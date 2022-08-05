@@ -18,7 +18,7 @@ namespace API.Weight.Controllers
             _context = context;
         }
 
-        /// <summary>API "Save thông tin "Weight Detail"</summary>
+        /// <summary>API "Save thông tin "WeightDetail"</summary>
         /// <remarks>
         /// BODY
         ///  
@@ -51,7 +51,7 @@ namespace API.Weight.Controllers
             return Ok(new ApiSuccessReponse<bool> { Data = true, Message = string.Format(CommonResource.MSG_SUCCESS, "Lưu thông tin cân") });
         }
 
-        /// <summary>API "Save thông tin "Resource Monitor"</summary>
+        /// <summary>API "Save thông tin "ResourceMonitor"</summary>
         /// <remarks>
         /// BODY
         ///  

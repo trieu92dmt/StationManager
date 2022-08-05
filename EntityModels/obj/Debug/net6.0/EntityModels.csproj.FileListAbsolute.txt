@@ -1,0 +1,14 @@
+D:\Working\DataCollection\EntityModels\bin\Debug\net6.0\EntityModels.deps.json
+D:\Working\DataCollection\EntityModels\bin\Debug\net6.0\EntityModels.dll
+D:\Working\DataCollection\EntityModels\bin\Debug\net6.0\EntityModels.pdb
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.csproj.AssemblyReference.cache
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.GeneratedMSBuildEditorConfig.editorconfig
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.AssemblyInfoInputs.cache
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.AssemblyInfo.cs
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.csproj.CoreCompileInputs.cache
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.dll
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\refint\EntityModels.dll
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.pdb
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\ref\EntityModels.dll
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.Core.CommonResource.resources
+D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.csproj.GenerateResource.cache

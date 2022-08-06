@@ -2504,11 +2504,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Working\\DataCollection\\API.Weight\\API.Weight.csproj",
+      "projectUniqueName": "C:\\Users\\ISD-Dev-Backend-01\\source\\repos\\TLG_DatacollectionAPI\\API.Weight\\API.Weight.csproj",
       "projectName": "API.Weight",
-      "projectPath": "D:\\Working\\DataCollection\\API.Weight\\API.Weight.csproj",
+      "projectPath": "C:\\Users\\ISD-Dev-Backend-01\\source\\repos\\TLG_DatacollectionAPI\\API.Weight\\API.Weight.csproj",
       "packagesPath": "C:\\Users\\ISD-Dev-Backend-01\\.nuget\\packages\\",
-      "outputPath": "D:\\Working\\DataCollection\\API.Weight\\obj\\",
+      "outputPath": "C:\\Users\\ISD-Dev-Backend-01\\source\\repos\\TLG_DatacollectionAPI\\API.Weight\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\DevExpress 21.1\\Components\\Offline Packages"
@@ -2530,8 +2530,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Working\\DataCollection\\EntityModels\\EntityModels.csproj": {
-              "projectPath": "D:\\Working\\DataCollection\\EntityModels\\EntityModels.csproj"
+            "C:\\Users\\ISD-Dev-Backend-01\\source\\repos\\TLG_DatacollectionAPI\\EntityModels\\EntityModels.csproj": {
+              "projectPath": "C:\\Users\\ISD-Dev-Backend-01\\source\\repos\\TLG_DatacollectionAPI\\EntityModels\\EntityModels.csproj"
             }
           }
         }

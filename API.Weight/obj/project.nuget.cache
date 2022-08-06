@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3He6BuDsw2n12sa6x+Qy4X1KNfnuzdTjXd1tmw3Kw4TY+zDTeRF7+uwYJCeaVektYvkLZ0Tcg9o1Fj8TZwH3Qw==",
+  "dgSpecHash": "L4Mwbokt0E0uiejTX9lhhmSAMlCneMEzrmmN4/UeRKTw5XG4rrT/ywQn80OxgTmJcmuTXbxJWAmy+2l13mfIZg==",
   "success": true,
-  "projectFilePath": "D:\\Working\\DataCollection\\API.Weight\\API.Weight.csproj",
+  "projectFilePath": "C:\\Users\\ISD-Dev-Backend-01\\source\\repos\\TLG_DatacollectionAPI\\API.Weight\\API.Weight.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ISD-Dev-Backend-01\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\ISD-Dev-Backend-01\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

@@ -12,3 +12,17 @@ D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.pdb
 D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\ref\EntityModels.dll
 D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.Core.CommonResource.resources
 D:\Working\DataCollection\EntityModels\obj\Debug\net6.0\EntityModels.csproj.GenerateResource.cache
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\bin\Debug\net6.0\EntityModels.deps.json
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\bin\Debug\net6.0\EntityModels.dll
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\bin\Debug\net6.0\EntityModels.pdb
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.csproj.AssemblyReference.cache
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.Core.CommonResource.resources
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.csproj.GenerateResource.cache
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.AssemblyInfoInputs.cache
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.AssemblyInfo.cs
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.csproj.CoreCompileInputs.cache
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.dll
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\refint\EntityModels.dll
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\EntityModels.pdb
+C:\Users\ISD-Dev-Backend-01\source\repos\TLG_DatacollectionAPI\EntityModels\obj\Debug\net6.0\ref\EntityModels.dll

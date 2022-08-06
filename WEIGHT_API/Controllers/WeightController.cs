@@ -113,7 +113,7 @@ namespace WEIGHT_API.Controllers
                 WeightTime = e.WeightTime,
                 WeightStationCode = e.WeightStationCode,
                 WeightPerWeighing = (double)e.WeightPerWeighing,
-                RawData = e.RawData == null ? "" : e.RawData
+                RawData = e.RawData
                 
             }).OrderByDescending(x => x.WeightTime).ToList();
 

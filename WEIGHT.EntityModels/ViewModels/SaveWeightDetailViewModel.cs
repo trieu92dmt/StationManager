@@ -12,5 +12,6 @@ namespace WEIGHT.EntityModels.ViewModels
 
         [Required(ErrorMessage = "Mã đầu cân không được để trống")]
         public string WeightStationCode { get; set; }
+        public string RawData { get; set; }
     }
 }

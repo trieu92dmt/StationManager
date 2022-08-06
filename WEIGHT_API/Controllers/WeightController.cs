@@ -51,7 +51,8 @@ namespace WEIGHT_API.Controllers
             {
                 WeightTime = request.WeightTime,
                 WeightStationCode = request.WeightStationCode,
-                WeightPerWeighing = request.WeightPerWeighing
+                WeightPerWeighing = request.WeightPerWeighing,
+                RawData = request.RawData
             });
 
             await _context.SaveChangesAsync();
@@ -111,9 +112,9 @@ namespace WEIGHT_API.Controllers
             {
                 WeightTime = e.WeightTime,
                 WeightStationCode = e.WeightStationCode,
-                //ProductName = e.ProductName,
-                //CustomerName = e.CustomerName,
-                WeightPerWeighing = (double)e.WeightPerWeighing
+                WeightPerWeighing = (double)e.WeightPerWeighing,
+                RawData = e.RawData == null ? "" : e.RawData
+                
             }).OrderByDescending(x => x.WeightTime).ToList();
 
             if (WeightTime.HasValue) respose = respose.Where(x => x.WeightTime.Date == WeightTime.Value.Date).ToList();

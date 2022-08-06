@@ -14,5 +14,8 @@ namespace WEIGHT.EntityModels.Models
         public decimal WeightPerWeighing { get; set; }
         [StringLength(50)]
         public string WeightStationCode { get; set; }
+
+        [StringLength(64)]
+        public string RawData { get; set; }
     }
 }

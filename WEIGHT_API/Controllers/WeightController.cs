@@ -114,7 +114,7 @@ namespace WEIGHT_API.Controllers
                 //ProductName = e.ProductName,
                 //CustomerName = e.CustomerName,
                 WeightPerWeighing = (double)e.WeightPerWeighing
-            }).ToList();
+            }).OrderByDescending(x => x.WeightTime).ToList();
 
             if (WeightTime.HasValue) respose = respose.Where(x => x.WeightTime.Date == WeightTime.Value.Date).ToList();
 
@@ -143,7 +143,7 @@ namespace WEIGHT_API.Controllers
                 CheckingTime = e.CheckingTime,
                 WeighingStationCode = e.WeighingStationCode,
                 WeightNumberDisplayed = e.WeightNumberDisplayed
-            }).ToList();
+            }).OrderByDescending(x => x.CheckingTime).ToList();
 
             if (CheckingTime.HasValue) respose = respose.Where(x => x.CheckingTime.Date == CheckingTime.Value.Date).ToList();
 

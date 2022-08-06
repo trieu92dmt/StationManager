@@ -11,7 +11,7 @@ namespace WEIGHT.EntityModels.Models
         public string CustomerName { get; set; }
         [StringLength(50)]
         public string ProductName { get; set; }
-        public double WeightPerWeighing { get; set; }
+        public decimal WeightPerWeighing { get; set; }
         [StringLength(50)]
         public string WeightStationCode { get; set; }
     }

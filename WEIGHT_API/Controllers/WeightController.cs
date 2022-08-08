@@ -106,22 +106,37 @@ namespace WEIGHT_API.Controllers
 
         /// <summary>API "Tìm thông tin theo weight time</summary>
         [HttpGet("list-weight-detail")]
-        public async Task<IActionResult> ListWeightDetail(DateTime? WeightTime)
+        public IActionResult ListWeightDetail([FromQuery]ListWeightDetailViewModel vm)
         {
-            var respose = _context.WeightDetailModel.Select(e => new WeightDetailResponse
+            //Query weight detail order by decs weight time
+            var response = _context.WeightDetailModel.OrderByDescending(x => x.WeightTime).AsQueryable();
+            var result = response.Take(vm.Length).Select(v => new WeightDetailResponse
             {
-                WeightTime = e.WeightTime,
-                WeightStationCode = e.WeightStationCode,
-                WeightPerWeighing = (double)e.WeightPerWeighing,
-                RawData = e.RawData
-                
-            }).OrderByDescending(x => x.WeightTime).ToList();
+                WeightTime = v.WeightTime,
+                WeightStationCode = v.WeightStationCode,
+                WeightPerWeighing = (double)v.WeightPerWeighing,
+                RawData = v.RawData
 
-            if (WeightTime.HasValue) respose = respose.Where(x => x.WeightTime.Date == WeightTime.Value.Date).ToList();
+            }).ToList();
 
-            await _context.SaveChangesAsync();
+            //Search by Weight time
+            if (vm.WeightTime.HasValue) result = result.Where(x => x.WeightTime.Date == vm.WeightTime.Value.Date).ToList();
 
-            return Ok(new ApiSuccessReponse<List<WeightDetailResponse>> { Data = respose, Message = string.Format(CommonResource.MSG_SUCCESS, "Tìm kiếm thông tin cân") });
+            //Total recorđ
+            var totalRecord = result.Count();
+
+            //Get stt
+            if (result.Any())
+            {
+                int i = 0;
+                foreach (var item in result)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+
+            return Ok(new ApiSuccessReponse<List<WeightDetailResponse>> { Data = result, Message = string.Format(CommonResource.MSG_SUCCESS, "Tìm kiếm thông tin cân"), TotalRecord = totalRecord });
         }
 
 

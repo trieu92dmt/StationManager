@@ -115,7 +115,7 @@ namespace WEIGHT_API.Controllers
                 WeightTime = v.WeightTime,
                 WeightStationCode = v.WeightStationCode,
                 WeightPerWeighing = (double)v.WeightPerWeighing,
-                RawData = v.RawData
+                RawData = $"{v.RawData.Replace("\r\n", " ")}"
 
             }).ToList();
 

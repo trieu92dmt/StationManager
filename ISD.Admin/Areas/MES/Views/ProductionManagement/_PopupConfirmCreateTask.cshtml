@@ -1,0 +1,44 @@
+﻿@using System.Globalization;
+@model ProductionManagementViewModel
+
+<style>
+    .pr-0 {
+        padding-right: 0 !important;
+    }
+
+    .pt-2 {
+        padding-top: 2px !important;
+    }
+</style>
+
+<div class="modal-dialog modal-dialog-sm">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h5 class="modal-title">Ghi nhận sản lượng</h5>
+        </div>
+        <div class="modal-body">
+            <form id="frm-create-TTLSX">
+                <div class="panel-group">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <input type="hidden" name="NewTask_ParentTaskId" id="NewTask_ParentTaskId" value="@Model.TaskId" />
+                            <div class="row text-center alert-message">
+                                <p>Mã QR này hiện tại chưa có dữ liệu thực thi.</p>
+                                <p>Bạn có muốn thêm mới lệnh thực thi sản xuất không?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">@LanguageResource.Btn_Cancel</span>
+            <a class="btn btn-primary pull-right" id="btn-create-new-task">
+                @LanguageResource.Create
+            </a>
+        </div>
+    </div>
+</div>
+
+

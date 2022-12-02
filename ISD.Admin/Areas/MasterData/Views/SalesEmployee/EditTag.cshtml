@@ -1,0 +1,276 @@
+﻿@model SalesEmployeeViewModel
+@{
+    ViewBag.Title = LanguageResource.Update + " " + LanguageResource.MasterData_SalesEmployee.ToLower();
+    string CurrentController = ConstController.SalesEmployee;
+    string CurrentArea = ConstArea.MasterData;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @enctype = "multipart/form-data", @id = "frmEditTag" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(p => p.SalesEmployeeCode)
+    @Html.Hidden("SerialTagValid", Model.SerialTag)
+
+    <input type="hidden" name="Data" id="Data" value="@ViewBag.Data" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @ViewBag.Title
+            @HtmlExtensions.BackButton(CurrentArea, CurrentController)
+        </h1>
+        <div class="pull-right">
+            @HtmlExtensions.SaveButton("btn-save", LanguageResource.Btn_Save)
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                                @Html.TooltipLabelFor(p => p.SalesEmployeeCode)
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="display-for" id="">
+                                    @Html.DisplayFor(p => p.SalesEmployeeCode)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                                @Html.TooltipLabelFor(p => p.SalesEmployeeName)
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="display-for" id="">
+                                    @Html.DisplayFor(p => p.SalesEmployeeName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                                @Html.TooltipLabelFor(p => p.DepartmentId)
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="display-for" id="">
+                                    @Html.DisplayFor(p => p.DepartmentName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-4">
+                                @Html.TooltipLabelFor(p => p.SerialTag)
+                            </div>
+                            <div class="col-xs-8 col-sm-8 col-md-4">
+                                <div class="input-group input-group-sm">
+                                    @Html.RequiredTextboxFor(p => p.SerialTag)
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-info btn-flat" id="btnScan">Scan</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel hidden">
+                    <style>
+                        .output {
+                            background-color: #f0f0f0;
+                            border-radius: 0.75em;
+                            display: block;
+                            margin: 0.5em;
+                            padding: 0.5em;
+                        }
+
+                        #status {
+                            margin: .5em 0;
+                            font-style: italic;
+                        }
+
+                        #log {
+                            margin: .5em 0;
+                            white-space: pre-wrap;
+                        }
+
+                            #status:empty, #log:empty, #content:empty {
+                                display: none;
+                            }
+                    </style>
+                    <h3>Live Output</h3>
+                    <div id="output" class="output">
+                        <div id="content"></div>
+                        <div id="status"></div>
+                        <pre id="log"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+       //set event btn-save, btn-save-continue for btn-create
+        $(document).ready(function () {
+            //Chuyển qua https nếu chưa phải https
+            if (location.protocol !== 'https:') {
+                location.replace(`https:${location.href.substring(location.protocol.length)}`);
+            }
+        });
+
+        function SaveSerialTag(serialNumber) {
+            //Remove ':' in serial
+            let seri = serialNumber.replace(/:/g, '');
+            //Convert from HEX
+            let intSerial = parseInt(seri, 16);
+            $("#SerialTag").val(intSerial);
+            $("#btnScan").button('reset');
+        }
+
+        $(document).on("click", "#btn-save", function () {
+            var controller = "@CurrentUrl";
+            var $btn = $(this);
+            var frm = $("#frmEditTag"),
+                formData = new FormData(),
+                formParams = frm.serializeArray();
+
+            if (frm.valid()) {
+                $.each(formParams, function (i, val) {
+                    formData.append(val.name, val.value);
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/" + controller + "/EditTag",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (jsonData) {
+                        $btn.button('reset');
+                        if (jsonData.Success == true) {
+                            if (jsonData.RedirectUrl) {
+                                if (jsonData.RedirectUrl.indexOf("?") == -1) {
+                                    window.location.href = jsonData.RedirectUrl + "?message=" + jsonData.Data;
+                                }
+                                else {
+                                    window.location.href = jsonData.RedirectUrl + "&message=" + jsonData.Data;
+                                }
+                            }
+                            else {
+                                window.location.href = "/" + controller + "?message=" + jsonData.Data;
+                            }
+                        }
+                        else {
+                            if (jsonData.Data != null && jsonData.Data != "") {
+                                alertPopup(false, jsonData.Data);
+                            }
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $btn.button('reset');
+                        alertPopup(false, xhr.responseText);
+                    }
+                });
+            }
+            else {
+                //show error invalid
+                var validator = frm.validate();
+                var arr = [];
+                $.each(validator.errorMap, function (index, value) {
+                    console.log('Id: ' + index + ' Message: ' + value);
+                    arr.push(value);
+                });
+                if (arr.length > 0) {
+                    alertPopup(false, arr);
+                }
+                $btn.button('reset');
+            }
+        });
+
+    </script>
+    <script>
+        let ndef;
+        var ChromeSamples = {
+            log: function () {
+                var line = Array.prototype.slice.call(arguments).map(function (argument) {
+                    return typeof argument === 'string' ? argument : JSON.stringify(argument);
+                }).join(' ');
+
+                document.querySelector('#log').textContent += line + '\n';
+            },
+
+            clearLog: function () {
+                document.querySelector('#log').textContent = '';
+            },
+
+            setStatus: function (status) {
+                document.querySelector('#status').textContent = status;
+            },
+
+            setContent: function (newContent) {
+                var content = document.querySelector('#content');
+                while (content.hasChildNodes()) {
+                    content.removeChild(content.lastChild);
+                }
+                content.appendChild(newContent);
+            }
+        };
+
+        // Add a global error event listener early on in the page load, to help ensure that browsers
+        // which don't support specific functionality still end up displaying a meaningful message.
+        window.addEventListener('error', function (error) {
+            if (ChromeSamples && ChromeSamples.setStatus) {
+                console.error(error);
+                ChromeSamples.setStatus(error.message + ' (Your browser may not support this feature.)');
+                error.preventDefault();
+            }
+        });
+
+        if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)) {
+            // Let's log a warning if the sample is not supposed to execute on this
+            // version of Chrome.
+            if (89 > parseInt(RegExp.$1)) {
+                ChromeSamples.setStatus('Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.');
+            }
+        }
+
+        log = ChromeSamples.log;
+
+        if (!("NDEFReader" in window)) {
+            ChromeSamples.setStatus(
+                "Web NFC is not available.\n" +
+                'Please make sure the "Experimental Web Platform features" flag is enabled on Android.'
+            );
+        }
+
+        $(document).on("click", "#btnScan", function () {
+            $(this).button('loading');
+            try {
+                if (ndef == undefined) {
+                    ndef = new NDEFReader();
+                }
+                ndef.scan();
+                log("> Scan started");
+
+                ndef.addEventListener("readingerror", () => {
+                    log("Argh! Cannot read data from the NFC tag. Try another one?");
+                });
+
+                ndef.onreading = event => {
+                    //const message = event.message;
+                    const serialNumber = event.serialNumber;
+
+                    log(`> Serial Number: ${serialNumber}`);
+                    //log(`> Records: (${message.records.length})`);
+                    SaveSerialTag(serialNumber);
+                };
+
+            } catch (error) {
+                log("Argh! " + error);
+                $(this).button('reset');
+            }
+        })
+    </script>
+}
+

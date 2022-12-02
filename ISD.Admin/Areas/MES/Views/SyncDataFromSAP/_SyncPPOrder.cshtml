@@ -1,0 +1,67 @@
+﻿@model ParamRequestSyncPPOrderModel
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "frmSyncPPOrder" }))
+{
+    <div class="panel-body">
+        <div class="row">
+
+            <div class="col-md-5">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.TooltipLabelFor(p => p.WERKS)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.RequiredTextboxFor(p => p.WERKS, new { @class = "numeric-input form-control" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-8">
+                            <b class="text-warning">Vui lòng nhập thông tin LSX ĐT hoặc LSX SAP:</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="col-md-4">
+                    @Html.TooltipLabelFor(p => p.LSXDT)
+                </div>
+                <div class="col-md-8">
+                    @Html.RequiredTextboxFor(p => p.LSXDT, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="col-md-4">
+                    @Html.TooltipLabelFor(p => p.PPOrder)
+                </div>
+                <div class="col-md-8">
+                    @Html.RequiredTextboxFor(p => p.PPOrder, new { @class = "numeric-input form-control" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-12">
+        <div class="form-group">
+            <div class="col-md-8 col-md-offset-5">
+                <a class="btn btn-primary btn-inline" id="btn-sync-pporder"><i class="fa fa-refresh" aria-hidden="true"></i> Đồng bộ PP Order</a>
+            </div>
+        </div>
+    </div>
+    </div>
+}

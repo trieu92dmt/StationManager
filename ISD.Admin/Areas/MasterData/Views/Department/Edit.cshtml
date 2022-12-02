@@ -1,0 +1,221 @@
+﻿@model DepartmentViewModel
+
+@{
+    /**/
+
+    ViewBag.Title = LanguageResource.Update + " " + LanguageResource.Master_Department.ToLower();
+    string CurrentController = ConstController.Department;
+    string CurrentArea = ConstArea.MasterData;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+
+@section head {
+    <link href="~/Scripts/DualListBox/dualselect.css" rel="stylesheet" />
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @enctype = "multipart/form-data", @id = "frmEdit" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(p => p.DepartmentId)
+    <input type="hidden" name="isContinue" id="isContinue" value="@ViewBag.isContinue" />
+    <input type="hidden" name="Data" id="Data" value="@ViewBag.Data" />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @HtmlExtensions.BackButton(CurrentArea, CurrentController)
+        </h1>
+        <div class="pull-right">
+            @HtmlExtensions.SaveButton("btn-save", LanguageResource.Btn_Save)
+            @HtmlExtensions.SaveButton("btn-save-continue", LanguageResource.Btn_SaveAndContinue)
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">@ViewBag.Title</h3>
+            </div>
+            <div class="box-body">
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.DepartmentCode)
+                        @Html.RequiredTextboxFor(p => p.DepartmentCode , new {@readonly = true})
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.DepartmentName)
+                        @Html.RequiredTextboxFor(p => p.DepartmentName)
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.DepartmentType)
+                        @Html.DropDownListFor(p => p.DepartmentType, null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.CompanyId)
+                        @Html.DropDownListFor(p => p.CompanyId, null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.StoreId)
+                        @Html.DropDownListFor(p => p.StoreId, null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.WorkShopId)
+                        @Html.DropDownListFor(p => p.WorkShopId, null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                    </div>
+                    <div class="col-md-6">
+
+                        @Html.TooltipLabelFor(p => p.EquipmentList)
+                        <select id="EquipmentList" name="EquipmentList" multiple class="form-control">
+                            @foreach (var item in (List<EquipmentModel>)ViewBag.EquipmentListAll)
+                            {
+
+                                if (((List<Guid?>)ViewBag.EquipmentListSelect).Any(x => x == item.EquipmentId))
+                                {
+                                    <option value="@item.EquipmentId" selected>@item.EquipmentName</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.EquipmentId"> @item.EquipmentName</option>
+                                }
+
+                            }
+                        </select>
+                        @*@Html.DropDownListFor(p => p.EquipmentList, null, new { @class = " form-control with-search", @multiple = true })*@
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.OrderIndex)
+                        @Html.RequiredTextboxFor(p => p.OrderIndex)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TooltipLabelFor(p => p.Actived)
+                        @Html.ActivedRadioButton(p => p.Actived)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">@LanguageResource.Department_Routing</h3>
+                </div>
+                <div class="box-body" style="text-align: -webkit-center;">
+                    @Html.DropDownList("RoutingList", null, null, new { @class = "dual-select-list", @multiple = "multiple" })
+                </div>
+            </div>*@
+    </div>
+}
+
+@section scripts {
+    <script src="~/Scripts/DualListBox/dualselect.js"></script>
+    <script>
+       //set event btn-save, btn-save-continue for btn-create
+        $(document).ready(function () {
+            ISD.EditInitial("@CurrentUrl");
+            //$("#CompanyId").trigger("change");
+
+            numericInput();
+            renderRoutingDualSelectList();
+        });
+        $(document).on("change", "#CompanyId", function () {
+            var CompanyId = $("#CompanyId").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/MasterData/Department/GetStoreByCompany",
+                data: {
+                    CompanyId: CompanyId
+                },
+                success: function (jsonData) {
+                    $("#StoreId").html("");
+                    $("#StoreId").append("<option>-- Vui lòng chọn --</option>");
+                    if (jsonData.length > 0) {
+                        $.each(jsonData, function (index, value) {
+                            $("#StoreId").append("<option value='" + value.Value + "'>" + value.Text + "</option>");
+                        });
+                    }
+                    //else {
+                    //    $("#StoreId").append("<option>-- Vui lòng chọn --</option>");
+                    //}
+                }
+            });
+        });
+
+        function numericInput() {
+            $('#OrderIndex').inputFilter(function (value) {
+                return /^-?\d*$/.test(value);
+            });
+        }
+
+        function renderRoutingDualSelectList() {
+            const dualselect = jQuery('#RoutingList').dualselect({
+                // options here
+                //Determine whether or not to show move buttons
+                //showMoveButtons: false,
+
+                //Determine whether or not to move options by click
+                //moveOnSelect: false,
+
+                //Determine whether or not to show the search box
+                //showFilters:false,
+
+
+                //Customize the move buttons
+                //selectText: '&gt;',
+                //selectAllText: '&gt;&gt;',
+                //removeText: '&lt;',
+                //removeAllText: '&lt;&lt;'
+
+                //Customize the CSS class of the dual list box
+                //dualselectClass:'is-dualselect',
+
+                //Customize the wrapper element
+                //wrapperElement: 'div',
+                //wrapperClass: 'dualselect-wrapper',
+
+                // Available callback functions which will be fired before you select or remove options
+                //beforeSelectOption: function (_option) {
+                //    if (_option.text().indexOf('option30') >= 0) {
+                //        alert('option30 selection not allowed');
+                //        return false;
+                //    }
+                //    return true;
+                //},
+                //beforeRemoveOption: function (_option) {
+                //    if (_option.text().indexOf('option25') >= 0) {
+                //        alert('option25 removal not allowed');
+                //        return false;
+                //    }
+                //    return true;
+                //},
+
+                //Custom
+                filtersPlaceholder: 'Tìm kiếm...',
+                avlTitle: 'TẤT CẢ CÔNG ĐOẠN',
+                selTitle: 'CÁC CÔNG ĐOẠN ĐƯỢC CHỌN',
+            });
+
+            //Destroy the instance
+            //dualselect.destroy();
+
+            //Re-initialize the dual list box in cases where options are updated or new options are added
+            //dualselect.resync();
+        }
+    </script>
+}

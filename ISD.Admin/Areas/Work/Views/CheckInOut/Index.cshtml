@@ -1,0 +1,254 @@
+﻿@model CompanyModel
+@{
+    ViewBag.Title = "Lịch sử CheckIn/Out";
+    string CurrentController = "CheckInOut";
+    string CurrentArea = ConstArea.Work;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+      
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                {
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper"><label class="control-label" for="">@LanguageResource.EmployeeCode</label></div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("SalesEmployeeCode", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper"><label class="control-label" for="">@LanguageResource.SerialTag</label></div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("SerialTag", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper">
+                                            <label class="control-label">@LanguageResource.Task_RemindTime</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("CommonDate", null, new { @class = "form-control with-search ddl-common-date", @data_id = "Duration", @id = "duration-date", Name = "DurationCommonDate" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row Duration">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper"><label class="control-label" for="">@LanguageResource.FromDate</label></div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("DurationFromDate", "{0:yyyy-MM-dd}", new { @class="form-control", type = "date" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper"><label class="control-label" for="">@LanguageResource.ToDate</label></div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("DurationToDate", "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-5">
+                                    @HtmlExtensions.SearchButton()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="divSearchResult">
+                        <table class="table table-bordered table-striped table-hover dataTable dataTableServerSide no-footer">
+                            <thead class="isd-table-header">
+                                <tr>
+                                    <th class="text-center">@LanguageResource.NumberIndex</th>
+                                    <th class="text-center">@LanguageResource.SerialTag</th>
+                                    <th class="text-center">@LanguageResource.SalesEmployee_Code</th>
+                                    <th class="text-center">@LanguageResource.SalesEmployee_Name</th>
+                                    <th class="text-center">Thời gian</th>
+                                </tr>
+                            </thead>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="delete-confirm"></div>
+
+@section scripts {
+    <script>
+        //load default and set event
+        $(document).ready(function () {
+            $(".ddl-common-date").trigger("change");
+           // ISD.SearchInitial("@CurrentUrl");
+            PaggingServerSideCheckInOut("@CurrentUrl");
+            ISD.ShowMessage(window.location.href);
+
+        });
+         $("#btn-search").click(function () {
+             PaggingServerSideCheckInOut("@CurrentUrl");
+        });
+        //set default form submit => click btn-search button
+        $("#frmSearch").submit(function (e) {
+            e.preventDefault();
+            $("#btn-search").trigger("click");
+        });
+
+        //common date
+        $(document).on("change", ".ddl-common-date", function () {
+            var cssClass = $(this).data('id');
+            var commonDate = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Utilities/CommonDate/Get",
+                data: {
+                    CommonDate: commonDate
+                },
+                success: function (jsonData) {
+                    $("." + cssClass + " input[name='" + cssClass + "FromDate']").val(jsonData.FromDate);
+                    $("." + cssClass + " input[name='" + cssClass + "ToDate']").val(jsonData.ToDate);
+                    if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                        $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", true);
+                        $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", true);
+                    } else {
+                        $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", false);
+                        $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", false);
+                    }
+
+                }
+            });
+        });
+
+
+        function PaggingServerSideCheckInOut(controller) {
+            //$(".dataTableServerSide").DataTable().clear().destroy();
+            $(".dataTableServerSide")
+                .on('processing.dt', function (e, settings, processing) {
+                    ISD.LoadingDataTable(processing, '.dataTableServerSide');
+                })
+                .DataTable({
+                proccessing: true,
+                serverSide: true,
+                paging: true,
+                scrollX: true,
+                ajax: {
+                    type: 'POST',
+                    url: "/" + controller + "/_SearchServerSide",
+                    contentType: 'application/json',
+                    data: function (d) {
+                        var arr = {};
+                        //data search
+                        var data = $("#frmSearch").serializeArray();
+                        $.each(data, function (index, val) {
+                            var obj = {};
+                            obj[val.name] = val.value;
+                            $.extend(true, arr, obj);
+                        });
+                        //data datatable (draw, start, length,...)
+                        $.extend(true, arr, d);
+
+                        return JSON.stringify(arr);
+                    }
+                },
+                columns: [
+                    {
+                        "data": "STT",
+                        "className": "text-center",
+                        "orderable": false
+                    },
+                    {
+                        "data": "SerialTag",
+                        "className": "text-right",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "SalesEmployeeCode",
+                        "className": "text-right",
+                        "orderable": false
+                    },
+                    {
+                        "data": "SalesEmployeeName",
+                        "orderable": false
+                    },
+                    {
+                        "data": "CheckInDate",
+                        "className": "text-center",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                return moment(data).format("HH:mm:ss DD/MM/YYYY");
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                destroy: true,
+                language: {
+                    sProcessing: "Đang xử lý...",
+                    sLengthMenu: "Xem _MENU_ mục",
+                    sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                    sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                    sInfoPostFix: "",
+                    sSearch: "Tìm nội dung:",
+                    sUrl: "",
+                    oPaginate: {
+                        sFirst: "Đầu",
+                        sPrevious: "&laquo;",
+                        sNext: "&raquo;",
+                        sLast: "Cuối"
+                    }
+                },
+                columnDefs: [
+                    { targets: [0, 1], visible: true },
+                    { targets: 'no-sort', visible: false }
+                ],
+                "sDom": '<"top"flp>rt<"bottom"ip><"clear">',
+            });
+        }
+    </script>
+}

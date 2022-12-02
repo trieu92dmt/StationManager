@@ -1,0 +1,208 @@
+﻿@model ProductModel
+@{
+    ViewBag.Title = LanguageResource.ProductionOrder;
+    string CurrentArea = ConstArea.Work;
+    string CurrentController = ConstController.ProductionOrder;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                {
+                    <div class="panel-body">
+                        <div class="row">
+
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-5">
+                                    @HtmlExtensions.SearchButton()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="divSearchResult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="delete-confirm"></div>
+
+@section components {
+    <div class="modal fade" id="popupProductionOrder" role="dialog">
+       
+        <div class="modal-dialog modal-lg">
+           
+            <!-- Modal content-->
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div> 
+    
+    
+}
+
+@section scripts {
+    <script>
+        //load default and set event
+        $(document).ready(function () {
+            ISD.SearchInitial("@CurrentUrl");
+           
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+           
+            //-- BEGIN event tách lệnh sản suất--
+            $('body').on('click','.btn-DivionOfTask', function () {
+                var id = $(this).attr('Id');
+
+                $.ajax({
+                    data: {
+                        Id:id
+                    },
+                    url: 'ProductionOrder/_DivisionOfTask'
+                }).done(function (html) {
+                    $('.modal-content').html(html);
+                    $('#popupProductionOrder').modal('show');
+                })
+            })
+
+            //  begin show modal phân bổ chi tiết
+            $('body').on('click', '#btn-PhanBo', function (event) {
+                event.preventDefault()
+
+                var qty = $('#txtSLPhanBo').val();
+
+                $.ajax({
+                    data: {
+                        qty: qty
+                    },
+                    url: 'ProductionOrder/_DetailProductionOrder'
+                }).done(function (html) {
+                    var SLLSanPham = $('#ProductQty').val();// số lương sản phầm cần sản xuất
+                    var SLSanXuat = $('#txtSLPhanBo').val();// số lần sx
+                    var SLMoiLanPB = Math.floor(SLLSanPham / SLSanXuat); // số lượng mỗi lần phân bổ
+                    var SoSPDu = SLLSanPham % SLSanXuat; // số lượng còn dư
+
+                    $('#DetailProductionOrder').html(html);
+                    var row = $('#popupProductionOrder tr.DetailProductOrder'); // lấy tất cả nhữn dòng là chi tiết phân bổ
+                    row.each(function (i, item) { // lặp từng dòng
+                         i= i+1;
+                        if (row.length == i) { // nếu là lần sản xuất cuối cùng thì công thêm  số lương  dư
+                            $('input#Qty.SLPhanBo.CTPhanBo_' + i).val(SLMoiLanPB + SoSPDu);
+                        }
+                        else {
+                            $('input#Qty.SLPhanBo.CTPhanBo_' + i).val(SLMoiLanPB)
+                        }
+
+                    })
+
+
+                })
+
+            })
+            // end show modal phân bổ lệnh sản xuất
+
+            // begin event thay đổi số lượng mỗi lần sản xuất
+            $('body').on('change', '.SLPhanBo', function (event) {
+                event.preventDefault()
+                arrSLSanXuat = $('.SLPhanBo');
+                var SLThucThe = 0;
+                var SLSPSXThucThe = $('#ProductQty').val();// số lương sản phẩn cần sản xuất
+                $.each($('.SLPhanBo'), function (i, item)
+                {
+                    SLThucThe = SLThucThe + parseInt(item.value);
+                })
+                if (SLThucThe > SLSPSXThucThe) {
+                    $('.alert-message').html('Số lượng không hợp lệ ');
+                    $('#divAlertWarningTask').show();
+                }
+                else {
+                    $('#divAlertWarningTask').hide();
+                }
+            })
+            // end event thay đổi số lượng mỗi lần sản xuất
+
+            // begin event lưu phân bổ lệnh sản xuất
+            $('body').on('click', '.btn-save-subtask', function (e) {
+                e.preventDefault();
+                var arrTask = [];
+                var row = $('#popupProductionOrder tr.DetailProductOrder'); // lấy tất cả nhữn dòng là chi tiết phân bổ
+                row.each(function (i, item) { // lặp từng dòng
+                    var coloumn = $(item).find('td'); // lấy các cột của dòng
+                    var task =
+                    {
+                        ParentTaskId: $('#TaskId').val(),
+                        Qty: coloumn[1].firstElementChild.value,
+                        StartDate: coloumn[2].firstElementChild.value,
+                        EndDate: coloumn[3].firstElementChild.value,
+                        Summary: $('#Summary').val(),
+                        TaskId: $('#TaskId').val(),
+                        TaskStatusId: $('#TaskStatusId').val(),
+                        ProductId: $('#ProductId').val(),
+                    }
+                    arrTask.push(task)
+
+                })
+
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        taskViewModels: arrTask,
+                        FileUrl: null,
+                        taskAssignList: null,
+                        taskAssignGroupList: null,
+                        taskAssignPersonGroupList: null,
+                        taskReporterList: null,
+                        Type: 'LSX',
+                        bool: null,
+                        GroupName: null
+                    },
+                    url: '/Work/ProductionOrder/Create',
+                    success: function (json) {
+                        
+                        $('.alert-message').html(json.Data);
+                        $('#divAlertWarningTask').removeClass('alert alert-warning')
+                        $('#divAlertWarningTask').addClass('alert alert-success')
+                        setTimeout(function () {
+                            $('#divAlertWarningTask').show();
+                            $('#popupProductionOrder').modal('hide')
+                        }, 3000);
+                           
+                        
+                    },
+                    error: function () {
+                        $('.alert-message').html(json.Data);
+                        $('#divAlertWarningTask').show();
+                    }
+                })
+                console.log(arrTask);
+            })
+            // end vent lưu phân bổ lệnh sản xuất
+            //--END event tách lệnh sản xuất --
+        });
+
+    </script>
+}

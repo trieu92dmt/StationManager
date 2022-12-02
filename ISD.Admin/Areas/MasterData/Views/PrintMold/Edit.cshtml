@@ -1,0 +1,180 @@
+﻿@model PrintMoldModel
+
+@{
+    /**/
+
+    ViewBag.Title = LanguageResource.Update + " " + LanguageResource.MasterData_PrintMold.ToLower();
+    string CurrentController = ConstController.PrintMold;
+    string CurrentArea = ConstArea.MasterData;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+
+
+@using (Html.BeginForm("Edit", null, FormMethod.Post, new { @enctype = "multipart/form-data", @id = "frmEdit" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(p => p.PrintMoldId)
+    @Html.HiddenFor(p => p.PrintMoldIntId)
+
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @HtmlExtensions.BackButton(CurrentArea, CurrentController)
+        </h1>
+        <div class="pull-right">
+            @HtmlExtensions.SaveButton("btn-save", LanguageResource.Btn_Save)
+            @HtmlExtensions.SaveButton("btn-save-continue", LanguageResource.Btn_SaveAndContinue)
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">@ViewBag.Title</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.PrintMoldCode)
+                        @Html.RequiredTextboxFor(p => p.PrintMoldCode, new { @readonly = true })
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.PrintMoldName)
+                        @Html.RequiredTextboxFor(p => p.PrintMoldName)
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.PrintMoldType)
+                        @Html.RequiredTextboxFor(p => p.PrintMoldType)
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.ProductPerMold)
+                        @Html.RequiredTextboxFor(p => p.ProductPerMold)
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.Serial)
+                        @Html.RequiredTextboxFor(p => p.Serial)
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.Bin)
+                        @Html.RequiredTextboxFor(p => p.Bin)
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.TooltipLabelFor(p => p.LocationNote)
+                        @Html.RequiredTextboxFor(p => p.LocationNote)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.ProfileName)
+                        @Html.RequiredTextboxFor(p => p.ProfileName)
+                        @*@Html.DropDownListFor(p => p.ProfileId, null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })*@
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.TooltipLabelFor(p => p.ProductId)
+                        @Html.DropDownListFor(p => p.ProductId, null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        @Html.TooltipLabelFor(p => p.Specifications_Length)
+                        @Html.RequiredTextboxFor(p => p.Specifications_Length)
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        @Html.TooltipLabelFor(p => p.Specifications_Width)
+                        @Html.RequiredTextboxFor(p => p.Specifications_Width)
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        @Html.TooltipLabelFor(p => p.Specifications_Height)
+                        @Html.RequiredTextboxFor(p => p.Specifications_Height)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        @Html.TooltipLabelFor(p => p.Specifications_Overalls)
+                        @Html.RequiredTextboxFor(p => p.Specifications_Overalls)
+
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.TooltipLabelFor(p => p.Specifications_Side)
+                        @Html.RequiredTextboxFor(p => p.Specifications_Side)
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        @Html.TooltipLabelFor(p => p.PrintMoldFilm)
+                        @Html.RequiredTextboxFor(p => p.PrintMoldFilm)
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.TooltipLabelFor(p => p.PrintMoldDate)
+                        @Html.RequiredTextboxFor(p => p.PrintMoldDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.TooltipLabelFor(p => p.LastMaintenanceDate)
+                        @Html.RequiredTextboxFor(p => p.LastMaintenanceDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-3">
+                    @Html.TooltipLabelFor(p => p.MaintenanceAlert)
+                    @Html.RequiredTextboxFor(p => p.MaintenanceAlert)
+                </div>
+
+                <div class="form-group col-md-3">
+                    @Html.TooltipLabelFor(p => p.StampQuantity)
+                    @Html.RequiredTextboxFor(p => p.StampQuantity)
+                </div>
+
+                <div class="form-group col-md-3">
+                    @Html.TooltipLabelFor(p => p.CurrentStampeQuantity)
+                    @Html.RequiredTextboxFor(p => p.CurrentStampeQuantity)
+                </div>
+
+                <div class="form-group col-md-3">
+                    @Html.TooltipLabelFor(p => p.StampQuantityAlert)
+                    @Html.RequiredTextboxFor(p => p.StampQuantityAlert)
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        @Html.TooltipLabelFor(p => p.Description)
+                        @Html.RequiredTextboxFor(p => p.Description)
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.TooltipLabelFor(p => p.Status)
+                        @Html.RequiredTextboxFor(p => p.Status)
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    
+    </div>
+}
+
+@section scripts {
+    <script>
+        //set event btn-save, btn-save-continue for btn-edit
+        $(document).ready(function () {
+            ISD.EditInitial("@CurrentUrl");
+        });
+    </script>
+}
+

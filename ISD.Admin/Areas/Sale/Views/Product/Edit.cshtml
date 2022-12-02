@@ -1,0 +1,1013 @@
+﻿@model ProductViewModel
+
+@{
+    ViewBag.Title = LanguageResource.Details + " " + LanguageResource.Sale_Product.ToLower();
+    string CurrentController = ConstController.Product;
+    string CurrentArea = ConstArea.Sale;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+<style>
+    #uploadTable tr td {
+        vertical-align: top;
+    }
+</style>
+@using (Html.BeginForm("Edit", null, FormMethod.Post, new { @enctype = "multipart/form-data", @id = "frmEdit" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(p => p.ProductId)
+    @*@Html.HiddenFor(p => p.ERPProductCode)*@
+    @Html.Hidden("ProductCodeValid", Model.ProductCode)
+    @Html.HiddenFor(p => p.CompanyCode)
+    @Html.HiddenFor(p => p.ParentCategoryId)
+    @Html.HiddenFor(p => p.CategoryId)
+    @Html.HiddenFor(p => p.CategoryDetailId)
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @ViewBag.Title
+            @HtmlExtensions.BackButton(CurrentArea, CurrentController)
+        </h1>
+        <div class="pull-right">
+            @*@HtmlExtensions.SaveButton("btn-save", LanguageResource.Btn_Save)*@
+            @*@HtmlExtensions.SaveButton("btn-save-continue", LanguageResource.Btn_SaveAndContinue)*@
+        </div>
+    </div>
+
+    <div class="content" ng-app="myPinImageApp" ng-controller="myPinImageAppController">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+
+                    <div id="exTab1" class="nav-tabs-custom">
+                        <ul class="nav nav-pills nav nav-tabs">
+                            <li class="active">
+                                <a href="#tab1" data-toggle="tab">@LanguageResource.Product_Tab1</a>
+                            </li>
+                            @*<li>
+                                    <a id="tabBOM" href="#tab-BOM" data-toggle="tab">BOM</a>
+                                </li>*@
+                            <li>
+                                <a id="tabRouting" href="#tab-Routing" data-toggle="tab">Routing</a>
+                            </li>
+                            @*<li>
+                                <a id="tabDrawing" href="#tab-Drawing" data-toggle="tab">Bản vẽ</a>
+                            </li>*@
+                            @*<li>
+                                    <a href="#tab3" data-toggle="tab">@LanguageResource.Product_Tab3</a>
+                                </li>
+                                <li>
+                                    <a href="#tab4" data-toggle="tab">@LanguageResource.Product_Tab4</a>
+                                </li>
+                                <li>
+                                    <a href="#tab5" data-toggle="tab">@LanguageResource.Product_Tab5</a>
+                                </li>
+                                <li>
+                                    <a href="#tab6" data-toggle="tab">@LanguageResource.Product_Tab6</a>
+                                </li>*@
+                        </ul>
+
+                        <div class="tab-content clearfix">
+                            <div class="tab-pane active" id="tab1">
+                                @Html.Partial("_ProductGeneral")
+
+                                @*<hr />
+                                    <h4>@LanguageResource.Product_Color</h4>
+                                    <div id="ProductColorList">
+                                        @Html.Action("_ProductColor", new { ProductId = Model.ProductId, mode = 2 })
+                                    </div>
+
+                                    <hr />
+                                    <div>
+                                        <h4>@LanguageResource.Product_PriceInfo</h4>
+                                        @Html.Action("_ProductPrice", new { ProductId = Model.ProductId })
+                                    </div>
+
+                                    <hr />
+                                    <div>
+                                        <h4>@LanguageResource.Product_StockInfo</h4>
+                                        @Html.Action("_ProductWarehouse", new { ProductId = Model.ProductId })
+                                    </div>*@
+                            </div>
+
+                            @*BOM*@
+                            @*<div class="tab-pane" id="tab-BOM">
+                                    @Html.Action("_ProductBOM", new { ERPProductCode = Model.ERPProductCode, CompanyCode = Model.CompanyCode })
+                                </div>*@
+
+                            @*Routing sản phẩm *@
+                            <div class="tab-pane" id="tab-Routing">
+                                @Html.Action("_ProductRouting", new {ProductCode = Model.ProductCode, ERPProductCode = Model.ERPProductCode, CompanyCode = Model.CompanyCode, Version = ViewBag.Version })
+                            </div>
+                            @*Bản vẽ sản phẩm*@
+                            @*<div class="tab-pane" id="tab-Drawing">
+                                @Html.Action("_ProductDrawing", new { IsMold = ViewBag.IsMold ,Version = ViewBag.Version })
+                            </div>*@
+
+
+                            @*Thông số kỹ thuật*@
+                            @*<div class="tab-pane" id="tab3">
+
+                                    @Html.Action("_ProductSpecifications", new { ProductId = Model.ProductId, mode = 2 })
+                                </div>
+
+                                <div class="tab-pane" id="tab4">
+                                    @Html.Action("_ProductAccessory", new { ProductId = Model.ProductId, mode = 2 })
+                                </div>
+
+                                <div class="tab-pane" id="tab5">
+                                    @Html.Action("_ProductPromotion", new { ProductId = Model.ProductId })
+                                </div>
+
+                                <div class="tab-pane" id="tab6">
+                                    @Html.Action("_ProductCustomerPromotion", new { ProductId = Model.ProductId })
+                                </div>*@
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section components {
+    <!-- Modal Popup Image Detail -->
+    <div id="divImageDetails" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                    <h4 class="product-color"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="frmUploadImage">
+                        <table id="uploadTable" class="table table-bordered table-striped table-hover dataTable no-footer">
+                            <thead class="isd-table-header">
+                                <tr>
+                                    <th class="text-center">@LanguageResource.NumberIndex</th>
+                                    <th class="color-input">@Html.DisplayNameFor(p => p.ColorStyleImage)</th>
+                                    <th class="color-input">@Html.DisplayNameFor(p => p.isDefault)</th>
+                                    <th class="text-center action-width">@LanguageResource.Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailColorList"></tbody>
+                            <tfoot id="detailColor">
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="file" class="form-control text-box single-line" id="DetailImage" name="DetailImage" />
+                                    </td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <a class="btn btn-warning btn-add-image">
+                                            @LanguageResource.Btn_AddRow
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup Addfile -->
+    <div id="divAddFilePopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cancel-delete"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> @LanguageResource.Product_Drawing</h4>
+                </div>
+                <form id="frmAddFile">
+                    <div class="form-horizontal">
+                        <div class="modal-body">
+
+                            @if (ViewBag.IsMold)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.DrawingMoldCode)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.RequiredTextboxFor(p => p.DrawingMoldCode)
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.DrawingCode)
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.RequiredTextboxFor(p => p.DrawingCode)
+
+                                    </div>
+                                </div>
+                            }
+
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.TooltipLabelFor(p => p.DrawingNote)
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.RequiredTextboxFor(p => p.DrawingNote)
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <div class="label-wrapper">
+                                        <label class="control-label" for="FileUrl">Đính kèm</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="FileAttachment" name="MainCommentFileUrl" type="file" multiple accept=".png,.jpg,.jpeg,.svg,.csv,.pdf,.gif,.jpg,.jpeg,.png,.doc,.docx" />
+                                    <input name="ProductId" type="hidden" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-default" data-dismiss="modal" id="btn-cancel-delete">@LanguageResource.Btn_Cancel</span>
+                            <a class="btn btn-primary pull-right" id="btn-confirm-add-file" data-tab="">
+                                @LanguageResource.Btn_Save
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Confirm Delete File-->
+    <div id="divDeleteFilePopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cancel-delete"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@LanguageResource.Btn_Delete @LanguageResource.Task_FileUrl</h4>
+                </div>
+                <form id="frmConfirmDeleteFile">
+                    <input type="hidden" name="FileAttachmentId" />
+                    <div class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="row text-center alert-message">
+                                @string.Format(LanguageResource.Confirm_ConfirmDelete, LanguageResource.Task_FileUrl.ToLower())
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-default" data-dismiss="modal" id="btn-cancel-delete">@LanguageResource.Confirm_No</span>
+                            <a class="btn btn-primary pull-right" id="btn-confirm-del-file" data-tab="">
+                                @LanguageResource.Confirm_Yes
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--Confirm Add new File-->
+    <div id="divAddnewFilePopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cancel-addnew"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@LanguageResource.Btn_AddRow @LanguageResource.Task_FileUrl</h4>
+                </div>
+                <form id="frmConfirmAddnewFile">
+                    <input type="hidden" name="ProductId" />
+                    <div class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="row text-center alert-message">
+                                @string.Format(LanguageResource.Confirm_ConfirmAddNew)
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-default" data-dismiss="modal" id="btn-cancel-addnew">@LanguageResource.Confirm_No</span>
+                            <a class="btn btn-primary pull-right" id="btn-confirm-addnew-file" data-tab="">
+                                @LanguageResource.Confirm_Yes
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+@*Script Connmadet*@
+<script>
+
+
+</script>
+@section scripts {
+    @*REGION: Use AngularJS for InsertProductProperties (Đặc tính nổi bật: chọn điểm trên hình)*@
+    @*<script src="~/Scripts/Product/PinImage.js"></script>*@
+    @*END REGION*@
+
+<script>
+        //set event btn-save, btn-save-continue for btn-edit
+        $(document).ready(function () {
+            //ISD.SearchInitial("@CurrentUrl");
+            ISD.EditInitial("@CurrentUrl");
+            $("select[name='CommonDate']").trigger('change');
+            //$("select[name='ParentCategoryId']").trigger('change');
+            $("select[name='CommonDateRouting']").trigger('change');
+            //$("#btn-searchBOM").trigger('click');
+
+            //Product.GetCategory();
+            //Product.GetAccessory();
+            //Product.ChangeColor();
+            //Product.PopupAddImage();
+
+            $('#tbl-BOM-Detail').DataTable({
+                pageLength: 25,
+                paging: true,
+                scrollX: true,
+                //fix bug squashed header
+                autoWidth: true,
+                initComplete: function (settings) {
+                    $(window).resize();
+                },
+                drawCallback: function (settings) {
+                    $(window).trigger('resize');
+                },
+                destroy: true,
+                language: {
+                    sProcessing: "Đang xử lý...",
+                    sLengthMenu: "Xem _MENU_ mục",
+                    sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                    sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                    sInfoPostFix: "",
+                    sSearch: "Tìm nội dung:",
+                    sUrl: "",
+                    oPaginate: {
+                        sFirst: "Đầu",
+                        sPrevious: "&laquo;",
+                        sNext: "&raquo;",
+                        sLast: "Cuối"
+                    },
+                    columnDefs: [
+                        { targets: [0, 1], visible: true },
+                        { targets: 'no-sort', visible: false }
+                    ],
+                    //"decimal": ".",
+                    //"thousands": ","
+                },
+                //"decimal": ".",
+                //"thousands": ",",
+                //"bLengthChange": false,
+                //"bInfo": true,
+                //"bPaginate" : false,
+                "sDom": '<"top"flp>rt<"bottom"i><"clear">',
+            });
+        });
+
+
+        //insert new row
+        $(document).on("click", ".btn-add-row", function () {
+            var index = $(this).data("row");
+            if (index == 0) {
+                Product.AddRow("InsertProductColor", "colorList", "color");
+            }
+            else if (index == 1) {
+                Product.AddRow("InsertProductProperties", "propertiesList", "properties");
+            }
+            else if (index == 2) {
+                Product.AddRow("InsertProductSpecifications", "specificationsList", "specifications");
+            }
+            else {
+                Product.AddRow("InsertProductAccessory", "accessoryList", "accessory");
+            }
+        });
+
+        //delete row
+        $(document).on("click", ".btn-del-product", function () {
+            var index = $(this).data("row");
+            var STT = $(this).data("id");
+
+            if (index == 0) {
+                Product.DeleteRow("DeleteProductColor", "colorList", STT);
+            }
+            else if (index == 1) {
+                Product.DeleteRow("DeleteProductProperties", "propertiesList", STT);
+            }
+            else if (index == 2) {
+                Product.DeleteRow("DeleteProductSpecifications", "specificationsList", STT);
+            }
+            else {
+                Product.DeleteRow("DeleteProductAccessory", "accessoryList", STT);
+            }
+        });
+
+        $(document).on("click", ".btn-seemore", function () {
+            var hasClass = $(".hidden-fields").hasClass("hidden");
+            if (hasClass == true) {
+                $(".hidden-fields").removeClass("hidden");
+                $(".btn-seemore").html("@LanguageResource.SeeLess");
+            }
+            else {
+                $(".hidden-fields").addClass("hidden");
+                $(".btn-seemore").html("@LanguageResource.SeeMore");
+            }
+        });
+
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            e.relatedTarget // previous active tab
+            e.target // newly activated tab
+
+            console.log("id of previous active tab: " + e.relatedTarget.id);
+            console.log("id of newly activated tab: " + e.target.id);
+
+            $(window).trigger('resize');
+        });
+
+        //export excel
+        $(document).on('click', '#btn-export-BOM', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var arr = {};
+            var data = $("#frmEdit").serializeArray();
+            $.each(data, function (index, val) {
+                var obj = {};
+                obj[val.name] = val.value;
+                $.extend(true, arr, obj);
+            });
+
+            //var obj = {};
+            //obj["ERPProductcode"] = $("#ERPProductCode").val();
+            //obj["CompanyCode"] = $("#CompanyCode").val();
+            //$.extend(true, arr, obj)
+
+            ISD.Download("/@CurrentUrl/ExportExcelBOM", arr);
+            $btn.button('reset');
+        });
+
+        $(document).on("change", "select[name='CommonDate']", function () {
+            var commonDate = $(this).val();
+            if (commonDate == 'Custom') {
+                var recentSearch = JSON.parse(localStorage.getItem('pageId-'));
+                if (recentSearch != null && recentSearch != undefined && recentSearch != "" && modeSearch == "Recently") {
+                    $('#FromDate').val(recentSearch.FromDate);
+                    $('#ToDate').val(recentSearch.ToDate);
+                    $("#frmEdit input[name='FromDate']").prop("readonly", false);
+                    $("#frmEdit input[name='ToDate']").prop("readonly", false);
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Utilities/CommonDate/Get",
+                        data: {
+                            CommonDate: commonDate
+                        },
+                        success: function (jsonData) {
+                            $("#frmEdit input[name='FromDate']").val(jsonData.FromDate);
+                            $("#frmEdit input[name='ToDate']").val(jsonData.ToDate);
+                            if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                                $("#frmEdit input[name='FromDate']").prop("readonly", true);
+                                $("#frmEdit input[name='ToDate']").prop("readonly", true);
+                            } else {
+                                $("#frmEdit input[name='FromDate']").prop("readonly", false);
+                                $("#frmEdit input[name='ToDate']").prop("readonly", false);
+                            }
+                        }
+                    });
+                }
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/Utilities/CommonDate/Get",
+                    data: {
+                        CommonDate: commonDate
+                    },
+                    success: function (jsonData) {
+                        $("#frmEdit input[name='FromDate']").val(jsonData.FromDate);
+                        $("#frmEdit input[name='ToDate']").val(jsonData.ToDate);
+                        if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                            $("#frmEdit input[name='FromDate']").prop("readonly", true);
+                            $("#frmEdit input[name='ToDate']").prop("readonly", true);
+                        } else {
+                            $("#frmEdit input[name='FromDate']").prop("readonly", false);
+                            $("#frmEdit input[name='ToDate']").prop("readonly", false);
+                        }
+                    }
+                });
+            }
+        });
+        //end: CommonDateRouting
+
+
+        $(document).on("change", "select[name='CommonDateRouting']", function () {
+            var commonDate = $(this).val();
+            if (commonDate == 'Custom') {
+                var recentSearch = JSON.parse(localStorage.getItem('pageId-'));
+                if (recentSearch != null && recentSearch != undefined && recentSearch != "" && modeSearch == "Recently") {
+                    $('#FromDateRouting').val(recentSearch.FromDate);
+                    $('#ToDateRouting').val(recentSearch.ToDate);
+                    $("#frmEdit input[name='FromDateRouting']").prop("readonly", false);
+                    $("#frmEdit input[name='ToDateRouting']").prop("readonly", false);
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Utilities/CommonDate/Get",
+                        data: {
+                            CommonDate: commonDate
+                        },
+                        success: function (jsonData) {
+                            $("#frmEdit input[name='FromDateRouting']").val(jsonData.FromDate);
+                            $("#frmEdit input[name='ToDateRouting']").val(jsonData.ToDate);
+                            if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                                $("#frmEdit input[name='FromDateRouting']").prop("readonly", true);
+                                $("#frmEdit input[name='ToDateRouting']").prop("readonly", true);
+                            } else {
+                                $("#frmEdit input[name='FromDateRouting']").prop("readonly", false);
+                                $("#frmEdit input[name='ToDateRouting']").prop("readonly", false);
+                            }
+                        }
+                    });
+                }
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/Utilities/CommonDate/Get",
+                    data: {
+                        CommonDate: commonDate
+                    },
+                    success: function (jsonData) {
+                        $("#frmEdit input[name='FromDateRouting']").val(jsonData.FromDate);
+                        $("#frmEdit input[name='ToDateRouting']").val(jsonData.ToDate);
+                        if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                            $("#frmEdit input[name='FromDateRouting']").prop("readonly", true);
+                            $("#frmEdit input[name='ToDateRouting']").prop("readonly", true);
+                        } else {
+                            $("#frmEdit input[name='FromDateRouting']").prop("readonly", false);
+                            $("#frmEdit input[name='ToDateRouting']").prop("readonly", false);
+                        }
+                    }
+                });
+            }
+        });
+        //end: CommonDateRouting
+        $("#tabBOM").click(function () {
+        $("#btn-searchBOM").trigger('click');
+    });
+        $("#tabRouting").click(function () {
+            $("#btn-searchRouting").trigger('click');
+        });
+        $("#tabDrawing").click(function () {
+            ReloadFileTable();
+        });
+        $("#btn-searchBOM").click(function () {
+            //xóa table routing
+            $("#divSearchResultRouting").css("display", "none");
+            $("#divSearchResultBOM").removeAttr("style");
+            PaggingServerSearchBOM("@CurrentUrl");
+
+        });
+        $("#btn-searchRouting").click(function () {
+            //$("#divSearchResultBOM").css("display", "none");
+            //$("#divSearchResultRouting").removeAttr("style");
+            PaggingServerSearchRouting("@CurrentUrl");
+
+        });
+
+        function PaggingServerSearchRouting(controller) {
+            //$(".dataTableServerSide").DataTable().clear().destroy(); // hủy table chờ insert table mới
+            $(".dataTableServerSideRouting").DataTable().clear().destroy(); // hủy table chờ insert table mới
+            //$('#table-header').remove();
+            $(".dataTableServerSideRouting")
+                .on('processing.dt', function (e, settings, processing) {
+                    LoadingDataTable(processing, '.dataTableServerSideRouting');
+                })
+                .DataTable({
+                    proccessing: true,
+                    serverSide: true,
+                    paging: true,
+                    scrollX: true,
+                    ajax: {
+                        type: 'POST',
+                        url: "/" + controller + "/_PaggingServerSearchRouting",
+                        contentType: 'application/json',
+                        data: function (d) {
+                            var arr = {};
+                            //data search
+                            var data = $("#frmEdit").serializeArray();
+                            $.each(data, function (index, val) {
+                                var obj = {};
+                                obj[val.name] = val.value;
+                                $.extend(true, arr, obj);
+                            });
+                            //data datatable (draw, start, length,...)
+                            $.extend(true, arr, d);
+                            return JSON.stringify(arr);
+                        }
+                    },
+                    columns: [
+                        //{
+                        //    "data": "STT",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //},
+                        {
+                            "data": "RoutingVersion",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "ProductCode",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "ProductName",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "OrderIndex",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "StepCode",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "StepName",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "ProductionGuide",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "EstimateComplete",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "RatedTime",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "MoldCode",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        {
+                            "data": "ProductPerPage",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+
+
+                    ],
+                    destroy: true,
+                    language: {
+                        sProcessing: "Đang xử lý...",
+                        sLengthMenu: "Xem _MENU_ mục",
+                        sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                        sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                        sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                        sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                        sInfoPostFix: "",
+                        sSearch: "Tìm nội dung:",
+                        sUrl: "",
+                        oPaginate: {
+                            sFirst: "Đầu",
+                            sPrevious: "&laquo;",
+                            sNext: "&raquo;",
+                            sLast: "Cuối"
+                        }
+                    },
+                    columnDefs: [
+                        { targets: [0, 1], visible: true },
+                        { targets: 'no-sort', visible: false }
+                    ],
+                    //  "sDom": '<"top"flp><"#custom-id">rt<"bottom"ip><"clear">',
+                    "sDom": '<"top"flp>rt<"bottom"ip><"clear">',
+                });
+            //  $('#custom-id').html('  ssa some info');
+
+        }
+        function PaggingServerSearchBOM(controller) {
+            $(".dataTableServerSide").DataTable().clear().destroy(); // hủy table chờ insert table mới
+            //$(".dataTableServerSideRouting").DataTable().clear().destroy(); // hủy table chờ insert table mới
+            //$('#table-header').remove();
+        $(".dataTableServerSide")
+            .on('processing.dt', function (e, settings, processing) {
+                LoadingDataTable(processing, '.dataTableServerSide');
+            })
+            .DataTable({
+                proccessing: true,
+                serverSide: true,
+                paging: true,
+                scrollX: true,
+                ajax: {
+                    type: 'POST',
+                    url: "/" + controller + "/_PaggingServerSearchBOM",
+                    contentType: 'application/json',
+                    data: function (d) {
+                        var arr = {};
+                        //data search
+                        var data = $("#frmEdit").serializeArray();
+                        $.each(data, function (index, val) {
+                            var obj = {};
+                            obj[val.name] = val.value;
+                            $.extend(true, arr, obj);
+                        });
+                        //data datatable (draw, start, length,...)
+                        $.extend(true, arr, d);
+                        return JSON.stringify(arr);
+                    }
+                },
+                columns: [
+                    //{
+                    //    "data": "STT",
+                    //    "className": "text-center",
+                    //    "orderable": true,
+                    //},
+                    {
+                        "data": "MATNR",
+                        "className": "text-center",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MAKTX",
+                        "className": "text-left",
+                        "orderable": true,
+
+                    },
+                    {
+                        "data": "WERKS",
+                        "orderable": true,
+                        "className": "text-center",
+
+                    },
+                    {
+                        "data": "MEINS",
+                        "className": "text-right",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MENGE",
+                        "className": "text-left",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MENGE",
+                        "className": "text-left",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MENGE",
+                        "className": "text-left",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MENGE",
+                        "className": "text-left",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MENGE",
+                        "className": "text-left",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MENGE",
+                        "className": "text-left",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "MENGE",
+                        "className": "text-left",
+                        "orderable": true,
+                    },
+
+                ],
+                destroy: true,
+                language: {
+                    sProcessing: "Đang xử lý...",
+                    sLengthMenu: "Xem _MENU_ mục",
+                    sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                    sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                    sInfoPostFix: "",
+                    sSearch: "Tìm nội dung:",
+                    sUrl: "",
+                    oPaginate: {
+                        sFirst: "Đầu",
+                        sPrevious: "&laquo;",
+                        sNext: "&raquo;",
+                        sLast: "Cuối"
+                    }
+                },
+                columnDefs: [
+                    { targets: [0, 1], visible: true },
+                    { targets: 'no-sort', visible: false }
+                ],
+                //  "sDom": '<"top"flp><"#custom-id">rt<"bottom"ip><"clear">',
+                "sDom": '<"top"flp>rt<"bottom"ip><"clear">',
+            });
+        //  $('#custom-id').html('  ssa some info');
+
+    }
+
+        LoadingDataTable = function (processing, element) {
+        var height = $(element + " tbody").height();
+        var width = $(element).width();
+        var ele = $(element).parent(".dataTables_scrollBody");
+        var processingElement = ele.find('.dataTables_processing');
+        if (processingElement.length == 0) {
+            $(element).parent(".dataTables_scrollBody").append('<div class="dataTables_processing"></div>');
+        }
+        $(processingElement).css('width', width + 10);
+        $(processingElement).css('padding-top', height / 2);
+        $(processingElement).css('display', processing ? 'block' : 'none');
+        if ($($("ul.nav-tabs li.active a").attr('href')).find('.dataTables_processing').length > 0 || $('.nav-tabs-custom').length == 0) {
+            //Loading content
+            var contentWidth = $(element).parent(".dataTables_scrollBody").width();
+            if (contentWidth > 0) {
+                $('.loading-content').css($(element).parent(".dataTables_scrollBody").position());
+                $('.loading-content').css('left', contentWidth / 2);
+                $('.loading-content').css('padding-top', height / 2);
+                $('.loading-content').css('display', $(element + ' tbody tr').length > 0 && processing ? 'block' : 'none');
+            }
+        }
+        }
+
+        //GetCategoryByBrand and check is PrintMold
+        $(document).on("change", "#ParentCategoryId", function () {
+        var ParentCategoryId = $("#ParentCategoryId").val();
+        var ProductId = $("#ProductId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Sale/Product/CheckChanged",
+            data: {
+                ParentCategoryId: ParentCategoryId,
+                ProductId: ProductId
+            },
+            success: function (jsonData) {
+                if (jsonData) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Sale/Product/GetCategoryByBrand",
+                        data: {
+                            ParentCategoryId: ParentCategoryId
+                        },
+                        success: function (jsonData) {
+                            $("#CategoryId").html("");
+                            if (jsonData.length > 0) {
+                                $.each(jsonData, function (index, value) {
+                                    $("#CategoryId").append("<option value='" + value.Value + "'>" + value.Text + "</option>");
+                                });
+                            }
+                            else {
+                                $("#CategoryId").append("<option value=''></option>");
+                            }
+                            $("#CategoryId").trigger("change");
+                        }
+                    });
+                }
+                else {
+                    alert("Thay đổi không phù hợp");
+                    //giữ nguyên ô chọn về ban đầu
+                    $("#ParentCategoryId").val(1);
+                    $("#CategoryId").val(1);
+                    $("#CategoryDetailId").val(1);
+                }
+            }
+        });
+
+    });
+        //GetCategoryDetailByCategory
+        $(document).on("change", "#CategoryId", function () {
+            var CategoryId = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Sale/Product/GetCategoryDetailByCategory",
+                data: {
+                    ParentCategoryId: CategoryId
+                },
+                success: function (jsonData) {
+                    $("#CategoryDetailId").html("");
+                    if (jsonData.length > 0) {
+                        $.each(jsonData, function (index, value) {
+                            $("#CategoryDetailId").append("<option value='" + value.Value + "'>" + value.Text + "</option>");
+                        });
+                    }
+                    else {
+                        $("#CategoryDetailId").append("<option value=''></option>");
+                    }
+                }
+            });
+        });
+
+        //add file
+        $(document).on("click", ".btn-add-file", function () {
+            loading2();
+
+            var ProductId = $("input[name='ProductId']").val();
+            $("#divAddFilePopup input[name='ProductId']").val(ProductId);
+
+            $("#divAddFilePopup").modal("show");
+            $("body").removeClass("loading2");
+        });
+        $(document).on("click", "#btn-confirm-add-file", function () {
+            var ProductId = $("input[name='ProductId']").val();
+            $("#divAddFilePopup").modal("hide");
+            ISD.SaveDataWithUrl("/Sale/Product/SaveFileAttachments", "#frmAddFile", this, "ReloadFileTable");
+            alertPopup(true, "Thêm mới bản vẽ thành công");
+            @*$.ajax({
+                type: "POST",
+                url: '/@CurrentUrl/CheckExistsFileAttachment',
+                data: {
+                    ProductId: ProductId
+                },
+                success: function (reponse) {
+                    if (reponse.Success == true) {
+                        $("#divAddFilePopup").modal("hide");
+                        $("#divAddnewFilePopup").modal("show");
+                    }
+                    else {
+                        $("#divAddFilePopup").modal("hide");
+                        ISD.SaveDataWithUrl("/Sale/Product/SaveFileAttachments", "#frmAddFile", this, "ReloadFileTable");
+                        alertPopup(true, "Thêm mới bản vẽ thành công");
+                    }
+                }
+            });*@
+        });
+        //$("#btn-confirm-addnew-file").click(function () {
+        //     $("#divAddnewFilePopup").modal("hide");
+        //    ISD.SaveDataWithUrl("/Sale/Product/SaveFileAttachments", "#frmAddFile", this, "ReloadFileTable");
+        //    alertPopup(true, "Thêm mới bản vẽ thành công");
+        //});
+
+        $(document).on("click", ".btn-del-file", function () {
+            var id = $(this).data("id");
+            $("#divDeleteFilePopup input[name='FileAttachmentId']").val(id);
+            $("#divDeleteFilePopup").modal("show");
+        });
+        //xóa file
+        $(document).on("click", "#btn-confirm-del-file", function () {
+            var FileAttachmentId = $("#divDeleteFilePopup input[name='FileAttachmentId']").val();
+
+            $.ajax({
+                type: "POST",
+                url: '/@CurrentUrl/DeleteFileAttachment',
+                data: {
+                    FileAttachmentId: FileAttachmentId
+                },
+                success: function (html) {
+                    $("#divDeleteFilePopup").modal("hide");
+                    if (html.Success == true) {
+                        ReloadFileTable();
+                    }
+                }
+            });
+        });
+
+         function ReloadFileTable() {
+            loading2();
+             var ProductId = $("input[name='ProductId']").val();
+            $.ajax({
+                type: "POST",
+                url: '/@CurrentUrl/GetProductAttactmentView',
+                data: {
+                    ProductId: ProductId,
+                    IsMold : "@ViewBag.IsMold"
+
+                },
+                success: function (html) {
+                    $(".div-list-file").html("");
+                    $(".div-list-file").html(html);
+                    document.getElementById("FileAttachment").value = null;
+                }
+            });
+        }
+</script>
+}
+
+
+

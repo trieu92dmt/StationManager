@@ -1,0 +1,78 @@
+﻿@model  List<CreateSubTaskViewModel>
+@{
+    string CurrentArea = ConstArea.Work;
+    string CurrentController = ConstController.ProductionOrder;
+    var TaskStatusList = (IEnumerable<SelectListItem>)ViewBag.TaskStatusList;
+}
+<table class="table table-bordered table-striped table-hover dataTable no-footer">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center">@LanguageResource.NumberIndex</th>
+            <th>@Html.DisplayName(LanguageResource.BatchCode)</th>
+            <th>@Html.DisplayName(LanguageResource.Task_StartDate)</th>
+            <th>@Html.DisplayName(LanguageResource.Task_EstimateEndDate)</th>
+            <th>@Html.DisplayName(LanguageResource.Duration)</th>
+            <th>@Html.DisplayName(LanguageResource.Status)</th>
+            <th>@Html.DisplayName(LanguageResource.Qty)</th>
+            <th>@Html.DisplayName("SL NVL YC")</th>
+            @*<th>@Html.DisplayName(LanguageResource.Actions)</th>*@
+
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i;}
+        @for (i = 0; i < Model.Count(); i++)
+        {
+        <tr class="detail-product-order">
+            @Html.Hidden("createSubTaskViewModels[" + i + "].WorkFlowId", Model[i].WorkFlowId)
+
+            <td class="text-center">@(i+1)@Html.Hidden("createSubTaskViewModels[" + i + "].TaskId", Model[i].TaskId, new { @id = "task-id-" + i })</td>
+            <td>@Html.TextBox("createSubTaskViewModels[" + i + "].Summary", Model[i].Summary, new { @id = "summary-" + i, @class = "form-control" })</td>
+            <td> @Html.TextBox("createSubTaskViewModels[" + i + "].StartDate", Model[i].StartDate, new { type = "date", @id = "start-date-" + i, @class = "form-control" })</td>
+            <td> @Html.TextBox("createSubTaskViewModels[" + i + "].EstimateEndDate", Model[i].EstimateEndDate, new { type = "date", @id = "estimate-end-date-" + i, @class = "form-control" })</td>
+            <td class="text-center">
+            </td>
+            <td class="task-status-name" id="task-status-name-@i">
+                <select Name="createSubTaskViewModels[@i].TaskStatusId" class="form-control with-search" id="task-status-id-@i">
+                    @foreach (var status in TaskStatusList)
+                    {
+                        if (Model[i].TaskStatusId == Guid.Parse(status.Value))
+                        {
+                            <option value="@status.Value">@status.Text</option>
+                        }
+                    }
+                    @foreach (var status in TaskStatusList)
+                    {
+                        if (Model[i].TaskStatusId != Guid.Parse(status.Value))
+                        {
+                            <option value="@status.Value">@status.Text</option>
+                        }
+                    }
+                </select>
+            </td>
+            <td>@Html.TextBox("createSubTaskViewModels[" + i + "].Qty", Model[i].Qty, new { @id = "ct-phan-bo-" + i, type = "number", @class = "form-control sl-phan-bo ct-phan-bo" })</td>
+            <td class="sl-nvl-yc" id="sl-nvl-yc-@i"> </td>
+        </tr>
+        }
+    <tr class="detail-product-order">
+        @Html.Hidden("createSubTaskViewModels[" + i + "].WorkFlowId", null, new {@class = "work-flow-id" })
+
+        <td class="text-center">@(i+1)</td>
+        <td>@Html.TextBox("createSubTaskViewModels[" + i + "].Summary", null, new { @id = "summary-" + i, @class = "form-control" })</td>
+        <td> @Html.TextBox("createSubTaskViewModels[" + i + "].StartDate", null, new { type = "date", @id = "start-date-" + i, @class = "form-control" })</td>
+        <td> @Html.TextBox("createSubTaskViewModels[" + i + "].EstimateEndDate", null, new { type = "date", @id = "estimate-end-date-" + i, @class = "form-control" })</td>
+        <td class="text-center">
+        </td>
+        <td class="task-status-name" id="task-status-name-@i">
+            <select Name="createSubTaskViewModels[@i].TaskStatusId" class="form-control with-search" id="task-status-id-@i">
+                @foreach (var status in TaskStatusList)
+                {
+                    <option value="@status.Value">@status.Text</option>
+                }
+            </select>        
+        </td>
+        <td>@Html.TextBox("createSubTaskViewModels[" + i + "].Qty", null, new { @id = "ct-phan-bo-" + i, type = "number", @class = "form-control sl-phan-bo ct-phan-bo" })</td>
+        <td class="sl-nvl-yc" id="sl-nvl-yc-@i"> </td>
+    </tr>
+    </tbody>
+</table>

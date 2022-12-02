@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BA7719D2-9D91-412B-9D93-E4FC6ACDABF6}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MES</RootNamespace>
+    <AssemblyName>MES</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44367</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AssignmentController.cs" />
+    <Compile Include="Controllers\ConsumableMaterialsDeliveryController.cs" />
+    <Compile Include="Controllers\DateClosedController.cs" />
+    <Compile Include="Controllers\HistoryCheckInOutController.cs" />
+    <Compile Include="Controllers\CheckInOutController.cs" />
+    <Compile Include="Controllers\LookUpProductionStageController.cs" />
+    <Compile Include="Controllers\ProductionManagementController.cs" />
+    <Compile Include="Controllers\ProductionOrderController.cs" />
+    <Compile Include="Controllers\QualityControlController.cs" />
+    <Compile Include="Controllers\SaleOrderHeader80Controller.cs" />
+    <Compile Include="Controllers\SaleOrderHeader100Controller.cs" />
+    <Compile Include="Controllers\ProductionRecordingController.cs" />
+    <Compile Include="Controllers\SyncDataFromSAPController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="MESAreaRegistration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\QualityControl.js" />
+    <Content Include="Scripts\ProductionRecording.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\ProductionManagement\Index.cshtml" />
+    <Content Include="Views\ProductionManagement\_RecordProduction.cshtml" />
+    <Content Include="Views\ProductionManagement\_SwitchingStages.cshtml" />
+    <Content Include="Views\ProductionRecording\_Search.cshtml" />
+    <Content Include="Views\ProductionRecording\Index.cshtml" />
+    <Content Include="Views\ProductionRecording\_UpdateBarCode.cshtml" />
+    <Content Include="Views\HistoryCheckInOut\Index.cshtml" />
+    <Content Include="Views\HistoryCheckInOut\_Search.cshtml" />
+    <Content Include="Views\CheckInOut\Index.cshtml" />
+    <Content Include="Views\CheckInOut\_SaveCheckIn.cshtml" />
+    <Content Include="Views\SaleOrderHeader100\Index.cshtml" />
+    <Content Include="Views\SaleOrderHeader100\_Search.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\_Search.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\Index.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\ViewSO.cshtml" />
+    <Content Include="Views\SaleOrderHeader100\ViewSO.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\_SaleOrderItemList.cshtml" />
+    <Content Include="Views\SaleOrderHeader100\_SaleOrderItemList.cshtml" />
+    <Content Include="Views\SaleOrderHeader100\ViewDetailSO.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\ViewDetailSO.cshtml" />
+    <Content Include="Views\SaleOrderHeader100\_GetBOMDetails.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\_GetBOMDetails.cshtml" />
+    <Content Include="Views\ProductionManagement\_RoutingSearch.cshtml" />
+    <Content Include="Views\ProductionManagement\_RoutingSearchResult.cshtml" />
+    <Content Include="Views\ProductionManagement\_RoutingResult.cshtml" />
+    <Content Include="Views\ProductionManagement\_RecordProductionDetail.cshtml" />
+    <Content Include="Views\Assignment\Index.cshtml" />
+    <Content Include="Views\ProductionOrder\Index.cshtml" />
+    <Content Include="Views\ProductionOrder\_Search.cshtml" />
+    <Content Include="Views\ProductionOrder\_PrintQRCode.cshtml" />
+    <Content Include="Views\Assignment\_LenhSanXuat.cshtml" />
+    <Content Include="Views\Assignment\_NhanVien.cshtml" />
+    <Content Include="Views\Assignment\_CongDoan.cshtml" />
+    <Content Include="Views\Assignment\_AddEmployee.cshtml" />
+    <Content Include="Views\Assignment\_AddEmployeeInner.cshtml" />
+    <Content Include="Views\ProductionManagement\_PopupConfirmCreateTask.cshtml" />
+    <Content Include="Views\ProductionRecording\_ProductionRecordingResultHeader.cshtml" />
+    <Content Include="Views\ProductionRecording\_ProductionOrderSearch.cshtml" />
+    <Content Include="Views\ProductionRecording\_ProductionRecordingSearch.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\_ReportBomDetailByListSO.cshtml" />
+    <Content Include="Views\ConsumableMaterialsDelivery\Index.cshtml" />
+    <Content Include="Views\ConsumableMaterialsDelivery\_AllotResult.cshtml" />
+    <Content Include="Views\ConsumableMaterialsDelivery\List.cshtml" />
+    <Content Include="Views\ConsumableMaterialsDelivery\_Search.cshtml" />
+    <Content Include="Views\ProductionManagement\_ProductionRecordhistory.cshtml" />
+    <Content Include="Views\ProductionManagement\_SwitchingStagesDetail.cshtml" />
+    <Content Include="Views\SaleOrderHeader100\_ScheduleLines.cshtml" />
+    <Content Include="Views\SaleOrderHeader80\_ScheduleLines.cshtml" />
+    <Content Include="Views\ProductionManagement\_ConfirmWorkCenter.cshtml" />
+    <Content Include="Views\ProductionManagement\_ConfirmWorkCenterDetail.cshtml" />
+    <Content Include="Views\ProductionManagement\GetDepartmentBy.cshtml" />
+    <Content Include="Views\ProductionManagement\_UsageQuantity.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\Index.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncRouting.cshtml" />
+    <Content Include="Views\ProductionManagement\_RecordProductionDetailTransfer.cshtml" />
+    <Content Include="Views\LookUpProductionStage\_ListRoutingInventer.cshtml" />
+    <Content Include="Views\LookUpProductionStage\_Search.cshtml" />
+    <Content Include="Views\LookUpProductionStage\Index.cshtml" />
+    <Content Include="Views\Assignment\_LenhSanXuatInner.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncBOM.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncMaterial.cshtml" />
+    <Content Include="Views\Assignment\_CongDoanInner.cshtml" />
+    <Content Include="Views\ProductionManagement\_RecordProductionRouting.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncPPOrder.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncPRPO.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncSO.cshtml" />
+    <Content Include="Views\ProductionManagement\_GetDepartmentAndWorkShop.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncSOTEXTPR.cshtml" />
+    <Content Include="Views\SyncDataFromSAP\_SyncPOTEXTSOPR.cshtml" />
+    <Content Include="Views\DateClosed\Index.cshtml" />
+    <Content Include="Views\DateClosed\_Search.cshtml" />
+    <Content Include="Views\QualityControl\Index.cshtml" />
+    <Content Include="Views\QualityControl\_PaggingServerSide.cshtml" />
+    <Content Include="Views\QualityControl\Edit.cshtml" />
+    <Content Include="Views\QualityControl\_QualityControlError.cshtml" />
+    <Content Include="Views\QualityControl\_AddRowError.cshtml" />
+    <Content Include="Views\QualityControl\_ImageInfo.cshtml" />
+    <Content Include="Views\QualityControl\_ListImage.cshtml" />
+    <Content Include="Views\QualityControl\_AddRowInfo.cshtml" />
+    <Content Include="Views\QualityControl\_QualityControlInfo.cshtml" />
+    <Content Include="Views\QualityControl\_QualityControlDetail.cshtml" />
+    <Content Include="Views\QualityControl\QRCode.cshtml" />
+    <Content Include="Views\MatchCard\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ISD.Constant\ISD.Constant.csproj">
+      <Project>{5101294b-3f78-48cb-aa08-f9f8e5d64583}</Project>
+      <Name>ISD.Constant</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ISD.Core\ISD.Core.csproj">
+      <Project>{F99715F3-AA9A-4BED-926D-31C43DE11C75}</Project>
+      <Name>ISD.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ISD.EntityModels\ISD.EntityModels.csproj">
+      <Project>{1ED555ED-4142-4359-BA1F-83F81FB65B5A}</Project>
+      <Name>ISD.EntityModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ISD.Extensions\ISD.Extensions.csproj">
+      <Project>{3FEBFFB2-7575-4C2C-9141-7A2EA86C48D3}</Project>
+      <Name>ISD.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ISD.Repositories\ISD.Repositories.csproj">
+      <Project>{5B7E2F34-1834-4DD1-88F7-ABEEDE5BF821}</Project>
+      <Name>ISD.Repositories</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ISD.Resources\ISD.Resources.csproj">
+      <Project>{86cb4271-113b-440e-970b-ca14c3131d08}</Project>
+      <Name>ISD.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ISD.ViewModels\ISD.ViewModels.csproj">
+      <Project>{9E6D4C80-C34C-462A-82B9-5837D81D996B}</Project>
+      <Name>ISD.ViewModels</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>1034</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:1083/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+  </Target>
+  <Import Project="..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

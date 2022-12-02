@@ -1,0 +1,22 @@
+﻿@model IEnumerable<AssignmentLenhSanXuatViewModel>
+
+<table id="tbl-lenh-san-xuat" class="table table-hover table-bordered table-striped">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center">@LanguageResource.NumberIndex</th>
+            <th>@LanguageResource.Assignment_LSXDT</th>
+            <th>@LanguageResource.Assignment_LSXD</th>
+            <th>@LanguageResource.Assignment_LSXC</th>
+            <th>@LanguageResource.Assignment_ProductCode</th>
+            <th>@LanguageResource.Assignment_ProductName</th>
+            <th>@LanguageResource.Assignment_ItemCode</th>
+            <th>@LanguageResource.Assignment_ItemName</th>
+            <th class="text-right" style="width:136px;">@LanguageResource.Assignment_AssignQty</th>
+            <th class="text-center">Hoàn thành công đoạn lớn</th>
+            <th class="text-center">@LanguageResource.Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @Html.Partial("_LenhSanXuatInner", Model)
+    </tbody>
+</table>

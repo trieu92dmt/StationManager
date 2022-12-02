@@ -1,0 +1,311 @@
+﻿@model SaleOrderItem100ViewModel
+
+@{
+    ViewBag.Title = LanguageResource.Btn_View + " " + LanguageResource.SaleOrderHeader100.ToLower();
+    string CurrentController = ConstController.SaleOrderHeader100;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+<style>
+    #uploadTable tr td {
+        vertical-align: top;
+    }
+</style>
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a href="/MES/SaleOrderHeader100/ViewSO/@Model.VBELN">Quay lại</a>
+        </small>
+    </h1>
+    <div class="pull-right">
+
+    </div>
+</div>
+
+<div class="content">
+    <div class="panel-group">
+        <div class="panel panel-default">
+
+            <div id="exTab1" class="nav-tabs-custom">
+                <div class="tab-content clearfix">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.VBELN)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.RequiredTextboxFor(p => p.VBELN, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.POSNR)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.RequiredTextboxFor(p => p.POSNR, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.MATNR)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.RequiredTextboxFor(p => p.MATNR, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.ItemDescription)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.RequiredTextboxFor(p => p.ItemDescription, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <ul class="nav nav-pills nav nav-tabs">
+                        <li class="active">
+                            <a href="#tab1" data-toggle="tab">Sales</a>
+                        </li>
+                        <li>
+                            <a href="#tab2" data-toggle="tab">Schedule lines</a>
+                        </li>
+                    </ul>
+                    <div class="tab-pane active" id="tab1">
+                        <div style="margin:10px">
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.BEDAE)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.BEDAE, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-2">
+                                        @Html.RequiredTextboxFor(p => p.UMVKZ, new { @type = "number", @readonly = "readonly" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        @Html.RequiredTextboxFor(p => p.MEINS, new { @readonly = "readonly" })
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p style="padding-top: 7px;text-align: center;"><-></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @Html.RequiredTextboxFor(p => p.UMVKN, new { @type = "number", @readonly = "readonly" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        @Html.RequiredTextboxFor(p => p.MEINS, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.KBMENG)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.KBMENG, new { @type = "number", @readonly = "readonly" })
+                                    </div>
+                                </div> 
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.KLMENG)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.KLMENG, new { @type = "number", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.WERKS)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.WERKS, new { @type = "number", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.SOBKZ)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.SOBKZ, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.PS_PSP_PNR_OUTPUT)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.PS_PSP_PNR_OUTPUT, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.ABGRU)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.ABGRU, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.GBSTA)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.GBSTA, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.ERNAM)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.ERNAM, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.ERDAT)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.RequiredTextboxFor(p => p.ERDAT, "{0:yyyy-MM-dd}", new { @type = "date", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <div class="col-md-12">
+                                        @Html.RequiredTextboxFor(p => p.ERZET, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.ZZTERM)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.ZZTERM, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.ZZTERM_DES)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.RequiredTextboxFor(p => p.ZZTERM_DES, new { @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="tab-pane" id="tab2">
+                        <div class="div-schedule-lines">
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+@section components {
+
+}
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "/@CurrentUrl/ScheduleLines",
+                data: { VBELN: "@Model.VBELN", POSNR:"@Model.POSNR" },
+                success: function (html) {
+                    $(".div-schedule-lines").html(html);
+                    ISD.PaggingTableScheduleLines(true)
+                },
+                error: function (xhr, status, error) {
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+
+
+        })
+
+        ISD.PaggingTableScheduleLines = function (isScrollX, pageLength) {
+            if (!pageLength) {
+                pageLength = 10;
+            }
+            $('.div-schedule-lines .dataTable').DataTable({
+                pageLength: pageLength,
+                paging: true,
+                scrollX: isScrollX === true ? true : false,
+                destroy: true,
+                language: {
+                    sProcessing: "Đang xử lý...",
+                    sLengthMenu: "Xem _MENU_ mục",
+                    sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                    sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                    sInfoPostFix: "",
+                    sSearch: "Tìm nội dung:",
+                    sUrl: "",
+                    oPaginate: {
+                        sFirst: "Đầu",
+                        sPrevious: "&laquo;",
+                        sNext: "&raquo;",
+                        sLast: "Cuối"
+                    },
+                    columnDefs: [
+                        { targets: [0, 1], visible: true },
+                        { targets: 'no-sort', visible: false }
+                    ],
+                    //"decimal": ".",
+                    //"thousands": ","
+                },
+                //"decimal": ".",
+                //"thousands": ",",
+                //"bLengthChange": false,
+                //"bInfo": true,
+                //"bPaginate" : false,
+                "sDom": '<"top"flp>rt<"bottom"i><"clear">',
+            });
+        }
+    </script>
+}
+
+
+
+

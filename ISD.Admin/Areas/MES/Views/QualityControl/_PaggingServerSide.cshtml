@@ -1,0 +1,29 @@
+﻿@model IEnumerable<QualityControlViewModel>
+@{
+    string CurrentController = ConstController.QualityControl;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+
+<table class="table table-bordered table-striped table-hover dataTableServerSide no-footer">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center isd-table-th-stt">@LanguageResource.NumberIndex</th>
+            <th class="text-center"></th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.SaleOrgCode)</th>
+            <th>@Html.DisplayNameFor(p => p.LSXSAP)</th>
+            <th>@Html.DisplayNameFor(p => p.DSX)</th>
+            <th>@Html.DisplayNameFor(p => p.LSXDT)</th>
+            <th>@Html.DisplayNameFor(p => p.ProductAttribute)</th>
+            <th>@Html.DisplayNameFor(p => p.ProductName)</th>
+            <th>@Html.DisplayNameFor(p => p.WorkCenterCode)</th>
+            <th>@Html.DisplayNameFor(p => p.Status)</th>
+            <th>@Html.DisplayNameFor(p => p.Result)</th>
+            <th>@Html.DisplayNameFor(p => p.ConfirmDate)</th>
+            <th>@Html.DisplayNameFor(p => p.QualityDate)</th>
+            <th class="text-center">@LanguageResource.Actions</th>
+        </tr>
+    </thead>
+</table>    
+

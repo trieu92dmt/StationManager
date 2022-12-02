@@ -1,0 +1,239 @@
+﻿@model BC20ReportViewModel
+@{
+    //Layout = "~/Views/Shared/_Layout_Report.cshtml";
+    Layout = "~/Views/Shared/_Layout_Report_TV.cshtml";
+    ViewBag.Title = LanguageResource.BC20Report;
+    string CurrentController = ConstController.BC20Report;
+    string CurrentArea = ConstArea.Reports;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+    //bool isHasPermissionEdit = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.Edit);
+}
+@section head {
+    <link href="~/Content/ApexChart/apexcharts.css" rel="stylesheet" />
+    <style>
+        thead.fixedHeader {
+            position: sticky;
+            top: -1px;
+        }
+
+        #table-employee {
+            position: relative;
+        }
+
+        table-primary, .table-primary > td, .table-primary > th {
+            background-color: #b8daff;
+        }
+
+        #table-employee > tbody > tr:nth-child(2n) > td, #table-employee > tbody > tr:nth-child(2n) > th {
+            background-color: #ADD8E6 !important;
+        }
+
+        #report {
+            height: 850px;
+        }
+    </style>
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title: @ViewBag.PhanXuong (@ViewBag.NgayHienTai)
+    </h1>
+    <div class="pull-right">
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body" id="report">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                    {
+                        @Html.HiddenFor(p => p.ReportDate)
+                        @Html.HiddenFor(p => p.IsViewAtCurrent)
+                        @*@Html.HiddenFor(p => p.WorkShop)
+                            @Html.HiddenFor(p => p.Department)*@
+                        if (Model.WorkShop != null && Model.WorkShop.Count > 0)
+                        {
+                            for (int i = 0; i < Model.WorkShop.Count; i++)
+                            {
+                                var workshop = Model.WorkShop[i];
+
+                                <input name="WorkShop[@i]" type="hidden" value="@workshop" />
+                            }
+                        }
+                        if (Model.Department != null && Model.Department.Count > 0)
+                        {
+                            for (int i = 0; i < Model.Department.Count; i++)
+                            {
+                                var department = Model.Department[i];
+
+                                <input name="Department[@i]" type="hidden" value="@department" />
+                            }
+                        }
+                    }
+
+                    @Html.Partial("_BC20ReportPartial")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="delete-confirm"></div>
+<div class="loading-modal"></div>
+
+@section components {
+
+}
+@section scripts {
+    <script src="~/Content/ApexChart/apexcharts.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadReport();
+            //tự load lại 1 tiếng 1 lần
+            window.setInterval(function () {
+                // call your function here
+                loadReport();
+            }, 3600000);  // Change Interval here to test. For eg: 5000 for 5 se
+        })
+        function loadReport() {
+             var data = $('#frmSearch').serialize();
+             getData(data);
+        }
+        function getData(data, html) {
+            //Get data
+            $.ajax({
+                type: "GET",
+                url: "/@CurrentUrl/GetData",
+                data: data,
+                success: function (jsonData) {
+                    if (jsonData.IsSuccess) {
+                        //if (html) {
+                        //    $('#report').html(html);
+                        //}
+                        //chart
+                        renderChart(jsonData.Data);
+                        //table
+                        $('#table-employee tbody').html('');
+                        if (jsonData.Data) {
+                            var nhanVienData = jsonData.Data.NhanVien;
+                            if (nhanVienData && nhanVienData.length > 0) {
+                                $.each(nhanVienData, function (i, val) {
+                                    var htmlContent = '<tr>';
+                                    htmlContent += '<td class="text-center">' + val.ThoiGianDisplay + '</td>';
+                                    htmlContent += '<td>' + val.PhanXuong + '</td>';
+                                    htmlContent += '<td>' + val.To + '</td>';
+                                    htmlContent += '<td>' + val.CongNhan + '</td>';
+                                    htmlContent += '<td class="text-right">' + val.NangSuatDuKienTheoRoutingDisplay + '</td>';
+                                    htmlContent += '<td class="text-right">' + val.NangSuatTheoSoNLDDisplay + '</td>';
+                                    htmlContent += '<td class="text-right">' + val.NangSuatLuyKeDenHienTaiDisplay + '</td>';
+                                    htmlContent += '</tr>';
+                                    $('#table-employee tbody').append(htmlContent);
+                                });
+                                //15 giây scroll một lần
+                                setInterval(function () {
+                                    var $container = $('#div-table');
+                                    var $employee1 = $('#div-table tbody tr').eq(1);
+                                    var $scrollTop = $container.scrollTop();
+                                    //$scrollTo = $('#table-employee tbody tr').eq(10)
+                                    if ($scrollTop + $container.innerHeight() >= $container[0].scrollHeight) {
+                                        $container.animate({
+                                            scrollTop: 0
+                                        }, 2000);
+                                    }
+                                    else {
+                                        $container.animate({
+                                            //scrollTop: $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
+                                            scrollTop: $scrollTop === 0 ? 700 : $scrollTop + 700
+                                        }, 2000);
+                                    }
+                                }, 15000);
+
+                            }
+                        }
+                    }
+                    else {
+                        alertPopup(false, jsonData.Message);
+                    }
+                },
+                error: function (err) {
+
+                }
+            });
+
+        }
+        //Xử lý chart
+        function renderChart(jsonData) {
+            $("#chart").empty();
+            var options = {
+                series: [{
+                    //data: [44, 55, 41, 64, 22, 43, 21]
+                    name: 'Kế hoạch',
+                    data: jsonData.SoPhutKeHoach && jsonData.SoPhutKeHoach.length > 0 ? jsonData.SoPhutKeHoach : [],
+                }, {
+                    /* data: [53, 32, 33, 52, 13, 44, 32]*/
+                    name: 'Thực tế',
+                    data: jsonData.SoPhutThucTe && jsonData.SoPhutThucTe.length > 0 ? jsonData.SoPhutThucTe : [],
+                }],
+                chart: {
+                    type: 'bar',
+                    /* height: jsonData.TenDong.length > 5 ? 800 : 500*/
+                    height: 450,
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        dataLabels: {
+                            position: 'top',
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    //offsetX: -6,
+                    offsetX: 60,
+                    style: {
+                        fontSize: '12px',
+                        colors: ['#000'],
+                        /*fontWeight: 'bold',*/
+                    },
+                    formatter: function (val, opts) {
+                        return formatCurrencyWithComma(val);
+                    },
+                },
+                stroke: {
+                    show: true,
+                    width: 1,
+                    colors: ['#fff']
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
+                },
+                xaxis: {
+                    /*categories: [2001, 2002, 2003, 2004, 2005, 2006, 2007],*/
+                    categories: jsonData.TenDong && jsonData.TenDong.length > 0 ? jsonData.TenDong : [],
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            fontSize: '12px',
+                            minWidth: 0,
+                            maxWidth: 160,
+                        }
+                    }
+                }
+            };
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+        }
+        $(document).ajaxStop(function () {
+            $("body").removeClass("loading2");
+            $(".with-search").select2();
+
+            $("#btn-search").button("reset");
+        });
+    </script>
+
+}
+

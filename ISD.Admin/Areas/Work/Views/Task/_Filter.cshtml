@@ -1,0 +1,296 @@
+﻿@model TaskSearchViewModel
+
+<div class="form-horizontal">
+    <div class="panel-group">
+        <div class="panel panel-default panel-search">
+            @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+            {
+                @Html.Hidden("KanbanId", (Guid?)ViewBag.KanbanId)
+                @Html.Hidden("CustomerTypeCode", ConstProfileType.Account)
+                @Html.Hidden("Type", (string)ViewBag.Type)
+            <div class="panel-body">
+
+                @*<div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.LSXDT)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(p => p.LSXDT, new { @class = "form-control text-box single-line" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.DSX)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(p => p.DSX, new { @class = "form-control text-box single-line" })
+                            </div>
+                        </div>
+                    </div>
+                    </div>*@
+                <div class="row">
+
+
+                    @if (ViewBag.Type == ConstWorkFlow.LSXC)
+                    {
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.Property2)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(p => p.Property2, new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.ProductCode)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(p => p.ProductCode, new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.Summary)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(p => p.Summary, new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.TaskStatusId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(p => p.TaskStatusId, null,LanguageResource.Dropdownlist_All,new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.isUpdateSerial)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("isUpdateSerial", new List<SelectListItem>(){
+                                                    new SelectListItem(){Text = LanguageResource.Dropdownlist_All, Value = ""},
+                                                    new SelectListItem(){Text = "Có", Value = "true"},
+                                                    new SelectListItem(){Text =  "Không", Value = "false"}
+                                                }, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.isUpdateQuatity)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("isUpdateQuatity", new List<SelectListItem>(){
+                                                    new SelectListItem(){Text = LanguageResource.Dropdownlist_All, Value = ""},
+                                                    new SelectListItem(){Text = "Có", Value = "true"},
+                                                    new SelectListItem(){Text =  "Không", Value = "false"}
+                                                }, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.isViewQtyHasValue)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("isViewQtyHasValue", new List<SelectListItem>(){
+                                                    new SelectListItem(){Text =  "LSX số lượng > 0", Value = "true", Selected = true},
+                                                    new SelectListItem(){Text = LanguageResource.Dropdownlist_All, Value = ""},
+                                                }, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                        </div>*@
+
+                        @*<div class="row" id="search-qty">
+                            <div class="col-md-5">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.FromQty)
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.TextBoxFor(p => p.FromQty, new { @class = "form-control text-box single-line" })
+                                        <span class="field-validation-error from-qty" data-valmsg-replace="true" style="display: none;">
+                                            <span class="from-qty-message" generated="true" style="color: orange;">
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @Html.TooltipLabelFor(p => p.ToQty)
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.TextBoxFor(p => p.ToQty, new { @class = "form-control text-box single-line" })
+                                        <span class="field-validation-error to-qty" data-valmsg-replace="true" style="display: none;">
+                                            <span class="to-qty-message" generated="true" style="color: orange;">
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    }
+                </div>
+                
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <div class="label-wrapper">
+                                    <label class="control-label">@LanguageResource.MES_StartDate_tooltip</label>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownList("CommonDate2", null, new { @class = "form-control with-search ddl-common-date", @data_id = "Start", @id = "start-date", Name = "StartCommonDate" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row Start">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.StartFromDate)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.StartFromDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.StartToDate)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.StartToDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row hidden hidden_EstimateEndDate">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <div class="label-wrapper">
+                                    <label class="control-label">@LanguageResource.Task_Search_EstimateEndDate</label>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownList("CommonDate2", null, new { @class = "form-control with-search ddl-common-date", @data_id = "EstimateEnd", @id = "estimate-end-date", Name = "EstimateEndCommonDate" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row hidden hidden_EstimateEndDate EstimateEnd">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.EstimateEndFromDate)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.EstimateEndFromDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.EstimateEndToDate)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.EstimateEndToDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row hidden hidden_EndDate">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <div class="label-wrapper">
+                                    <label class="control-label">@LanguageResource.Task_Search_EndDate</label>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownList("CommonDate2", null, new { @class = "form-control with-search ddl-common-date", @data_id = "End", @id = "end-date", Name = "EndCommonDate" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row hidden hidden_EndDate End">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.EndFromDate)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.EndFromDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.TooltipLabelFor(p => p.EndToDate)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.EndToDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-3 col-md-offset-4 input-group">
+                            <select class="form-control" id="SearchTemplateId" name="SearchTemplateId">
+                                <option value="">@LanguageResource.Dropdownlist_RecentSearch</option>
+                            </select>
+                            <span class="input-group-btn" style="padding-right:25px;padding-left: 10px;">
+                                <a class="btn btn-delete-frmSearch display-none" style="color: coral;" title="Xoá mẫu tìm kiếm"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></a>
+                                <a class="btn btn-save-frmSearch" title="Lưu mẫu tìm kiếm"><i class="fa fa-thumb-tack fa-lg" aria-hidden="true"></i></a>
+                            </span>
+                            @HtmlExtensions.SearchButton()
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>

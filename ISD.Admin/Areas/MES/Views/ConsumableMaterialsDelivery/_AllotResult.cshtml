@@ -1,0 +1,62 @@
+﻿@model IEnumerable<AllotmentResultViewModel>
+
+<table id="tbl-lenh-san-xuat" class="table table-hover table-bordered table-striped">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center">@LanguageResource.NumberIndex</th>
+            <th>@LanguageResource.Allotment_LSXSAP</th>
+            <th>@LanguageResource.Allotment_ProductCode</th>
+            <th>@LanguageResource.Allotment_ProductDetailCode</th>
+            <th>@LanguageResource.Allotment_ProductDetailName</th>
+            <th class="text-right">@LanguageResource.Allotment_ProductDetailActualQty</th>
+            <th>@LanguageResource.Allotment_BOM</th>
+            <th>@LanguageResource.Allotment_Unit</th>
+            <th class="text-right">@LanguageResource.Allotment_BOMQty</th>
+            <th>@LanguageResource.Allotment_StepCode</th>
+            <th class="text-right">@LanguageResource.Allotment_ActualQty</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            int i = 0, k = -1;
+            foreach (var item in Model)
+            {
+                i++;
+                k++;
+                <tr>
+                    <td class="text-center">
+                        @i
+                        <input type="hidden" name="detail[@k].LSXSAP" value="@item.LSXSAP"/>
+                        <input type="hidden" name="detail[@k].ProductCode" value="@item.ProductCode"/>
+                        <input type="hidden" name="detail[@k].ProductDetailCode" value="@item.ProductDetailCode"/>
+                        <input type="hidden" name="detail[@k].ProductDetailName" value="@item.ProductDetailName"/>
+                        <input type="hidden" name="detail[@k].ProductDetailActualQty" value="@item.ProductDetailActualQty"/>
+                        <input type="hidden" name="detail[@k].BOM" value="@item.BOMCode"/>
+                        <input type="hidden" name="detail[@k].BOMUnit" value="@item.BOMUnit"/>
+                        <input type="hidden" name="detail[@k].BOMQty" value="@item.BOMQty"/>
+                        <input type="hidden" name="detail[@k].StepName" value="@item.StepName"/>
+                        <input type="hidden" name="detail[@k].ActualQty" value="@item.ActualQty"/>
+                    </td>
+                    <td>@Html.DisplayFor(p => item.LSXSAP)</td>
+                    <td>@Html.DisplayFor(p => item.ProductCode)</td>
+                    <td>@Html.DisplayFor(p => item.ProductDetailCode)</td>
+                    <td>@Html.DisplayFor(p => item.ProductDetailName)</td>
+                    <td class="text-right">@Html.DisplayFor(p => item.ProductDetailActualQty)</td>
+                    <td>@Html.DisplayFor(p => item.BOM)</td>
+                    <td>@Html.DisplayFor(p => item.BOMUnit)</td>
+                    <td class="text-right">@Html.DisplayFor(p => item.BOMQty)</td>
+                    <td>@Html.DisplayFor(p => item.StepName)</td>
+                    <td class="text-right">@Html.DisplayFor(p => item.ActualQty)</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="11" class="text-center">@LanguageResource.NoRecordFound</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

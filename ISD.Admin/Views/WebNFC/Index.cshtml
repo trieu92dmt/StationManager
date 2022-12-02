@@ -1,0 +1,324 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sample illustrating the use of Web NFC.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web NFC Sample</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #ffffff;
+            box-sizing: border-box;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        }
+
+        h1 {
+            margin-bottom: -0.3em;
+        }
+
+        h2 {
+            margin-top: 2em;
+        }
+
+        h3 {
+            margin-bottom: -0.2em;
+            margin-top: 2em;
+        }
+
+        .pageIcon {
+            height: 2.3em;
+            float: left;
+            margin-right: 0.5em;
+        }
+
+        .availability {
+            margin-bottom: 2em;
+        }
+
+        .output {
+            background-color: #f0f0f0;
+            border-radius: 0.75em;
+            display: block;
+            margin: 0.5em;
+            padding: 0.5em;
+        }
+
+        #status {
+            margin: .5em 0;
+            font-style: italic;
+        }
+
+        #log {
+            margin: .5em 0;
+            white-space: pre-wrap;
+        }
+
+            #status:empty, #log:empty, #content:empty {
+                display: none;
+            }
+
+        .highlight {
+            border-radius: 0.75em;
+            border: 1px solid #f0f0f0;
+            display: block;
+            margin: 0.5em;
+            overflow-x: auto;
+            padding: 0.5em;
+        }
+
+        code {
+            font-family: Inconsolata, Consolas, monospace;
+        }
+
+        .c {
+            color: #999988;
+            font-style: italic
+        }
+    </style>
+
+
+</head>
+<body>
+    <div>
+        <div id="divAlertSuccess" class="alert alert-success alert-dismissable" style="display: none">
+            <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertSuccess">×</button>
+            <div class="alert-message">
+            </div>
+        </div>
+
+        <div id="divAlertWarning" class="alert alert-warning alert-dismissable" style="display: none">
+            <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarning">×</button>
+            <div class="alert-message">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Web NFC Sample</h1>
+
+        <h3>Background</h3>
+        <p>
+            Web NFC nhằm mục đích cung cấp cho các trang web khả năng đọc và ghi vào thẻ NFC khi chúng được đưa đến gần thiết bị của người dùng (thường là 5-10 cm, 2-4 inch). Phạm vi hiện tại được giới hạn ở NDEF, một định dạng tin nhắn nhị phân nhẹ. Các hoạt động I/O mức thấp (ví dụ: ISO-DEP, NFC-A/B, NFC-F) và Mô phỏng thẻ dựa trên máy chủ (HCE) không được hỗ trợ trong phạm vi hiện tại.
+        </p>
+
+        <button class="btn btn-primary" id="scanButton">Scan</button>
+        <button class="btn btn-info" id="writeButton">Write</button>
+
+        <h3>Live Output</h3>
+        <div id="output" class="output">
+            <div id="content"></div>
+            <div id="status"></div>
+            <pre id="log"></pre>
+        </div>
+        <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+        <script>
+            var ChromeSamples = {
+                log: function () {
+                    var line = Array.prototype.slice.call(arguments).map(function (argument) {
+                        return typeof argument === 'string' ? argument : JSON.stringify(argument);
+                    }).join(' ');
+
+                    document.querySelector('#log').textContent += line + '\n';
+                },
+
+                clearLog: function () {
+                    document.querySelector('#log').textContent = '';
+                },
+
+                setStatus: function (status) {
+                    document.querySelector('#status').textContent = status;
+                },
+
+                setContent: function (newContent) {
+                    var content = document.querySelector('#content');
+                    while (content.hasChildNodes()) {
+                        content.removeChild(content.lastChild);
+                    }
+                    content.appendChild(newContent);
+                }
+            };
+
+            // Add a global error event listener early on in the page load, to help ensure that browsers
+            // which don't support specific functionality still end up displaying a meaningful message.
+            window.addEventListener('error', function (error) {
+                if (ChromeSamples && ChromeSamples.setStatus) {
+                    console.error(error);
+                    ChromeSamples.setStatus(error.message + ' (Your browser may not support this feature.)');
+                    error.preventDefault();
+                }
+            });
+
+            if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)) {
+                // Let's log a warning if the sample is not supposed to execute on this
+                // version of Chrome.
+                if (89 > parseInt(RegExp.$1)) {
+                    ChromeSamples.setStatus('Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.');
+                }
+            }
+
+            log = ChromeSamples.log;
+
+            if (!("NDEFReader" in window)) {
+                ChromeSamples.setStatus(
+                    "Web NFC is not available.\n" +
+                    'Please make sure the "Experimental Web Platform features" flag is enabled on Android.'
+                );
+            }
+
+            scanButton.addEventListener("click", async () => {
+                log("User clicked scan button");
+
+                try {
+                    const ndef = new NDEFReader();
+                    await ndef.scan();
+                    log("> Scan started");
+
+                    ndef.addEventListener("readingerror", () => {
+                        log("Argh! Cannot read data from the NFC tag. Try another one?");
+                    });
+
+                    //ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                    //    log(`> Serial Number: ${serialNumber}`);
+                    //    log(`> Records Data: (${message})`);
+                    //    log(`> Records: (${message.records.length})`);
+                    //});
+
+                    ndef.onreading = event => {
+                        const message = event.message;
+                        const serialNumber = event.serialNumber;
+
+                        log(`> Serial Number: ${serialNumber}`);
+                        log(`> Records: (${message.records.length})`);
+                        //Lưu lại serial của thẻ vừa đọc được vào DB
+                        SaveSerialTag(serialNumber);
+
+                        for (const record of message.records) {
+                            log("Record type:  " + record.recordType);
+                            log("MIME type:    " + record.mediaType);
+                            log("Record id:    " + record.id);
+                            switch (record.recordType) {
+                                case "text":
+                                    const textDecoder = new TextDecoder(record.encoding);
+                                    log(`Text: ${textDecoder.decode(record.data)} (${record.lang})`);
+                                    break;
+                                case "url":
+                                    log(`URL: ${decoder.decode(record.data)}`);
+                                    break;
+                                case "mime":
+                                    if (record.mediaType === "application/json") {
+                                        log(`JSON: ${JSON.parse(decoder.decode(record.data))}`);
+                                    }
+                                    else if (record.mediaType.startsWith("image/")) {
+                                        const blob = new Blob([record.data], { type: record.mediaType });
+
+                                        const img = document.createElement("img");
+                                        img.src = URL.createObjectURL(blob);
+                                        img.onload = () => window.URL.revokeObjectURL(this.src);
+
+                                        document.body.appendChild(img);
+                                    }
+                                    else {
+                                        log(`Media not handled`);
+                                    }
+                                    break;
+                                default:
+                                    log(`Record not handled`);
+                            }
+                        }
+                    };
+                } catch (error) {
+                    log("Argh! " + error);
+                }
+            });
+
+            writeButton.addEventListener("click", async () => {
+                log("User clicked write button");
+
+                try {
+                    const ndef = new NDEFReader();
+                    await ndef.write("Hello world!");
+                    log("> Message written");
+                } catch (error) {
+                    log("Argh! " + error);
+                }
+            });
+        </script>
+        <script>
+
+            $(document).ready(function () {
+                //Chuyển qua https
+                if (location.protocol !== 'https:') {
+                    location.replace(`https:${location.href.substring(location.protocol.length)}`);
+                }
+            })
+
+            function SaveSerialTag(serialNumber) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Work/CheckInOut/SaveCheckIn",
+                    data: { SeriaTag: serialNumber },
+                    success: function (response) {
+                        if (response.Success = true) {
+                            alertPopup(true, response.Message);
+                        } else {
+                            alertPopup(false, response.Message);
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err.responseText);
+                    }
+                });
+            }
+
+
+            function setMessage(div, message) {
+                if (Array.isArray(message)) {
+                    var arr = [];
+                    $.each(message, function (i, item) {
+                        //Code cũ
+                        //arr[i] = { err: item.ErrorMessage }
+                        if (item.ErrorMessage != undefined && item.ErrorMessage != "") {
+                            arr[i] = { err: item.ErrorMessage }
+                        }
+                        else {
+                            arr[i] = { err: item }
+                        }
+                        $(div + " .alert-message").append("<li>" + arr[i].err + "</li>");
+                    });
+                }
+                else {
+                    $(div + " .alert-message").html(message);
+                }
+            }
+
+            function alertPopup(isSuccess, message) {
+                if (isSuccess == true) {
+                    $("#divAlertSuccess .alert-message").html("");
+                    setMessage("#divAlertSuccess", message);
+
+                    $('#divAlertSuccess').show();
+                    setTimeout(function () {
+                        $('#divAlertSuccess').hide();
+                    }, 5000)
+                }
+                else if (isSuccess == false) {
+                    $("#divAlertWarning .alert-message").html("");
+                    setMessage("#divAlertWarning", message);
+                    $('#divAlertWarning').show();
+                }
+
+                $("html, body").animate({ scrollTop: 0 }, "fast");
+            }
+        </script>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,388 @@
+﻿@using ISD.Extensions
+@{
+    ViewBag.Title = LanguageResource.SyncDataFromSAP;
+    string CurrentArea = ConstArea.MES;
+    string CurrentController = ConstController.SyncDataFromSAP;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+    //bool isHasPermissionCreate = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.Create);
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="divBody">
+                        <!--Routing-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">ROUTING</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncRouting")
+                            </div>
+
+                        </div>
+                        <!--BOM-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">BOM</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncBOM")
+                            </div>
+
+                        </div>
+                        <!--Material-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">Material</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncMaterial")
+                            </div>
+
+                        </div>
+
+                        <!--PP Order-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">PP Order</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncPPOrder")
+                            </div>
+
+                        </div>
+
+                        <!--PR PO MIGO-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">PR PO MIGO</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncPRPO")
+                            </div>
+
+                        </div>
+
+                        <!--SO-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">Sale Order</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncSO")
+                            </div>
+
+                        </div>
+
+                        <!--SOTEXT_PR-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">SOTEXT_PR</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncSOTEXTPR")
+                            </div>
+
+                        </div>
+
+                        <!--POTEXT_SO_PR-->
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 class="box-title">POTEXT_SO_PR</h5>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Partial("_SyncPOTEXTSOPR")
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            ISD.ShowMessage(window.location.href);
+            numericInput();
+        });
+
+        function numericInput() {
+            $('.numeric-input').inputFilter(function (value) {
+                return /^-?\d*$/.test(value);
+            });
+        }
+        //Xử lý nút "Đồng bộ Routing"
+        $(document).on('click', '#btn-sync-routing', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSync').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncRouting',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+         //Xử lý nút "Đồng bộ BOM"
+        $(document).on('click', '#btn-sync-bom', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSyncBOM').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncBOM',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+        //Xử lý nút "Đồng bộ Material"
+        $(document).on('click', '#btn-sync-material', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSyncMaterial').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncMaterial',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+         //Xử lý nút "Đồng bộ PP Order"
+        $(document).on('click', '#btn-sync-pporder', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSyncPPOrder').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncPPOrder',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+        //Xử lý nút "Đồng bộ PR PO"
+        $(document).on('click', '#btn-sync-pr-po', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSyncPRPO').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncPRPO',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+        //Xử lý nút "Đồng bộ SO"
+        $(document).on('click', '#btn-sync-so', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSyncSO').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncSO',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+        //Xử lý nút "Đồng bộ SOTEXT_PR"
+        $(document).on('click', '#btn-sync-sotext-pr', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSyncSOTEXTPR').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncSOTEXT_PR',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+        //Xử lý nút "Đồng bộ POTEXT_SO_PR"
+        $(document).on('click', '#btn-sync-potext-so-pr', function () {
+            var $btn = $(this);
+            $btn.button('loading');
+            var data = $('#frmSyncPOTEXTSOPR').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/@CurrentUrl/SyncPOTEXT_SO_PR',
+                data: data,
+                success: function (jsonData) {
+                    $btn.button('reset');
+                    if (jsonData.Success) {
+                        window.location.href = "/@CurrentUrl" + "?message=" + jsonData.Data;
+                    } else {
+                        alertPopup(false, jsonData.Data);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    $btn.button('reset');
+                    alertPopup(false, xhr.responseText);
+                }
+            });
+        });
+
+        //Xử lý nhập thông tin đồng bộ PP Order
+        $(document).on('input', '#LSXDT', function () {
+            if ($(this).val()) {
+                $('#PPOrder').prop('readonly', true);
+            }
+            else {
+                $('#PPOrder').prop('readonly', false);
+            }
+        });
+        $(document).on('input', '#PPOrder', function () {
+            if ($(this).val()) {
+                $('#LSXDT').prop('readonly', true);
+            }
+            else {
+                $('#LSXDT').prop('readonly', false);
+            }
+        });
+    </script>
+}

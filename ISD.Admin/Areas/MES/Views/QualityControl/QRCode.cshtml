@@ -1,0 +1,254 @@
+﻿@model QualityControlViewModel
+@{
+    ViewBag.Title = LanguageResource.QualityControl;
+    string CurrentController = ConstController.QualityControl;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-qrcode">
+                <div class="panel-body">
+                    <div class="message-function">
+                        Vui lòng quét thẻ treo!
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default panel-data hidden">
+                <div class="panel-body">
+                    <div id="divSearchResult">
+                        <table class="table table-bordered table-striped table-hover dataTableServerSide no-footer">
+                            <thead class="isd-table-header">
+                                <tr>
+                                    <th class="text-center">@LanguageResource.Actions</th>
+                                    <th class="text-center"></th>
+                                    <th>@Html.DisplayNameFor(p => p.WorkCenterCode)</th>
+                                    <th class="text-center">@Html.DisplayNameFor(p => p.SaleOrgCode)</th>
+                                    <th>@Html.DisplayNameFor(p => p.LSXSAP)</th>
+                                    <th>@Html.DisplayNameFor(p => p.DSX)</th>
+                                    <th>@Html.DisplayNameFor(p => p.LSXDT)</th>
+                                    <th>@Html.DisplayNameFor(p => p.ProductCode)</th>
+                                    <th>@Html.DisplayNameFor(p => p.ProductName)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Status)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Result)</th>
+                                    <th>@Html.DisplayNameFor(p => p.ConfirmDate)</th>
+                                    <th>@Html.DisplayNameFor(p => p.QualityDate)</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="box-footer hidden">
+    <div id="logMsg">
+        <b>Log:</b>
+    </div>
+</div>
+<div class="loading-modal"></div>
+<div class="delete-confirm"></div>
+@section components{
+    <div class="modal fade" id="divFunctionModal" role="dialog">
+
+    </div>
+    <div class="modal fade" id="divImageModal" role="dialog">
+
+    </div>
+}
+@section scripts {
+    <script src="~/Scripts/WebScaner/BarcodeReader.js"></script>
+    <script src="~/Scripts/WebScaner/ScanQRCode.js"></script>
+    <script>
+        $(document).ready(function () {
+            ISD.EditInitial("@CurrentUrl");
+            ISD.ShowMessage(window.location.href);
+
+            openButtonClicked();
+        });
+
+        function PaggingServerSide(controller, QRCode) {
+            $(".dataTableServerSide").DataTable().clear().destroy();
+            $(".dataTableServerSide")
+                .on('processing.dt', function (e, settings, processing) {
+                    ISD.LoadingDataTable(processing, '.dataTableServerSide');
+                })
+                .DataTable({
+                    proccessing: true,
+                    serverSide: true,
+                    paging: true,
+                    scrollX: true,
+                    ajax: {
+                        type: 'POST',
+                        url: "/" + controller + "/_PaggingServerSide",
+                        contentType: 'application/json',
+                        data: function (d) {
+                            var arr = {};
+                            //data search
+                            var obj = {};
+                            obj["QRCode"] = QRCode;
+                            $.extend(true, arr, obj);
+
+                            //data datatable (draw, start, length,...)
+                            $.extend(true, arr, d);
+
+                            return JSON.stringify(arr);
+                        }
+                    },
+                    columns: [
+                        {
+                            "data": "QualityControlId",
+                            "orderable": false,
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                htmlContent = '';
+                                /* Phiếu QC */
+                                htmlContent += '<span> <a href="#" class="btn btn-primary btn-qc" data-id="' + row["QualityControlId"] + '" onclick="$(this).button(\'loading\')">QC</a></span>';
+
+                                return htmlContent;
+                            }
+                        },
+                       {
+                            "data": "Color",
+                            "orderable": true,
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                if (cellData != "") {
+                                    $(td).css("background-color", rowData["BackgroundColor"]);
+                                    $(td).css("color", rowData["Color"]);
+                                }
+                            },
+                            "render": function (data, type, row) {
+                                return "";
+                            },
+                            "width": "30px",
+                        }, {
+                            "data": "WorkCenterCode",
+                            "orderable": false,
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "SaleOrgCode",
+                            "orderable": false,
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "LSXSAP",
+                            "orderable": false,
+                        },
+                        {
+                            "data": "DSX",
+                            "orderable": false,
+                        },
+                        {
+                            "data": "LSXDT",
+                            "orderable": false,
+                        },
+                        {
+                            "data": "ProductCode",
+                            "orderable": false,
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "ProductName",
+                            "orderable": false,
+                        },
+                       
+                        {
+                            "data": "Status",
+                            "orderable": false,
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    if (data == true) {
+                                        return "Đã kiểm tra";
+                                    }
+                                    else {
+                                        return "Chưa kiểm tra";
+                                    }
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "Result",
+                            "orderable": false,
+                        },
+                        {
+                            "data": "ConfirmDate",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                // If display or filter data is requested, format the date
+                                if (type === "display" || type === "filter") {
+                                    if (data != null) {
+                                        return moment(data).format("DD/MM/YYYY");
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                        {
+                            "data": "QualityDate",
+                            "className": "text-center",
+                            "render": function (data, type, row) {
+                                // If display or filter data is requested, format the date
+                                if (type === "display" || type === "filter") {
+                                    if (data != null) {
+                                        return moment(data).format("DD/MM/YYYY");
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                    ],
+                    destroy: true,
+                    language: {
+                        sProcessing: "Đang xử lý...",
+                        sLengthMenu: "Xem _MENU_ mục",
+                        sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                        sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                        sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                        sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                        sInfoPostFix: "",
+                        sSearch: "Tìm nội dung:",
+                        sUrl: "",
+                        oPaginate: {
+                            sFirst: "Đầu",
+                            sPrevious: "&laquo;",
+                            sNext: "&raquo;",
+                            sLast: "Cuối"
+                        }
+                    },
+                    columnDefs: [
+                        { targets: [0, 1], visible: true },
+                        { targets: 'no-sort', visible: false }
+                    ],
+                    "sDom": '<"top"flp>rt<"bottom"ip><"clear">',
+            });
+        }
+
+
+        function onBarcodeDataReady(data, type, time) {
+            loading2();
+            let textData = GetValueFieldInData(data, "T2");
+            //barcodeDataText.value = decode_utf8(textData);
+            //readTimeText.value = time;
+            let Barcode = GetValueFieldInData(data, "T1");
+            PaggingServerSide("@CurrentUrl", data);
+            $(".panel-data").removeClass("hidden");
+        }
+    </script>
+    @Scripts.Render("~/Areas/MES/Scripts/QualityControl")
+
+}
+
+

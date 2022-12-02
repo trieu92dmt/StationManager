@@ -1,0 +1,257 @@
+﻿@model DivisionOfTaskViewModel
+@using ISD.Core
+
+@{
+    var SubTask = (IEnumerable<TaskViewModel>)ViewBag.subtask;
+
+    string CurrentController = ConstController.Timeline;
+    string CurrentArea = ConstArea.Work;
+    //Cấu hình thuộc tính
+    var configList = (List<WorkFlowConfigModel>)ViewBag.WorkFlowConfig;
+    //var fieldCodeList = (List<string>)ViewBag.WorkFlowConfigCode;
+    //var hiddenFieldList = (List<string>)ViewBag.WorkFlowHiddenField;
+}
+<div class="modal-header bg-primary">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="">TẠO ĐỢT SẢN XUẤT</h4>
+
+</div>
+<div class="modal-body">
+    <ul class="nav nav-tabs" id="content-detail">
+        <li class="active"><a href="#chi-tiet-dot" data-toggle="tab">Chi tiết đợt</a></li>
+        <li><a href="#cong-doan-cua-dot" data-toggle="tab">Công đoạn của đợt</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="active tab-pane" id="chi-tiet-dot" style="margin-top: 7px;">
+            <div id="divAlertWarningTask" class="alert alert-warning alert-dismissable divPopupMessage" style="display: none">
+                <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarning">×</button>
+                <div class="alert-message">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-horizontal">
+                    <div class="form-group row">
+                        <!--Lệnh sản xuất cha-->
+                        <div class="col-md-3">
+                            <div class="col-md-5">
+                                <div class="label-wrapper">
+                                    @Html.LabelByPropertyNameFor(p => p.Property5, LanguageResource.LSXDT)
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.RequiredTextboxFor(p => p.Property5, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <!--Ngày bắt đầu-->
+                        <div class="col-md-3">
+                            <div class="col-md-5">
+                                <div class="label-wrapper">
+                                    @Html.LabelByPropertyNameFor(p => p.StartDate_LSXDT, LanguageResource.MES_StartDate)
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.RequiredTextboxFor(p => p.StartDate_LSXDT, "{0:yyyy-MM-dd}", new { type = "date", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <!--Ngày Kết thúc-->
+                        <div class="col-md-3">
+                            <div class="col-md-5">
+                                <div class="label-wrapper">
+                                    @Html.LabelByPropertyNameFor(p => p.EstimateEndDate_LSXDT, LanguageResource.MES_EstimatedDate)
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.RequiredTextboxFor(p => p.EstimateEndDate_LSXDT, "{0:yyyy-MM-dd}", new { type = "date", @readonly = "readonly" })
+
+                            </div>
+                        </div>
+                        <!--Thời gian-->
+                        <div class="col-md-3">
+                            <div class="col-md-5">
+                                <div class="label-wrapper">
+                                    @Html.LabelByPropertyNameFor(p => p.Duration_LSXDT, LanguageResource.LSXDT_Duration)
+                                </div>
+                            </div>
+                            <div class="col-md-7 ">
+                                @Html.RequiredTextboxFor(p => p.Duration_LSXDT, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <!--Lệnh sản xuất con-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+                                    @Html.LabelByPropertyNameFor(p => p.Summary, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<TaskViewModel, string>(p1 => p1.Summary)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.Summary, new { @readonly = "readonly" })
+                                </div>
+                            </div>*@
+                        <!--Ngày bắt đầu-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+                                    @Html.LabelByPropertyNameFor(p => p.StartDate, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<TaskViewModel, DateTime?>(p1 => p1.StartDate)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.StartDate, "{0:yyyy-MM-dd}", new { type = "date", @readonly = "readonly" })
+                                </div>
+                            </div>*@
+                        <!--Ngày Kết thúc-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+                                    @Html.LabelByPropertyNameFor(p => p.EstimateEndDate, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<TaskViewModel, DateTime?>(p1 => p1.EstimateEndDate)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.EstimateEndDate, "{0:yyyy-MM-dd}", new { type = "date", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="col-md-5">
+                                    <div class="label-wrapper">
+                                        @Html.LabelByPropertyNameFor(p => p.Duration, LanguageResource.Duration)
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.Duration, new { @readonly = "readonly" })
+
+                                </div>
+                            </div>*@
+                    </div>
+                    <div class="form-group row">
+                        <!--Mã thành phẩm-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+                                    @Html.LabelByPropertyNameFor(p => p.ProductCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<TaskViewModel, string>(p1 => p1.ProductCode)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.ProductCode, new { @disabled = "disabled" })
+                                </div>
+                            </div>*@
+                        <!--Tên Thành phẩm-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+
+                                    @Html.LabelByPropertyNameFor(p => p.ProductName, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<TaskViewModel, string>(p1 => p1.ProductName)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.ProductName, new { @readonly = "readonly" })
+                                </div>
+                            </div>*@
+                        <!--Số lượng kế hoạch-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+
+                                    @Html.LabelByPropertyNameFor(p => p.Qty, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<TaskViewModel, int?>(p1 => p1.Qty)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.Qty, new { type = "number", @readonly = "readonly" })
+                                </div>
+                            </div>*@
+                        <!--Số lượng thực tế-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+                                    <div class="label-wrapper">
+                                        @Html.LabelByPropertyNameFor(p => p.ActualNumber, LanguageResource.ActualNumber)
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.ActualNumber, new { type = "number", @readonly = "readonly" })
+                                </div>
+                            </div>*@
+
+                    </div>
+                    <div class="form-group row">
+
+                        <!--Nguyên vật liệu yêu cầu-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+                                    <div class="label-wrapper">
+                                        @Html.LabelByPropertyNameFor(p => p.MaterialsRequired, LanguageResource.MaterialsRequired)
+
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.MaterialsRequired, new { type = "number", @readonly = "readonly" })
+                                </div>
+                            </div>*@
+                        <!--Nguyên vật liệu đã nhận-->
+                        @*<div class="col-md-3">
+                                <div class="col-md-5">
+                                    <div class="label-wrapper">
+                                        @Html.LabelByPropertyNameFor(p => p.MaterialsReceived, LanguageResource.MaterialsReceived)
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.MaterialsReceived, new { type = "number", @readonly = "readonly" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="col-md-5">
+                                    <div class="label-wrapper">
+                                        @Html.LabelByPropertyNameFor(p => p.PercentComplete, LanguageResource.PercentComplete)
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.RequiredTextboxFor(p => p.PercentComplete, new { type = "number", @readonly = "readonly" })
+                                </div>
+                            </div>*@
+
+                        <!--Trạng thái-->
+                        <div class="col-md-3">
+                            <div class="col-md-5">
+                                @Html.LabelByPropertyNameFor(p => p.TaskStatusId, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<TaskViewModel, Guid>(p1 => p1.TaskStatusId)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-7">
+                                @Html.RequiredTextboxFor(p => p.TaskStatusName, new { @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <button class='btn btn-primary btn-them-dot float-right'>Thêm đợt</button>
+
+                    </div>
+                    <div class="form-group">
+                        <form id="frm-tach-dot">
+                            @Html.Hidden("ParentTaskId", Model.TaskId)
+                            @Html.Hidden("WorkFlowId", Model.WorkFlowId)
+
+                            <div class="detail-production-order-control">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="cong-doan-cua-dot" style="margin-top: 7px;">
+            <div class="row">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <form id="frm-cong-doan">
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="detail-step-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+    <button type="button" class="btn btn-primary" id="btn-save-tach-dot">Lưu</button>
+</div>

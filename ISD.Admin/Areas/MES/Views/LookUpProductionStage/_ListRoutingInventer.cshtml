@@ -1,0 +1,12 @@
+﻿@model ProductionOrderDetailViewModel
+
+@if (Enumerable.Count(ViewBag.ProductAttributes)  > 0)
+{
+    @Html.RequiredDropDownListFor(x => x.ProductAttributes, null, null, new { @clas = "with-search" })
+}
+else
+{
+    <select class="form-control">
+        <option value=""> -- Sản phẩm này không tồn tại hoặc không có chi tiết -- </option>
+    </select>
+}

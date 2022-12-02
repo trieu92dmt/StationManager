@@ -1,0 +1,110 @@
+﻿@*@model List<DivisionOfTaskViewModel>*@
+@model List<DivisionOfTaskByLSXDTViewModel>
+@{
+    var StepList = (SelectList)ViewBag.StepList;
+}
+
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="detail-step">
+        @{//index đợt
+            int i = -1;
+            //index step
+            int j = 0, k = -1;
+        }
+        @foreach (var item in Model)
+        {
+            i++;
+            <div class="panel panel-default" style="padding-top:0 !important;">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        <!--Thông tin đợt-->
+                        <a href='#collapse-@item.STTDot' class="accordion-toggle" data-parent="#accordion" data-toggle="collapse">
+                            <span>Đợt </span><span class="panel-stt-dot">@item.STTDot</span>
+                        </a>
+                        <input type="hidden" name="DotSXStepList[@i].DotName" id="DotSXStepList_DotName_@i" value="@item.DotName" class="form-control dot-step-name" />
+                        <input type="hidden" name="DotSXStepList[@i].DotId" id="DotSXStepList_DotId_@i" value="@item.DotId" class="dot-step-id" />
+                        <input type="hidden" name="DotSXStepList[@i].STTDot" id="DotSXStepList_STTDot_@i" value="@item.STTDot" class="stt-dot-step" />
+                        @*<div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <div class="col-md-6">
+                                            <div class="label-wrapper">
+
+                                                <div class="label-wrapper"><label class="control-label">Đợt</label></div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="hidden" name="DotSXStepList[@i].DotName" id="DotSXStepList_DotName_@i" value="@item.DotName" class="form-control dot-step-name" />
+                                            <input type="hidden" name="DotSXStepList[@i].DotId" id="DotSXStepList_DotId_@i" value="@item.DotId" class="dot-step-id" />
+                                            <input type="hidden" name="DotSXStepList[@i].STTDot" id="DotSXStepList_STTDot_@i" value="@item.STTDot" class="stt-dot-step" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                    </h5>
+                </div>
+                <div class="panel-body" style="padding: 0 !important;">
+                    <div id='collapse-@item.STTDot' class='panel-collapse collapse'>
+                        <div class="panel-body">
+                            <!--Danh sách công đoạn-->
+                            @if (StepList != null && StepList.Count() > 0)
+                            {
+
+                                var checkedValueAll = string.Empty;
+                                //Nếu danh sách công đoạn đã lưu = danh sách lấy từ cấu hình => check all
+                                if (item.StepList != null && item.StepList.Count > 0 && item.StepList.Count == StepList.Count())
+                                {
+                                    checkedValueAll = "checked";
+                                }
+                                <div class="cong-doan-dot" id="cong-doan-dot-@i">
+                                    <table class="table table-bordered table-striped table-hover no-footer" style="width: 50% !important;">
+                                        <thead class="isd-table-header">
+                                            <tr>
+                                                <th class="text-center">
+                                                    <input type="checkbox" name="DotSXStepList[@i].IsCheckAll" id="DotSXStepList_IsCheckAll_@i" value="True" class="cong-doan-check-all" data-row="@i" @checkedValueAll />
+                                                    <span>@LanguageResource.Btn_Choose</span>
+                                                </th>
+                                                <th>Công đoạn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @{ int l = 0;}
+                                            @foreach (var itemChildren in StepList)
+                                            {
+                                                l++;
+                                                j++;
+                                                k++;
+                                                var checkedValue = string.Empty;
+                                                if (item.StepList != null && item.StepList.Count > 0 && item.StepList.Where(p => p == itemChildren.Value).FirstOrDefault() != null)
+                                                {
+                                                    checkedValue = "checked";
+                                                }
+                                                <tr class="StepProductOrder">
+                                                    <td class="text-center">
+                                                        <input type="hidden" name="CongDoanList[@k].STTDot" id="CongDoanList_STTDot_@k" value="@item.STTDot" class="stt-dot-cong-doan" />
+                                                        <input type="hidden" name="CongDoanList[@k].StepCode" id="CongDoanList_StepCode_@k" value="@itemChildren.Value" class="cong-doan-code" />
+                                                        <input type="checkbox" name="CongDoanList[@k].IsChoosen" id="CongDoanList_IsChoosen_@k" value="True" class="cong-doan-is-choosen" @checkedValue />
+                                                    </td>
+                                                    <td>
+                                                        @itemChildren.Text
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                        <tfoot></tfoot>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+}

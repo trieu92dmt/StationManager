@@ -1,0 +1,744 @@
+﻿@using Newtonsoft.Json;
+@using Reports.Options;
+@using System.Drawing;
+@using ISD.Repositories;
+
+@model IEnumerable<BC00ReportViewModel>
+
+@{
+    var pivotSetting = (List<FieldSettingModel>)ViewBag.PivotSetting;
+    var search = (BC00ReportViewModel)ViewBag.Search;
+    var NumberOfFreezeColumn = (int?)ViewBag.NumberOfFreezeColumn;
+    UtilitiesRepository repo = new UtilitiesRepository();
+    string fileName = repo.RemoveSign4VietnameseString(LanguageResource.BC00Report.ToUpper()).Replace(" ", "_").Replace("/", "_");
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+}
+
+@Html.DevExpress().GridView(settings =>
+{
+    settings.Name = "gridViewBC01";
+    settings.KeyFieldName = "BC01Id";
+    settings.Width = Unit.Percentage(100);
+    settings.CallbackRouteValues = new { Controller = "BC00Report", Action = "BC00ReportPivotGridPartial", jsonReq = JsonConvert.SerializeObject(search) };
+    //settings.SettingsEditing.BatchUpdateRouteValues = new { Controller = "BC00Report", Action = "BatchEditingUpdateModel" };
+
+    //Command Column: CRUD
+    //settings.CommandColumn.Visible = true;
+    //settings.CommandColumn.ShowCancelButton = true;
+    //settings.CommandColumn.ShowDeleteButton = true;
+    //settings.CommandColumn.ShowNewButtonInHeader = false;
+    //settings.CommandColumn.ShowNewButton = true;
+    settings.CommandColumn.Width = Unit.Pixel(90);
+    settings.CommandColumn.FixedStyle = GridViewColumnFixedStyle.Left;
+    settings.CommandColumn.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+    //Button sửa
+    //settings.CommandColumn.CustomButtons.Add(new GridViewCommandColumnCustomButton() { ID = "btn-edit-row", Text = "Sửa" });
+    //settings.ClientSideEvents.CustomButtonClick = "function(s, e) {{ if(e.buttonID == 'btn-edit-row') { handleEditReportModalPopup(s, e) } }}";
+    //Button thêm mới
+    /*
+    settings.CommandColumn.SetHeaderTemplateContent(c =>
+    {
+        Html.DevExpress().Button(btnSettings =>
+        {
+            btnSettings.Name = "btn-create-new";
+            btnSettings.Text = "Thêm mới";
+            btnSettings.RenderMode = ButtonRenderMode.Link;
+            btnSettings.UseSubmitBehavior = false;
+            //btnSettings.ClientSideEvents.Click = "function(s, e) {  $('#edit-report-modal').modal('show'); }";
+        }).GetHtml();
+    });
+    */
+
+
+    //Fixed Column
+    settings.Styles.FixedColumn.BackColor = Color.LightYellow;
+    settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+
+    //Fixed Header
+    settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+    settings.Settings.VerticalScrollableHeight = 500;
+
+    settings.SettingsPager.Mode = GridViewPagerMode.ShowAllRecords;
+
+    //Paging
+    //settings.SettingsPager.Position = PagerPosition.TopAndBottom;
+    //settings.SettingsPager.FirstPageButton.Visible = true;
+    //settings.SettingsPager.LastPageButton.Visible = true;
+    //settings.SettingsPager.PageSizeItemSettings.Visible = true;
+    //settings.SettingsPager.PageSizeItemSettings.Items = new string[] { "10", "20", "50", "100", "200" };
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "UTCT";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Ưu tiên chỉnh tay (UT1)";
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.NumberType = SpinEditNumberType.Integer;
+            p.MinValue = 1;
+            p.MaxValue = 10000;
+        });
+        if (NumberOfFreezeColumn > 0)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 70;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "UTHT";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Ưu tiên hệ thống (UT2)";
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.NumberType = SpinEditNumberType.Integer;
+            p.MinValue = 1;
+            p.MaxValue = 10000;
+        });
+        if (NumberOfFreezeColumn > 0)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 70;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "STT";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Thứ tự ưu tiên";
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.NumberType = SpinEditNumberType.Integer;
+            p.MinValue = 1;
+            p.MaxValue = 10000;
+        });
+        if (NumberOfFreezeColumn > 0)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 70;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "LSX";
+        c.Width = Unit.Pixel(160);
+        c.Caption = "LSXĐT";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 1)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 160;
+    });
+
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "DSX";
+        c.Width = Unit.Pixel(160);
+        c.Caption = "Đợt LSXĐT";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 2)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 160;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "VBELN";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "SO";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 3)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "PYCSXDT";
+        c.Width = Unit.Pixel(160);
+        c.Caption = "PYCSXDT";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 4)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 200;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "POSNR";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "SO Line";
+        c.ReadOnly = true;
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        if (NumberOfFreezeColumn > 5)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "WBS";
+        c.Width = Unit.Pixel(160);
+        c.Caption = "WBS";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 6)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 200;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "LSXSAP";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "LSX SAP";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 7)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "ProductCode";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Mã sản phẩm";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 8)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "MType";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Material Type";
+        c.ReadOnly = true;
+        if (NumberOfFreezeColumn > 9)
+        {
+            c.FixedStyle = GridViewColumnFixedStyle.Left;
+        }
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Quantity";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Số lượng kế hoạch";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n0";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        
+        c.ExportWidth = 100;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "LSXDNK";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "SL NK lũy kế theo đợt";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n0";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 100;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "SLCL";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "SL còn lại";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n0";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 100;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Unit";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "ĐVT";
+        c.ReadOnly = true;
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Volumn";
+        c.Width = Unit.Pixel(80);
+        //c.Caption = "Volumn (Thể tích)";
+        c.Caption = "M3 tinh";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n3";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "QuantityProduct";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "SL SP/ Thùng";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n0";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "AssignResponsibility";
+        c.Width = Unit.Pixel(200);
+        c.Caption = "Nhân sự phụ trách TDSX + XH";
+        c.ReadOnly = true;
+        c.ExportWidth = 200;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "NumberSP";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Số mã SP";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n0";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "SLKHB";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "SLKH (cái/Bộ)";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n0";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "SLKH";
+        c.Width = Unit.Pixel(100);
+        //c.Caption = "SLKH (Cont)";
+        c.Caption = "Số cont kế hoạch";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n3";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "NK";
+        c.Width = Unit.Pixel(100);
+        //c.Caption = "Đã NK";
+        c.Caption = "Số cont lũy kế NK";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n3";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Remaining";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Số cont còn lại";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n3";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "ContDate";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Số Cont / Ngày";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n3";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "DeliveryDate";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Ngày yêu cầu giao hàng";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Stock";
+        c.Width = Unit.Pixel(240);
+        c.Caption = "Công đoạn thực hiện";
+        c.ReadOnly = true;
+        c.ExportWidth = 240;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "WorkShop";
+        c.Visible = false;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "WorkShopName";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Phân xưởng";
+        c.ReadOnly = true;
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "SOCreateOn";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Ngày tạo SO";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "SchedulelineDeliveryDate";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Ngày dự kiến giao hàng";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "SchedulelineDeliveryDateUpdate";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Ngày giao hàng điều chỉnh";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "PRDeliveryDate";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Ngày về trên PR";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Leadtime";
+        c.Width = Unit.Pixel(90);
+        c.Caption = "Leadtime";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n3";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 90;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "StartDate";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Bắt đầu dự kiến";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "FinishDate";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Kết thúc dự kiến";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "StartDateChange";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Bắt đầu điều chỉnh";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "FinishDateChange";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Kết thúc điều chỉnh";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "dd/MM/yyyy";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "NumberDaysDelay";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Số ngày trễ";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "n0";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "CompletedPercent";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "% Hoàn thành";
+        c.ReadOnly = true;
+        c.EditorProperties().SpinEdit(p =>
+        {
+            p.DisplayFormatString = "{0:n2} %";
+        });
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "ErrorDepartment";
+        c.Visible = false;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "ErrorDepartmentName";
+        c.Caption = "Phòng ban lỗi";
+        c.Width = Unit.Pixel(240);
+        c.EditorProperties().ComboBox(p =>
+        {
+            p.TextField = "name";
+            p.ValueField = "id";
+            p.ValueType = typeof(Guid);
+            p.DataSource = (List<ISDSelectGuidItem>)ViewBag.ErrorDepartment;
+        });
+        c.ExportWidth = 240;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "ErrorGroup";
+        c.Visible = false;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "ErrorGroupName";
+        c.Caption = "Nhóm lỗi";
+        c.Width = Unit.Pixel(240);
+        c.EditorProperties().ComboBox(p =>
+        {
+            p.TextField = "name";
+            p.ValueField = "id";
+            p.ValueType = typeof(Guid);
+            p.DataSource = (List<ISDSelectGuidItem>)ViewBag.ErrorGroup;
+        });
+        c.ExportWidth = 240;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "ErrorDetail";
+        c.Width = Unit.Pixel(160);
+        c.Caption = "Mô tả chi tiết lỗi";
+        c.ExportWidth = 160;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Status";
+        c.Width = Unit.Pixel(160);
+        c.Caption = "Tình trạng";
+        c.ExportWidth = 160;
+    });
+
+    //settings.Columns.Add("Discontinued", MVCxGridViewColumnType.CheckBox);
+    settings.CellEditorInitialize = (s, e) =>
+    {
+        ASPxEdit editor = (ASPxEdit)e.Editor;
+        editor.ValidationSettings.Display = Display.None;
+    };
+    settings.ClientSideEvents.BeginCallback = "OnBeginGridCallback";
+
+    //Filter
+    settings.Settings.ShowHeaderFilterButton = true;
+    settings.SettingsPopup.HeaderFilter.Height = 200;
+    settings.SettingsPopup.HeaderFilter.SettingsAdaptivity.MinHeight = 300;
+    var headerFilterMode = GridHeaderFilterMode.CheckedList;
+    foreach (GridViewDataColumn column in settings.Columns)
+    {
+        column.SettingsHeaderFilter.Mode = headerFilterMode;
+    }
+
+    //Export excel
+    if (Model != null && Model.Count() > 0)
+    {
+        settings.SettingsExport.EnableClientSideExportAPI = true;
+        settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.WYSIWYG;
+
+        settings.Toolbars.Add(t =>
+        {
+            t.SettingsAdaptivity.Enabled = true;
+            t.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+            t.Items.Add(GridViewToolbarCommand.ExportToXls);
+            t.Items.Add(GridViewToolbarCommand.ExportToXlsx);
+        });
+
+        //File name
+        settings.SettingsExport.FileName = fileName;
+        //Page header
+        //settings.SettingsExport.ReportHeader = LanguageResource.BC00Report.ToUpper();
+        settings.SettingsExport.PageHeader.Left = LanguageResource.BC00Report.ToUpper();
+        settings.SettingsExport.PageHeader.Font.Size = 16;
+        settings.SettingsExport.PageHeader.Font.Bold = true;
+        //Column header
+        settings.SettingsExport.Styles.Header.BackColor = ColorTranslator.FromHtml("#C6EFCE");
+        settings.SettingsExport.Styles.Header.ForeColor = ColorTranslator.FromHtml("#000000");
+        settings.SettingsExport.Styles.Header.Font.Size = 11;
+        settings.SettingsExport.Styles.Header.Font.Bold = true;
+        //Cell
+        settings.SettingsExport.Styles.Cell.Font.Size = 11;
+    }
+
+
+    Reports.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).GetHtml()

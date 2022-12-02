@@ -1,0 +1,46 @@
+﻿@model ChangeTaskStatusViewModel
+
+<div class="modal-dialog modal-dialog-sm">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Cập nhật công đoạn</h4>
+        </div>
+        <form id="frmUpdateStatus">
+            @Html.HiddenFor(p => p.TaskId)
+            <div class="form-horizontal">
+                <div class="modal-body">
+                    <div id="divAlertPopupWarning" class="alert alert-warning alert-dismissable" style="display: none">
+                        <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertPopupWarning">×</button>
+                        <div class="alert-message">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-xs-3">
+                                @Html.TooltipLabelFor(p => p.FromTaskStatusId)
+                            </div>
+                            <div class="col-xs-8">
+                                @Html.DropDownListFor(p => p.FromTaskStatusId, null, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-3">
+                                @Html.TooltipLabelFor(p => p.ToTaskStatusId)
+                            </div>
+                            <div class="col-xs-8">
+                                @Html.DropDownListFor(p => p.ToTaskStatusId, null, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="btn btn-default" data-dismiss="modal">@LanguageResource.Btn_Cancel</span>
+                    <a class="btn btn-primary pull-right" id="btn-save">
+                        @LanguageResource.Btn_Save
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

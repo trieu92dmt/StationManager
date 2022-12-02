@@ -1,0 +1,153 @@
+﻿<div class="modal fade" id="create-report-modal" role="dialog" aria-labelledby="createReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="createReportModalLabel">@LanguageResource.Create @LanguageResource.BC00Report</h5>
+            </div>
+            <div class="modal-body ui-front">
+                <div class="alert alert-warning alert-dismissable modalPopupAlert" style="display: none;">
+                    <button type="button" class="alert-close close" aria-hidden="true">×</button>
+                    <div class="modal-popup-alert-message">
+                    </div>
+                </div>
+
+                <div class="form-horizontal" style="padding: 10px;">
+                    <form id="frm-create-report">
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="LSXDTCreate" class="col-form-label">LSXDT:</label>
+                                @*<input type="text" class="form-control" autocomplete="off" name="LSXDTCreate" id="LSXDTCreate" />*@
+                                <div class="input-group input-group-required">
+                                    <input class="form-control text-box single-line" data-val="true" data-val-required="Vui lòng nhập thông tin &quot;LSXDT&quot;" autocomplete="off" name="LSXDTCreate" id="LSXDTCreate" type="text" value="" placeholder="Vui lòng nhập thông tin để tìm kiếm LSXĐT">
+                                    <div class="required-icon" data-original-title="" title="">
+                                        <div class="text">*</div>
+                                    </div>
+                                    <span class="field-validation-valid validation-text" data-valmsg-for="LSXDTCreate" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="DSXCreate" class="col-form-label">Đợt SX:</label>
+                                @*<input type="text" class="form-control" autocomplete="off" name="DSXCreate" id="DSXCreate" />*@
+                                <div class="input-group input-group-required">
+                                    <input class="form-control text-box single-line" data-val="true" data-val-required="Vui lòng nhập thông tin &quot;Đợt SX&quot;" autocomplete="off" name="DSXCreate" id="DSXCreate" type="text" value="" placeholder="Vui lòng nhập thông tin để tìm kiếm Đợt SX">
+                                    <div class="required-icon" data-original-title="" title="">
+                                        <div class="text">*</div>
+                                    </div>
+                                    <span class="field-validation-valid validation-text" data-valmsg-for="DSXCreate" data-valmsg-replace="true"></span>
+                                </div>
+                                <input type="hidden" name="DSXCreateId" id="DSXCreateId" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="LSXSAPCreate" class="col-form-label">LSXSAP:</label>
+                                @*<input type="text" class="form-control" autocomplete="off" name="LSXSAPCreate" id="LSXSAPCreate" />*@
+                                <div class="input-group input-group-required">
+                                    <input class="form-control text-box single-line" data-val="true" data-val-required="Vui lòng nhập thông tin &quot;LSX SAP&quot;" autocomplete="off" name="LSXSAPCreate" id="LSXSAPCreate" type="text" value="" placeholder="Vui lòng nhập thông tin để tìm kiếm LSX SAP">
+                                    <div class="required-icon" data-original-title="" title="">
+                                        <div class="text">*</div>
+                                    </div>
+                                    <span class="field-validation-valid validation-text" data-valmsg-for="LSXSAPCreate" data-valmsg-replace="true"></span>
+                                </div>
+                                <input type="hidden" name="LSXSAPCreateId" id="LSXSAPCreateId" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="ProductCodeCreate" class="col-form-label">Sản phẩm:</label>
+                                <input type="text" class="form-control" autocomplete="off" name="ProductCodeCreate" id="ProductCodeCreate" readonly />
+                                @*<div class="input-group input-group-required">
+                    <input class="form-control text-box single-line" data-val="true" data-val-required="Vui lòng nhập thông tin &quot;Tên công đoạn&quot;" autocomplete="off" name="ProductCodeCreate" id="ProductCodeCreate" type="text" value="" readonly>
+                    <div class="required-icon" data-original-title="" title="">
+                        <div class="text">*</div>
+                    </div>
+                    <span class="field-validation-valid validation-text" data-valmsg-for="ProductCodeCreate" data-valmsg-replace="true"></span>
+                </div>*@
+                                <input type="hidden" name="ProductCodeCreateId" id="ProductCodeCreateId" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="VBELNCreate" class="col-form-label">SO:</label>
+                                <input type="text" class="form-control" id="VBELNCreate" name="VBELNCreate" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="POSNRCreate" class="col-form-label">SO Line:</label>
+                                <input type="text" class="form-control" id="POSNRCreate" name="POSNRCreate" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="STTCreate" class="col-form-label">STT(Mức độ ưu tiên):</label>
+                                <input type="text" class="form-control" id="STTCreate" name="STTCreate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="StockCreate" class="col-form-label">Công đoạn thực hiện:</label>
+                                @*<input type="text" class="form-control" id="StockCreate" name="StockCreate" autocomplete="off" placeholder="Vui lòng nhập thông tin để tìm kiếm Công đoạn thực hiện" />*@
+                                <div class="input-group input-group-required">
+                                    <input class="form-control text-box single-line" data-val="true" data-val-required="Vui lòng nhập thông tin &quot;Công đoạn thực hiện&quot;" autocomplete="off" name="StockCreate" id="StockCreate" type="text" value="" placeholder="Vui lòng nhập thông tin để tìm kiếm Công đoạn thực hiện">
+                                    <div class="required-icon" data-original-title="" title="">
+                                        <div class="text">*</div>
+                                    </div>
+                                    <span class="field-validation-valid validation-text" data-valmsg-for="StockCreate" data-valmsg-replace="true"></span>
+                                </div>
+                                <input type="hidden" id="StockCodeCreate" name="StockCodeCreate" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="lead-time-create" style="display:none;">
+                            <div class="col-md-6">
+                                <label for="LeadtimeCreate" class="col-form-label">Leadtime:</label>
+                                <input type="text" class="form-control" id="LeadtimeCreate" name="LeadtimeCreate" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6" id="start-date-create" style="display:none;">
+                                <label for="StartDateCreate" class="col-form-label">Ngày bắt đầu:</label>
+                                <input type="date" class="form-control" id="StartDateCreate" name="StartDateCreate" />
+                            </div>
+                            <div class="col-md-6" id="end-date-create" style="display:none;">
+                                <label for="EndDateCreate" class="col-form-label">Ngày kết thúc:</label>
+                                <input type="date" class="form-control" id="EndDateCreate" name="EndDateCreate" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6" id="completed-percent-create" style="display:none;">
+                                <label for="CompletedPercentCreate" class="col-form-label">% hoàn thành:</label>
+                                <input type="text" class="form-control" id="CompletedPercentCreate" name="CompletedPercentCreate" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="ErrorDepartmentCreate" class="col-form-label">Phòng ban lỗi:</label>
+                                <select id="ErrorDepartmentCreate" name="ErrorDepartmentCreate" class="form-control with-search">
+                                    <option value="">@LanguageResource.Dropdownlist_Choose</option>
+                                    @foreach (var item in (List<ISDSelectGuidItem>)ViewBag.ErrorDepartment)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="StatusCreate" class="col-form-label">Tình trạng:</label>
+                                <input type="text" class="form-control" id="StatusCreate" name="StatusCreate">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btn-save-create">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

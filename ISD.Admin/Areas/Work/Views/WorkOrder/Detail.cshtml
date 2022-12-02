@@ -1,0 +1,357 @@
+﻿@model WorkOrderViewModel
+@{
+    ViewBag.Title = LanguageResource.Information + " " + "lệnh sản xuất";
+    string CurrentController = ConstController.WorkOrder;
+    string CurrentArea = ConstArea.Work;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+    bool isHasPermissionEdit = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.Edit);
+
+    int stt = 0;
+}
+
+@using (Html.BeginForm("Edit", null, FormMethod.Post, new { @enctype = "multipart/form-data", @id = "frmEdit" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="content">
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @ViewBag.Title @HtmlExtensions.BackButton(CurrentArea, CurrentController)
+            </h1>
+        </div>
+        <div class="panel-group">
+            <div class="panel panel-body">
+                <div class="form-horizontal">
+                    @* Panel Work Order General *@
+                    <div class="panel panel-primary isd-panel">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse-workorder-general">Thông tin chung</a>
+                            </h4>
+                        </div>
+                        <div id="collapse-workorder-general" class="panel-collapse collapse in">
+                            <div class="content-header-in-panel">
+                                <table class="table table-hover tableOverview">
+                                    <tbody>
+                                        <tr>
+                                            @* Mã LSX tổng hợp *@
+                                            <th>Mã LSX tổng hợp</th>
+                                            <td>@Model.ParentWorkOrderCode</td>
+                                            @* Lệnh SX *@
+                                            <th>Lệnh SX</th>
+                                            <td>@Model.WorkOrderCode</td>
+                                            @* Tên TP/BTP *@
+                                            <th>Tên TP/BTP</th>
+                                            <td>@Model.ProductCode | @Model.ProductName</td>
+                                            @* BOM Version *@
+                                            <th>BOM Version</th>
+                                            <td>@Model.BOMVersion</td>
+                                            @* Số lượng phát lệnh *@
+                                            <th>SL phát lệnh</th>
+                                            <td>@Model.WorkOrderQty @Model.WorkOrderUnit</td>
+                                        </tr>
+                                        <tr>
+                                            @* Ngày phát lệnh *@
+                                            <th>Ngày phát lệnh</th>
+                                            <td>@Model.DocumentDate</td>
+                                            @* Ngày BĐSX dự kiến *@
+                                            <th>Ngày BĐSX dự kiến</th>
+                                            <td>@Model.EstimateFromDate</td>
+                                            @* Ngày KTSX dự kiến *@
+                                            <th>Ngày KTSX dự kiến</th>
+                                            <td>@Model.EstimateToDate</td>
+                                            @* Ngày BĐSX thực tế *@
+                                            <th>Ngày BĐSX thực tế</th>
+                                            <td>@Model.ActualStartDate</td>
+                                            @* Ngày KTSX thực tế *@
+                                            <th>Ngày KTSX thực tế</th>
+                                            <td>@Model.ActualEndDate</td>
+                                        </tr>
+                                        <tr>
+                                            @* Khách hàng *@
+                                            <th>Khách hàng</th>
+                                            <td>@Model.CustomerName</td>
+                                            @* Số PO/ Hợp đồng/ Báo giá *@
+                                            <th>Số PO/ Hợp đồng/ Báo giá</th>
+                                            <td>@Model.PONumber</td>
+                                            @* Số lượng SP đặt hàng *@
+                                            <th>SL SP đặt hàng</th>
+                                            <td></td>
+                                            @* Số lượng giao mẫu *@
+                                            <th>SL giao mẫu</th>
+                                            <td></td>
+                                            @* ĐVT *@
+                                            <th>ĐVT</th>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            @* Phiếu tiếp nhận thông tin *@
+                                            <th>Phiếu tiếp nhận TT</th>
+                                            <td></td>
+                                            @* Ngày giao hàng *@
+                                            <th>Ngày giao hàng</th>
+                                            <td></td>
+                                            @* Kích thước SP(mm) *@
+                                            <th>Kích thước SP(mm)</th>
+                                            <td>@Model.ProductSize</td>
+                                            @* Kích thước khổ trải SP(mm) *@
+                                            <th>Kích thước khổ trải SP(mm)</th>
+                                            <td>@Model.ProductSpreadSize</td>
+                                            @* Số SP/Khổ in(hoặc khổ cắt) *@
+                                            <th>Số SP/Khổ in(hoặc khổ cắt)</th>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            @* Đơn vị gia công TP *@
+                                            <th>Đơn vị gia công TP</th>
+                                            <td>@Model.ProcessingUnit</td>
+                                            @* Tình trạng SP *@
+                                            <th>Tình trạng SP</th>
+                                            <td></td>
+                                            @* Mô tả SP *@
+                                            <th>Mô tả SP</th>
+                                            <td></td>
+                                            @* Số phiếu thiết kế *@
+                                            <th>Số phiếu thiết kế</th>
+                                            <td>@Model.DesignVote</td>
+                                            @* Phụ trách thiết kế *@
+                                            <th>Phụ trách thiết kế</th>
+                                            <td>@Model.DesignBy</td>
+                                        </tr>
+                                        <tr>
+                                            @* Mã bản vẽ Marquette *@
+                                            <th>Mã bản vẽ Marquette</th>
+                                            <td></td>
+                                            @* Mã bản vẽ khuôn *@
+                                            <th>Mã bản vẽ khuôn</th>
+                                            <td></td>
+                                            @*Ghi chú mẫu kèm theo *@
+                                            <th>Ghi chú mẫu kèm theo</th>
+                                            <td></td>
+                                            @* Created By *@
+                                            <th>Created By</th>
+                                            <td></td>
+                                            @* Ghép bài *@
+                                            <th>Ghép bài</th>
+                                            <td>@Model.MatchCard</td>
+                                        </tr>
+                                        <tr>
+                                            @* Tên hạng mục in *@
+                                            <th>Tên hạng mục in</th>
+                                            <td></td>
+                                            @*Kiểu in *@
+                                            <th>Kiểu in</th>
+                                            <td>@Model.PrintStyle</td>
+                                            @*Công ty gia công in *@
+                                            <th>Công ty gia công in</th>
+                                            <td></td>
+                                            @* NCC kẽm *@
+                                            <th>NCC kẽm</th>
+                                            <td>@Model.ZincSupplier</td>
+                                            @* Ngày yêu cầu có hàng in *@
+                                            <th>Ngày yc có hàng in</th>
+                                            <td>@Model.PrintReqDate</td>
+                                        </tr>
+                                        <tr>
+                                            @* Trạng thái *@
+                                            <th>Trạng thái</th>
+                                            <td>@Model.PrintStatus</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Panel Khuôn và Component *@
+                    <div class="panel panel-primary isd-panel">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse-workorder-component">Thông tin Component</a>
+                            </h4>
+                        </div>
+                        <div id="collapse-workorder-component" class="panel-collapse collapse in">
+                            <div class="content-header-in-panel">
+                                <table class="table table-bordered table-striped table-hover dataTable no-footer">
+                                    <thead class="isd-table-header">
+                                        <tr>
+                                            @* STT *@
+                                            <th class="text-center isd-table-th-stt">@LanguageResource.NumberIndex</th>
+                                            @* Mã khuôn *@
+                                            <th class="text-center">Component</th>
+                                            @*Số Serial *@
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-center">Unit</th>
+                                            <th class="text-center">MarquetteCode</th>
+                                            <th class="text-center">Size</th>
+                                            <th class="text-center">SizePrint</th>
+                                            <th class="text-center">QuantityExport</th>
+                                            <th class="text-center">QuantityPaperCut</th>
+                                            <th class="text-center">QuantityPaperCutMin</th>
+                                            <th class="text-center">ColorParam</th>
+                                            <th class="text-center">ColorCode</th>
+                                            <th class="text-center">PrintSpecifications</th>
+                                            <th class="text-center">ZincSize</th>
+                                            <th class="text-center">ZincNumber</th>
+                                            <th class="text-center">Note</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            stt = 0;
+                                            if (ViewBag.MoldMapping != null && ViewBag.MoldMapping.Count > 0)
+                                            {
+                                                foreach (var item in (List<WorkOrder_Product_Mapping>)ViewBag.ComponentMapping)
+                                                {
+                                                    stt++;
+                                                    <tr>
+                                                        @* STT *@
+                                                        <th class="text-center isd-table-th-stt" data-id="@item.Id">@stt</th>
+                                                        @* Mã khuôn *@
+                                                        <th class="text-center">@item.Component</th>
+                                                        @*Số Serial *@
+                                                        <th class="text-center">@string.Format("{0:n2}", item.Quantity)</th>
+                                                        <th class="text-center">@item.Unit</th>
+                                                        <th class="text-center">@item.MarquetteCode</th>
+
+                                                        <th class="text-center">@string.Format("{0:n2}", item.Size)</th>
+                                                        <th class="text-center">@string.Format("{0:n2}", item.SizePrint)</th>
+                                                        <th class="text-center">@string.Format("{0:n2}", item.QuantityExport)</th>
+                                                        <th class="text-center">@string.Format("{0:n2}", item.QuantityPaperCut)</th>
+                                                        <th class="text-center">@string.Format("{0:n2}", item.QuantityPaperCutMin)</th>
+
+                                                        <th class="text-center">@item.ColorParam</th>
+                                                        <th class="text-center">@item.ColorCode</th>
+                                                        <th class="text-center">@item.PrintSpecifications</th>
+                                                        <th class="text-center">@item.ZincSize</th>
+                                                        <th class="text-center">@item.ZincNumber</th>
+                                                        <th class="text-center">@item.ZincSize</th>
+                                                        <th class="text-center">@item.Note</th>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr class="odd">
+                                                    <td valign="top" colspan="15" class="dataTables_empty">@LanguageResource.NoRecordFound</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group panel">
+                        <div class="col-md-6">
+                            @* Panel khuôn *@
+                            <div class="panel panel-primary isd-panel">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" href="#collapse-workorder-mold">Thông tin khuôn</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse-workorder-mold" class="panel-collapse collapse in">
+                                    <div class="content-header-in-panel">
+                                        <table class="table table-bordered table-striped table-hover dataTable no-footer">
+                                            <thead class="isd-table-header">
+                                                <tr>
+                                                    @* STT *@
+                                                    <th class="text-center isd-table-th-stt">@LanguageResource.NumberIndex</th>
+                                                    @* Mã khuôn *@
+                                                    <th class="text-center">Mã khuôn</th>
+                                                    @*Số Serial *@
+                                                    <th class="text-center">Số Serial</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    stt = 0;
+                                                    if (ViewBag.MoldMapping != null && ViewBag.MoldMapping.Count > 0)
+                                                    {
+                                                        foreach (var item in (List<WorkOrder_Mold_Mapping>)ViewBag.MoldMapping)
+                                                        {
+                                                            stt++;
+                                                            <tr>
+                                                                @* STT *@
+                                                                <th class="text-center isd-table-th-stt" data-id="@item.Id">@stt</th>
+                                                                @* Mã khuôn *@
+                                                                <th class="text-center">@item.MoldCode</th>
+                                                                @*Số Serial *@
+                                                                <th class="text-center" id="serial_@stt">@item.SerialNumber</th>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr class="odd">
+                                                            <td valign="top" colspan="6" class="dataTables_empty">@LanguageResource.NoRecordFound</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Panel Work Order Routing *@
+                    <div class="panel panel-primary isd-panel">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse-workorder-routing">Thông tin công đoạn sản xuất</a>
+                            </h4>
+                        </div>
+                        <div id="collapse-workorder-routing" class="panel-collapse collapse in">
+                            <div class="content-header-in-panel">
+                                <table class="table table-bordered table-striped table-hover dataTable no-footer">
+                                    <thead class="isd-table-header">
+                                        <tr>
+                                            <th class="text-center isd-table-th-stt">@LanguageResource.NumberIndex</th>
+                                            <th>@LanguageResource.Routing_StepCode</th>
+                                            <th>@LanguageResource.Routing_StepName</th>
+                                            <th>@LanguageResource.ProductionGuide</th>
+                                            <th>@LanguageResource.Unit</th>
+                                            <th>@LanguageResource.ProductByStep</th>
+                                            <th>@LanguageResource.TotalProduct</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (ViewBag.RoutingLSX != null && ViewBag.RoutingLSX.Count > 0)
+                                        {
+                                            int i = 0;
+                                            foreach (var item in (List<WorkOrderDetailViewModel>)ViewBag.RoutingLSX)
+                                            {
+                                                i++;
+                                                <tr>
+                                                    <td class="text-center">@i</td>
+                                                    <td>@Html.DisplayFor(p => item.StepCode)</td>
+                                                    <td>@Html.DisplayFor(p => item.StepName)</td>
+                                                    <td>@Html.DisplayFor(p => item.ProductionGuide)</td>
+                                                    <td>@Html.DisplayFor(p => item.ProductPerPage)</td>
+                                                    <td>@Html.DisplayFor(p => item.ProductByStep)</td>
+                                                    <td>@Html.DisplayFor(p => item.TotalProduct)</td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr class="odd">
+                                                <td valign="top" colspan="6" class="dataTables_empty">@LanguageResource.NoRecordFound</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

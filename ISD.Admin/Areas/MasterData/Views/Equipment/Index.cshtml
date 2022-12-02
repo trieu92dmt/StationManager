@@ -1,0 +1,176 @@
+﻿@model EquipmentModel
+@{ ViewBag.Title = LanguageResource.MasterData_Equipment;
+    string CurrentController = ConstController.Equipment;
+    string CurrentArea = ConstArea.MasterData;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+
+    bool isHasPermissionPrint = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.PRINT); }
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+        @HtmlExtensions.CreateButton(CurrentArea, CurrentController)
+        @if (isHasPermissionPrint == true)
+        {
+            <a class="btn btn-success btn-printBarcode"><i class="fa fa-print"></i> Tạo QR Code</a>}
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                {
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.EquipmentCode)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(p => p.EquipmentCode, new { @class = "form-control text-box single-line" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.EquipmentName)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(p => p.EquipmentName, new { @class = "form-control text-box single-line" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.EquipmentGroupCode)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("EquipmentGroupCode", null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.EquipmentTypeCode)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("EquipmentTypeCode", null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.WorkShopId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("WorkShopId", null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.EquipmentStatus)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("EquipmentStatus", null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                                    </div>
+                                </div>
+                            </div>*@
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-5">
+                                    @HtmlExtensions.SearchButton()
+                                </div>
+                            </div>
+                        </div>
+                    </div>}
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="divSearchResult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section components {
+    <!--Print Barcode StorageBin -->
+    <div id="divPrintEquipmentPopup" class="modal fade" role="dialog">
+
+    </div>
+}
+
+<div class="delete-confirm"></div>
+
+@section scripts {
+    <script>
+    //load default and set event
+        $(document).ready(function () {
+            ISD.SearchInitial("@CurrentUrl",true);
+            ISD.ShowMessage(window.location.href);
+        });
+        //show modal Tạo barcode
+        $(document).on("click", ".btn-printBarcode", function () {
+            loading2();
+            var $btn = $(this);
+
+            var EquipmentIds = [];
+            $("#checkboxEquipment:checked").each(function () {
+                EquipmentIds.push($(this).val());
+            });
+            //Nếu chưa chọn thông báo lỗi 
+            if (EquipmentIds.length == 0) {
+                alertPopup(false, "Không thể tạo QR code. Vui lòng chọn Máy móc chuyền!");
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '/MasterData/Equipment/_PrintEquipmentPopup/',
+                    data: { EquipmentIds: EquipmentIds },
+                    success: function (html) {
+                        $("#divPrintEquipmentPopup").html(html);
+                        $("#divPrintEquipmentPopup").modal("show");
+                        $btn.button('reset');
+                    }
+                });
+            }
+
+        });
+        //click In barcode
+        $(document).on("click", ".btn-print", function () {
+            loading2();
+            var $btn = $(this);
+            //
+            var Ids = [];
+            $("#checkboxEquipment:checked").each(function () {
+                Ids.push($(this).val());
+            });
+            var EquipmentId = Ids.join(",");
+            //Get Stepcode
+            var StepCode = $('#StepCode').val();
+            if (StepCode == null || StepCode == "") {
+                //Báo lỗi trên popup
+                ISD.setMessage("#divAlertWarningTask", "Vui lòng chọn Công đoạn!");
+                $('#divPrintEquipmentPopup #divAlertWarningTask').show();
+            }
+            else {
+                var url = "/Reports/ReportEquipment/Index/?Id=" + EquipmentId + "&StepCode=" + StepCode;
+                window.open(url);
+                $('.close').trigger("click")
+            }
+            $("body").removeClass("loading2");
+            $btn.button('reset');
+        });
+    </script>
+}

@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - @LanguageResource.ProjectName</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link href="~/Content/typeahead/typeahead.css" rel="stylesheet" />
+    <link href="~/Content/select2.min.css" rel="stylesheet" />
+    @*<link href="~/Content/Color/bootstrap-colorpicker.css" rel="stylesheet" />*@
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/custom")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Html.DevExpress().GetStyleSheets(
+    new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Editors },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.HtmlEditor },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.GridView },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.CardView },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.PivotGrid },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Chart },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Report },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Scheduler },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.TreeList },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.RichEdit },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Spreadsheet },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.SpellChecker },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.VerticalGrid }
+)
+    @Html.DevExpress().GetScripts(
+    new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+    new Script { ExtensionSuite = ExtensionSuite.HtmlEditor },
+    new Script { ExtensionSuite = ExtensionSuite.GridView },
+    new Script { ExtensionSuite = ExtensionSuite.CardView },
+    new Script { ExtensionSuite = ExtensionSuite.PivotGrid },
+    new Script { ExtensionSuite = ExtensionSuite.Editors },
+    new Script { ExtensionSuite = ExtensionSuite.Chart },
+    new Script { ExtensionSuite = ExtensionSuite.Report },
+    new Script { ExtensionSuite = ExtensionSuite.Scheduler },
+    new Script { ExtensionSuite = ExtensionSuite.TreeList },
+    new Script { ExtensionSuite = ExtensionSuite.RichEdit },
+    new Script { ExtensionSuite = ExtensionSuite.Spreadsheet },
+    new Script { ExtensionSuite = ExtensionSuite.SpellChecker },
+    new Script { ExtensionSuite = ExtensionSuite.VerticalGrid }
+)
+    @RenderSection("head", required: false)
+
+</head>
+<body class="skin-strong-blue sidebar-mini ng-scope sidebar-collapse">
+    <div>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="margin-left: 0 !important;">
+            <div class="app-overlay" style="display: none;">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            @Html.Partial("Notifications")
+            <div>
+                @RenderBody()
+            </div>
+            <div class="loading-content">Loading...</div>
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Main Footer -->
+        <footer class="main-footer" style="margin-left: 0 !important;">
+            <div class="text-left hidden-xs col-md-6">
+                <strong>Copyright &copy; @DateTime.Now.Year <a href="https://isdcorp.vn" title="Công ty Cổ Phần Phát Triển Phần Mềm Thông Minh ISD" target="_blank">ISD Corp</a>.</strong> All rights reserved.
+            </div>
+            <!-- To the right -->
+            <div class="text-right hidden-xs col-md-6">
+                v1.0
+            </div>
+            <!-- Default to the left -->
+        </footer>
+    </div>
+
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")*@
+    @RenderSection("jquery", required: false)
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/AdminLTE-2.4.3/dist/js/adminlte.min.js"></script>
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/typeahead/typeahead.bundle.min.js"></script>
+    <!--Select2-->
+    <script src="~/Scripts/select2.min.js"></script>
+    @Scripts.Render("~/scripts/common/js")
+    <script src="~/Scripts/moment.js"></script>
+    <script type="text/javascript">
+       var net5apidomain ='@Net5ApiDomain';
+    </script>
+    <!--Cookie-->
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    @RenderSection("components", required: false)
+    <div id="dynamicModalContainer"></div>
+    @Html.Partial("./Partials/_DeleteModalPartial")
+    @Html.Partial("./Partials/_ImportModalPartial")
+    @Html.Action("_StoreModalPartial", "Shared", new { area = "" })
+    @*<script src="~/Scripts/jquery.dataTables.min.js"></script>*@
+    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/numeric-comma.js"></script>
+    @Scripts.Render("~/scripts/common/shared")
+    @RenderSection("scripts", required: false)
+
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsDepartment" targetNamespace="http://tempuri.org/DsDepartment.xsd" xmlns:mstns="http://tempuri.org/DsDepartment.xsd" xmlns="http://tempuri.org/DsDepartment.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DsDepartment" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="DsDepartment" msprop:Generator_DataSetName="DsDepartment">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Department" msprop:Generator_RowEvHandlerName="DepartmentRowChangeEventHandler" msprop:Generator_RowDeletedName="DepartmentRowDeleted" msprop:Generator_RowDeletingName="DepartmentRowDeleting" msprop:Generator_RowEvArgName="DepartmentRowChangeEvent" msprop:Generator_TablePropName="Department" msprop:Generator_RowChangedName="DepartmentRowChanged" msprop:Generator_RowChangingName="DepartmentRowChanging" msprop:Generator_TableClassName="DepartmentDataTable" msprop:Generator_RowClassName="DepartmentRow" msprop:Generator_TableVarName="tableDepartment" msprop:Generator_UserTableName="Department">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DepartmentId" msprop:Generator_ColumnPropNameInRow="DepartmentId" msprop:Generator_ColumnPropNameInTable="DepartmentIdColumn" msprop:Generator_ColumnVarNameInTable="columnDepartmentId" msprop:Generator_UserColumnName="DepartmentId" type="xs:string" minOccurs="0" />
+              <xs:element name="DepartmentName" msprop:Generator_ColumnPropNameInRow="DepartmentName" msprop:Generator_ColumnPropNameInTable="DepartmentNameColumn" msprop:Generator_ColumnVarNameInTable="columnDepartmentName" msprop:Generator_UserColumnName="DepartmentName" type="xs:string" minOccurs="0" />
+              <xs:element name="WorkShopId" msprop:Generator_ColumnPropNameInRow="WorkShopId" msprop:Generator_ColumnPropNameInTable="WorkShopIdColumn" msprop:Generator_ColumnVarNameInTable="columnWorkShopId" msprop:Generator_UserColumnName="WorkShopId" type="xs:string" minOccurs="0" />
+              <xs:element name="WorkShopName" msprop:Generator_ColumnPropNameInRow="WorkShopName" msprop:Generator_ColumnPropNameInTable="WorkShopNameColumn" msprop:Generator_ColumnVarNameInTable="columnWorkShopName" msprop:Generator_UserColumnName="WorkShopName" type="xs:string" minOccurs="0" />
+              <xs:element name="DepartmentCode" msprop:Generator_ColumnPropNameInRow="DepartmentCode" msprop:Generator_ColumnPropNameInTable="DepartmentCodeColumn" msprop:Generator_ColumnVarNameInTable="columnDepartmentCode" msprop:Generator_UserColumnName="DepartmentCode" type="xs:string" minOccurs="0" />
+              <xs:element name="WorkShopCode" msprop:Generator_ColumnPropNameInRow="WorkShopCode" msprop:Generator_ColumnPropNameInTable="WorkShopCodeColumn" msprop:Generator_ColumnVarNameInTable="columnWorkShopCode" msprop:Generator_UserColumnName="WorkShopCode" type="xs:string" minOccurs="0" />
+              <xs:element name="QRCode" msprop:Generator_ColumnPropNameInRow="QRCode" msprop:Generator_ColumnPropNameInTable="QRCodeColumn" msprop:Generator_ColumnVarNameInTable="columnQRCode" msprop:Generator_UserColumnName="QRCode" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

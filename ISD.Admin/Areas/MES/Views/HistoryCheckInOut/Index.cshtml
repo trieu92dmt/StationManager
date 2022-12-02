@@ -1,0 +1,145 @@
+﻿@model CheckInOutSearchViewModel
+@{
+    ViewBag.Title = LanguageResource.HistoryCheckInOut;
+    string CurrentController = ConstController.HistoryCheckInOut;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                {
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.SalesEmployeeCode)
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(p => p.SalesEmployeeCode, null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.SerialTag)
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(p => p.SerialTag, null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.DurationCommonDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(p => p.DurationCommonDate, null, new { @class = "form-control with-search ddl-common-date"})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.DurationFromDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.RequiredTextboxFor(p => p.DurationFromDate, new {type = "date", @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.DurationToDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.RequiredTextboxFor(p => p.DurationToDate, new { type = "date", @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-5">
+                                    @HtmlExtensions.SearchButton()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="divSearchResult">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="delete-confirm"></div>
+
+@section scripts {
+    <script>
+        //load default and set event
+        $(document).ready(function () {
+            $(".ddl-common-date").trigger("change");
+
+            ISD.SearchInitial("@CurrentUrl");
+            @*PaggingServerSideCheckInOut("@CurrentUrl");*@
+            ISD.ShowMessage(window.location.href);
+
+        });
+        //common date
+        $(document).on("change", ".ddl-common-date", function () {
+            var commonDate = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Utilities/CommonDate/Get",
+                data: {
+                    CommonDate: commonDate
+                },
+                success: function (jsonData) {
+                    $("#DurationFromDate").val(jsonData.FromDate);
+                    $("#DurationToDate").val(jsonData.ToDate);
+                    if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                        $("#DurationFromDate").attr("readonly", true);
+                        $("#DurationToDate").attr("readonly", true);
+                    } else {
+                        $("#DurationFromDate").removeAttr("readonly");
+                        $("#DurationToDate").removeAttr("readonly");
+                    }
+
+                }
+            });
+        });
+       
+    </script>
+}

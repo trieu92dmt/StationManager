@@ -1,0 +1,151 @@
+﻿@model ProductionManagementViewModel
+
+@if (Model.Barcode.HasValue)
+{
+    <div class="modal-dialog modal-dialog-sm" onload="setup();">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title">Cập nhật QR Code</h5>
+            </div>
+            <div class="content">
+                <div id="divAlertWarningTask" class="alert alert-warning alert-dismissable divPopupMessage" style="display: none">
+                    <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarning">×</button>
+                    <div class="alert-message">
+                    </div>
+                </div>
+                <form id="frmUpdateQRCode">
+                    @Html.HiddenFor(p => p.TaskId)
+                    @Html.HiddenFor(p => p.Barcode)
+                    @Html.HiddenFor(p => p.ProductionOrder_SAP)
+                    @Html.HiddenFor(p => p.ProductionOrder)
+                    <div class="panel-group">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <div class="col-md-4 col-xs-5">
+                                            @Html.LabelByPropertyNameFor(p => p.WorkDate, "Ngày làm việc:")
+                                        </div>
+                                        <div class="col-md-8 col-xs-7 display-for">
+                                            @(Model.WorkDate != null ? Model.WorkDate.Value.ToString("dd/MM/yyyy") : "")
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4 col-xs-5 pr-0">
+                                            @Html.LabelByPropertyNameFor(p => p.ProductionOrder, "LSX ĐT:")
+                                        </div>
+                                        <div class="col-md-8 col-xs-7 display-for">
+                                            @Html.DisplayFor(p => Model.ProductionOrder)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4 col-xs-5 pr-0">
+                                            @Html.LabelByPropertyNameFor(p => p.ProductionOrder_SAP, "LSX SAP:")
+                                        </div>
+                                        <div class="col-md-8 col-xs-7 display-for">
+                                            @Html.DisplayFor(p => Model.ProductionOrder_SAP)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4 col-xs-5 pr-0">
+                                            @Html.LabelByPropertyNameFor(p => p.ProductName, "Sản phẩm:")
+                                        </div>
+                                        <div class="col-md-8 col-xs-7 display-for">
+                                            @Html.DisplayTextFor(p => Model.ProductCode)
+                                            @Html.DisplayTextFor(p => Model.ProductName)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-function text-bold">
+                        Vui lòng quét mã QR để cập nhật mã QR!
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <span class="btn btn-default pull-left" data-dismiss="modal">@LanguageResource.Btn_Cancel</span>
+                <a class="btn btn-primary pull-right" id="btn-save" style="display:none">
+                    @LanguageResource.Btn_Save
+                </a>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="box-footer">
+        <div class="alert alert-warning alert-message">
+            QR Code đã tồn tại!
+        </div>
+    </div>
+}
+
+
+
+<div class="box-footer" style="display:none">
+    <div id="logMsg">
+        <b>Log:</b>
+    </div>
+</div>
+<script src="~/Scripts/WebScaner/BarcodeReader.js"></script>
+<script src="~/Scripts/WebScaner/ScanQRCode.js"></script>
+<script>
+    //var barcodeDataText, readTimeText;
+    //barcodeDataText = document.getElementById("BarcodeData");
+    //symbTypeText = document.getElementById("SymbType");
+    //readTimeText = document.getElementById("ReadTime");
+    $(document).ready(function () {
+        openButtonClicked()
+    });
+    //Quét mã có data sẽ gọi hàm này, cusstom bên trong hàm, không sửa tên hàm và tham số.
+    function onBarcodeDataReady(data, type, time) {
+
+        //let textData = GetValueFieldInData(data, "T2");
+        //barcodeDataText.value = decode_utf8(textData);
+        //readTimeText.value = time;
+        //let idTask = GetValueFieldInData(data, "T1");
+        var $BarCode = $('#Barcode').val(decode_utf8(data));
+        if ($BarCode.val() != null && $BarCode.val() != "") {
+            $('.message-function').text("Đã quét thành công, nhấn 'LƯU' để lưu mã QR!");
+            $('#btn-save').removeAttr("style")
+        } else {
+            $('.message-function').text("Lỗi, vui lòng thử lại");
+        }
+
+    }
+
+    $(document).on("click", "#btn-save", function () {
+        $btn = $(this);
+        $btn.button('loading');
+        loading2();
+        var $data = $('#frmUpdateQRCode').serialize();
+        $.ajax({
+            type: "POST",
+            url: "/MES/ProductionRecording/_UpdateBarCode",
+            data: $data,
+            success: function (response) {
+                $btn.button('reset');
+                if (response.Success == true) {
+                    ISD.setMessage("#divAlertSuccess", response.Data);
+                    $('#divAlertSuccess').show();
+                    //tat popup
+                    $('#divFunctionModal').modal('hide');
+                } else {
+                    ISD.setMessage("#divAlertWarningTask", response.Data);
+                    $('#divFunctionModal #divAlertWarningTask').show();
+                }
+            },
+            error: function (err) {
+                $btn.button('reset');
+                ISD.setMessage("#divAlertWarningTask", response.Data);
+                $('#divFunctionModal #divAlertWarningTask').show();
+                console.log(err.statusText);
+            }
+        });
+    })
+</script>

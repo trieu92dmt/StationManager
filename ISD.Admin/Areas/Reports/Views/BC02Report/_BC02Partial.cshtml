@@ -1,0 +1,158 @@
+﻿@using Newtonsoft.Json;
+@using ISD.Repositories;
+
+@model IEnumerable<BC02ReportViewModel>
+
+@{
+    var pivotSetting = (List<FieldSettingModel>)ViewBag.PivotSetting;
+    var search = (BC02ReportViewModel)ViewBag.Search;
+    var NumberOfFreezeColumn = (int?)ViewBag.NumberOfFreezeColumn;
+    UtilitiesRepository repo = new UtilitiesRepository();
+    string fileName = repo.RemoveSign4VietnameseString(LanguageResource.BC02Report.ToUpper()).Replace(" ", "_").Replace("/", "_");
+    //Danh sách phân xưởng
+    var WorkShopList = (List<ISDSelectStringItem>)ViewBag.WorkShopList;
+    //Danh sách khách hàng
+    var CustomerList = (List<ISDSelectStringItem>)ViewBag.CustomerList;
+}
+
+@Html.DevExpress().VerticalGrid(settings =>
+{
+    settings.Name = "BC02VerticalGrid";
+    settings.CallbackRouteValues = new { Controller = "BC02Report", Action = "BC02ReportPartial", jsonReq = JsonConvert.SerializeObject(search) };
+    settings.Width = Unit.Percentage(100);
+    settings.SettingsExport.EnableClientSideExportAPI = true;
+    settings.SettingsExport.FileName = fileName;
+    settings.SettingsExport.PageHeader.Left = LanguageResource.BC02Report.ToUpper();
+    settings.SettingsExport.PageHeader.Font.Size = 16;
+    settings.SettingsExport.PageHeader.Font.Bold = true;
+
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "MonthText";
+        r.Caption = "Tháng";
+        r.RecordStyle.HorizontalAlign = HorizontalAlign.Right;
+        r.RecordStyle.BackColor = System.Drawing.Color.LightGray;
+        r.ExportRecordStyle.HorizontalAlign = HorizontalAlign.Right;
+        r.ExportRecordStyle.BackColor = System.Drawing.Color.LightGray;
+    });
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "Year";
+        r.Caption = "Năm";
+    });
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "ThuaThieu";
+        r.Caption = "Thừa (+)/ thiếu (-)";
+        r.PropertiesEdit.DisplayFormatString = "n2";
+    });
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "ContRegister";
+        r.Caption = "Công suất đăng kí (còn lại)";
+        r.PropertiesEdit.DisplayFormatString = "n2";
+    });
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "Cont100";
+        r.Caption = "Số cont LSX (100%)";
+        r.PropertiesEdit.DisplayFormatString = "n2";
+    });
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "Cont80";
+        r.Caption = "Số cont CBNL (<100%)";
+        r.PropertiesEdit.DisplayFormatString = "n2";
+    });
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "Cont60";
+        r.Caption = "Số cont dự kiến (<60%)";
+        r.PropertiesEdit.DisplayFormatString = "n2";
+    });
+    settings.Rows.Add(r =>
+    {
+        r.FieldName = "Total";
+        r.Caption = "Tổng";
+        r.PropertiesEdit.DisplayFormatString = "n2";
+    });
+
+    settings.Rows.AddCategory(c =>
+    {
+        c.Caption = "Phân xưởng";
+        if (WorkShopList != null && WorkShopList.Count > 0)
+        {
+            for (int i = 1; i <= WorkShopList.Count; i++)
+            {
+                settings.Rows.Add(r =>
+                {
+                    r.FieldName = "PX" + i.ToString().PadLeft(2, '0');
+                    r.Caption = WorkShopList[i - 1].name;
+                    r.PropertiesEdit.DisplayFormatString = "n2";
+                });
+            }
+        }
+    });
+
+    settings.Rows.AddCategory(c =>
+    {
+        c.Caption = "Khách hàng";
+        if (CustomerList != null && CustomerList.Count > 0)
+        {
+            for (int i = 1; i <= CustomerList.Count; i++)
+            {
+                settings.Rows.Add(r =>
+                {
+                    r.FieldName = "KH" + i.ToString().PadLeft(2, '0');
+                    r.Caption = CustomerList[i - 1].name;
+                    r.PropertiesEdit.DisplayFormatString = "n2";
+                });
+            }
+        }
+    });
+
+    settings.CustomRowDisplayText = (sender, e) =>
+    {
+        int value = 0;
+        bool successfullyParsed = int.TryParse(Convert.ToString(e.Value), out value);
+        if (successfullyParsed)
+        {
+            value = Convert.ToInt32(e.Value);
+            if (value == 0)
+            {
+                e.DisplayText = string.Empty;
+            }
+        }
+    };
+
+    //Filter 
+    //settings.Settings.ShowHeaderFilterButton = true;
+    //settings.SettingsPopup.HeaderFilter.MinWidth = 250;
+    //settings.SettingsPopup.HeaderFilter.SettingsAdaptivity.Mode = PopupControlAdaptivityMode.OnWindowInnerWidth;
+    //settings.SettingsPopup.HeaderFilter.SettingsAdaptivity.SwitchAtWindowInnerWidth = 768;
+    //settings.SettingsPopup.HeaderFilter.SettingsAdaptivity.MinHeight = 300;
+
+    //Settings
+    settings.SettingsBehavior.AllowRowExpanding = false;
+    //settings.Settings.ShowSummaryPanel = true;
+    settings.Settings.HeaderAreaWidth = 250;
+    settings.Settings.RecordWidth = 150;
+    settings.Settings.ShowCategoryIndents = false;
+    settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+    settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+    //settings.SettingsPager.PageSize = 10;
+    //settings.SettingsPager.EnableAdaptivity = true;
+    settings.SettingsPager.PageSize = 1000;
+    settings.Settings.VerticalScrollableHeight = 500;
+
+    //Export
+    settings.Toolbars.Add(tb =>
+    {
+        tb.SettingsAdaptivity.Enabled = true;
+        tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+
+        tb.Items.Add(VerticalGridToolbarCommand.ExportToXls);
+        tb.Items.Add(VerticalGridToolbarCommand.ExportToXlsx);
+    });
+}).Bind(Model).GetHtml()
+

@@ -1,0 +1,168 @@
+﻿<div class="modal fade" id="edit-report-modal" role="dialog" aria-labelledby="editReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="editReportModalLabel">@LanguageResource.Update @LanguageResource.BC01Report</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning alert-dismissable modalPopupAlert" style="display: none;">
+                    <button type="button" class="alert-close close" aria-hidden="true">×</button>
+                    <div class="modal-popup-alert-message">
+                    </div>
+                </div>
+                <div class="form-horizontal" style="padding: 10px;">
+                    <form id="frm-edit-report">
+                        @*<input type="hidden" name="BC01IdEdit" id="BC01IdEdit" />*@
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="STTEdit" class="col-form-label">STT(Mức độ ưu tiên):</label>
+                                <input type="text" class="form-control" id="STTEdit" name="STTEdit" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="LSXEdit" class="col-form-label">LSX:</label>
+                                <input type="text" class="form-control" id="LSXEdit" name="LSXEdit" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="DSXEdit" class="col-form-label">DSX:</label>
+                                <input type="text" class="form-control" id="DSXEdit" name="DSXEdit" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="VBELNEdit" class="col-form-label">SO:</label>
+                                <input type="text" class="form-control" id="VBELNEdit" name="VBELNEdit" readonly />
+                            </div>
+                            @*<div class="col-md-6">
+                                <label for="POSNREdit" class="col-form-label">SO Line:</label>
+                                <input type="text" class="form-control" id="POSNREdit" name="POSNREdit" readonly />
+                            </div>*@
+                        </div>
+                        @*<div class="form-group">
+                            <div class="col-md-6">
+                                <label for="LSXSAPEdit" class="col-form-label">LSX SAP:</label>
+                                <input type="text" class="form-control" id="LSXSAPEdit" name="LSXSAPEdit" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ProductCodeEdit" class="col-form-label">Mã sản phẩm:</label>
+                                <input type="text" class="form-control" id="ProductCodeEdit" name="ProductCodeEdit" readonly />
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="StockEdit" class="col-form-label">Công đoạn thực hiện:</label>
+                                <input type="text" class="form-control" id="StockEdit" name="StockEdit" readonly />
+                                <input type="hidden" class="form-control" id="StockCodeEdit" name="StockCodeEdit" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6" id="work-shop-edit" style="display:none;">
+                                <label for="WorkShopEdit" class="col-form-label">Phân xưởng:</label>
+                                @*<input type="text" class="form-control" id="WorkShopEdit" name="WorkShopEdit" />*@
+                                @*<select id="WorkShopEdit" name="WorkShopEdit" class="form-control with-search">
+                                        <option value="">@LanguageResource.Dropdownlist_Choose</option>
+                                        @{
+                                            var workShopLst = (List<ISDSelectStringItem>)ViewBag.WorkShop;
+                                            var optGroupLst = workShopLst.GroupBy(g => g.additional).Select(p => p.Key).ToList();
+                                        }
+                                        @if (workShopLst != null && workShopLst.Count > 0)
+                                        {
+                                            foreach (var optGroup in optGroupLst)
+                                            {
+                                                <optgroup label="@optGroup">
+                                                    @foreach (var item in workShopLst.Where(p => p.additional == optGroup))
+                                                    {
+                                                        <option value="@item.id">@item.name</option>
+                                                    }
+                                                </optgroup>
+                                            }
+                                        }
+
+                                    </select>*@
+                                <select id="WorkShopEdit" name="WorkShopEdit" class="form-control with-search">
+                                    <option value="">@LanguageResource.Dropdownlist_Choose</option>
+                                    @foreach (var item in (List<ISDSelectStringItem>)ViewBag.WorkShop)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6" id="lead-time-edit" style="display:none;">
+                                <label for="LeadtimeEdit" class="col-form-label">Leadtime:</label>
+                                <input type="text" class="form-control" id="LeadtimeEdit" name="LeadtimeEdit" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6" id="start-date-edit" style="display:none;">
+                                <label for="StartDateEdit" class="col-form-label">Ngày bắt đầu:</label>
+                                <input type="date" class="form-control" id="StartDateEdit" name="StartDateEdit" />
+                            </div>
+                            <div class="col-md-6" id="end-date-edit" style="display:none;">
+                                <label for="EndDateEdit" class="col-form-label">Ngày kết thúc:</label>
+                                <input type="date" class="form-control" id="EndDateEdit" name="EndDateEdit" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6" id="start-date-change-edit">
+                                <label for="StartDateChangeEdit" class="col-form-label">Ngày bắt đầu điều chỉnh:</label>
+                                <input type="date" class="form-control" id="StartDateChangeEdit" name="StartDateChangeEdit" />
+                            </div>
+                            <div class="col-md-6" id="end-date-change-edit">
+                                <label for="EndDateEdit" class="col-form-label">Ngày kết thúc điều chỉnh:</label>
+                                <input type="date" class="form-control" id="EndDateChangeEdit" name="EndDateChangeEdit" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6" id="completed-percent-edit" style="display:none;">
+                                <label for="CompletedPercentEdit" class="col-form-label">% hoàn thành:</label>
+                                <input type="text" class="form-control" id="CompletedPercentEdit" name="CompletedPercentEdit" autocomplete="off"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="ErrorDepartmentEdit" class="col-form-label">Phòng ban lỗi:</label>
+                                <select id="ErrorDepartmentEdit" name="ErrorDepartmentEdit" class="form-control with-search">
+                                    <option value="">@LanguageResource.Dropdownlist_Choose</option>
+                                    @foreach (var item in (List<ISDSelectGuidItem>)ViewBag.ErrorDepartment)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ErrorGroupEdit" class="col-form-label">Nhóm lỗi:</label>
+                                <select id="ErrorGroupEdit" name="ErrorGroupEdit" class="form-control with-search">
+                                    <option value="">@LanguageResource.Dropdownlist_Choose</option>
+                                    @foreach (var item in (List<ISDSelectGuidItem>)ViewBag.ErrorGroup)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="ErrorDetailEdit" class="col-form-label">Mô tả chi tiết lỗi:</label>
+                                <input type="text" class="form-control" id="ErrorDetailEdit" name="ErrorDetailEdit" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="StatusEdit" class="col-form-label">Tình trạng:</label>
+                                <input type="text" class="form-control" id="StatusEdit" name="StatusEdit" autocomplete="off">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btn-save-edit">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

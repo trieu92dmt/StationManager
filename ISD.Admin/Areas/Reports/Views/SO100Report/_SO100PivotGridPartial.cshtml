@@ -1,0 +1,741 @@
+﻿@using Newtonsoft.Json;
+@model IEnumerable<SO100ReportViewModel>
+@{
+    var pivotSetting = (List<FieldSettingModel>)ViewBag.PivotSetting;
+    var search = (SO100ReportViewModel)ViewBag.Search;
+}
+
+@Html.DevExpress().PivotGrid(settings =>
+{
+    settings.Name = "SO100ReportPivotGrid";
+    settings.CallbackRouteValues = new { Controller = "SO100Report", Action = "SO100ReportPivotGridPartial", jsonReq = JsonConvert.SerializeObject(search) };
+    settings.Width = Unit.Percentage(100);
+    settings.OptionsPager.RowsPerPage = 10;
+    settings.OptionsPager.PageSizeItemSettings.Visible = true;
+    settings.OptionsCustomization.AllowDrag = true;
+    settings.OptionsCustomization.AllowDragInCustomizationForm = true;
+    settings.OptionsCustomization.AllowSort = false;
+    settings.AfterPerformCallback = (sender, e) =>
+    {
+        List<FieldSettingModel> fieldSettingList = new List<FieldSettingModel>();
+        ASPxPivotGrid PivotGrid = sender as ASPxPivotGrid;
+        var listField = PivotGrid.Fields;
+        foreach (PivotGridField field in listField)
+        {
+            FieldSettingModel fieldSetting = new FieldSettingModel();
+            fieldSetting.Caption = field.Caption;
+            fieldSetting.AreaIndex = field.AreaIndex;
+            fieldSetting.FieldName = field.FieldName;
+            if (field.Area == PivotArea.RowArea)
+            {
+                fieldSetting.PivotArea = 0;
+
+            }
+            else
+            {
+                if (field.Area == PivotArea.ColumnArea)
+                {
+                    fieldSetting.PivotArea = 1;
+                }
+                else
+                {
+                    if (field.Area == PivotArea.FilterArea)
+                    {
+                        fieldSetting.PivotArea = 2;
+                    }
+                    else
+                    {
+                        fieldSetting.PivotArea = 3;
+                    }
+                }
+            }
+            if (field.ValueFormat.FormatType == FormatType.Numeric || field.ValueFormat.FormatType == FormatType.DateTime)
+            {
+                fieldSetting.CellFormat_FormatString = field.ValueFormat.FormatString;
+                fieldSetting.CellFormat_FormatType = field.ValueFormat.FormatType.ToString();
+            }
+            fieldSetting.Visible = field.Visible;
+            fieldSettingList.Add(fieldSetting);
+        }
+        Session[CurrentUser.AccountId + "Layout"] = fieldSettingList;
+
+    };
+
+
+    if (pivotSetting != null && pivotSetting.Count > 0)
+    {
+        foreach (var fieldSetting in pivotSetting)
+        {
+            settings.Fields.Add(field =>
+            {
+                if (fieldSetting.PivotArea == 0)
+                {
+                    field.Area = PivotArea.RowArea;
+                }
+                if (fieldSetting.PivotArea == 1)
+                {
+                    field.Area = PivotArea.ColumnArea;
+                }
+                if (fieldSetting.PivotArea == 2)
+                {
+                    if (fieldSetting.AreaIndex > 10)
+                    {
+                        field.Visible = false;
+                    }
+                    field.Area = PivotArea.FilterArea;
+
+                }
+                if (fieldSetting.PivotArea == 3)
+                {
+                    field.Area = PivotArea.DataArea;
+                }
+                field.FieldName = fieldSetting.FieldName;
+                field.Caption = fieldSetting.Caption;
+                field.AreaIndex = fieldSetting.AreaIndex.Value;
+                if (fieldSetting.CellFormat_FormatType == "DateTime")
+                {
+                    field.ValueFormat.FormatType = FormatType.DateTime;
+                    field.ValueFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                    field.CellFormat.FormatType = FormatType.DateTime;
+                    field.CellFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                    field.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+                    field.ValueStyle.HorizontalAlign = HorizontalAlign.Center;
+                }
+                if (fieldSetting.CellFormat_FormatType == "Numeric")
+                {
+                    field.ValueFormat.FormatType = FormatType.Numeric;
+                    field.ValueFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                    field.CellFormat.FormatType = FormatType.Numeric;
+                    field.CellFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                    field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+                    field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+                }
+                field.Visible = fieldSetting.Visible.Value;
+            });
+        }
+    }
+    else // default
+    {
+        //Filter Area
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "STT";
+            field.Caption = "STT";
+            field.AreaIndex = 0;
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Center;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "VBELN";
+            field.Caption = "SO Number";
+            field.AreaIndex = 1;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "POSNR";
+            field.Caption = "SO Line";
+            field.AreaIndex = 2;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "WBS";
+            field.Caption = "WBS";
+            field.AreaIndex = 3;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MATNR_COMBO";
+            field.Caption = "Mã combo";
+            field.AreaIndex = 4;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MATNR";
+            field.Caption = "Mã sản phẩm";
+            field.AreaIndex = 5;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MENGE_SU";
+            field.Caption = "Qty (SU)";
+            field.AreaIndex = 6;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MEINS_SU";
+            field.Caption = "Sales Unit";
+            field.AreaIndex = 7;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MENGE_UoM";
+            field.Caption = "Qty (UoM)";
+            field.AreaIndex = 8;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MEINS_UoM";
+            field.Caption = "Base Unit";
+            field.AreaIndex = 9;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "DeliveryDate";
+            field.Caption = "Delivery Date";
+            field.ValueFormat.FormatType = FormatType.DateTime;
+            field.ValueFormat.FormatString = "dd/MM/yyyy";
+            field.AreaIndex = 10;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "PYCSXDT";
+            field.Caption = "PYCSX ĐT";
+            field.AreaIndex = 11;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "LSXDT";
+            field.Caption = "LSXĐT";
+            field.AreaIndex = 12;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "ItemComponent";
+            field.Caption = "Item Component";
+            field.AreaIndex = 13;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "IDNRK_MES";
+            field.Caption = "Mã NL";
+            field.AreaIndex = 14;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MTART";
+            field.Caption = "MTYPE";
+            field.AreaIndex = 15;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MAKTX";
+            field.Caption = "Tên nguyên liệu";
+            field.AreaIndex = 16;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MEINS";
+            field.Caption = "ĐVT";
+            field.AreaIndex = 17;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "DinhMucBOM";
+            field.Caption = "Định mức BOM";
+            field.AreaIndex = 18;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "Scrap";
+            field.Caption = "Scrap";
+            field.AreaIndex = 19;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MENGE";
+            field.Caption = "SLYC theo BOM";
+            field.AreaIndex = 20;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "MENGE_WITH_SCRAP";
+            field.Caption = "SLYC theo BOM Có Scrap";
+            field.AreaIndex = 21;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLXVL";
+            field.Caption = "SLNVL xuất vào lệnh theo SO (261)";
+            field.AreaIndex = 22;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLXVLSOItem";
+            field.Caption = "SLNVL xuất vào lệnh theo SO line (261)";
+            field.AreaIndex = 23;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLXVLConLai";
+            field.Caption = "SLNVL đã xuất vào LSX theo  SO thừa (+)/ thiếu (-) so với SLYC có scrap";
+            field.AreaIndex = 24;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLTFSO";
+            field.Caption = "SLTP chuyển kho theo SO (311)";
+            field.AreaIndex = 25;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLTFSOItem";
+            field.Caption = "SLTP chuyển kho theo SO line";
+            field.AreaIndex = 26;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLTFConLai";
+            field.Caption = "SLTP chuyển kho thừa (+)/ thiếu (-) so với SO";
+            field.AreaIndex = 27;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SL311";
+            field.Caption = "SLNVL chuyển kho xưởng theo SO (311)";
+            field.AreaIndex = 28;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SL311SOItem";
+            field.Caption = "SLNVL chuyển kho xưởng theo SO line (311)";
+            field.AreaIndex = 29;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SL311ConLai";
+            field.Caption = "SLNVL đã chuyển kho xưởng theo  SO thừa (+)/ thiếu (-) so với SLYC có scrap";
+            field.AreaIndex = 30;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SL311HQ";
+            field.Caption = "SLTP chuyển kho HQ theo SO (311)";
+            field.AreaIndex = 31;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SL311HQSOItem";
+            field.Caption = "SLTP chuyển kho HQ theo SO line (311)";
+            field.AreaIndex = 32;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SL311HQConLai";
+            field.Caption = "SLTP chuyển kho thừa (+)/ thiếu (-) so với SO";
+            field.AreaIndex = 33;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLYCPR";
+            field.Caption = "SLNVL đã  lên PR theo SO";
+            field.AreaIndex = 34;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLYCPRSOItem";
+            field.Caption = "SLNVL đã  lên PR theo SO line";
+            field.AreaIndex = 35;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLYCPRConLai";
+            field.Caption = "SLNVL đã lên PR Thừa (+)/ thiếu (-) So với SLYC có scrap";
+            field.AreaIndex = 36;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "BSMNG_SUM_PO";
+            field.Caption = "SLNVL đã lên PO theo SO";
+            field.AreaIndex = 37;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "DangMuaSOItem";
+            field.Caption = "SLNVL đã lên PO theo SO line";
+            field.AreaIndex = 38;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "DangMuaConLai";
+            field.Caption = "SLNVL đã lên PO thừa (+)/ thiếu (-) so với PR";
+            field.AreaIndex = 39;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "GR_QTY";
+            field.Caption = "SLNVL nhập kho PO theo SO";
+            field.AreaIndex = 40;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SNKTPOSOItem";
+            field.Caption = "SLNVL nhập kho PO theo SO line";
+            field.AreaIndex = 41;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SNKTPOConLai";
+            field.Caption = "SLNVL thừa (+)/thiếu (-) so với PO";
+            field.AreaIndex = 42;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLTPCKCTSO";
+            field.Caption = "SLTP chuyển kho CT theo SO (311)";
+            field.AreaIndex = 43;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLTPCKCTSOItem";
+            field.Caption = "SLTP chuyển kho CT theo SO line (311)";
+            field.AreaIndex = 44;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLTPCKCTConLai";
+            field.Caption = "SLTP chuyển kho CT thừa (+)/ thiếu (-) so với SO";
+            field.AreaIndex = 45;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLNVLTTSO";
+            field.Caption = "SLNVL tồn trơn theo SO";
+            field.AreaIndex = 46;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLNVLTTSOItem";
+            field.Caption = "SLNVL tồn trơn theo SO line";
+            field.AreaIndex = 47;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "SLNVLTTConlai";
+            field.Caption = "SLNVL tồn trơn thừa (+)/ thiếu (-) so với SO";
+            field.AreaIndex = 48;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        //settings.Fields.Add(field =>
+        //{
+        //    field.Area = PivotArea.RowArea;
+        //    field.FieldName = "CanThem";
+        //    field.Caption = "Cần thêm";
+        //    field.AreaIndex = 48;
+        //    field.ValueFormat.FormatType = FormatType.Numeric;
+        //    field.ValueFormat.FormatString = "{0:n3}";
+        //    field.CellFormat.FormatType = FormatType.Numeric;
+        //    field.CellFormat.FormatString = "{0:n3}";
+        //    field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+        //    field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        //});
+
+        settings.Fields.Add(field =>
+        {
+            field.Area = PivotArea.RowArea;
+            field.FieldName = "CanThemWithScrap";
+            field.Caption = "SL thực có Thừa (+)/ thiếu (-) so với SLYC có Scrap";
+            field.AreaIndex = 49;
+            field.ValueFormat.FormatType = FormatType.Numeric;
+            field.ValueFormat.FormatString = "{0:n3}";
+            field.CellFormat.FormatType = FormatType.Numeric;
+            field.CellFormat.FormatString = "{0:n3}";
+            field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+            field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        });
+
+        //settings.Fields.Add(field =>
+        //{
+        //    field.Area = PivotArea.RowArea;
+        //    field.FieldName = "SLNVLTruTonSO";
+        //    field.Caption = "SLNVL trừ tồn theo SO";
+        //    field.AreaIndex = 50;
+        //    field.ValueFormat.FormatType = FormatType.Numeric;
+        //    field.ValueFormat.FormatString = "{0:n3}";
+        //    field.CellFormat.FormatType = FormatType.Numeric;
+        //    field.CellFormat.FormatString = "{0:n3}";
+        //    field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+        //    field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        //});
+
+        //settings.Fields.Add(field =>
+        //{
+        //    field.Area = PivotArea.RowArea;
+        //    field.FieldName = "SLNVLTruTonChuaCoDonHang";
+        //    field.Caption = "SLNVL Tồn trơn chưa có đơn hàng";
+        //    field.AreaIndex = 51;
+        //    field.ValueFormat.FormatType = FormatType.Numeric;
+        //    field.ValueFormat.FormatString = "{0:n3}";
+        //    field.CellFormat.FormatType = FormatType.Numeric;
+        //    field.CellFormat.FormatString = "{0:n3}";
+        //    field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+        //    field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        //});
+    }
+}).Bind(Model).GetHtml()
+
+

@@ -1,0 +1,722 @@
+﻿@model  TimeLineSearchViewModel
+
+@{
+    ViewBag.Title = LanguageResource.Work_GranttChart2;
+    var listSystemTemplate = (List<PivotTemplateViewModel>)ViewBag.SystemTemplate;
+    var listUserTemplate = (List<PivotTemplateViewModel>)ViewBag.UserTemplate;
+    var templateId = ViewBag.TemplateId;
+    var modeSearch = ViewBag.ModeSearch;
+    var granttSettings = (List<FieldSettingGranttModel>)ViewBag.PivotSetting;
+    string CurrentController = ConstController.GranttChart2;
+    string CurrentArea = ConstArea.Work;
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+    ViewBag.CurrentUrl = CurrentUrl;
+
+
+}
+@Html.Hidden("TemplateId", null, new { value = templateId })
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+
+        <a class="btn bg-blue" id="full-screen"><i class="fa fa-window-maximize"></i> </a>
+        <a class="btn bg-blue" id="export-Excel"><i class="fa fa-download"></i> Export</a>
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="form-horizontal">
+                <div class="panel panel-default panel-search">
+                    @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                    {
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="row Start">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                @Html.TooltipLabelFor(p => p.CompanyName)
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("CompanyId", null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                @Html.TooltipLabelFor(p => p.WorkShopName)
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("WorkShopId", null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <div class="label-wrapper">
+                                                <label class="control-label">@LanguageResource.Task_StartDate</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("CommonDate2", null, new { @class = "form-control with-search ddl-common-date", @data_id = "Start", @id = "start-date", Name = "StartCommonDate" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="row Start">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                @Html.TooltipLabelFor(p => p.StartFromDate)
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.RequiredTextboxFor(p => p.StartFromDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                @Html.TooltipLabelFor(p => p.StartToDate)
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.RequiredTextboxFor(p => p.StartToDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="col-md-12 input-group" style="text-align:center">
+                                        <div class="col-md-12 input-group" style="text-align:center">
+                                            <a class="btn btn-primary btn-search" id="btn-Search"><i class="fa fa-search"></i> Tìm kiếm</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-default">
+
+                <div class="dropdown pull-right" style="padding-top:5px; padding-right: 5px;">
+                    @Html.Partial("~/Areas/Reports/Views/_PivotTemplateHandle.cshtml")
+                </div>
+                <div class="panel-body" style="overflow-x:scroll;">
+                    <div id="gantt_here" class="common" style="min-height:550px" ;></div>
+                    <div id="gantt_dropdown">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-modal"></div>
+
+
+@section components {
+    <div class="modal fade" id="popupTaskKanban" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Areas/Work/Views/Task/_DeletePopups.cshtml")
+    <div id="popupSaveTemplate" class="modal fade" role="dialog">
+        @Html.Partial("~/Areas/Reports/Views/_SaveTemplatePopup.cshtml")
+    </div>
+}
+
+<!--Theo khuyến cáo của google, css đưa lên phần head, js đưa xuống cuối body-->
+<!--Phần này là thư viện cần nhúng lên phần <head></head> -->
+@section head{
+    <link href="~/Scripts/jqwidgets/styles/jqx.base.css" rel="stylesheet" />
+    <link href="~/Scripts/jqwidgets/styles/jqx.material-green.css" rel="stylesheet" />
+    <link href="~/Areas/Work/CSS/dhtmlxgantt.css" rel="stylesheet" />
+    <link href="~/Areas/Work/CSS/CustomGrantt.css" rel="stylesheet" />
+
+}
+@section jquery {
+
+}
+<!--Phần này là thư viện cần nhúng lên cuối <body></body> -->
+
+@section scripts{
+    <!--Common Search result template-->
+    <script src="~/Scripts/jqwidgets/jqxsortable.js"></script>
+    <script src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script src="~/Scripts/jqwidgets/jqxdragdrop.js"></script>
+    <script>
+        $('#popupTaskKanban').on('hidden.bs.modal', function () {
+            location.reload();
+        });
+    </script>
+    <script src="~/Areas/Work/Scripts/ISD.Kanban.js"></script>
+    <script src="~/Scripts/Common/ISD.SearchTemplate.js"></script>
+    <!--gantt chart dhtmlx-->
+    <script src="~/Areas/Work/Scripts/dhtmlxgantt.js"></script>
+
+    <script src="~/Areas/Work/Scripts/GranttChartTemplate.js"></script>
+    <script src="https://export.dhtmlx.com/gantt/api.js?v=6.0.4"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+
+    @*<script src="https://export.dhtmlx.com/gantt/api.js?v=7.1.2"></script>*@
+    <!--Nhé thử vào đây xem được không, không được sẽ làm không đúng khuyến cáo trong 1 số trường hợp-->
+    <!--CK Editor-->
+
+    <script src="~/Content/Plugin/ckeditor/ckeditor.js"></script>
+    <script src="~/ckfinder/ckfinder.js"></script>
+    <script>
+        var dt = [];
+        //--BEGIN EVENT COMPANYCHANGE
+        $('#CompanyId').on('change', function () {
+            var CompanyId = $("#CompanyId").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/work/Timeline/GetWorkShopBy",
+                data: {
+                    CompanyId: CompanyId
+                },
+                success: function (jsonData) {
+                    $("#WorkShopId").html("");
+                    if (jsonData.length > 0) {
+                        $.each(jsonData, function (index, value) {
+                            $("#WorkShopId").append("<option value='" + value.Value + "'>" + value.Text + "</option>");
+                        });
+                    }
+                    else {
+                        $("#WorkShopId").append("<option>-- Tất cả --</option>");
+                    }
+                }
+            });
+        })
+        //--END EVENT COMPANYCHANGE
+
+        // tạo dữ liệu ảo
+
+        var arr = [
+            { id: "676ca794-d859-4b68-963f-000042f514b0", text: "Trúc - 31/5 - Anh Sơn", duration: 0, start_date: "01/05/2021", end_date: "25/05/2021", finishDate: "15/04/2021", status: "", slkh: 0, sltt: 0, complete: 0, SLNVLYC: 0, parent: null, open: true, color: "red", textColor: "blue" },
+            { id: "676ca794-d859-4b68-963f-000042f514b1", text: "Trúc - 31/5 - Anh Sơn", duration: 0, start_date: "01/05/2021", end_date: "25/05/2021", finishDate: "15/04/2021", status: "", slkh: 0, sltt: 0, complete: 0, SLNVLYC: 0, parent: '676ca794-d859-4b68-963f-000042f514b0', open: true, color: "yellow" },
+            { id: "676ca794-d859-4b68-963f-000042f514b2", text: "Trúc - 31/5 - Anh Sơn", duration: 0, start_date: "01/05/2021", end_date: "25/05/2021", finishDate: "15/04/2021", status: "", slkh: 0, sltt: 0, complete: 0, SLNVLYC: 0, parent: '676ca794-d859-4b68-963f-000042f514b0', open: true }
+            //{ id: 2, text: "Task #1", start_date: "02-02-2018", duration: 8, progress: 0.6, parent: 1, cc: 'c' },
+
+            //{ id: 4, text: "Project #4", start_date: "01-04-2018", duration: 18, progress: 0.4, cc: 'c', open: true },
+            //{ id: 5, text: "Task #5", start_date: "02-04-2018", duration: 8, progress: 0.6, parent: 4, cc: 'c' },
+            //{ id: 6, text: "Task #6", start_date: "11-04-2018", duration: 8, progress: 0.6, parent: 4, cc: 'c' },
+            //{ id: 3, text: "Task #2", start_date: "11-02-2018", duration: 8, progress: 0.6, parent: 1, cc: 'c' },
+        ];
+        //end tạo dữ liệu ảo
+
+        $(document).ready(function () {
+            ISDPivotTemplate.Init("@CurrentUrl", "@CurrentController");
+
+            //common date
+            $(document).on("change", ".ddl-common-date", function () {
+                var cssClass = $(this).data('id');
+                var commonDate = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "/Utilities/CommonDate/Get",
+                    data: {
+                        CommonDate: commonDate
+                    },
+                    success: function (jsonData) {
+                        $("." + cssClass + " input[name='" + cssClass + "FromDate']").val(jsonData.FromDate);
+                        $("." + cssClass + " input[name='" + cssClass + "ToDate']").val(jsonData.ToDate);
+                        if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                            $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", false);
+                            $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", false);
+                        } else {
+                            $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", false);
+                            $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", false);
+                        }
+
+                    }
+                });
+            });
+            // load data
+            var listTask = [];
+
+            var fromDate = $('#StartFromDate').val();
+            var toDate = $('#StartToDate').val();
+            $.ajax({
+                type: "GET",
+                data: {
+                    fromDate: fromDate,
+                    toDate: toDate
+                },
+                url: '/Work/Timeline/_search',
+                success: function (jsonData) {
+
+                    $.each(jsonData.Data, function (i, item) {
+
+                        var parent;
+                        if (item.ParentTaskId == null) {
+                            parent = 0;
+                        }
+                        else {
+                            parent = item.ParentTaskId;
+
+                        }
+
+                        var color = item.ProcessCode.split(',');
+                        var task = {
+                            id: item.TaskId,
+                            text: item.TaskName,
+                            duration: 0,
+                            start_date: item.sStart,
+                            finishDate: item.sFinishDate,
+                            end_date: item.sFinish != null ? item.sFinish : (item.sFinishDate != null ? item.sFinishDate : item.sStart),
+                            enddate: item.sFinish,
+                            status: item.status,
+                            slkh: 0,
+                            complete: 0,
+                            SLNVLYC: 0,
+                            sltt: 0,
+                            parent: parent,
+                            color: color[0],
+                            textColor: color[1],
+                            open: false
+                        };
+
+
+                        listTask.push(task);
+                    })
+
+                },
+                error: function (jsonData) {
+                    console.log(jsonData)
+                }
+            }).done(
+                function () {
+                    // ---- Begin Create list colum ------
+                    gantt.config.date_grid = "%d/%m"; // định dạng ngày hiển thị
+                    var colHeader = '<div class="gantt-dropdown" onclick="gantt.$showDropdown(this)">&#9660;</div>';
+                    var allColumns = [
+
+                        { name: "text", label: "Task name", width: 120, height: 150, resize: true, tree: true, },
+                        { name: "duration", label: "Duration", width: 60, align: "center", resize: true, },
+                        { name: "start_date", label: "Start", width: 80, align: "center", resize: true, },
+                        { name: "finishDate", label: "Deadline", width: 80, align: "center", resize: true, },
+                        { name: "enddate", label: "Finish date", width: 70, align: "center", resize: true, },
+                        { name: "end_date", label: "Finish date", width: 70, align: "center", resize: true, },
+                        { name: "status", label: "Trạng Thái", width: 70, align: "center", resize: true },
+                        { name: "slkh", label: "SLKH", width: 70, align: "center", resize: true, },
+                        { name: "complete", label: "% Complate", align: "center", width: 70, resize: true, },
+                        { name: "SLNVLYC", label: "SL NVL YC", align: "center", width: 70, resize: true, },
+                        { name: "buttons", label: colHeader, max_width: 30, resize: true }
+                    ]
+                    gantt.config.columns = allColumns;
+                    // -- End Create list column---
+
+                    // Begin custom date is sunday
+
+                    var today = moment().valueOf()
+                    var day = moment(today).format('MM/DD/YYYY');
+                    gantt.config.work_time = true;
+                    gantt.templates.timeline_cell_class = function (task, date) {
+                        if (!gantt.isWorkTime({ task: task, date: date })) {
+                            return "weekend";
+                        }
+                        date = moment(date).format('MM/DD/YYYY');
+                        if (date == day) {
+                            return "today-cell";
+                        }
+                    };
+                    // End custom date is sunday
+
+
+                    // custom scale
+                    gantt.config.scale_height = 40;
+                    gantt.config.min_column_width = 25;
+                    gantt.config.scales = [
+                        {
+                            unit: "month", step: 1, format: "%m/%Y", css: function (date) {
+                                return "text-color";
+                            }
+                        },
+                        {
+                            unit: "day", step: 1, format: "%j"
+                        }
+
+                    ];
+                    // end custom sacle
+
+                    // ----- begin hind show cloumn grantt -----
+                    function getDropdownNode() {
+                        return document.querySelector("#gantt_dropdown");
+                    }
+
+                    gantt.$showDropdown = function (node) {
+                        var position = node.getBoundingClientRect();
+                        var dropDown = getDropdownNode();
+                        dropDown.style.top = position.bottom + "px";
+                        dropDown.style.left = position.left + "px";
+                        dropDown.style.display = "block";
+                        populateColumnsDropdown(dropDown);
+
+                        dropDown.onchange = function () {
+                            var selection = getColumnsSelection(dropDown);
+                            gantt.config.columns = createColumnsConfig(selection);
+                            gantt.render();
+                        }
+
+                        dropDown.keep = true;
+                        setTimeout(function () {
+                            dropDown.keep = false;
+                        })
+                    }
+                    gantt.$hideDropdown = function () {
+                        var dropDown = getDropdownNode();
+                        dropDown.style.display = "none";
+
+                    }
+                    window.addEventListener("click", function (event) {
+                        if (!event.target.closest("#gantt_dropdown") && !getDropdownNode().keep) {
+                            gantt.$hideDropdown();
+                        }
+                    });
+                    function populateColumnsDropdown(node) {
+                        var visibleColumns = {};
+                        gantt.config.columns.forEach(function (col) {
+                            visibleColumns[col.name] = true;
+                        });
+
+
+
+
+                        var lines = [];
+                        allColumns.forEach(function (col) {
+
+                            if (col.name != 'buttons') {
+                                var checked = visibleColumns[col.name] ? "checked" : "";
+                                lines.push("<label><input type='checkbox' name='" + col.name + "' " + checked + ">" + col.label + "</label>");
+                            }
+
+                        });
+                        node.innerHTML = lines.join("<br>");
+
+                    }
+
+                    function getColumnsSelection(node) {
+                        var selectedColumns = node.querySelectorAll(":checked");
+                        var checkedColumns = {};
+                        selectedColumns.forEach(function (node) {
+                            checkedColumns[node.name] = true;
+                        });
+                        checkedColumns.buttons;
+                        checkedColumns.buttons = true;
+
+                        return checkedColumns;
+                    }
+                    function createColumnsConfig(selectedColumns) {
+                        var newColumns = [];
+
+                        allColumns.forEach(function (column) {
+                            if (selectedColumns[column.name]) {
+                                newColumns.push(column);
+                            }
+                        });
+
+
+                        return newColumns;
+                    }
+
+                    //Create column custom
+                    function createColumnsCustom(selectedColumns) {
+                        var newColumns = [];
+                        var json = localStorage.getItem("columnDefault");
+                        var arrColumnDF = JSON.parse(json);
+                        var listNameColumn = [];
+                        $.each(selectedColumns, function (i, item) {
+                            listNameColumn.push(item.name)
+                        })
+                        arrColumnDF.forEach(function (column) {
+                            var index = jQuery.inArray(column.name, listNameColumn);
+                            if (index != -1) {
+                                column.width = selectedColumns[index].width;
+                                newColumns.push(column);
+                            }
+                        });
+                        return newColumns;
+                    }
+
+                    //----- end hind show column grantt ------
+
+                    // -- BEGIN event search---
+                    search();
+                    // --END  event search---
+
+                    // BEGIN event click task
+                    gantt.attachEvent("onTaskDblClick", function (id, e) {
+
+                        console.log(e)
+                        $.ajax({
+                            type: "GET",
+                            data: {
+                                TaskId: id,
+                                KanbanId: "",
+                                NextColumnName: null
+
+                            },
+                            url: '/Work/Task/_Edit'
+                        }).done(function (html) {
+                            //$('.modal-content').html(html);
+                            //$('#popupTaskKanban').modal('show');
+                            $("#popupTaskKanban").find(".modal-content").html(html).end().modal("show");
+                        })
+
+
+                    });
+                    // END event click task
+
+                    // BEGIN save Column default grantt in local storage
+                    localStorage.removeItem("columnDefault"); // remove local storage before add
+
+                    localStorage.removeItem("columnDefault");
+                    var listColumnDF = gantt.config.columns;
+                    var arrColumnDF = [];
+                    $.each(listColumnDF, function (i, item) {
+                        var col = {
+                            name: item.name,
+                            label: item.label,
+                            width: item.width,
+                            height: item.height,
+                            resize: item.resize,
+                            tree: item.tree
+                        }
+                        arrColumnDF.push(col)
+                    })
+                    var JsonColumnDF = JSON.stringify(arrColumnDF);
+                    localStorage.setItem("columnDefault", JsonColumnDF);
+                    // END save Column default grantt in local storage
+
+                    //---Begin Load column custom ---
+                    /*var js = localStorage.getItem("column");*/
+                    var arr = @Html.Raw(Json.Encode(ViewBag.PivotSetting));
+                    console.log(arr);
+                    $.each(arr, function (i, item) {
+                        var col = {
+                            name: item.FieldName,
+                            label: item.Caption,
+                            width: item.Width,
+                            height: item.Height,
+                            resize: item.Resize,
+                            tree: item.Tree
+                        }
+                        dt.push(col)
+                    })
+
+                    var arrColumn = dt;
+                       // Trường hợp người dùng đã custom
+                       if ( arr != null) {
+                           gantt.config.columns = createColumnsCustom(arrColumn);
+                           gantt.init("gantt_here");
+                           gantt.parse({
+                           data: listTask,
+                        });
+                    }
+                    // Trường hợp người dùng chưa custom thì lấy default
+                    else {
+                        gantt.init("gantt_here");
+                        gantt.parse({
+                            data: listTask,
+                        });
+                    }
+                    //-- END Load column custom from locol storage ---
+
+                }
+            )
+            ISD.ShowMessage(window.location.href);
+            ISD.Delete();
+            ISD.Cancel();
+            ISD.DateTimeInitial();
+
+
+        });
+
+
+        function loading2Modal() {
+            $("#popupTaskKanban").addClass("loading2");
+        }
+        // --- BEGIN event search ---
+        function search() {
+            $('#btn-Search').on('click', function () {
+                var $btn = $('#btn-Search');
+                loading2();
+                gantt.templates.scale_cell_class = function (date) {
+                    if (date.getDay() == 0 || date.getDay() == 6) {
+                        return "weekend";
+                    }
+                };
+                var fromDate = $('#StartFromDate').val();
+                var toDate = $('#StartToDate').val();
+                var listTask = [];
+                $.ajax({
+                    type: "GET",
+                    data: {
+                        fromDate: fromDate,
+                        toDate: toDate
+                    },
+                    url: '/Work/Timeline/_search',
+                    success: function (jsonData) {
+                        var a = 0;
+                        $.each(jsonData.Data, function (i, item) {
+                            var parent;
+                            if (item.ParentTaskId == null) {
+                                parent = 0;
+                                a = a + 1;
+                            }
+                            else {
+                                parent = item.ParentTaskId;
+
+                            }
+                            var color = item.ProcessCode.split(',');
+                            var task = {
+                                id: item.TaskId,
+                                text: item.TaskName,
+                                duration: 0,
+                                start_date: item.sStart,
+                                finishDate: item.sFinishDate,
+                                end_date: item.sFinish != null ? item.sFinish : (item.sFinishDate != null ? item.sFinishDate : item.sStart),
+                                enddate: item.sFinish,
+                                status: item.status,
+                                slkh: 0,
+                                complete: 0,
+                                SLNVLYC: 0,
+                                sltt: 0,
+
+                                parent: parent,
+                                color: color[0],
+                                textColor: color[1],
+                                open: false
+                            };
+
+
+                            listTask.push(task);
+                        })
+
+                    },
+                    error: function (jsonData) {
+                        console.log(jsonData)
+                    }
+                }).done(
+                    function () {
+
+                        gantt.clearAll();
+                        gantt.parse({
+                            data: listTask,
+                        });
+                    })
+            })
+
+        }
+        // ---- END event search ---
+
+        // --- BEGIN event Full Screen ---
+        $('#full-screen').on('click', function () {
+
+            var JsonColumn = JSON.stringify(dt);
+            localStorage.setItem('column', JsonColumn)
+            var fromDate = $('#StartFromDate').val();
+            var toDate = $('#StartToDate').val();
+            var date = $.datepicker.formatDate('yy-mm-dd', new Date());
+            if (fromDate == "") {
+                var fromDate = date;
+            }
+            if (toDate == "") {
+                var toDate = date;
+            }
+            var url = '/work/Timeline/FullView?fromDate=' + fromDate + '&toDate=' + toDate + '';
+            window.open(url, 'window name', 'window settings');
+
+
+        })
+        //---- END event Full Screen ---
+
+
+
+        //-- BEGIN Export excel
+
+        $('#export-Excel').on('click', function () {
+
+            gantt.config.scales = [
+                { unit: "day", step: 1, format: "%j-%M-%Y" }
+            ];
+            //gantt.eachTask(function (task) {
+            //    task.$open = true;
+            //});
+            //gantt.render();
+            gantt.exportToExcel({
+                visual: "base-colors",
+
+            })
+            gantt.config.scales = [
+                { unit: "month", step: 1, format: "%M-%Y" },
+                { unit: "day", step: 1, format: "%j" },
+                { unit: "day", step: 1, format: "%D" }
+            ];
+            //gantt.eachTask(function (task) {
+            //    task.$open = false;
+            //});
+            //gantt.render();
+        })
+         //-- END export excel
+
+        // BEGIN even change template
+        $(document).off("click", ".pivot-template-item").on("click", ".pivot-template-item", function () {
+            var arr = {};
+            var data = $("#frmSearch").serializeArray();
+            var obj = {};
+            $.each(data, function (index, val) {
+                obj[val.name] = val.value;
+                $.extend(true, arr, obj)
+            });
+            obj["IsView"] = true;
+            obj["modeSearch"] = "Recently";
+            $.extend(true, arr, obj);
+            var templateId = $(this).data('id');
+            obj["pivotTemplate"] = templateId;
+            $.extend(true, arr, obj);
+            ISD.Download("/@CurrentUrl/ChangeTemplate", arr);
+
+             @*var arr = {};
+             var data = $("#frmSearch").serializeArray();
+             var obj = {};
+             $.each(data, function (index, val) {
+                 obj[val.name] = val.value;
+                 $.extend(true, arr, obj)
+             });
+            obj["IsView"] = true;
+            obj["modeSearch"] = "Recently";
+            $.extend(true, arr, obj);
+            var templateId = $(this).data('id');
+            obj["pivotTemplate"] = templateId;
+            $.extend(true, arr, obj);
+            //Save localStorage
+            localStorage.setItem('pageId-' + currentPageId, JSON.stringify(arr));
+            ISD.Download("/@CurrentUrl/ChangeTemplate", arr);*@
+        });
+        // END event change template
+
+
+    </script>
+}
+

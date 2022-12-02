@@ -1,0 +1,30 @@
+
+@Html.DevExpress().DocumentViewer(settings => {
+    settings.Name = "DocumentViewer";
+    settings.CallbackRouteValues = new {
+        Controller = "ReportHangTag",
+        Action = "DocumentViewerPartial",
+        CustomerReference = ViewBag.CustomerReference,
+        BatchPrinting = ViewBag.BatchPrinting,
+        isFist = false,
+        IsCum = ViewBag.IsCum
+    };
+    settings.ExportRouteValues = new
+    {
+        Controller = "ReportHangTag",
+        Action = "DocumentViewerPartialExport",
+        CustomerReference = ViewBag.CustomerReference,
+        BatchPrinting = ViewBag.BatchPrinting,
+        IsCum = ViewBag.IsCum
+    };
+    if (ViewBag.IsCum == true)
+    {
+        settings.Report = (HangTagCumXtraReport)ViewData["HangTag_Report"];
+    }
+    else
+    {
+        settings.Report = (HangTagXtraReport)ViewData["HangTag_Report"];
+    }
+    settings.ToolbarMode = DocumentViewerToolbarMode.Ribbon;
+    //settings.ClientSideEvents.Init = "function init(s) { var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor); var createFrameElement = s.viewer.printHelper.createFrameElement; s.viewer.printHelper.createFrameElement = function(name) { var frameElement = createFrameElement.call(this, name); if (isChrome) { frameElement.addEventListener('load', function(e) { if (frameElement.contentDocument.contentType !== 'text/html') frameElement.contentWindow.print(); }); } return frameElement;}}";
+}).GetHtml()

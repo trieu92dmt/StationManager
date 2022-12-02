@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Report.cshtml";
+    ViewBag.Title = "In QR Code máy móc chuyền";
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left"> @ViewBag.Title</h1>
+</div>
+
+<div class="content">
+    <div id="divReport">
+        @Html.Action("DocumentViewerPartial", "ReportEquipment", new { Id = ViewBag.Id, StepCode = ViewBag.StepCode })
+    </div>
+</div>

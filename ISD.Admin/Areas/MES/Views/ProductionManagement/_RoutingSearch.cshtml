@@ -1,0 +1,103 @@
+﻿@model ProductionManagementViewModel
+
+<div class="modal-dialog modal-dialog-sm">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cancel-delete"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">CHỌN SẢN PHẨM/CHI TIẾT/CỤM</h4>
+        </div>
+        <div class="modal-body">
+            <form id="frmRoutingSearchPopup">
+                @Html.HiddenFor(p => p.TaskId)
+                @Html.HiddenFor(p => p.ProductionOrder)
+                @Html.HiddenFor(p => p.ProductionOrder_SAP)
+                @Html.HiddenFor(p => p.Summary)
+                @Html.HiddenFor(p => p.StepCode)
+                @Html.HiddenFor(p => p.StepName)
+                @Html.HiddenFor(p => p.ProductCode)
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    <div class="panel-group">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5">
+                                        @Html.LabelByPropertyNameFor(p => p.ProductionOrder, LanguageResource.LSXDT)
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        <p>@Model.ProductionOrder</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5">
+                                        @Html.LabelByPropertyNameFor(p => p.Summary, LanguageResource.MES_Summary_D)
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        <p>@Model.Summary</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5">
+                                        @Html.LabelByPropertyNameFor(p => p.ProductionOrder_SAP, LanguageResource.MES_Summary)
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        <p>@Model.ProductionOrder_SAP</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5">
+                                        @Html.LabelByPropertyNameFor(p => p.StepCode, "Công đoạn")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        <p>@Model.StepCode | @Model.StepName</p>
+                                    </div>
+                                </div>
+
+                                @*<div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="col-md-8 col-md-offset-5">
+                                                <a class="btn btn-primary btn-search" id="btn-Routing-search">
+                                                    <i class="fa fa-search"></i> @LanguageResource.Btn_Search
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </form>
+            <form id="frmRoutingSearchResultPopup">
+                @Html.HiddenFor(p => p.TaskId, new { @id = "" })
+                <div class="form-horizontal">
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div id="table-routing">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-primary" id="btn-Routing-submit-Result">
+                @LanguageResource.Btn_Accept
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadingRouting();
+    });
+</script>

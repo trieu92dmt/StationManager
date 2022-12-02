@@ -1,0 +1,95 @@
+﻿@model IEnumerable<EmployeeAssignmentSearchResultViewModel>
+
+<table id="tbl-search-employee" class="table table-hover table-bordered table-striped">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center">@LanguageResource.NumberIndex</th>
+            <th>@LanguageResource.Assignment_EmployeeCode</th>
+            <th>@LanguageResource.Assignment_EmployeeName</th>
+            <th>@LanguageResource.Master_Department</th>
+            <th>@LanguageResource.Assignment_EmployeeRouting</th>
+            <th class="text-center">Chọn</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            int i = 0, k = -1;
+            foreach (var item in Model)
+            {
+                i++;
+                k++;
+        <tr>
+            <td class="text-center">@i</td>
+            <td>@item.EmployeeCode</td>
+            <td>@item.EmployeeName</td>
+            <td>@item.Department</td>
+            <td>@item.EmployeeRouting</td>
+            <td class="text-center">
+                <input type="checkbox" id="nv-@k" name="AddEmployeeList[@k]" value="@item.EmployeeCode" class="them-nhan-vien" />
+            </td>
+        </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">@LanguageResource.NoRecordFound</td>
+            </tr>
+        }
+    </tbody>
+    @*<tbody>
+            <tr>
+                <td class="text-center">1</td>
+                <td>N001-01</td>
+                <td>Nguyễn Văn Hải</td>
+                <td>Bào</td>
+                <td class="text-center">OK</td>
+                <td class="text-center">
+                    <input id="N001-01-1" type="checkbox" checked />
+                </td>
+                <td class="text-center">
+                    <input id="N001-01-2" type="checkbox" checked />
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center">2</td>
+                <td>N001-02</td>
+                <td>Nguyễn Hải Phong</td>
+                <td>Bào</td>
+                <td class="text-center">OK</td>
+                <td class="text-center">
+                    <input id="N001-02-1" type="checkbox" />
+                </td>
+                <td class="text-center">
+                    <input id="N001-02-2" type="checkbox" checked />
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center">3</td>
+                <td>N001-03</td>
+                <td>Đỗ Văn Chinh</td>
+                <td>Bào</td>
+                <td class="text-center">OK</td>
+                <td class="text-center">
+                    <input id="N001-03-1" type="checkbox" />
+                </td>
+                <td class="text-center">
+                    <input id="N001-03-2" type="checkbox" checked />
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center">4</td>
+                <td>N001-04</td>
+                <td>Đỗ Văn Chiêu</td>
+                <td>Bào</td>
+                <td class="text-center">OK</td>
+                <td class="text-center">
+                    <input id="N001-04-1" type="checkbox" />
+                </td>
+                <td class="text-center">
+                    <input id="N001-04-2" type="checkbox" checked />
+                </td>
+            </tr>
+        </tbody>*@
+</table>

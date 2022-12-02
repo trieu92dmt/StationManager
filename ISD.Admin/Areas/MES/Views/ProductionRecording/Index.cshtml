@@ -1,0 +1,461 @@
+﻿@model ProductionManagementViewModel
+@{
+    ViewBag.Title = LanguageResource.ProductionRecording;
+    string CurrentController = ConstController.ProductionRecording;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+@section head{
+    <style>
+        #frm-record-production .form-horizontal .form-group {
+            font-size: 12px !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        #frmRoutingSearchPopup .form-horizontal {
+            font-size: 12px !important;
+        }
+
+            #frmRoutingSearchPopup .form-horizontal .form-group {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+            }
+    </style>
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+        @*<a class="btn bg-blue" data-toggle="modal" data-target="#divProductionOrderSearch"><i class="fa fa-plus-square"></i> Thêm mới</a>*@
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                {
+                    <div class="panel-body">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.LSXDT)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(p => p.LSXDT, new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.LSXSAP)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(p => p.LSXSAP, new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.ProductCode)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(p => p.ProductCode, new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.ProductName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(p => p.ProductName, new { @class = "form-control text-box single-line" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.StepName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(p => p.StepCode, null, LanguageResource.Dropdownlist_All, new { @class = "with-search" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.ToStockCode)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(p => p.ToStockCode, null, LanguageResource.Dropdownlist_All, new { @class = "with-search" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.TooltipLabelFor(p => p.CreateBy)
+                                </div>
+                                <div class="col-md-8 position-relative dropdown-absolute">
+                                    @Html.DropDownListFor(x => x.CreateBy, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <div class="label-wrapper">
+                                            <label class="control-label">@LanguageResource.CreatedTime</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("CommonDate", null, new { @class = "form-control with-search ddl-common-date", @data_id = "Created", @id = "created-date", Name = "CreatedCommonDate" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row Created">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.CreatedFromDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.RequiredTextboxFor(p => p.CreatedFromDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.CreatedToDate)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.RequiredTextboxFor(p => p.CreatedToDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-5">
+                                    @HtmlExtensions.SearchButton()
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="divSearchResult">
+                        @Html.Partial("_ProductionRecordingResultHeader", new ThucThiLenhSanXuatViewModel())
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-modal"></div>
+<div class="delete-confirm"></div>
+@section components{
+
+    <div class="modal fade" id="divFunctionModal" role="dialog">
+
+    </div>
+    <div class="modal fade" id="divRoutingSearch" role="dialog">
+
+    </div>
+    <div class="modal fade" id="divProductionRecordhistory" role="dialog">
+
+    </div>
+    <div class="modal fade" id="divProductionOrderSearch" role="dialog">
+        @Html.Partial("_ProductionOrderSearch")
+    </div>
+
+}
+
+@section scripts {
+    @*<script src="~/Areas/MES/Scripts/ProductionRecording.js"></script>*@
+    @Scripts.Render("~/Areas/MES/Scripts/ProductionRecording")
+    <script>
+        $(document).ready(function () {
+            //ISD.SearchInitial("@CurrentUrl");
+            PaggingServerSide("@CurrentUrl");
+            ISD.ShowMessage(window.location.href);
+            ISD.UploadFile("@CurrentUrl");
+        });
+        //common date
+        $(document).on("change", ".ddl-common-date", function () {
+            var cssClass = $(this).data('id');
+            var commonDate = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Utilities/CommonDate/Get",
+                data: {
+                    CommonDate: commonDate
+                },
+                success: function (jsonData) {
+                    $("." + cssClass + " input[name='" + cssClass + "FromDate']").val(jsonData.FromDate);
+                    $("." + cssClass + " input[name='" + cssClass + "ToDate']").val(jsonData.ToDate);
+                    if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                        $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", true);
+                        $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", true);
+                    } else {
+                        $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", false);
+                        $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", false);
+                    }
+
+                }
+            });
+        });
+        $(document).ajaxStop(function () {
+            $('.btn').button('reset');
+        });
+
+        $("#btn-search").click(function () {
+            PaggingServerSide("@CurrentUrl");
+        });
+
+        //trigger enter click when fill in search form
+        $(document).on("keyup", "#frmSearch", function (evt) {
+            if (evt.keyCode == 13) {
+                $("#btn-search").trigger("click");
+            }
+        });
+
+        function PaggingServerSide(controller) {
+            $(".dataTableServerSide").DataTable().clear().destroy();
+            $(".dataTableServerSide")
+                .on('processing.dt', function (e, settings, processing) {
+                    ISD.LoadingDataTable(processing, '.dataTableServerSide');
+                })
+                .DataTable({
+                proccessing: true,
+                serverSide: true,
+                paging: true,
+                scrollX: true,
+                ajax: {
+                    type: 'POST',
+                    url: "/" + controller + "/_PaggingServerSide",
+                    contentType: 'application/json',
+                    data: function (d) {
+                        var arr = {};
+                        //data search
+                        var data = $("#frmSearch").serializeArray();
+                        $.each(data, function (index, val) {
+                            var obj = {};
+                            obj[val.name] = val.value;
+                            $.extend(true, arr, obj);
+                        });
+                        //data datatable (draw, start, length,...)
+                        $.extend(true, arr, d);
+
+                        return JSON.stringify(arr);
+                    }
+                },
+                columns: [
+                    {
+                        "data": "STT",
+                        "className": "text-center"
+                    },
+                    {
+                        "data": "Summary",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "Property5",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "ProductCode",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "ProductName",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "StepName",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "ToStockCode",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "RoutingDetail",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "CreateByName",
+                        "orderable": true,
+                    },
+                    {
+                        "data": "CreateTime",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    {
+                        "data": "TaskId",
+                        "orderable": false,
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            htmlContent = '';
+                            if (row["Barcode"] == '' || row["Barcode"] == null) {
+
+                                /* Cập nhật QR Code */
+                                htmlContent += '<span><a href="#" class="btn btn-primary btn-update-barcode" data-id="' + row["TaskId"] + '" onclick="$(this).button("loading")">Cập nhật QR Code</a></span >';
+                            }
+
+                            /* Ghi nhận sản lượng */
+                            if (row["ToStockCode"] == '' || row["ToStockCode"] == null) {
+                                htmlContent += '<span> <a href="#" class="btn btn-primary btn-record-production" data-id="' + row["TaskId"] + '" onclick="$(this).button(\'loading\')">Ghi nhận sản lượng</a></span>';
+                            } else {
+                                htmlContent += '<span> <a href="#" class="btn btn-primary btn-record-production" data-id="' + row["TaskId"] + '" onclick="$(this).button(\'loading\')">Xem</a></span>';
+                            }
+                            /* Chuyển công đoạn */
+                            if (row["ToStockCode"] == '' || row["ToStockCode"] == null) {
+                                htmlContent += '<span> <a href="#" class="btn btn-primary btn-switching-stages" data-id="' + row["TaskId"] + '" onclick="$(this).button(\'loading\')">Chuyển công đoạn</a></span>';
+                            }
+                            /* hoàn tất công đoạn lớn */
+                            htmlContent += '<span> <a href="#" class="btn btn-primary btn-confirm-cdl" data-id="' + row["TaskId"] + '" onclick="$(this).button(\'loading\')">Hoàn tất công đoạn lớn</a></span>';
+
+                            return htmlContent;
+                        }
+                    },
+                ],
+                destroy: true,
+                language: {
+                    sProcessing: "Đang xử lý...",
+                    sLengthMenu: "Xem _MENU_ mục",
+                    sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                    sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                    sInfoPostFix: "",
+                    sSearch: "Tìm nội dung:",
+                    sUrl: "",
+                    oPaginate: {
+                        sFirst: "Đầu",
+                        sPrevious: "&laquo;",
+                        sNext: "&raquo;",
+                        sLast: "Cuối"
+                    }
+                },
+                columnDefs: [
+                    { targets: [0, 1], visible: true },
+                    { targets: 'no-sort', visible: false }
+                ],
+                "sDom": '<"top"flp>rt<"bottom"ip><"clear">',
+            });
+        }
+
+        //Cập nhật barcode
+        $(document).on("click", ".btn-update-barcode", function (e) {
+            loading2();
+            var $btn = $(this);
+            var id = $btn.data("id");
+            $.ajax({
+                type: "GET",
+                url: "/MES/ProductionRecording/_UpdateBarCode",
+                data: { TaskId: id },
+                success: function (response) {
+                    $("#divFunctionModal").html(response);
+                    $("#divFunctionModal").modal('show');
+
+                    PaggingServerSide("@CurrentUrl");
+                },
+                error: function (err) {
+                    console.log(err.statusText);
+                }
+            });
+        });
+        //Ghi nhận sản lượng
+        $(document).on("click", ".btn-record-production", function () {
+            loading2();
+            var $btn = $(this);
+            var id = $btn.data("id");
+            $.ajax({
+                type: "GET",
+                url: "/MES/ProductionRecording/_RecordProduction",
+                data: { TaskId: id },
+                success: function (response) {
+                    $("#divFunctionModal").html(response);
+                    $("#divFunctionModal").modal('show');
+                    //PaggingServerSide("@CurrentUrl");
+                },
+                error: function (err) {
+                    console.log(err.statusText);
+                }
+            });
+        });
+        //Chuyển đổi công đoạn
+        $(document).on("click", ".btn-switching-stages", function (e) {
+            loading2();
+            var $btn = $(this);
+            var id = $btn.data("id");
+            $.ajax({
+                type: "GET",
+                url: "/MES/ProductionRecording/_SwitchingStages",
+                data: { TaskId: id },
+                success: function (response) {
+                    $("#divFunctionModal").html(response);
+                    $("#divFunctionModal").modal('show');
+                    @*PaggingServerSide("@CurrentUrl");*@
+                },
+                error: function (err) {
+                    console.log(err.statusText);
+                }
+            });
+        });
+
+        //Hoàn tất công đoạn lớn
+        $(document).on("click", ".btn-confirm-cdl", function (e) {
+            loading2();
+            var $btn = $(this);
+            var id = $btn.data("id");
+            $.ajax({
+                type: "GET",
+                url: "/MES/ProductionRecording/_ConfirmWorkCenter",
+                data: { TaskId: id },
+                success: function (response) {
+                    $("#divFunctionModal").html(response);
+                    $("#divFunctionModal").modal('show');
+                    //PaggingServerSide("@CurrentUrl");
+                },
+                error: function (err) {
+                    console.log(err.statusText);
+                }
+            });
+        });
+        function onBarcodeDataReady(data, type, time) {
+            $('#ToBarcode').val(data);
+        }
+        $('#divFunctionModal').on('hidden.bs.modal', function () {
+            $('#divFunctionModal').html("");
+        });
+    </script>
+}
+

@@ -1,0 +1,254 @@
+﻿@model EmployeeCheckinViewModel
+
+@{
+    ViewBag.Title = LanguageResource.CheckInOut;
+    string CurrentController = ConstController.CheckInOut;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-xs-4">
+                            @Html.TooltipLabelFor(p => p.SerialTag)
+                        </div>
+                        <div class="col-xs-8">
+                            @Html.RequiredTextboxFor(p => p.SerialTag, new { @readonly = "readonly" })
+                            @*<div class="input-group input-group-sm">
+
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-info btn-flat" id="scanButton">@LanguageResource.Btn_ScanNFCTag</button>
+                                    </span>
+                                </div>*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-4">
+                            @Html.TooltipLabelFor(p => p.SalesEmployeeCode)
+                        </div>
+                        <div class="col-xs-8">
+                            @Html.RequiredTextboxFor(p => p.SalesEmployeeCode, new { @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-4">
+                            @Html.TooltipLabelFor(p => p.SalesEmployeeName)
+                        </div>
+                        <div class="col-xs-8">
+                            @Html.RequiredTextboxFor(p => p.SalesEmployeeName, new { @readonly = "readonly" })
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-4">
+                            @Html.TooltipLabelFor(p => p.DepartmentName)
+                        </div>
+                        <div class="col-xs-8">
+                            @Html.RequiredTextboxFor(p => p.DepartmentName, new { @readonly = "readonly" })
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 text-center">
+                        <button class="btn btn-primary btn-checkin" disabled="disabled">CHECKIN/OUT</button>
+                    </div>
+                </div>
+            </div>
+            <div id="checkinHistory"></div> 
+            <div class="panel hidden">
+                <style>
+                    .output {
+                        background-color: #f0f0f0;
+                        border-radius: 0.75em;
+                        display: block;
+                        margin: 0.5em;
+                        padding: 0.5em;
+                    }
+
+                    #status {
+                        margin: .5em 0;
+                        font-style: italic;
+                    }
+
+                    #log {
+                        margin: .5em 0;
+                        white-space: pre-wrap;
+                    }
+
+                        #status:empty, #log:empty, #content:empty {
+                            display: none;
+                        }
+                </style>
+                <h3>Live Output</h3>
+                <div id="output" class="output">
+                    <div id="content"></div>
+                    <div id="status"></div>
+                    <pre id="log"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+<script>
+     $(document).ready(function () {
+            ISD.SearchInitial("@CurrentUrl");
+            ISD.ShowMessage(window.location.href);
+
+        });
+    var ChromeSamples = {
+        log: function () {
+            var line = Array.prototype.slice.call(arguments).map(function (argument) {
+                return typeof argument === 'string' ? argument : JSON.stringify(argument);
+            }).join(' ');
+
+            document.querySelector('#log').textContent += line + '\n';
+        },
+
+        clearLog: function () {
+            document.querySelector('#log').textContent = '';
+        },
+
+        setStatus: function (status) {
+            document.querySelector('#status').textContent = status;
+        },
+
+        setContent: function (newContent) {
+            var content = document.querySelector('#content');
+            while (content.hasChildNodes()) {
+                content.removeChild(content.lastChild);
+            }
+            content.appendChild(newContent);
+        }
+    };
+
+    // Add a global error event listener early on in the page load, to help ensure that browsers
+    // which don't support specific functionality still end up displaying a meaningful message.
+    window.addEventListener('error', function (error) {
+        if (ChromeSamples && ChromeSamples.setStatus) {
+            console.error(error);
+            ChromeSamples.setStatus(error.message + ' (Your browser may not support this feature.)');
+            error.preventDefault();
+        }
+    });
+
+    if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)) {
+        // Let's log a warning if the sample is not supposed to execute on this
+        // version of Chrome.
+        if (89 > parseInt(RegExp.$1)) {
+            ChromeSamples.setStatus('Warning! Keep in mind this sample has been tested with Chrome ' + 89 + '.');
+        }
+    }
+
+    if (!("NDEFReader" in window)) {
+        ChromeSamples.setStatus(
+            "Web NFC is not available.\n" +
+            'Please make sure the "Experimental Web Platform features" flag is enabled on Android.'
+        );
+    }
+</script>
+
+<script>
+    let ndef;
+    log = ChromeSamples.log;
+    //set event btn-save, btn-save-continue for btn-create
+    $(document).ready(function () {
+        //Chuyển qua https nếu chưa phải https
+        if (location.protocol !== 'https:') {
+            location.replace(`https:${location.href.substring(location.protocol.length)}`);
+        }
+        try {
+            if (ndef == undefined) {
+                ndef = new NDEFReader();
+            }
+            ndef.scan();
+            log("> Scan started");
+
+            ndef.addEventListener("readingerror", () => {
+                log("Argh! Cannot read data from the NFC tag. Try another one?");
+            });
+
+            ndef.onreading = event => {
+                //const message = event.message;
+                const serialNumber = event.serialNumber;
+
+                log(`> Serial Number: ${serialNumber}`);
+                //log(`> Records: (${message.records.length})`);
+                SerialTagReady(serialNumber);
+            };
+
+        } catch (error) {
+            log("Argh! " + error);
+            $(this).button('reset');
+        }
+    });
+
+    function SerialTagReady(serialNumber) {
+        //Remove ':' in serial
+        let seri = serialNumber.replace(/:/g, '');
+        //Convert from HEX
+        let intSerial = parseInt(seri, 16);
+        $("#SerialTag").val(intSerial);
+        $("#checkinHistory").html("");
+        $.ajax({
+            type: "GET",
+            url: "/MES/CheckInOut/GetEmployeeBySerial",
+            data: { serialTag: intSerial },
+            success: function (response) {
+                if (response.Data != null) {
+                    $(".btn-checkin").prop("disabled", false);
+                    $("#SalesEmployeeCode").val(response.Data.SalesEmployeeCode);
+                    $("#SalesEmployeeName").val(response.Data.SalesEmployeeName);
+                    $("#DepartmentName").val(response.Data.DepartmentName);
+                } else {
+                    //alertPopup(false, "Không tìm thấy thông tin nhân viên!");
+                    $(".btn-checkin").prop("disabled", true);
+                    $("#SalesEmployeeCode").val("");
+                    $("#SalesEmployeeName").val("");
+                    $("#DepartmentName").val("");
+                }
+            }
+        });
+    }
+
+    $(document).on("click", ".btn-checkin", function () {
+        $btn = $(this);
+        //$btn.attr("disabled", true);
+        //$btn.html("Loadding...");
+        $btn.button('loading');
+
+        var serialTag = $("#SerialTag").val();
+        if (serialTag) {
+            $.ajax({
+                type: "POST",
+                url: "/MES/CheckInOut/_SaveCheckIn",
+                data: { SerialTag: serialTag },
+                success: function (response) {
+                    $btn.button('reset');
+                    $("#checkinHistory").html(response);
+                },
+                error: function (err) {
+                    $btn.button('reset');
+                    console.log(err.responseText);
+                }
+            });
+        }
+    })
+</script>
+
+
+

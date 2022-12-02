@@ -1,0 +1,562 @@
+﻿@using Newtonsoft.Json;
+@using ISD.Repositories;
+@using System.Drawing;
+
+@model IEnumerable<BC05ReportViewModel>
+
+@{
+    var pivotSetting = (List<FieldSettingModel>)ViewBag.PivotSetting;
+    var search = (BC05ReportViewModel)ViewBag.Search;
+    var NumberOfFreezeColumn = (int?)ViewBag.NumberOfFreezeColumn;
+    UtilitiesRepository repo = new UtilitiesRepository();
+    string fileName = repo.RemoveSign4VietnameseString(LanguageResource.BC05Report.ToUpper()).Replace(" ", "_").Replace("/", "_");
+    //Danh sách phòng ban lỗi
+    var AllDepartmentList = (List<ISDSelectItem2>)ViewBag.AllDepartmentList;
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+}
+@Html.DevExpress().GridView(settings =>
+{
+    settings.Name = "gridViewBC05";
+    settings.KeyFieldName = "LSXDT";
+    settings.Width = Unit.Percentage(100);
+    settings.CallbackRouteValues = new { Controller = "BC05Report", Action = "BC05ReportPartial", jsonReq = JsonConvert.SerializeObject(search) };
+    //Command Column: CRUD
+    settings.CommandColumn.Visible = false;
+
+    //Fixed Column
+    settings.Styles.FixedColumn.BackColor = Color.LightYellow;
+    settings.Settings.HorizontalScrollBarMode = ScrollBarMode.Visible;
+
+    //Fixed Header
+    settings.Settings.VerticalScrollBarMode = ScrollBarMode.Visible;
+    settings.Settings.VerticalScrollableHeight = 500;
+
+    settings.SettingsPager.Mode = GridViewPagerMode.ShowAllRecords;
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "STT";
+        c.Width = Unit.Pixel(70);
+        c.Caption = "STT";
+        c.FixedStyle = GridViewColumnFixedStyle.Left;
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 70;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "VBELN";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "SO";
+        c.FixedStyle = GridViewColumnFixedStyle.Left;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 80;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "LSXDT";
+        c.Width = Unit.Pixel(200);
+        c.Caption = "LSX Đại Trà";
+        c.FixedStyle = GridViewColumnFixedStyle.Left;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 200;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "NumberSP";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Số mã SP";
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.PropertiesEdit.DisplayFormatString = "n0";
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Quantity";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "SL SP";
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.PropertiesEdit.DisplayFormatString = "n0";
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "DeliveryDate";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Ngày giao hàng";
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.PropertiesEdit.DisplayFormatString = "dd/MM/yyyy";
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "FinishDateChange";
+        c.Width = Unit.Pixel(100);
+        c.Caption = "Ngày KT điều chỉnh";
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.PropertiesEdit.DisplayFormatString = "dd/MM/yyyy";
+        c.ExportWidth = 100;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Center;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "SLKH";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Số cont KH";
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.PropertiesEdit.DisplayFormatString = "n3";
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "Remaining";
+        c.Width = Unit.Pixel(80);
+        c.Caption = "Số cont còn lại";
+        c.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.PropertiesEdit.DisplayFormatString = "n3";
+        c.ExportWidth = 80;
+        c.ExportCellStyle.HorizontalAlign = HorizontalAlign.Right;
+    });
+
+    if (AllDepartmentList != null && AllDepartmentList.Count > 0)
+    {
+        for (int i = 1; i <= AllDepartmentList.Count; i++)
+        {
+            settings.Columns.Add(c =>
+            {
+                c.FieldName = "PBL" + (AllDepartmentList[i - 1].orderIndex / 10).ToString().PadLeft(2, '0');
+                c.Width = Unit.Pixel(200);
+                c.Caption = AllDepartmentList[i - 1].text;
+                c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+                c.ExportWidth = 250;
+            });
+        }
+    }
+
+    settings.Columns.Add(c =>
+    {
+        c.FieldName = "AssignResponsibility";
+        c.Width = Unit.Pixel(150);
+        c.Caption = "Nhân sự phụ trách";
+        c.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+        c.ExportWidth = 150;
+    });
+
+
+
+    //Export excel
+    if (Model != null && Model.Count() > 0)
+    {
+        settings.SettingsExport.EnableClientSideExportAPI = true;
+        settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.WYSIWYG;
+
+        settings.Toolbars.Add(t =>
+        {
+            t.SettingsAdaptivity.Enabled = true;
+            t.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+            t.Items.Add(GridViewToolbarCommand.ExportToXls);
+            t.Items.Add(GridViewToolbarCommand.ExportToXlsx);
+        });
+
+        //File name
+        settings.SettingsExport.FileName = fileName;
+        //Page header
+        //settings.SettingsExport.ReportHeader = LanguageResource.BC00Report.ToUpper();
+        settings.SettingsExport.PageHeader.Left = LanguageResource.BC00Report.ToUpper();
+        settings.SettingsExport.PageHeader.Font.Size = 16;
+        settings.SettingsExport.PageHeader.Font.Bold = true;
+        //Column header
+        settings.SettingsExport.Styles.Header.BackColor = ColorTranslator.FromHtml("#C6EFCE");
+        settings.SettingsExport.Styles.Header.ForeColor = ColorTranslator.FromHtml("#000000");
+        settings.SettingsExport.Styles.Header.Font.Size = 11;
+        settings.SettingsExport.Styles.Header.Font.Bold = true;
+        //Cell
+        settings.SettingsExport.Styles.Cell.Font.Size = 11;
+    }
+    Reports.Helpers.GridViewFeaturesHelper.SetupGlobalGridViewBehavior(settings);
+}).Bind(Model).GetHtml()
+@*@Html.DevExpress().PivotGrid(settings =>
+    {
+        settings.Name = "BC05Report";
+        settings.CallbackRouteValues = new { Controller = "BC05Report", Action = "BC05ReportPartial", jsonReq = JsonConvert.SerializeObject(search) };
+        settings.Width = Unit.Percentage(100);
+        settings.OptionsPager.RowsPerPage = 10;
+        settings.OptionsPager.ColumnsPerPage = 90;
+        settings.OptionsPager.PageSizeItemSettings.Visible = true;
+        //Grand total
+        settings.OptionsView.ShowRowTotals = false;
+        settings.OptionsView.ShowColumnGrandTotalHeader = false;
+        settings.OptionsView.ShowColumnGrandTotals = false;
+        settings.OptionsView.ShowRowGrandTotalHeader = false;
+        settings.OptionsView.ShowRowGrandTotals = false;
+        settings.OptionsView.ShowTotalsForSingleValues = false;
+        settings.OptionsView.ShowGrandTotalsForSingleValues = false;
+        settings.OptionsView.ShowCustomTotalsForSingleValues = false;
+        //Customization
+        settings.OptionsCustomization.AllowDrag = true;
+        settings.OptionsCustomization.AllowDragInCustomizationForm = true;
+        settings.OptionsCustomization.AllowSort = false;
+        settings.OptionsCustomization.AllowExpand = false;
+        //Scroll
+        settings.OptionsView.HorizontalScrollingMode = PivotScrollingMode.Virtual;
+        settings.OptionsView.HorizontalScrollBarMode = ScrollBarMode.Auto;
+        settings.AfterPerformCallback = (sender, e) =>
+        {
+            List<FieldSettingModel> fieldSettingList = new List<FieldSettingModel>();
+            ASPxPivotGrid PivotGrid = sender as ASPxPivotGrid;
+            var listField = PivotGrid.Fields;
+            foreach (PivotGridField field in listField)
+            {
+                FieldSettingModel fieldSetting = new FieldSettingModel();
+                fieldSetting.Caption = field.Caption;
+                fieldSetting.AreaIndex = field.AreaIndex;
+                fieldSetting.FieldName = field.FieldName;
+                if (field.Area == PivotArea.RowArea)
+                {
+                    fieldSetting.PivotArea = 0;
+
+                }
+                else
+                {
+                    if (field.Area == PivotArea.ColumnArea)
+                    {
+                        fieldSetting.PivotArea = 1;
+                    }
+                    else
+                    {
+                        if (field.Area == PivotArea.FilterArea)
+                        {
+                            fieldSetting.PivotArea = 2;
+                        }
+                        else
+                        {
+                            fieldSetting.PivotArea = 3;
+                        }
+                    }
+                }
+                if (field.ValueFormat.FormatType == FormatType.Numeric || field.ValueFormat.FormatType == FormatType.DateTime)
+                {
+                    fieldSetting.CellFormat_FormatString = field.ValueFormat.FormatString;
+                    fieldSetting.CellFormat_FormatType = field.ValueFormat.FormatType.ToString();
+                }
+                fieldSetting.Visible = field.Visible;
+                fieldSettingList.Add(fieldSetting);
+            }
+            Session[CurrentUser.AccountId + "Layout"] = fieldSettingList;
+
+        };
+
+        if (pivotSetting != null && pivotSetting.Count > 0)
+        {
+            foreach (var fieldSetting in pivotSetting)
+            {
+                settings.Fields.Add(field =>
+                {
+                    if (fieldSetting.PivotArea == 0)
+                    {
+                        field.Area = PivotArea.RowArea;
+                        field.Options.AllowExpand = DefaultBoolean.False;
+                    }
+                    if (fieldSetting.PivotArea == 1)
+                    {
+                        field.Area = PivotArea.ColumnArea;
+                    }
+                    if (fieldSetting.PivotArea == 2)
+                    {
+                        if (fieldSetting.AreaIndex > 10)
+                        {
+                            field.Visible = false;
+                        }
+                        field.Area = PivotArea.FilterArea;
+
+                    }
+                    if (fieldSetting.PivotArea == 3)
+                    {
+                        field.Area = PivotArea.DataArea;
+                    }
+                    field.FieldName = fieldSetting.FieldName;
+                    field.Caption = fieldSetting.Caption;
+                    field.AreaIndex = fieldSetting.AreaIndex.Value;
+                    if (fieldSetting.CellFormat_FormatType == "DateTime")
+                    {
+                        field.ValueFormat.FormatType = FormatType.DateTime;
+                        field.ValueFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                        field.CellFormat.FormatType = FormatType.DateTime;
+                        field.CellFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                        field.ValueStyle.HorizontalAlign = HorizontalAlign.Center;
+                        field.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+                    }
+                    if (fieldSetting.CellFormat_FormatType == "Numeric")
+                    {
+                        field.ValueFormat.FormatType = FormatType.Numeric;
+                        field.ValueFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                        field.CellFormat.FormatType = FormatType.Numeric;
+                        field.CellFormat.FormatString = fieldSetting.CellFormat_FormatString;
+                        field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+                        field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+                    }
+                    field.Visible = fieldSetting.Visible.Value;
+                    field.SortMode = PivotSortMode.Default;
+                    if (fieldSetting.Caption == "STT")
+                    {
+                        field.ValueStyle.HorizontalAlign = HorizontalAlign.Center;
+                        field.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+                    }
+                    if (fieldSetting.FieldName == "PBL01" || fieldSetting.FieldName == "PBL02" || fieldSetting.FieldName == "PBL03" || fieldSetting.FieldName == "PBL04" || fieldSetting.FieldName == "PBL05"
+                    || fieldSetting.FieldName == "PBL06" || fieldSetting.FieldName == "PBL07" || fieldSetting.FieldName == "PBL08" || fieldSetting.FieldName == "PBL09" || fieldSetting.FieldName == "PBL10"
+                    || fieldSetting.FieldName == "PBL11" || fieldSetting.FieldName == "AssignResponsibility"
+
+                   )
+                    {
+                        field.SummaryType = PivotSummaryType.Min;
+                        field.ValueStyle.HorizontalAlign = HorizontalAlign.Left;
+                        field.CellStyle.HorizontalAlign = HorizontalAlign.Left;
+                    }
+                });
+            }
+        }
+        else // default
+        {
+            //Filter Area
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.RowArea;
+                field.FieldName = "STT";
+                field.Caption = "STT";
+                field.AreaIndex = 0;
+                //field.ValueFormat.FormatType = FormatType.Numeric;
+                //field.ValueFormat.FormatString = "{0:n0}";
+                //field.CellFormat.FormatType = FormatType.Numeric;
+                //field.CellFormat.FormatString = "{0:n0}";
+                field.ValueStyle.HorizontalAlign = HorizontalAlign.Center;
+                field.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+            });
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.RowArea;
+                field.FieldName = "VBELN";
+                field.Caption = "SO";
+                field.AreaIndex = 1;
+            });
+
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.RowArea;
+                field.FieldName = "LSXDT";
+                field.Caption = "LSX Đại Trà";
+                field.AreaIndex = 2;
+            });
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.RowArea;
+                field.FieldName = "NumberSP";
+                field.Caption = "Số mã SP";
+                field.AreaIndex = 3;
+                field.ValueFormat.FormatType = FormatType.Numeric;
+                field.ValueFormat.FormatString = "{0:n0}";
+                field.CellFormat.FormatType = FormatType.Numeric;
+                field.CellFormat.FormatString = "{0:n0}";
+                field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+                field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+            });
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.RowArea;
+                field.FieldName = "Quantity";
+                field.Caption = "Số lượng SP";
+                field.AreaIndex = 4;
+                field.ValueFormat.FormatType = FormatType.Numeric;
+                field.ValueFormat.FormatString = "{0:n0}";
+                field.CellFormat.FormatType = FormatType.Numeric;
+                field.CellFormat.FormatString = "{0:n0}";
+                field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+                field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+            });
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.RowArea;
+                field.FieldName = "DeliveryDate";
+                field.Caption = "Ngày giao hàng";
+                field.ValueFormat.FormatString = "{0:dd/MM/yyyy}";
+                field.ValueFormat.FormatType = FormatType.DateTime;
+                field.AreaIndex = 5;
+                field.ValueStyle.HorizontalAlign = HorizontalAlign.Center;
+                field.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+            });
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.RowArea;
+                field.FieldName = "FinishDateChange";
+                field.Caption = "Ngày KT điều chỉnh";
+                field.ValueFormat.FormatString = "{0:dd/MM/yyyy}";
+                field.ValueFormat.FormatType = FormatType.DateTime;
+                field.AreaIndex = 6;
+                field.ValueStyle.HorizontalAlign = HorizontalAlign.Center;
+                field.CellStyle.HorizontalAlign = HorizontalAlign.Center;
+            });
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.DataArea;
+                field.FieldName = "SLKH";
+                field.Caption = "Số cont KH";
+                field.ValueFormat.FormatType = FormatType.Numeric;
+                field.ValueFormat.FormatString = "{0:n3}";
+                field.CellFormat.FormatType = FormatType.Numeric;
+                field.CellFormat.FormatString = "{0:n3}";
+                field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+                field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+                field.AreaIndex = 7;
+            });
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.DataArea;
+                field.FieldName = "Remaining";
+                field.Caption = "Số cont còn lại";
+                field.ValueFormat.FormatType = FormatType.Numeric;
+                field.ValueFormat.FormatString = "{0:n3}";
+                field.CellFormat.FormatType = FormatType.Numeric;
+                field.CellFormat.FormatString = "{0:n3}";
+                field.ValueStyle.HorizontalAlign = HorizontalAlign.Right;
+                field.CellStyle.HorizontalAlign = HorizontalAlign.Right;
+                field.AreaIndex = 8;
+            });
+
+            if (AllDepartmentList != null && AllDepartmentList.Count > 0)
+            {
+                for (int i = 1; i <= AllDepartmentList.Count; i++)
+                {
+                    settings.Fields.Add(field =>
+                    {
+                        field.Area = PivotArea.DataArea;
+                        field.FieldName = "PBL" + i.ToString().PadLeft(2, '0');
+                        field.Caption = AllDepartmentList[i - 1].name; ;
+                        field.AreaIndex = 9;
+                    });
+                }
+            }
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL01";
+            //    field.Caption = "KD";
+            //    field.AreaIndex = 9;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL02";
+            //    field.Caption = "TVTK";
+            //    field.AreaIndex = 10;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL03";
+            //    field.Caption = "CW";
+            //    field.AreaIndex = 11;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL04";
+            //    field.Caption = "KHDD";
+            //    field.AreaIndex = 12;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL05";
+            //    field.Caption = "SX";
+            //    field.AreaIndex = 13;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL06";
+            //    field.Caption = "XNK";
+            //    field.AreaIndex = 14;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL07";
+            //    field.Caption = "QC";
+            //    field.AreaIndex = 15;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL08";
+            //    field.Caption = "Kho";
+            //    field.AreaIndex = 16;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL09";
+            //    field.Caption = "Sofa";
+            //    field.AreaIndex = 17;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL10";
+            //    field.Caption = "Mẫu";
+            //    field.AreaIndex = 18;
+            //});
+
+            //settings.Fields.Add(field =>
+            //{
+            //    field.Area = PivotArea.DataArea;
+            //    field.FieldName = "PBL11";
+            //    field.Caption = "Khác";
+            //    field.AreaIndex = 19;
+            //});
+
+            settings.Fields.Add(field =>
+            {
+                field.Area = PivotArea.DataArea;
+                field.FieldName = "AssignResponsibility";
+                field.Caption = "Nhân sự phụ trách";
+                field.AreaIndex = 20;
+            });
+        }
+    }).Bind(Model).GetHtml()*@

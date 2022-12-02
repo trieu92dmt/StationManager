@@ -1,0 +1,50 @@
+﻿@model QualityControlDetailViewModel
+
+<div class="form-group">
+    <div class="col-md-4 col-xs-5">
+        @Html.TooltipLabelFor(p => p.TestMethod)
+    </div>
+    <div class="col-md-8 col-xs-7">
+        @Html.RequiredDropDownListFor(x => x.TestMethod, null, LanguageResource.Dropdownlist_Choose, new { @Name = "QualityControlDetailViewModel.TestMethod", @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-4 col-xs-5">
+        @Html.TooltipLabelFor(p => p.SamplingLevel)
+    </div>
+    <div class="col-md-8 col-xs-7 display-for">
+        @Html.RequiredDropDownListFor(x => x.SamplingLevel, null, LanguageResource.Dropdownlist_Choose, new { @Name = "QualityControlDetailViewModel.SamplingLevel", @class = "form-control" })
+    </div>
+</div>
+<div class="form-group hidden hidden-samplinglevel">
+    <div class="col-md-4 col-xs-5">
+        @Html.LabelByPropertyNameFor(p => p.SamplingLevel, "Nội dung:")
+    </div>
+    <div class="col-md-8 col-xs-7 display-for">
+        @Html.RequiredTextboxFor(x => x.SamplingLevelName, new { @Name = "QualityControlDetailViewModel.SamplingLevelName", @class = "form-control", @Disabled = "Disabled" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-4 col-xs-5">
+        @Html.TooltipLabelFor(p => p.AcceptableLevel)
+    </div>
+    <div class="col-md-8 col-xs-7 display-for">
+        @Html.TextBoxFor(x => x.AcceptableLevel, new { @class = "form-control", @Name = "QualityControlDetailViewModel.AcceptableLevel" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-4 col-xs-5">
+        @Html.TooltipLabelFor(p => p.InspectionQuantity)
+    </div>
+    <div class="col-md-8 col-xs-7 display-for">
+        @Html.TextBoxFor(x => x.InspectionQuantity, "{0:n0}", new { type = "number", @Name = "QualityControlDetailViewModel.InspectionQuantity", @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-4 col-xs-5">
+        @Html.TooltipLabelFor(p => p.Result)
+    </div>
+    <div class="col-md-8 col-xs-7 display-for">
+        @Html.DropDownList("ResultDetail", null, LanguageResource.Dropdownlist_Choose, new { @Name = "QualityControlDetailViewModel.Result", @class = "form-control" })
+    </div>
+</div>

@@ -1,0 +1,269 @@
+﻿@model ProductRoutingMappingViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = LanguageResource.LookUpProductionStage;
+    string CurrentController = ConstController.LookUpProductionStage;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+    string hrefCreate = ConstDomain.DomainAPI + "api/v1/MasterData/Routing/ExportCreate";
+    //string hrefUpdate = ConstDomain.DomainAPI + "api/v1/MasterData/Routing/ExportUpdate";
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    <div class="pull-right">
+        @*@HtmlExtensions.CreateButton(CurrentArea, CurrentController)*@
+        @HtmlExtensions.ExportButton(CurrentArea, CurrentController, null, null, null, hrefCreate, "#1")
+        @HtmlExtensions.ImportButton(CurrentArea, CurrentController)
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                {
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.ProductList)
+                                    </div>
+                                    <div class="col-md-8 multi">
+                                        <select name="productCode" id="productCode" class="form-control" multiple></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    @HtmlExtensions.SearchButton()
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="divSearchResult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="delete-confirm"></div>
+@section components {
+    <!--Confirm Add new File-->
+    <div id="divAddnewFilePopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cancel-addnew"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@LanguageResource.Modal_Notify_Routing</h4>
+                </div>
+                <form id="frmConfirmAddnewFile">
+                    <input type="hidden" name="ProductId" />
+                    <div class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="row text-center alert-message" id="text_response">
+                                @*@string.Format(LanguageResource.Task_FileUrl)*@
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-default" data-dismiss="modal" id="btn-cancel-addRouting">@LanguageResource.Confirm_No</span>
+                            <a class="btn btn-primary pull-right" id="btn-confirm-addRouting" data-tab="">
+                                @LanguageResource.Confirm_Yes
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+@section scripts {
+    <script>
+        //load default and set event
+        $(document).ready(function () {
+            Search("@CurrentUrl", true);
+            ISD.ShowMessage(window.location.href);
+            Select2_CustomFor_CRM_NotAll("/@CurrentUrl/SearchProductCode","#productCode");
+
+            //Import file
+            var domainAPI = '@ConstDomain.DomainAPI';
+            var action = 'api/v1/MasterData/Routing/';
+            ImportFile(domainAPI + action);
+        });
+
+        $(document).on("click", "#btn-export-edit", function () {
+            var domainAPI = '@ConstDomain.DomainAPI';
+            var action = 'api/v1/MasterData/Routing/ExportUpdate';
+            var $btn = $(this);
+            var arr = {};
+
+            //ProductCode: Mã thành phẩm/bán thành phẩm
+            var pc = [];
+            var productCode = $('#productCode').select2('data');
+            $.each(productCode, function (index, item) {
+                pc.push(item.id);
+            });
+            arr.ProductCode = pc;
+
+            ISD.Download(domainAPI + action, arr);
+            $btn.button("reset");
+         });
+
+
+        $(document).on("change", "#ProductCode", function () {
+            if (this.value != '' && this.value != null) {
+                loadProductionAttributes(this.value);
+            }
+        })
+
+        function loadProductionAttributes(ProductCode) {
+            $.ajax({
+                type: "GET",
+                url: "/MES/LookUpProductionStage/ListProductionAttribute",
+                data: { ProductCode: ProductCode },
+                success: function (html) {
+                    $('#ITMNOList').html("");
+                    $('#ITMNOList').html(html);
+                },
+            });
+        }
+        function Search(controller, isScrollX, isNotTrigger) {
+            $("#btn-search").click(function () {
+                ISD.SearchDefault(controller, isScrollX);
+            });
+            //click btn-search button at first time
+            if (!isNotTrigger) {
+                $("#btn-search").trigger("click");
+            }
+            //set default form submit => click btn-search button
+            $("#frmSearch").submit(function (e) {
+                e.preventDefault();
+                $("#btn-search").trigger("click");
+            });
+            //delete button
+            ISD.Delete();
+            //cancel button
+            ISD.Cancel();
+        }
+        function ImportFile(api) {
+            //Nhấn nút Import Excel
+            $(document).on("click", "#btn-importExcel", function () {
+                var $btn = $(this);
+                $btn.button('loading');
+                //alert
+                $(".modal-alert-message").html("");
+                $(".modalAlert").hide();
+
+                ISD.ProgressBar.showPleaseWait(); //show dialog
+                //Get file Excel
+                var file = document.getElementById('importexcelfile').files[0];
+                //Nếu chưa chọn file thông báo
+                if (file == undefined) {
+                    $btn.button('reset');
+                    setModalMessage("#importexcel-window #divModalAlertWarning", "Vui lòng chọn 1 file excel!");
+                    setTimeout(function () {
+                        $('#importexcel-window #divModalAlertWarning').show();
+                    }, 500);
+                    setTimeout(function () {
+                        $('#importexcel-window #divModalAlertWarning').hide();
+                    }, 3000);
+                }
+                else {
+                    var formData = new FormData();
+                    formData.append('importexcelfile', file);
+                    $.ajax({
+                        type: "POST",
+                        url: api + "Import",
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        datatype: 'json',
+                        success: function (jsonData) {
+                            $btn.button('reset');
+                            if (jsonData.isSuccess == false) {
+                                //Nếu IsSucces trả về false, Data trả về false => thông báo
+                                if (jsonData.data == false) {
+                                    $('#importexcel-window').modal("hide");
+                                    alertPopup(false, jsonData.message);
+                                    setTimeout(function () {
+                                        $("#importexcelfile").val("");
+                                    }, 3000);
+                                }
+                                else {
+                                    //Nếu IsSucces trả về true, Data trả về true => thông báo View Xác nhận ghi đè
+                                    $('#importexcel-window').modal("hide");
+                                    $("#text_response").html(jsonData.message);
+                                    $("#divAddnewFilePopup").modal("show");
+                                }
+                            }
+                            else {
+                                $('#importexcel-window').modal("hide");
+                                alertPopup(true, jsonData.message);
+                                $("#btn-search").trigger("click");
+                                setTimeout(function () {
+                                    $("#importexcelfile").val("");
+                                }, 3000);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            $btn.button('reset');
+                            alertModalPopup(false, xhr.responseText);
+                            setModalMessage("#importexcel-window #divModalAlertWarning", xhr.responseText);
+                            setTimeout(function () {
+                                $('#importexcel-window #divModalAlertWarning').show();
+                            }, 500);
+                        }
+                    });
+                }
+            });
+
+            //Nếu User click No trả về Thông báo
+            $(document).on("click", "#btn-cancel-addRouting", function () {
+                setModalMessage("#importexcel-window #divModalAlertWarning", "Không thể import file Excel. Vui lòng kiểm tra lại!");
+                setTimeout(function () {
+                    $('#importexcel-window #divModalAlertWarning').show();
+                }, 500);
+                $('#importexcel-window').modal("show");
+            });
+            //Nếu User click Yes, gọi API
+            $(document).on("click", "#btn-confirm-addRouting", function () {
+                //Get file Excel
+                var file = document.getElementById('importexcelfile').files[0];
+                var formData = new FormData();
+                formData.append('importexcelfile', file);
+                $.ajax({
+                    type: "POST",
+                    url: api + "Import/?IsOverwriteExistData=true",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    crossDomain: true,
+                    datatype: 'json',
+                    success: function (jsonData2) {
+                        if (jsonData2.isSuccess == true) {
+                            alertPopup(true, jsonData2.message);
+                            $("#btn-search").trigger("click");
+                            setTimeout(function () {
+                                $("#importexcelfile").val("");
+                            }, 3000);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alertPopup(false, xhr.responseText);
+                    }
+                });
+                $("#divAddnewFilePopup").modal("hide");
+            });
+        }
+    </script>
+}

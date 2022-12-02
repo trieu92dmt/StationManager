@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ProductionOrderViewModel>
+@{
+    string CurrentController = ConstController.ProductionOrder;
+    string CurrentArea = ConstArea.MES;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+}
+
+<table class="table table-bordered table-striped table-hover dataTable no-footer">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center isd-table-th-stt">@LanguageResource.NumberIndex</th>
+            <th class="text-left">@Html.DisplayNameFor(p => p.ZZLSX)</th>
+            <th class="text-right">@Html.DisplayNameFor(p => p.SoDSX)</th>
+            <th class="text-right">@Html.DisplayNameFor(p => p.SoLSXSAP)</th>
+            <th class="text-right">@Html.DisplayNameFor(p => p.SoCont)</th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.GSTRS)</th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.GLTRS)</th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.BDDC)</th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.KTDC)</th>
+            <th class="text-right">@Html.DisplayNameFor(p => p.Duration)</th>
+            @*<th class="text-center">@LanguageResource.Actions</th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                i++;
+        <tr>
+            <td class="text-center">@i</td>
+            <td class="text-left">@item.ZZLSX</td>
+            <td class="text-right">@item.SoDSX</td>
+            <td class="text-right">@item.SoLSXSAP</td>
+            <td class="text-right">@string.Format("{0:n3}", item.SoCont)</td>
+            <td class="text-center">@string.Format("{0:dd/MM/yyyy}", item.GSTRS)</td>
+            <td class="text-center">@string.Format("{0:dd/MM/yyyy}", item.GLTRS)</td>
+            <td class="text-center">@string.Format("{0:dd/MM/yyyy}", item.BDDC)</td>
+            <td class="text-center">@string.Format("{0:dd/MM/yyyy}", item.KTDC)</td>
+            <td class="text-right">@item.Duration</td>
+            <!--<td class="text-center">-->
+            @*<a class="btn btn-success btn-print-popup" data-id="@item.ZZLSX"  href="#" onclick="$(this).button('loading')">
+            <i class="fa fa-print"></i> In phiếu
+        </a>*@
+            <!--</td>-->
+        </tr>
+            }
+        }
+    </tbody>
+    <tfoot></tfoot>
+</table>
+

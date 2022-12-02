@@ -1,0 +1,58 @@
+﻿@model List<BomDetailViewModel>
+<div class="modal-header bg-primary">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">
+        Nhu cầu nguyên vật liệu theo @ViewBag.LSXD - @ViewBag.LSXDT 
+    </h4>
+</div>
+<div class="modal-body">
+    <div id="divAlertWarningTask" class="alert alert-warning alert-dismissable divPopupMessage" style="display: none">
+        <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarning">×</button>
+        <div class="alert-message">
+        </div>
+    </div>
+    <div class="content">
+        <div class="loading-modal">
+
+        </div>
+        <div class="box-body">
+            <table class="table table-bordered table-striped table-hover table-responsive-lg dataTable  no-footer tableDetailItem">
+                <thead class="isd-table-header">
+                    <tr>
+                        <th class="text-center">No.</th>
+                        <!-- -->
+                        <th>@Html.DisplayNameFor(p => p.FirstOrDefault().IDNRK)</th>
+                        <th>@Html.DisplayNameFor(p => p.FirstOrDefault().MAKTX)</th>
+                        <!-- Số lượng-->
+                        <th>@Html.DisplayNameFor(p => p.FirstOrDefault().MENGE)</th>
+                        <!-- Đơn vị tính -->
+                        <th>@Html.DisplayNameFor(p => p.FirstOrDefault().MEINS)</th>
+                        <!--SLKH -->
+                        <th>@Html.DisplayNameFor(p => p.FirstOrDefault().KLMENG)</th>
+                        <!--Component Scrap-->
+                        <th>@Html.DisplayNameFor(p => p.FirstOrDefault().AUSCH)</th>
+                        <th>@Html.DisplayNameFor(p => p.FirstOrDefault().Total)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int i = 0;}
+                    @foreach (var detail in Model)
+                    {
+                        i++;
+                        <tr>
+                            <td class="text-center">@i</td>
+                            <td>@Html.DisplayFor(p => detail.IDNRK_DISPLAY)</td>
+                            <td>@Html.DisplayFor(p => detail.MAKTX)</td>
+                            <td class="text-right">@Html.DisplayFor(p => detail.MENGE)</td>
+                            <td>@Html.DisplayFor(p => detail.MEINS)</td>
+                            <td class="text-right">@Html.DisplayFor(p => detail.KLMENG)</td>
+                            <td class="text-right">@Html.DisplayFor(p => detail.AUSCH)</td>
+                            <td class="text-right">@Html.DisplayFor(p => detail.Total)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

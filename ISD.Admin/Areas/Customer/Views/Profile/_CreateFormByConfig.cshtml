@@ -1,0 +1,1947 @@
+﻿@model ProfileViewModel
+@using ISD.Core
+@{
+    var personInChargeList = (List<PersonInChargeViewModel>)ViewBag.PersonInChargeList;
+    var personInCharge2List = (List<PersonInChargeViewModel>)ViewBag.PersonInCharge2List;
+    var profileGroupList = Model.profileGroupList;
+    var profileGroupCodeList = (List<CatalogViewModel>)ViewBag.CustomerGroupCode;
+    var PersonRoleCodeList = (List<CatalogViewModel>)ViewBag.PersonRoleCodeList;
+    var SalesEmployeeList = (List<SalesEmployeeViewModel>)ViewBag.EmployeeList;
+    var RolesList = (List<RolesViewModel>)ViewBag.RoleList;
+    var internalList = (List<ConstructionViewModel>)ViewBag.InternalList;
+    var competitorList = (List<ConstructionViewModel>)ViewBag.CompetitorList;
+
+    //Cấu hình thuộc tính
+    var configList = (List<ProfileConfigModel>)ViewBag.ProfileConfig;
+    var fieldCodeList = (List<string>)ViewBag.ProfileConfigCode;
+
+    //KH có mã SAP => khóa các trường đồng bộ từ ECC qua CRM
+    bool? isProfileSynced = false;
+    if ((bool?)ViewBag.isEditMode == true && (!string.IsNullOrEmpty(Model.ProfileForeignCode) || !string.IsNullOrEmpty((string)ViewBag.ProfileForeignCode)))
+    {
+        isProfileSynced = true;
+    }
+}
+
+<div class="row">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="">
+                <div class="panel-body">
+                    <!--Liên hệ chính-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p => p.IsMain)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-9 label-wrapper">
+                                @Html.CheckBox("IsMain") <label class="label-radio">@LanguageResource.PrimaryContact</label>
+                            </div>
+                        </div>
+                    }
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p => p.isForeignCustomer)) ||
+                         fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerTypeCode)))
+                    {
+                        <div class="form-group">
+                            <!--Đối tượng-->
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p => p.isForeignCustomer)))
+                            {
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.isForeignCustomer, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p1 => p1.isForeignCustomer)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-2">
+                                    @foreach (var item in (SelectList)ViewBag.isForeignCustomer)
+                                    {
+                                        <label class="label-radio">
+                                            @Html.RadioButton("isForeignCustomer", item.Value, item.Selected, new { @id = string.Format("Profile_General_isForeignCustomer_{0}", item.Value) })
+                                            @item.Text
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            <!--Phân loại KH-->
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerTypeCode)))
+                            {
+                                <div class="col-md-2">
+                                    @Html.LabelByPropertyNameFor(p => p.CustomerTypeCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.CustomerTypeCode)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-2">
+                                    @if ((bool?)ViewBag.isEditMode == true)
+                                    {
+                                        foreach (var item in (SelectList)ViewBag.CustomerTypeCode)
+                                        {
+                                            /*
+                                            <!--Nếu đã chọn Phân loại KH (B|C) theo công ty 1000 thì khi sửa ở cty 1000 disabled-->
+                                            <!--Nếu chưa                                         thì khi sửa ở cty 1000 không disabled-->
+                                            if (!string.IsNullOrEmpty(Model.CustomerTypeCode))
+                                            {
+                                                <label class="label-radio">
+                                                    @Html.RadioButton("CustomerTypeCode", item.Value, item.Selected, new { @id = string.Format("Profile_General_CustomerTypeCode_{0}", item.Value), @disabled = "disabled" })
+                                                    @item.Text
+                                                </label>
+                                                @Html.HiddenFor(p => p.CustomerTypeCode, new { @id = "Profile_General_CustomerTypeCode" })
+                                                @Html.Hidden("TypeCode", Model.CustomerTypeCode)
+                                            }
+                                            else
+                                            {
+                                                <label class="label-radio">
+                                                    @Html.RadioButton("CustomerTypeCode", item.Value, item.Selected, new { @id = string.Format("Profile_General_CustomerTypeCode_{0}", item.Value) })
+                                                    @item.Text
+                                                </label>
+                                            }
+                                            */
+
+                                            var CustomerTypeCode = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.CustomerTypeCode)).FirstOrDefault();
+
+                                            <label class="label-radio">
+                                                @if (isProfileSynced == true && CustomerTypeCode.IsReadOnly == true)
+                                                {
+                                                    @Html.RadioButton("CustomerTypeCode", item.Value, item.Selected, new { @id = string.Format("Profile_General_CustomerTypeCode_{0}", item.Value), @disabled = "disabled" })
+                                                    @Html.HiddenFor(p => p.CustomerTypeCode)
+                                                }
+                                                else
+                                                {
+                                                    @Html.RadioButton("CustomerTypeCode", item.Value, item.Selected, new { @id = string.Format("Profile_General_CustomerTypeCode_{0}", item.Value) })
+                                                }
+                                                @item.Text
+                                            </label>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in (SelectList)ViewBag.CustomerTypeCode)
+                                        {
+                                            <label class="label-radio">
+                                                @Html.RadioButton("CustomerTypeCode", item.Value, item.Selected, new { @id = string.Format("Profile_General_CustomerTypeCode_{0}", item.Value) })
+                                                @item.Text
+                                            </label>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    <!--Nguồn khách hàng-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerSourceCode)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.CustomerSourceCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.CustomerSourceCode)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{
+                                    var CustomerSourceCode = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.CustomerSourceCode)).FirstOrDefault();
+
+                                }
+                                @if (CustomerSourceCode != null && CustomerSourceCode.IsRequired == true)
+                                {
+                                    @Html.RequiredIfDropDownListFor(p => p.CustomerSourceCode, null, LanguageResource.Dropdownlist_Choose)
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("CustomerSourceCode", null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Chi nhánh-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CreateAtSaleOrg)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.CreateAtSaleOrg, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.CreateAtSaleOrg)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{
+                                    var CreateAtSaleOrg = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.CreateAtSaleOrg)).FirstOrDefault();
+
+                                    if (isProfileSynced == true && CreateAtSaleOrg.IsReadOnly == true)
+                                    {
+                                        @Html.DropDownList("CreateAtSaleOrg", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search", @disabled = "disabled" })
+                                        @Html.HiddenFor(p => p.CreateAtSaleOrg)
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("CreateAtSaleOrg", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Mã KH, Mã SAP-->
+                    @if ((bool?)ViewBag.isEditMode == true)
+                    {
+                        <!--Mã-->
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, int>(p => p.ProfileCode)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.ProfileCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, int>(p1 => p1.ProfileCode)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.RequiredTextboxFor(p => p.ProfileCode, new { @id = "Profile_General_ProfileCode", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        }
+                        <!--Mã SAP-->
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProfileForeignCode)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.ProfileForeignCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ProfileForeignCode)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.RequiredTextboxFor(p => p.ProfileForeignCode, new { @id = "Profile_General_ProfileForeignCode", @readonly = "readonly" })
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(p => p.ProfileForeignCode)
+                        }
+                    }
+                    <!--Tên-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Title)) ||
+                         fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProfileName)))
+                    {
+                        <div class="form-group">
+                            <div id="divProfileName" class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ProfileName, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ProfileName)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            @*<!--Danh xưng-->
+                                @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Title)))
+                                {
+                                    <div class="profileC">
+                                        <div class="col-md-1">
+                                            @Html.DropDownList("CustomerTitle", null, new { @class = "form-control with-search" })
+                                        </div>
+                                    </div>
+                                }
+                                <!--Tên-->
+                                @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Title)) &&
+                                     fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProfileName)))
+                                {
+                                    <div id="Profile_General_ProfileName_BC" class="col-md-7">
+                                        @Html.RequiredTextboxFor(p => p.ProfileName, new { @id = "Profile_General_ProfileName" })
+                                    </div>
+                                }
+                                else if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProfileName)))
+                                {
+                                    <div id="Profile_General_ProfileName_BC" class="col-md-8">
+                                        @Html.RequiredTextboxFor(p => p.ProfileName, new { @id = "Profile_General_ProfileName" })
+                                    </div>
+                                }*@
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>
+                                (p => p.ProfileName)))
+                            {
+                                <div id="Profile_General_ProfileName_BC" class="col-md-8">
+                                    @{
+                                        var ProfileName = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.ProfileName)).FirstOrDefault();
+
+                                        if (isProfileSynced == true && ProfileName.IsReadOnly == true)
+                                        {
+                                            @Html.RequiredTextboxFor(p => p.ProfileName, new { @id = "Profile_General_ProfileName", @readonly = "readonly" })
+                                        }
+                                        else
+                                        {
+                                            @Html.RequiredTextboxFor(p => p.ProfileName, new { @id = "Profile_General_ProfileName" })
+                                        }
+                                    }
+
+                                </div>
+                            }
+                        </div>
+                    }
+                    <!--Tên ngắn-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProfileShortName)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ProfileShortName, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ProfileShortName)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{
+                                    var ProfileShortName = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.ProfileShortName)).FirstOrDefault();
+
+                                    if (isProfileSynced == true && ProfileShortName.IsReadOnly == true)
+                                    {
+                                        @Html.RequiredTextboxFor(p => p.ProfileShortName, new { @id = "Profile_General_ProfileShortName", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.RequiredTextboxFor(p => p.ProfileShortName, new { @id = "Profile_General_ProfileShortName" })
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Ngày sinh-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.DateOfBirth)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.DateOfBirth, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.DateOfBirth)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                <span class="day-of-birth">
+                                    @Html.DropDownList("DayOfBirth", "--")
+                                </span>
+                                /
+                                <span class="month-of-birth">
+                                    @Html.DropDownList("MonthOfBirth", "--")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    <!--Độ tuổi-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Age)))
+                    {
+                        <div class="form-group profileC">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Age, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Age)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownList("Age", null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Công ty-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text1)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Text1, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text1)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.Text1)
+                            </div>
+                        </div>
+                    }
+                    <!--Mã số thuế-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.TaxNo)))
+                    {
+                        <div class="form-group profileB">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.TaxNo, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.TaxNo)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{
+                                    var TaxNo = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>
+                                   (e => e.TaxNo)).FirstOrDefault();
+
+                                    if (isProfileSynced == true && TaxNo.IsReadOnly == true)
+                                    {
+                                        @Html.RequiredTextboxFor(p => p.TaxNo, new { @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.RequiredTextboxFor(p => p.TaxNo)
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    }
+                    <!--Số điện thoại-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Phone)))
+                    {
+                        <div class="form-group">
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Phone)))
+                            {
+                                <div class="col-md-3 profileC">
+                                    @Html.TooltipLabelFor(p => p.Phone)
+                                </div>
+                                <div class="col-md-3 profileB" hidden>
+                                    @Html.TooltipLabelFor(p => p.CompanyNumber)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.ValidationMessageFor(p => p.Phone, null, new { @class = "validation-text" })
+                                    @{
+                                        var PhoneField = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.Phone)).FirstOrDefault();
+
+                                        if (isProfileSynced == true && PhoneField.IsReadOnly == true)
+                                        {
+                                            <div class="phoneControls">
+                                                <div class="input-group phonenumber">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-phone"></i>
+                                                    </div>
+                                                    @Html.TextBoxFor(p => p.Phone, new { @class = " form-control", @id = "Profile_General_Phone", @readonly = "readonly" })
+                                                </div>
+                                                @if (ViewBag.Phones != null && ViewBag.Phones.Count > 0)
+                                                {
+                                                    foreach (var Phone in ViewBag.Phones)
+                                                    {
+                                                        <div class="input-group phonenumber">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-phone"></i>
+                                                            </div>
+                                                            @Html.TextBoxFor(p => Phone, new { @class = " form-control text-box single-line", @id = "Profile_General_Phone", @readonly = "readonly" })
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="phoneControls">
+                                                <div class="input-group phonenumber">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-phone"></i>
+                                                    </div>
+                                                    @Html.TextBoxFor(p => p.Phone, new { @class = " form-control", @id = "Profile_General_Phone" })
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-default btn-addPhone" type="button">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                                @if (ViewBag.Phones != null && ViewBag.Phones.Count > 0)
+                                                {
+                                                    foreach (var Phone in ViewBag.Phones)
+                                                    {
+                                                        <div class="input-group phonenumber">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-phone"></i>
+                                                            </div>
+                                                            @Html.TextBoxFor(p => Phone, new { @class = " form-control text-box single-line", @id = "Profile_General_Phone" })
+                                                            <span class="input-group-btn">
+                                                                <button class="btn btn-danger btn-removePhone" type="button">
+                                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    <!--Email-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Email)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3 profileC">
+                                @Html.TooltipLabelFor(p => p.Email)
+                            </div>
+                            <div class="col-md-3 profileB" hidden>
+                                @Html.TooltipLabelFor(p => p.Email, "EmailBusiness")
+                            </div>
+                            <div class="col-md-8">
+                                @*@Html.ValidationMessageFor(p => p.Email, null, new { @class = "validation-text" })
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-envelope"></i>
+                                        </div>
+                                        @{
+                                            var Email = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.Email)).FirstOrDefault();
+
+                                            if (isProfileSynced == true && Email.IsReadOnly == true)
+                                            {
+                                                @Html.TextBoxFor(p => p.Email, new { @class = " form-control text-box single-line", @readonly = "readonly" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(p => p.Email, new { @class = " form-control text-box single-line" })
+                                            }
+                                        }
+
+                                    </div>*@
+
+                                @{
+                                    var EmailField = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.Email)).FirstOrDefault();
+
+                                    if (isProfileSynced == true && EmailField.IsReadOnly == true)
+                                    {
+                                        <div class="emailControls">
+                                            @*<div class="input-group email">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-envelope"></i>
+                                                    </div>
+                                                    @Html.TextBoxFor(p => p.Email, new { @class = " form-control text-box single-line", @readonly = "readonly" })
+                                                </div>*@
+                                            @if (ViewBag.Emails != null && ViewBag.Emails.Count > 0)
+                                            {
+                                                foreach (var Email in ViewBag.Emails)
+                                                {
+                                                    <div class="input-group email">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-envelope"></i>
+                                                        </div>
+                                                        @Html.TextBoxFor(p => Email, new { @class = " form-control text-box single-line", @readonly = "readonly" })
+                                                    </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group email">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-envelope"></i>
+                                                    </div>
+                                                    @Html.TextBoxFor(p => p.Email, new { @class = " form-control text-box single-line", @readonly = "readonly" })
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="emailControls">
+                                            @*<div class="input-group email">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-envelope"></i>
+                                                    </div>
+                                                    @Html.TextBoxFor(p => p.Email, new { @class = " form-control" })
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-default btn-addEmail" type="button">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                        </button>
+                                                    </span>
+                                                </div>*@
+                                            @if (ViewBag.Emails != null && ViewBag.Emails.Count > 0)
+                                            {
+                                                int emailIndex = 0;
+                                                foreach (var Email in ViewBag.Emails)
+                                                {
+                                                    <div class="input-group email">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-envelope"></i>
+                                                        </div>
+                                                        @Html.TextBoxFor(p => Email, new { @class = " form-control text-box single-line" })
+                                                        <span class="input-group-btn">
+                                                            @if (emailIndex == 0)
+                                                            {
+                                                                <button class="btn btn-default btn-addEmail" type="button">
+                                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                                </button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button class="btn btn-danger btn-removeEmail" type="button">
+                                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                                </button>
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                    emailIndex++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group email">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-envelope"></i>
+                                                    </div>
+                                                    @Html.TextBoxFor(p => p.Email, new { @class = " form-control" })
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-default btn-addEmail" type="button">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Website-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Website)))
+                    {
+                        <div class="form-group profileB">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Website, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Website)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.Website)
+                            </div>
+                        </div>
+                    }
+                    <!--Địa chỉ-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Address)))
+                    {
+                        var Address = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>
+                            (e => e.Address)).FirstOrDefault();
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.AddressTypeCode)
+                            </div>
+                            <div class="col-md-2">
+                                @if (isProfileSynced == true && Address.IsReadOnly == true)
+                                {
+                                    @Html.RequiredIfDropDownListFor(p => p.RequiredAddressTypeCode, null, LanguageResource.Dropdownlist_Choose, new { @disabled = "disabled" })
+                                    @Html.HiddenFor(p => p.AddressTypeCode)
+                                }
+                                else
+                                {
+                                    @Html.RequiredIfDropDownListFor(p => p.RequiredAddressTypeCode, null, LanguageResource.Dropdownlist_Choose)
+                                }
+                            </div>
+                            <div class="col-md-1">
+                                @Html.TooltipLabelFor(p => p.RequiredSaleOfficeCode)
+                            </div>
+                            <div class="col-md-2">
+                                @if (isProfileSynced == true && Address.IsReadOnly == true)
+                                {
+                                    @Html.RequiredIfDropDownListFor(p => p.RequiredSaleOfficeCode, null, LanguageResource.Dropdownlist_Choose, new { @disabled = "disabled" })
+                                    @Html.HiddenFor(p => p.SaleOfficeCode)
+                                }
+                                else
+                                {
+                                    @Html.RequiredIfDropDownListFor(p => p.RequiredSaleOfficeCode, null, LanguageResource.Dropdownlist_Choose)
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div id="provinceName" class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.RequiredProvinceId)
+                            </div>
+                            <div class="col-md-2">
+                                @if (isProfileSynced == true && Address.IsReadOnly == true)
+                                {
+                                    @Html.RequiredIfDropDownListFor(p => p.RequiredProvinceId, null, LanguageResource.Dropdownlist_Choose, new { @disabled = "disabled" })
+                                    @Html.HiddenFor(p => p.ProvinceId)
+                                }
+                                else
+                                {
+                                    @Html.RequiredIfDropDownListFor(p => p.RequiredProvinceId, null, LanguageResource.Dropdownlist_Choose)
+                                }
+                            </div>
+                            <div class="address-foreign">
+                                <div class="col-md-1">
+                                    @Html.TooltipLabelFor(p => p.DistrictId)
+                                </div>
+                                <div class="col-md-2">
+                                    @if (isProfileSynced == true && Address.IsReadOnly == true)
+                                    {
+                                        @Html.DropDownList("DistrictId", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search", @disabled = "disabled" })
+                                        @Html.HiddenFor(p => p.DistrictId)
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("DistrictId", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                </div>
+
+                                <div class="col-md-1">
+                                    @Html.TooltipLabelFor(p => p.WardId)
+                                </div>
+                                <div class="col-md-2">
+                                    @if (isProfileSynced == true && Address.IsReadOnly == true)
+                                    {
+                                        @Html.DropDownList("WardId", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search", @disabled = "disabled" })
+                                        @Html.HiddenFor(p => p.WardId)
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("WardId", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @*@Html.TooltipLabelFor(p => p.Address)*@
+                                @Html.LabelByPropertyNameFor(p => p.Address, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Address)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                <div class="input-group-required input-group-select-required">
+                                    @if (isProfileSynced == true && Address.IsReadOnly == true)
+                                    {
+                                        @Html.RequiredTextboxFor(p => p.Address, new { @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.RequiredTextboxFor(p => p.Address)
+                                    }
+                                    @*<div class="required-icon">
+                                            <span class="text">*</span>
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <!--Khách hàng/Chủ đầu tư-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, Guid?>(p => p.ReferenceProfileId)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ReferenceProfileId, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, Guid?>(p1 => p1.ReferenceProfileId)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @Html.HiddenFor(p => p.CompanyId)
+                                @Html.HiddenFor(p => p.ReferenceProfileId)
+
+                                @{
+                                    var ReferenceProfileId = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, Guid?>(e => e.ReferenceProfileId)).FirstOrDefault();
+                                    if (isProfileSynced == true && ReferenceProfileId.IsReadOnly == true)
+                                    {
+                                        @Html.TextBoxFor(p => p.CompanyName, new { @class = " form-control text-box single-line", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(p => p.CompanyName, new { @class = " form-control text-box single-line", @readonly = "readonly" })
+                                            <a class="input-group-addon btn btn-danger btn-del-profile">
+                                                <i class="fa fa-close"></i>
+                                            </a>
+                                            <a class="input-group-addon btn btn-default btn-get-profile" data-toggle="modal" data-target="#divProfileSearch">
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Phòng ban-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.DepartmentCode)) &&
+                         !fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Contact)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.DepartmentCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.DepartmentCode)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{
+                                    var DepartmentCode = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.DepartmentCode)).FirstOrDefault();
+                                    if (isProfileSynced == true && DepartmentCode.IsReadOnly == true)
+                                    {
+                                        @Html.DropDownList("DepartmentCode", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search", @disabled = "disabled" })
+                                        @Html.HiddenFor(p => p.DepartmentCode)
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("DepartmentCode", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Chức vụ-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.PositionB))
+                        && !fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Contact)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ProfileContactPosition, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ProfileContactPosition)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{
+                                    var Position = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.PositionB)).FirstOrDefault();
+                                    if (isProfileSynced == true && Position.IsReadOnly == true)
+                                    {
+                                        @Html.DropDownList("PositionB", null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search", @disabled = "disabled" })
+                                        @Html.Hidden("PositionB", Model.ProfileContactPosition)
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("PositionB", null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Tư vấn & TK-->
+                    @*@if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, Guid?>(p => p.ReferenceProfileId2)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.ReferenceProfileId2, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, Guid?>(p1 => p1.ReferenceProfileId2)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.HiddenFor(p => p.ReferenceProfileId2)
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(p => p.ConsultingAndDesign, new { @class = " form-control text-box single-line", @readonly = "readonly" })
+                                        <a class="input-group-addon btn btn-danger btn-del-profile" data-field="ReferenceProfileId2">
+                                            <i class="fa fa-close"></i>
+                                        </a>
+                                        <a class="input-group-addon btn btn-default btn-get-profile" data-toggle="modal" data-target="#divProfileSearch" data-field="ReferenceProfileId2">
+                                            <i class="fa fa-ellipsis-h"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }*@
+                    <!--Địa chỉ cụ thể dự án-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProjectLocation)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.RequiredSaleOfficeCode)
+                            </div>
+                            <div class="col-md-2">
+                                @Html.RequiredIfDropDownListFor(p => p.RequiredSaleOfficeCode, null, LanguageResource.Dropdownlist_Choose)
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div id="provinceName" class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.RequiredProvinceId)
+                            </div>
+                            <div class="col-md-2">
+                                @Html.RequiredIfDropDownListFor(p => p.RequiredProvinceId, null, LanguageResource.Dropdownlist_Choose)
+                            </div>
+                            <div class="address-foreign">
+                                <div class="col-md-1">
+                                    @Html.TooltipLabelFor(p => p.DistrictId)
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.DropDownList("DistrictId", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                </div>
+
+                                <div class="col-md-1">
+                                    @Html.TooltipLabelFor(p => p.WardId)
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.DropDownList("WardId", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ProjectLocation, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ProjectLocation)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.ProjectLocation)
+                            </div>
+                        </div>
+                    }
+                    <!--Loại hình-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist4)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Dropdownlist4, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist4)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.OpportunityType != null)
+                                {
+                                    @Html.DropDownList("OpportunityType", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Danh mục dự án-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist1)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Dropdownlist1, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist1)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.LeadCategory != null)
+                                {
+                                    @Html.DropDownList("LeadCategory", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Danh mục cơ hội bán hàng-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist2)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Dropdownlist2, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist2)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.OpportunityCategory != null)
+                                {
+                                    @Html.DropDownList("OpportunityCategory", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Quy mô dự án-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist5)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Dropdownlist5, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist5)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.ProjectScale != null)
+                                {
+                                    @Html.DropDownList("ProjectScale", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text2)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Text2, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text2)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-2">
+                                @Html.RequiredTextboxFor(p => p.Text2)
+                            </div>
+
+                            <div class="col-md-1">
+                                @Html.LabelByPropertyNameFor(p => p.Dropdownlist7, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist7)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownList("OpportunityUnit", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Xác suất-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist3)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Dropdownlist3, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist3)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.OpportunityPercentage != null)
+                                {
+                                    @Html.DropDownList("OpportunityPercentage", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Trạng thái cơ hội bán hàng-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist6)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Dropdownlist6, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist6)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.OpportunityStatus != null)
+                                {
+                                    @Html.DropDownList("OpportunityStatus", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Trạng thái dự án-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProjectStatusCode)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ProjectStatusCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ProjectStatusCode)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.ProjectStatusCode != null)
+                                {
+                                    @Html.DropDownList("ProjectStatusCode", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Mức độ xác định-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.QualificationLevelCode)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.QualificationLevelCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.QualificationLevelCode)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.QualificationLevelCode != null)
+                                {
+                                    @Html.DropDownList("QualificationLevelCode", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Nguồn thông tin-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ProjectSourceCode)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ProjectSourceCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ProjectSourceCode)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @if (ViewBag.ProjectSourceCode != null)
+                                {
+                                    @Html.DropDownList("ProjectSourceCode", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                }
+                            </div>
+                        </div>
+                    }
+                    <!--Thi công-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Construction)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Construction, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Construction)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                <div class="col-md-2">
+                                    <div class="label-wrapper">
+                                        <label class="control-label" for="Internal">An Cường</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="internalControls" style="display: grid">
+                                        @if (internalList != null && internalList.Count > 0)
+                                        {
+                                            int i = 0;
+
+                                            foreach (var item in internalList)
+                                            {
+                                                <div class="input-group internal">
+                                                    @Html.HiddenFor(p => internalList[i].ConstructionId, new { @class = "constructionid" })
+                                                    @Html.TextBoxFor(p => internalList[i].ConstructionName, new { @class = " form-control text-box single-line constructionname", @readonly = "readonly" })
+                                                    <a class="input-group-addon btn btn-danger btn-del-profile" data-field="InternalId" data-row="@i">
+                                                        <i class="fa fa-close"></i>
+                                                    </a>
+                                                    <a class="input-group-addon btn btn-default btn-get-profile" data-toggle="modal" data-target="#divProfileSearch" data-field="InternalId" data-row="@i">
+                                                        <i class="fa fa-ellipsis-h"></i>
+                                                    </a>
+                                                    <span class="input-group-btn">
+                                                        @if (i == 0)
+                                                        {
+                                                            <button class="btn btn-default btn-addInternal" type="button">
+                                                                <span class="glyphicon glyphicon-plus"></span>
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button class="btn btn-default btn-removeInternal btn-danger" type="button">
+                                                                <span class="glyphicon glyphicon-minus"></span>
+                                                            </button>
+                                                        }
+                                                    </span>
+                                                </div>
+                                                i++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="input-group internal">
+                                                <input class="constructionid" id="internalList_0__ConstructionId" name="internalList[0].ConstructionId" type="hidden">
+                                                <input class="form-control text-box single-line constructionname valid" id="internalList_0__ConstructionName" name="internalList[0].ConstructionName" readonly="readonly" type="text">
+                                                <a class="input-group-addon btn btn-danger btn-del-profile" data-field="InternalId" data-row="0">
+                                                    <i class="fa fa-close"></i>
+                                                </a>
+                                                <a class="input-group-addon btn btn-default btn-get-profile" data-toggle="modal" data-target="#divProfileSearch" data-field="InternalId" data-row="0">
+                                                    <i class="fa fa-ellipsis-h"></i>
+                                                </a>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default btn-addInternal" type="button">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                    </button>
+                                                </span>
+
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+                            <div class="col-md-8">
+                                <div class="col-md-2">
+                                    <div class="label-wrapper">
+                                        <label class="control-label" for="Competitor">Đối thủ</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="competitorControls" style="display: grid">
+                                        @if (competitorList != null && competitorList.Count > 0)
+                                        {
+                                            int i = 0;
+
+                                            foreach (var item in competitorList)
+                                            {
+                                                <div class="input-group competitor">
+                                                    @Html.HiddenFor(p => competitorList[i].ConstructionId, new { @class = "constructionid" })
+                                                    @Html.TextBoxFor(p => competitorList[i].ConstructionName, new { @class = " form-control text-box single-line constructionname", @readonly = "readonly" })
+                                                    <a class="input-group-addon btn btn-danger btn-del-profile" data-field="CompetitorId" data-row="@i">
+                                                        <i class="fa fa-close"></i>
+                                                    </a>
+                                                    <a class="input-group-addon btn btn-default btn-get-profile" data-toggle="modal" data-target="#divProfileSearch" data-field="CompetitorId" data-row="@i">
+                                                        <i class="fa fa-ellipsis-h"></i>
+                                                    </a>
+                                                    <span class="input-group-btn">
+                                                        @if (i == 0)
+                                                        {
+                                                            <button class="btn btn-default btn-addCompetitor" type="button">
+                                                                <span class="glyphicon glyphicon-plus"></span>
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button class="btn btn-default btn-removeCompetitor btn-danger" type="button">
+                                                                <span class="glyphicon glyphicon-minus"></span>
+                                                            </button>
+                                                        }
+                                                    </span>
+                                                </div>
+                                                i++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="input-group competitor">
+                                                @*@Html.HiddenFor(p => competitorList[0].ConstructionId, new { @class = "constructionid" })
+                                                    @Html.TextBoxFor(p => competitorList[0].ConstructionName, new { @class = " form-control text-box single-line constructionname", @readonly = "readonly" })*@
+                                                <input class="constructionid" id="competitorList_0__ConstructionId" name="competitorList[0].ConstructionId" type="hidden">
+                                                <input class="form-control text-box single-line constructionname valid" id="competitorList_0__ConstructionName" name="competitorList[0].ConstructionName" readonly="readonly" type="text">
+                                                <a class="input-group-addon btn btn-danger btn-del-profile" data-field="CompetitorId" data-row="0">
+                                                    <i class="fa fa-close"></i>
+                                                </a>
+                                                <a class="input-group-addon btn btn-default btn-get-profile" data-toggle="modal" data-target="#divProfileSearch" data-field="CompetitorId" data-row="0">
+                                                    <i class="fa fa-ellipsis-h"></i>
+                                                </a>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default btn-addCompetitor" type="button">
+                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                    </button>
+                                                </span>
+
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!--Tổng giá trị hợp đồng dự kiến-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, decimal?>(p => p.ContractValue)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ContractValue, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, decimal?>(p1 => p1.ContractValue)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{ var ContractValue = Model.ContractValue; }
+                                @if (Model.ContractValue != null)
+                                {
+                                    ContractValue = Convert.ToInt64(Model.ContractValue);
+                                }
+                                @Html.RequiredTextboxFor(p => ContractValue, new { @type = "number" })
+                                <div class="text-right numberContractValue mr-15 mt-5 hidden"></div>
+                            </div>
+                        </div>
+                    }
+
+                    <!--Ghi chú-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Note)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Note, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Note)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @Html.RequiredTextboxFor(p => p.Note)
+                            </div>
+                        </div>
+                    }
+                    <!--Ngày bắt đầu-->
+                    <!--Ngày kết thúc-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p => p.Date1)) ||
+                         fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p => p.Date2)))
+                    {
+                        <div class="form-group">
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p => p.Date1)))
+                            {
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Date1, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p1 => p1.Date1)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.RequiredTextboxFor(p => p.Date1, "{0:yyyy-MM-dd}", new { @type = "date" })
+                                </div>
+                            }
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p => p.Date2)))
+                            {
+                                <div class="col-md-2">
+                                    @Html.LabelByPropertyNameFor(p => p.Date2, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p1 => p1.Date2)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.RequiredTextboxFor(p => p.Date2, "{0:yyyy-MM-dd}", new { @type = "date" })
+                                </div>
+                            }
+                        </div>
+                    }
+                    <!--Ngày ghé thăm-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p => p.VisitDate)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.VisitDate, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, DateTime?>(p1 => p1.VisitDate)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-2">
+                                @Html.RequiredTextboxFor(p => p.VisitDate, "{0:yyyy-MM-dd}", new { @type = "date" })
+                            </div>
+                        </div>
+                    }
+                    <!--NV kinh doanh-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.SalesEmployeeCode)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.SalesEmployeeCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.SalesEmployeeCode)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row"></div>
+                                @{
+                                    var SalesEmployeeCode = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.SalesEmployeeCode)).FirstOrDefault();
+
+                                    if (isProfileSynced == true && SalesEmployeeCode.IsReadOnly == true)
+                                    {
+                                        <div class="personInChargeControls" style="display: grid">
+                                            @if (personInChargeList != null && personInChargeList.Count > 0)
+                                            {
+                                                int i = 0;
+
+                                                foreach (var item in personInChargeList)
+                                                {
+                                                    <div class="input-group personCharge">
+                                                        <div class="col-md-5 no-padding">
+                                                            @Html.RequiredExDropDownListFor(p => personInChargeList[@i].SalesEmployeeCode, new SelectList(SalesEmployeeList, "SalesEmployeeCode", "SalesEmployeeName", item.SalesEmployeeCode), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search personemployeecode", @data_row = i, @disabled = "disabled" })
+                                                            @Html.HiddenFor(p => personInChargeList[@i].SalesEmployeeCode)
+                                                        </div>
+                                                        <div class="col-md-5 input-group">
+                                                            <div class="display-for roleName roleName_@i">
+                                                                @item.RoleName
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    i++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group personCharge">
+                                                    <div class="col-md-5 no-padding">
+                                                        @Html.RequiredExDropDownListFor(p => personInChargeList[0].SalesEmployeeCode, new SelectList(SalesEmployeeList, "SalesEmployeeCode", "SalesEmployeeName", ViewBag.EmployeeCode), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search personemployeecode", @data_row = 0, @disabled = "disabled" })
+                                                    </div>
+                                                    <div class="col-md-5 input-group">
+                                                        <div class="display-for roleName roleName_0">
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="personInChargeControls" style="display: grid">
+                                            @if (personInChargeList != null && personInChargeList.Count > 0)
+                                            {
+                                                int i = 0;
+
+                                                foreach (var item in personInChargeList)
+                                                {
+                                                    <div class="input-group personCharge">
+                                                        <div class="col-md-5 no-padding">
+                                                            @Html.RequiredExDropDownListFor(p => personInChargeList[@i].SalesEmployeeCode, new SelectList(SalesEmployeeList, "SalesEmployeeCode", "SalesEmployeeName", item.SalesEmployeeCode), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search personemployeecode", @data_row = i })
+                                                        </div>
+                                                        <div class="col-md-5 input-group">
+                                                            <div class="display-for roleName roleName_@i">
+                                                                @item.RoleName
+                                                            </div>
+                                                            <span class="input-group-btn">
+                                                                @if (i == 0)
+                                                                {
+                                                                    <button class="btn btn-default btn-addPersonCharge" type="button">
+                                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                                    </button>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <button class="btn btn-default btn-removePersonCharge btn-danger" type="button">
+                                                                        <span class="glyphicon glyphicon-minus"></span>
+                                                                    </button>
+                                                                }
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+                                                    i++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group personCharge">
+                                                    <div class="col-md-5 no-padding">
+                                                        @Html.RequiredExDropDownListFor(p => personInChargeList[0].SalesEmployeeCode, new SelectList(SalesEmployeeList, "SalesEmployeeCode", "SalesEmployeeName", ViewBag.EmployeeCode), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search personemployeecode", @data_row = 0 })
+                                                    </div>
+                                                    <div class="col-md-5 input-group">
+                                                        <div class="display-for roleName roleName_0">
+
+                                                        </div>
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-default btn-addPersonCharge" type="button">
+                                                                <span class="glyphicon glyphicon-plus"></span>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                        if (ViewBag.Type == "Opportunity")
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <div class="label-wrapper"><label class="control-label">NV Sales Admin</label></div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row"></div>
+                                    <div class="personInChargeControls2" style="display: grid">
+                                        @if (personInCharge2List != null && personInCharge2List.Count > 0)
+                                        {
+                                            int i = 0;
+
+                                            foreach (var item in personInCharge2List)
+                                            {
+                                                <div class="input-group personCharge2">
+                                                    <div class="col-md-5 no-padding">
+                                                        @Html.RequiredExDropDownListFor(p => personInCharge2List[@i].SalesEmployeeCode, new SelectList(SalesEmployeeList, "SalesEmployeeCode", "SalesEmployeeName", item.SalesEmployeeCode), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search personemployeecode2", @data_row = i })
+                                                    </div>
+                                                    <div class="col-md-5 input-group">
+                                                        <div class="display-for roleName2 roleName2_@i">
+                                                            @item.RoleName
+                                                        </div>
+                                                        <span class="input-group-btn">
+                                                            @if (i == 0)
+                                                            {
+                                                                <button class="btn btn-default btn-addPersonCharge2" type="button">
+                                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                                </button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button class="btn btn-default btn-removePersonCharge2 btn-danger" type="button">
+                                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                                </button>
+                                                            }
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                                i++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="input-group personCharge2">
+                                                <div class="col-md-5 no-padding">
+                                                    @Html.RequiredExDropDownListFor(p => personInCharge2List[0].SalesEmployeeCode, new SelectList(SalesEmployeeList, "SalesEmployeeCode", "SalesEmployeeName", ViewBag.EmployeeCode), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search personemployeecode2", @data_row = 0 })
+                                                </div>
+                                                <div class="col-md-5 input-group">
+                                                    <div class="display-for roleName2 roleName2_0">
+
+                                                    </div>
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-default btn-addPersonCharge2" type="button">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                        </button>
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (ViewBag.Type == "Opportunity")
+                    {
+                        <!--Tình trạng dự án-->
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text3)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Text3, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text3)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(p => p.Text3, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        }
+                        <!--Hoàn thiện-->
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text4)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Text4, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text4)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-1">
+                                    @Html.HiddenFor(p => p.Text4, new { @class = "form-control" })
+                                    @*@Html.DropDownList("CompleteYear", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })*@
+                                    <div class="label-wrapper">
+                                        <label class="control-label">Năm</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.DropDownList("CompleteYear", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                </div>
+                                <div class="col-md-1">
+                                    @Html.HiddenFor(p => p.Text5, new { @class = "form-control" })
+                                    <div class="label-wrapper">
+                                        <label class="control-label">Quý</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.DropDownList("CompleteQuarter", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                </div>
+                            </div>
+                        }
+                    }
+                    <!--Trạng thái-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p => p.Actived)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.Actived, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p1 => p1.Actived)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @{
+                                    var Actived = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(e => e.Actived)).FirstOrDefault();
+
+                                    if (isProfileSynced == true && Actived.IsReadOnly == true)
+                                    {
+                                        @Html.ActivedRadioButton(p => p.Actived, true)
+                                        @Html.HiddenFor(p => p.Actived)
+                                    }
+                                    else
+                                    {
+                                        @Html.ActivedRadioButton(p => p.Actived)
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(p => p.Actived)
+                    }
+                    <!--Hình ảnh-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ImageUrl)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.ImageUrl, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.ImageUrl)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                <input type="file" name="FileUpload" />
+                            </div>
+                        </div>
+                    }
+                    <!--Yêu cầu tạo khách ở ECC-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p => p.isCreateRequest)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.isCreateRequest)
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownList("isCreateRequest", null, null, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Vai trò trong giao dịch-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.PartnerFunctionCode)))
+                    {
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.PartnerFunctionCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.PartnerFunctionCode, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Điều khoản thanh toán-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.PaymentTermCode)))
+                    {
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.PaymentTermCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.PaymentTermCode, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Phương thức thanh toán-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.PaymentMethodCode)))
+                    {
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.PaymentMethodCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.PaymentMethodCode, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Tài khoản doanh thu-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerAccountAssignmentGroupCode)))
+                    {
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.CustomerAccountAssignmentGroupCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.CustomerAccountAssignmentGroupCode, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Tài khoản công nợ-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.ReconcileAccountCode)))
+                    {
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.ReconcileAccountCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.ReconcileAccountCode, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Phân loại thuế VAT-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.TaxClassificationCode)))
+                    {
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.TaxClassificationCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.TaxClassificationCode, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+
+                    <!--Đơn vị tiền tệ-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CurrencyCode)))
+                    {
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.CurrencyCode)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.CurrencyCode, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.Manager)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.Manager, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                        <div class="form-group ecc-field">
+                            <div class="col-md-3">
+                                @Html.TooltipLabelFor(p => p.DebsEmployee)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(p => p.DebsEmployee, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                            </div>
+                        </div>
+                    }
+                    <!--Bổ sung-->
+                    @if (ViewBag.Type != "Opportunity")
+                    {
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text2)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Text2, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text2)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(p => p.Text2, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        }
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text3)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Text3, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text3)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(p => p.Text3, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        }
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text4)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Text4, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text4)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(p => p.Text4, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        }
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Text5)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Text5, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Text5)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(p => p.Text5, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        }
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist7)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Dropdownlist7, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist7)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @if (ViewBag.Dropdownlist7 != null)
+                                    {
+                                        @Html.DropDownList("Dropdownlist7", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                </div>
+                            </div>
+                        }
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist8)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Dropdownlist8, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist8)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @if (ViewBag.Dropdownlist8 != null)
+                                    {
+                                        @Html.DropDownList("Dropdownlist8", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                </div>
+                            </div>
+                        }
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist9)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Dropdownlist9, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist9)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @if (ViewBag.Dropdownlist9 != null)
+                                    {
+                                        @Html.DropDownList("Dropdownlist9", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                </div>
+                            </div>
+                        }
+                        if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Dropdownlist10)))
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.LabelByPropertyNameFor(p => p.Dropdownlist10, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.Dropdownlist10)).Select(p => p.Note).FirstOrDefault())
+                                </div>
+                                <div class="col-md-8">
+                                    @if (ViewBag.Dropdownlist10 != null)
+                                    {
+                                        @Html.DropDownList("Dropdownlist10", null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search" })
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <!--Chỉ định vật liệu An Cường-->
+                    @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p => p.IsAnCuongAccessory)))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.LabelByPropertyNameFor(p => p.IsAnCuongAccessory, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, bool?>(p1 => p1.IsAnCuongAccessory)).Select(p => p.Note).FirstOrDefault())
+                            </div>
+                            <div class="col-md-8">
+                                @Html.ActivedRadioButtonIs(p => p.IsAnCuongAccessory)
+                            </div>
+                        </div>
+                        <div class="hidden_IsAnCuongAccessory hidden">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.TooltipLabelFor(p => p.Laminate)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.Laminate)*@
+                                    @Html.TextAreaFor(p => p.Laminate, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.TooltipLabelFor(p => p.MFC)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.MFC)*@
+                                    @Html.TextAreaFor(p => p.MFC, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.TooltipLabelFor(p => p.Veneer)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.Veneer)*@
+                                    @Html.TextAreaFor(p => p.Veneer, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.TooltipLabelFor(p => p.Flooring)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.Flooring)*@
+                                    @Html.TextAreaFor(p => p.Flooring, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.TooltipLabelFor(p => p.Accessories)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.Accessories)*@
+                                    @Html.TextAreaFor(p => p.Accessories, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.TooltipLabelFor(p => p.KitchenEquipment)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.KitchenEquipment)*@
+                                    @Html.TextAreaFor(p => p.KitchenEquipment, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.TooltipLabelFor(p => p.OtherBrand)
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.TextAreaFor(p => p.OtherBrand, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        @Html.TooltipLabelFor(p => p.HandoverFurniture)
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.TextAreaFor(p => p.HandoverFurniture, new { @class = "form-control" })
+                                    </div>
+                                </div>*@
+                        </div>
+
+                        <div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.TooltipLabelFor(p => p.OtherBrand)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.OtherBrand)*@
+                                    @Html.TextAreaFor(p => p.OtherBrand, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.TooltipLabelFor(p => p.HandoverFurniture)
+                                </div>
+                                <div class="col-md-3">
+                                    @*@Html.RequiredTextboxFor(p => p.HandoverFurniture)*@
+                                    @*@Html.TextAreaFor(p => p.HandoverFurniture, new { @class = "form-control" })*@
+                                    @Html.DropDownList("HandoverFurnitureList", null, null, new { @class = "form-control with-search", @multiple = "multiple" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row profileB">
+        <!--Liên hệ-->
+        @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.Contact)))
+        {
+            <div class="col-md-6">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">@LanguageResource.Profile_Contact</h3>
+                    </div>
+                    <div class="box-body">
+                        @if (Model.ProfileId == null || Model.ProfileId == Guid.Empty)
+                        {
+                            <!--Thông tin liên hệ-->
+                            <div class="form-group col-md-12 profileB">
+                                @Html.TooltipLabelFor(p => p.ContactName)
+                                <div class="input-group input-group-required">
+                                    <input class="form-control text-box single-line valid" id="ContactName" name="ContactName" type="text" value="@Model.ContactName" placeholder="" aria-describedby="ContactName-error">
+                                    <div class="required-icon" data-original-title="" title=""><div class="text">*</div></div><span class="validation-text field-validation-valid" data-valmsg-for="ContactName" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 profileB">
+                                @Html.TooltipLabelFor(p => p.Phone)
+                                <div class="input-group input-group-required">
+                                    <input class="form-control text-box single-line valid" id="PhoneBusiness" name="PhoneBusiness" type="text" value="@Model.PhoneBusiness" placeholder="" aria-describedby="PhoneBusiness-error">
+                                    <div class="required-icon" data-original-title="" title=""><div class="text">*</div></div><span class="validation-text field-validation-valid" data-valmsg-for="PhoneBusiness" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 profileB">
+                                @Html.TooltipLabelFor(p => p.Email)
+                                <div class="input-group input-group-required">
+                                    <input class="form-control text-box single-line valid" id="EmailBusiness" name="EmailBusiness" type="text" value="@Model.EmailBusiness" placeholder="">
+                                </div>
+                            </div>
+                            <!--Phòng ban-->
+                            if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.DepartmentCode)))
+                            {
+                                <div class="form-group col-md-6 profileB">
+                                    @Html.LabelByPropertyNameFor(p => p.DepartmentCode, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.DepartmentCode)).Select(p => p.Note).FirstOrDefault())
+                                    @Html.DropDownList("DepartmentCode", null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                                </div>
+                            }
+                            <!--Chức vụ-->
+                            if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.PositionB)))
+                            {
+                                <div class="form-group col-md-6 profileB">
+                                    @Html.LabelByPropertyNameFor(p => p.PositionB, configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(p1 => p1.PositionB)).Select(p => p.Note).FirstOrDefault())
+                                    @Html.DropDownList("PositionB", null, LanguageResource.Dropdownlist_Choose, new { @class = " form-control with-search" })
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            @Html.Action("_List", "ProfileContact", Model.CompanyId)
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!--Nhóm doanh nghiệp-->
+        @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerGroupCode)) ||
+             fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerCareerCode)))
+        {
+            <div class="col-md-6">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">@LanguageResource.Profile_Group</h3>
+                    </div>
+                    <div class="box-body">
+                        <!--Nhóm khách hàng-->
+                        @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerGroupCode)))
+                        {
+                            <div class="form-group col-md-6 profileB">
+                                @Html.TooltipLabelFor(p => p.CustomerGroupCode)
+                                <div class="profileGroupControls">
+                                    @if (Model.profileGroupList != null && Model.profileGroupList.Count > 0)
+                                    {
+                                        int index = 0;
+                                        foreach (var item in Model.profileGroupList)
+                                        {
+                                            <div class="input-group profileGroup">
+                                                @Html.RequiredExDropDownList_RequiredFor(p => profileGroupList[index].ProfileGroupCode, new SelectList(profileGroupCodeList, "CatalogCode", "CatalogText_vi", item.ProfileGroupCode), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search profilegroupcode", @data_row = index })
+                                                <span class="input-group-btn">
+                                                    @if (index == 0)
+                                                    {
+                                                        <button class="btn btn-default btn-addProfileGroup" type="button">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-default btn-removeProfileGroup btn-danger" type="button">
+                                                            <span class="glyphicon glyphicon-minus"></span>
+                                                        </button>
+                                                    }
+                                                </span>
+                                            </div>
+                                            index++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="input-group profileGroup">
+                                            @Html.RequiredExDropDownList_RequiredFor(p => profileGroupList[0].ProfileGroupCode, new SelectList(profileGroupCodeList, "CatalogCode", "CatalogText_vi"), LanguageResource.Dropdownlist_Choose, new { @class = "form-control with-search profilegroupcode", @data_row = 0 })
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-addProfileGroup" type="button">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        <!--Ngành nghề-->
+                        @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerCareerCode)))
+                        {
+                            <div class="form-group col-md-6 profileB">
+                                @Html.TooltipLabelFor(p => p.CustomerCareerCode)
+                                @{
+                                    var CustomerCareerCode = configList.Where(p => p.FieldCode == PropertyHelper.GetPropertyName<ProfileViewModel, string>(e => e.CustomerCareerCode)).FirstOrDefault();
+
+                                    if (isProfileSynced == true && CustomerCareerCode.IsReadOnly == true)
+                                    {
+                                        @Html.RequiredIfDropDownListFor(p => p.CustomerCareerCode, null, LanguageResource.Dropdownlist_Choose, new { @disabled = "disabled" })
+                                        @Html.HiddenFor(p => p.CustomerCareerCode)
+                                    }
+                                    else
+                                    {
+                                        @Html.RequiredIfDropDownListFor(p => p.CustomerCareerCode, null, LanguageResource.Dropdownlist_Choose)
+                                    }
+                                }
+
+                            </div>
+                        }
+                    </div>
+                    @if (ViewBag.ViewExtens == "Mode_2")
+                    {
+                        <div class="box-body">
+                            <!--Nhóm khách hàng-->
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>
+                                (p => p.CustomerGroupCode)))
+                            {
+                                <div class="form-group col-md-6 profileB">
+                                    <div class="label-wrapper">
+                                        <label class="control-label" for="CustomerGroupCode">@string.Format("{0}_{1}", LanguageResource.Profile_ProfileGroup, "Công ty khác")</label>
+                                    </div>
+
+                                    <div class="profileGroupControls">
+                                        @if (Model.profileGroupOtherCompanyList != null && Model.profileGroupOtherCompanyList.Count > 0)
+                                        {
+                                            foreach (var item in Model.profileGroupOtherCompanyList)
+                                            {
+                                                <div class="input-group profileGroup">
+                                                    @Html.DisplayFor(p => item)
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            <!--Ngành nghề-->
+                            @if (fieldCodeList.Contains(PropertyHelper.GetPropertyName<ProfileViewModel, string>(p => p.CustomerCareerCode)))
+                            {
+                                <div class="form-group col-md-6 profileB">
+                                    <div class="label-wrapper">
+                                        <label class="control-label" for="CustomerCareerCode">@string.Format("{0}_{1}", LanguageResource.Profile_CustomerCareerCode, "Công ty khác")</label>
+                                    </div>
+                                    @if (Model.profileCareerOtherCompanyList != null && Model.profileCareerOtherCompanyList.Count > 0)
+                                    {
+                                        foreach (var item in Model.profileCareerOtherCompanyList)
+                                        {
+                                            <div>@Html.DisplayFor(p => item)</div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

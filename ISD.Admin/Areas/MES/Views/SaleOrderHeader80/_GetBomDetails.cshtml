@@ -1,0 +1,52 @@
+﻿@model List<BomDetailViewModel>
+<table class="table table-bordered table-striped table-hover table-responsive-lg dataTable no-footer tableDetailBOM">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center">No.</th>
+            <!-- -->
+            <th class="text-center">@Html.DisplayNameFor(p => p.FirstOrDefault().SOLineNumber)</th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.FirstOrDefault().MATNR)</th>
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().MATNR_DES)</th>
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().BOMBaseQty)</th>
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().BOMBaseUnit)</th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.FirstOrDefault().IDNRK)</th>
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().MAKTX)</th>
+            <th class="text-center">@Html.DisplayNameFor(p => p.FirstOrDefault().POSNR)</th>
+            <!-- Số lượng-->
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().MENGE)</th>
+            <!-- Đơn vị tính -->
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().MEINS)</th>
+            <!--SLKH -->
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().KLMENG)</th>
+            <!--Component Scrap-->
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().AUSCH)</th>
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().Total)</th>
+            <th>@Html.DisplayNameFor(p => p.FirstOrDefault().TotalWithScrap)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{int i = 0;}
+        @foreach (var detail in Model)
+        {
+            i++;
+            <tr>
+                <td class="text-center">@i</td>
+                <td class="text-center">@Html.DisplayFor(p => detail.SOLineNumber)</td>
+                <td class="text-center">@Html.DisplayFor(p => detail.MATNR)</td>
+                <td>@Html.DisplayFor(p => detail.MATNR_DES)</td>
+                <td class="text-right">@Html.DisplayFor(p => detail.BOMBaseQty)</td>
+                <td>@Html.DisplayFor(p => detail.BOMBaseUnit)</td>
+                <td class="text-center">@Html.DisplayFor(p => detail.IDNRK_DISPLAY)</td>
+                <td>@Html.DisplayFor(p => detail.MAKTX)</td>
+                <td class="text-center">@Html.DisplayFor(p => detail.POSNR)</td>
+                <td class="text-right">@Html.DisplayFor(p => detail.MENGE)</td>
+                <td>@Html.DisplayFor(p => detail.MEINS)</td>
+                <td class="text-right">@Html.DisplayFor(p => detail.KLMENG)</td>
+                <td class="text-right">@Html.DisplayFor(p => detail.AUSCH)</td>
+                <td class="text-right">@Html.DisplayFor(p => detail.Total)</td>
+                <td class="text-right">@Html.DisplayFor(p => detail.TotalWithScrap)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

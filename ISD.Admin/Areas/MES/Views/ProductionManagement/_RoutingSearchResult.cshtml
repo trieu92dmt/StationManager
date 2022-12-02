@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ProductionOrderDetailViewModel>
+
+<table class="table table-bordered table-responsive dataTable searchRoutingTable table-sm">
+    <thead class="isd-table-header">
+        <tr>
+            <th>@Html.DisplayNameFor(p => p.ProductAttributes)</th>
+            <th>@Html.DisplayNameFor(p => p.KTEXT)</th>
+            <th class="text-center">@LanguageResource.Btn_Choose</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var item in Model)
+        {
+            <tr>
+                @Html.HiddenFor(x => item.StepCode, new { Name = "productionOrderDetailNew[" + i + "].StepCode", @Id = "StepCode[" + i + "]", @readonly = "readonly" })
+                @Html.HiddenFor(x => item.Quantity_DLD, new { Name = "productionOrderDetailNew[" + i + "].Quantity_DLD", @Id = "Quantity_DLD[" + i + "]", @readonly = "readonly" })
+                @Html.HiddenFor(x => item.Quantity_DLKD, new { Name = "productionOrderDetailNew[" + i + "].Quantity_DLKD", @Id = "Quantity_DLKD[" + i + "]", @readonly = "readonly" })
+                @Html.HiddenFor(x => item.POT12, new { Name = "productionOrderDetailNew[" + i + "].POT12", @Id = "POT12[" + i + "]", @readonly = "readonly" })
+                <td>@Html.TextBoxFor(p => item.ProductAttributes, new { Name = "productionOrderDetailNew[" + i + "].ProductAttributes", @Id = "ProductAttributes[" + i + "]",  @style = "max-width:70px;border:none;background:none;", @readonly = "readonly" })</td>
+                <td>
+                    @Html.TextBoxFor(p => item.KTEXT, new { Name = "productionOrderDetailNew[" + i + "].KTEXT", @Id = "KTEXT[" + i + "]", @style = "max-width:120px;border:none;background:none;", @readonly = "readonly" })
+                    @(item.POT12 != null && item.POT12 != "" ? "(" + @item.POT12 + ")":null)
+                <td class="text-center">
+                    @Html.CheckBoxFor(x => item.Check, new { @Id = "Check[" + i + "]", Name = "productionOrderDetailNew[" + i + "].Check" })
+                </td>
+            </tr>
+            i++;
+        }
+
+    </tbody>
+    <tfoot></tfoot>
+</table>
+
+

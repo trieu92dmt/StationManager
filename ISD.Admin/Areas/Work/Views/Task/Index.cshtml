@@ -1,0 +1,1723 @@
+﻿@model TaskSearchViewModel
+@using ISD.Extensions
+@{
+    string Title = ViewBag.Title;
+    string CurrentArea = ConstArea.Work;
+    string CurrentController = ConstController.Task;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+    bool isHasPermissionEdit = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.Edit, "?Type=" + ViewBag.Type);
+    bool isHasPermissionDelete = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.Delete, "?Type=" + ViewBag.Type);
+    bool isHasPermissionEditProfile = HtmlExtensions.GetPermission("Customer/Profile", ConstFunction.Edit, "?Type=Account");
+    bool isHasPermissionSync = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.SYNC, "?Type=" + ViewBag.Type);
+    bool isHasPermissionCancel = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.CANCEL, "?Type=" + ViewBag.Type);
+    bool isHasPermissionCreate = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.Create, "?Type=" + ViewBag.Type);
+    bool isHasPermissionPrint = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.PRINT, "?Type=" + ViewBag.Type);
+    string parameters = string.Format("?Type={0}&Reporter={1}&Assignee={2}", ViewBag.Type, ViewBag.Reporter, ViewBag.Assignee);
+    var GoogleMapAPIKey = ViewBag.GoogleMapAPIKey;
+    var MarkerCluster = "https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js";
+
+    var hiddenClass = "";
+    var hiddenGTBClass = "";
+    var hiddenLSXDClass = "";
+    var hiddenLSXCClass = "";
+    if (ViewBag.Type != ConstWorkFlowCategory.THKH && ViewBag.Type != ConstWorkFlowCategory.TICKET && ViewBag.Type != ConstWorkFlowCategory.TICKET_MLC)
+    {
+        hiddenClass = "display-none";
+    }
+
+    if (ViewBag.Type != ConstWorkFlowCategory.GTB)
+    {
+        hiddenGTBClass = "display-none";
+    }
+
+    if (ViewBag.Type == ConstWorkFlow.LSXD)
+    {
+        hiddenLSXDClass = "display-none";
+    }
+
+    if (ViewBag.Type == ConstWorkFlow.LSXC)
+    {
+        hiddenLSXCClass = "display-none";
+
+    }
+}
+
+@section head {
+    <!--Kanban-->
+    <link href="~/Scripts/jqwidgets/styles/jqx.base.css" rel="stylesheet" />
+    <link href="~/Scripts/jqwidgets/styles/jqx.material-green.css" rel="stylesheet" />
+    <!--CKEDITOR-->
+    <script src="~/Content/Plugin/ckeditor/ckeditor.js"></script>
+    <script src="~/ckfinder/ckfinder.js"></script>
+    <!--Calendar-->
+    <link href="~/Content/Calendar/fullcalendar.min.css" rel="stylesheet" />
+    <link href="~/Content/Calendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @if (ViewBag.Type != ConstWorkFlowCategory.MyWork && ViewBag.Type != ConstWorkFlowCategory.MyFollow)
+        {
+            @Title.FirstCharToUpper(false)
+        }
+        else
+        {
+            @Title
+        }
+    </h1>
+    <div class="pull-right">
+        <!--Nếu không là MyWork và MyFollow thì mới có Thêm mới-->
+        @if (ViewBag.Type != ConstWorkFlowCategory.MyWork && ViewBag.Type != ConstWorkFlowCategory.MyFollow && ViewBag.Type != ConstWorkFlowCategory.MyCalendar && ViewBag.Type != ConstWorkFlow.LSXC && ViewBag.Type != ConstWorkFlow.LSXD)
+        {
+            @HtmlExtensions.CreateButton(CurrentArea, CurrentController, parameters)
+            if (isHasPermissionSync && ViewBag.Type == ConstWorkFlowCategory.TICKET_MLC)
+            {
+                <a class="btn btn-info btn-sync-product">
+                    <i class="fa fa-refresh"></i> Đồng bộ sản phẩm
+                </a>
+            }
+            if (isHasPermissionSync && ViewBag.Type == "LSX")
+            {
+                <a class="btn btn-info btn-sync-saleorder">
+                    <i class="fa fa-refresh"></i> Đồng bộ SO
+                </a>
+            }
+        }
+    </div>
+</div>
+
+<div class="content">
+    <div class="panel-group">
+        @Html.Partial("_Filter")
+        @*@Html.Hidden("Type", (string)ViewBag.Type)*@
+        @if (ViewBag.Type == ConstWorkFlowCategory.MyWork || ViewBag.Type == ConstWorkFlowCategory.MyFollow)
+        {
+            @Html.Hidden("KanbanId", (Guid?)ViewBag.KanbanId)
+        }
+        <div class="panel panel-default">
+            <div id="exTab1" class="nav-tabs-custom">
+                <ul class="nav nav-pills nav nav-tabs">
+                    <li class="active">
+                        <a href="#tab-search" data-toggle="tab" id="toggle-tab-search">@LanguageResource.Task_CommonTask</a>
+                    </li>
+                    <li class="hide-kanban">
+                        <a href="#tab-kanban" data-toggle="tab" id="toggle-tab-kanban">@LanguageResource.Kanban</a>
+                    </li>
+                    @if (ViewBag.Type == ConstWorkFlowCategory.MyWork || ViewBag.Type == ConstWorkFlowCategory.MyFollow)
+                    {
+                        <li class="hide-calendar">
+                            <a href="#tab-calendar" data-toggle="tab" id="toggle-tab-calendar">@LanguageResource.Calendar</a>
+                        </li>
+                    }
+                    @if (ViewBag.Type == ConstWorkFlowCategory.GTB)
+                    {
+                        <li class="hide-map">
+                            <a href="#tab-map" data-toggle="tab" id="toggle-tab-map">
+                                @LanguageResource.Maps
+                                <span class="ico-help" title="Bản đồ hiển thị 300 địa điểm gần nhất"><i class="fa fa-question-circle"></i></span>
+                            </a>
+
+                        </li>
+                        <li class="hide-calendarGTB">
+                            <a href="#tab-calendarGTB" data-toggle="tab" id="toggle-tab-calendarGTB">@ViewBag.EstimatedTitle</a>
+                        </li>
+                    }
+                </ul>
+
+                <div class="tab-content clearfix">
+                    <div class="tab-pane active" id="tab-search">
+                        @Html.Partial("_ListTask")
+                    </div>
+                    <div class="tab-pane hide-kanban" id="tab-kanban">
+                        <div class="kanbanContainer">
+                            <div id="kanban" class="kanbanClass"></div>
+                        </div>
+                    </div>
+                    @if (ViewBag.Type == ConstWorkFlowCategory.MyWork || ViewBag.Type == ConstWorkFlowCategory.MyFollow)
+                    {
+                        <div class="tab-pane hide-calendar" id="tab-calendar">
+                            <div id="calendar"></div>
+                        </div>
+                    }
+                    @if (ViewBag.Type == ConstWorkFlowCategory.GTB)
+                    {
+                        <div class="tab-pane hide-map" id="tab-map">
+                            <div id="map" style="height: 700px;"></div>
+                        </div>
+                        <div class="tab-pane hide-calendarGTB" id="tab-calendarGTB">
+                            <div id="calendarGTB"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="delete-confirm"></div>
+<div class="loading-modal"></div>
+
+@section components {
+    <!--print-->
+    <div class="modal fade" id="divFunctionModal" role="dialog">
+
+    </div>
+    <!--Popup Create Task Con-->
+    <div class="modal fade" id="popupProductionOrder" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="popupTaskKanban" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_DeletePopups")
+    <div class="modal fade" id="popupSaveTaskStatus" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div class="divProfilePopup"></div>
+    <div class="divContactPopup"></div>
+    <div class="divConstructionPopup"></div>
+
+    <div class="divSyncProduct">
+        <div id="divSyncProduct" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-sm">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cancel-delete"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">ĐỒNG BỘ THÔNG TIN SẢN PHẨM TỪ SAP</h4>
+                    </div>
+                    <form class="frmSyncProduct">
+                        <div class="form-horizontal">
+                            <div class="modal-body">
+                                <div id="divAlertPopupWarning" class="alert alert-warning alert-dismissable" style="display: none">
+                                    <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertPopupWarning">×</button>
+                                    <div class="alert-message">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <div class="label-wrapper">
+                                                <label class="control-label" for="CompanyId">Công ty</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("CompanyCode")
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <div class="label-wrapper">
+                                                <label class="control-label" for="ERPProductCode">Mã SAP</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" name="SyncERPProductCode" class="form-control text-box single-line" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <span class="btn btn-default" data-dismiss="modal" id="btn-cancel-delete">@LanguageResource.Btn_Cancel</span>
+                                <a class="btn btn-primary pull-right" id="btn-confirm-sync">
+                                    @LanguageResource.Btn_Sync
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MES: Popup sync SO-->
+    <div class="divSyncSaleOrder">
+        <div id="divSyncSaleOrder" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-sm">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cancel-delete"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">ĐỒNG BỘ THÔNG TIN SALE ORDER</h4>
+                    </div>
+                    <form class="frmSyncSaleOrder">
+                        <div class="form-horizontal">
+                            <div class="modal-body">
+                                <div id="divAlertPopupWarning" class="alert alert-warning alert-dismissable" style="display: none">
+                                    <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertPopupWarning">×</button>
+                                    <div class="alert-message">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <div class="label-wrapper">
+                                                <label class="control-label" for="CompanyCode">Công ty</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("CompanyCode")
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <div class="label-wrapper">
+                                                <label class="control-label" for="SaleOrder">Mã SO</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" name="SyncSaleOrderCode" class="form-control text-box single-line" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <div class="label-wrapper">
+                                                <label class="control-label" for="SaleOrderType">SO Type</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" name="SyncSOType" class="form-control text-box single-line" value="ZO" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <span class="btn btn-default" data-dismiss="modal" id="btn-cancel-delete">@LanguageResource.Btn_Cancel</span>
+                                <a class="btn btn-primary pull-right" id="btn-confirm-sync-saleorder">
+                                    @LanguageResource.Btn_Sync
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--MES: End Popup sync SO-->
+    <!--Popup ghi chú ngắn-->
+    <div class="modal fade" id="popupTaskShortNote" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">
+                        <a href=""><i class="fa fa-eye mr-5"></i></a> <span id="popup-title"></span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="divAlertWarningTaskShortNote" class="alert alert-warning alert-dismissable divPopupMessage" style="display: none">
+                        <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarning">×</button>
+                        <div class="alert-message">
+                        </div>
+                    </div>
+                    <div class="content">
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new { @enctype = "multipart/form-data", @id = "frmUpdateTaskShortNote" }))
+                        {
+                            <div class="box-body">
+                                <div>
+                                    <input id="ShortNoteTaskId" name="ShortNoteTaskId" type="hidden" value="">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!--Ghi chú ngắn-->
+                                            <div class="form-group">
+                                                <div>
+                                                    <div class="label-wrapper"><label class="control-label" for="Description">Ghi chú ngắn</label></div>
+                                                </div>
+                                                <div>
+                                                    <textarea class="form-control" cols="20" id="ShortNote" name="ShortNote" rows="4"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="btn-save-short-note">Lưu</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script src="~/Areas/Work/Scripts/CreateSubTask.js"></script>
+
+    <!--Kanban-->
+    <script src="~/Scripts/jqwidgets/jqxsortable.js"></script>
+    <script src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script src="~/Scripts/jqwidgets/jqxkanban.js"></script>
+    <script src="~/Scripts/jqwidgets/jqxdragdrop.js"></script>
+    <script src="~/Areas/Work/Scripts/ISD.Kanban.js"></script>
+
+    <script src="~/Scripts/Common/ISD.SearchTemplate.js"></script>
+    <script>
+        //Define it
+        var currentUserId = "@CurrentUser.AccountId";
+        var currentPageId = "@ViewBag.PageId";
+    </script>
+    <!--Calendar-->
+    @if (ViewBag.Type == ConstWorkFlowCategory.MyWork || ViewBag.Type == ConstWorkFlowCategory.MyFollow || @ViewBag.Type == ConstWorkFlowCategory.GTB)
+    {
+        <script src="~/Scripts/Calendar/moment.js"></script>
+        <script src="~/Scripts/Calendar/fullcalendar.min.js"></script>
+        <script src="~/Scripts/Calendar/Shared.js"></script>
+    }
+    <!--Google maps-->
+    @if (ViewBag.Type == ConstWorkFlowCategory.GTB)
+    {
+        <script src="https://maps.googleapis.com/maps/api/js?language=vi&key=@GoogleMapAPIKey"></script>
+        <script>
+
+            var bounds = new google.maps.LatLngBounds();
+            var infowindow = new google.maps.InfoWindow();
+            var marker, i;
+            function GoogleMapsInitialize(locations, country) {
+                var style = {
+                    hide: [
+                        {
+                            featureType: 'poi',
+                            stylers: [{ visibility: 'off' }]
+                        },
+                        {
+                            featureType: 'transit',
+                            elementType: 'labels.icon',
+                            stylers: [{ visibility: 'off' }]
+                        }
+                    ]
+                };
+
+                map = new google.maps.Map(document.getElementById('map'));
+                map.setOptions({ styles: style.hide });
+
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address': country }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
+                    }
+                });
+
+                var markers = [];
+                var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+                if (locations != null && locations.length > 0) {
+                    for (i = 0; i < locations.length; i++) {
+                        var colorMarker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(locations[i].lat, locations[i].lng),
+                            map: map,
+                            icon: colorMarker,
+                            //label: labels[i % labels.length]
+                        });
+                        bounds.extend(marker.position);
+
+                        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                            return function () {
+                                infowindow.setContent("<b>" + locations[i].name + "</b><br><p>" + locations[i].address + "</p>");
+                                infowindow.open(map, marker);
+                            }
+                        })(marker, i));
+                        markers.push(marker);
+                    }
+                    map.fitBounds(bounds);
+                }
+
+                //(optional) restore the zoom level after the map is done scaling
+                var listener = google.maps.event.addListener(map, "idle", function () {
+                    map.setZoom(12);
+                    google.maps.event.removeListener(listener);
+                    var markerCluster = new MarkerClusterer(map, markers,
+                        { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
+                });
+            }
+        </script>
+    }
+
+    <script>
+        //load default and set event
+        $(document).ready(function () {
+            //Set lại thông tin search gần đây khi là back lại
+            var modeTemplateSearch = ISD.GetQueryString("ModeSearch", window.location.href);
+
+            if (modeTemplateSearch == "Recently") {
+                LoadTemplateSearch(currentUserId, currentPageId, "Recently");
+                var recentSearch = JSON.parse(localStorage.getItem('pageId-' + currentPageId));
+                if (recentSearch) {
+                    FillToInput(recentSearch);
+                }
+            } else {
+                LoadTemplateSearch(currentUserId, currentPageId);
+                localStorage.removeItem('pageId-' + currentPageId)
+            }
+            PaggingServerSide_Task("@CurrentUrl");
+            ISD.ShowMessage(window.location.href);
+            ISD.Delete();
+            ISD.Cancel();
+            ISD.DateTimeInitial();
+
+            //select2 multiple
+            $(".Filters").select2({
+                multiple: true,
+                placeholder: "Thêm các trường tìm kiếm..."
+            });
+            $(".select-filter .select2 .select2-search__field").css("width", "200px");
+            //chọn tab theo config
+            $("#toggle-" + getParam('tab')).trigger("click");
+
+            //các lỗi bảo hành thường gặp
+            GetUsualError();
+
+            numericInput();
+        });
+
+
+        function loading2Modal() {
+            $("#popupTaskKanban").addClass("loading2");
+        }
+
+        $(document).on("change", ".Filters", function () {
+            var arr = $(this).val();
+            $("div[class*='hidden_']").addClass("hidden");
+            $.each(arr, function (index, value) {
+                //console.log(value);
+                $(".hidden_" + value).removeClass("hidden");
+            });
+        });
+
+        $(document).on("change", "select[name='Reporter']", function () {
+            var Reporter = $("select[name='Reporter']").val();
+            var Assignee = $("select[name='Assignee']").val();
+            var href = "/Work/Task/Create?Type=@ViewBag.Type&Reporter=" + Reporter + "&Assignee=" + Assignee;
+            $("#btn-create").attr("href", href);
+        });
+
+        $(document).on("change", "select[name='Assignee']", function () {
+            var Reporter = $("select[name='Reporter']").val();
+            var Assignee = $("select[name='Assignee']").val();
+            var href = "/Work/Task/Create?Type=@ViewBag.Type&Reporter=" + Reporter + "&Assignee=" + Assignee;
+            $("#btn-create").attr("href", href);
+        });
+
+        $("#CheckAll").click(function () {
+            if ($("#CheckAll").is(':checked')) {
+                $(".Filters > option").prop("selected", "selected");
+                $(".Filters").trigger("change");
+            } else {
+                $(".Filters > option").removeAttr("selected");
+                $(".Filters").trigger("change");
+            }
+        });
+
+
+        $(document).on("change", "#ProvinceId", function () {
+            var ProvinceId = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/MasterData/District/GetDistrictByProvince",
+                data: {
+                    ProvinceId: ProvinceId
+                },
+                success: function (jsonData) {
+                    $("#DistrictId").html("");
+                    $("#DistrictId").append("<option value=''>@LanguageResource.Dropdownlist_All</option>");
+                    $.each(jsonData, function (index, value) {
+                        $("#DistrictId").append("<option value='" + value.Value + "'>" + value.Text + "</option>");
+                    });
+
+                    $("#DistrictId").trigger("change");
+                }
+            });
+        });
+
+        $(document).on("change", "select[name='DistrictId']", function () {
+            var DistrictId = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                url: "/MasterData/Ward/GetWardByDistrict",
+                data: {
+                    DistrictId: DistrictId
+                },
+                success: function (jsonData) {
+                    var $ward = $("#WardId")
+                    $ward.html("");
+                    $ward.append("<option value=''>@LanguageResource.Dropdownlist_All</option>");
+                    $.each(jsonData, function (index, value) {
+                        $ward.append("<option value='" + value.Value + "'>" + value.Text + "</option>");
+                    });
+                }
+            });
+        });
+
+
+        // TaskStatusCode: có giá trị => reset: TaskProcessCode
+        $(document).on("change", "#TaskStatusCode", function () {
+            if ($(this).val()) {
+                $("#TaskProcessCode").val('');
+                $('#TaskProcessCode').trigger('change');
+            }
+        });
+        $(document).on("change", "#TaskProcessCode", function () {
+            if ($(this).val()) {
+                $("#TaskStatusCode").val('');
+                $('#TaskStatusCode').trigger('change');
+            }
+        });
+        //common date
+        $(document).on("change", ".ddl-common-date", function () {
+            var cssClass = $(this).data('id');
+            var commonDate = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Utilities/CommonDate/Get",
+                data: {
+                    CommonDate: commonDate
+                },
+                success: function (jsonData) {
+                    $("." + cssClass + " input[name='" + cssClass+ "FromDate']").val(jsonData.FromDate);
+                    $("." + cssClass + " input[name='" + cssClass + "ToDate']").val(jsonData.ToDate);
+                    if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                        $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", true);
+                        $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", true);
+                    } else {
+                        $("." + cssClass + " input[name='" + cssClass + "FromDate']").prop("disabled", false);
+                        $("." + cssClass + " input[name='" + cssClass + "ToDate']").prop("disabled", false);
+                    }
+
+                }
+            });
+        });
+
+        $("#btn-search").click(function () {
+            $("#btn-search").button('loading');
+
+            var searchData = GetDataFormSearch();
+            //Save localStorage
+            localStorage.setItem('pageId-' + currentPageId, searchData);
+
+            PaggingServerSide_Task("@CurrentUrl");
+        });
+
+        //trigger enter click when fill in search form
+        $(document).on("keyup", "#frmSearch", function (evt) {
+            if (evt.keyCode == 13) {
+                $("#btn-search").trigger("click");
+            }
+        });
+
+        //Đồng bộ sản phẩm
+        $(document).on("click", ".btn-sync-product", function () {
+            $(".divSyncProduct input[name='SyncERPProductCode']").val("");
+            $(".divSyncProduct #divSyncProduct").modal("show");
+        });
+
+        $(document).on("click", "#btn-confirm-sync", function () {
+            var $btn = $(this);
+            var CompanyCode = $(".divSyncProduct select[name='CompanyCode']").val();
+            var SyncERPProductCode = $(".divSyncProduct input[name='SyncERPProductCode']").val();
+            if (SyncERPProductCode == null || SyncERPProductCode == "") {
+                alertModalPopup("Vui lòng nhập mã SAP cần đồng bộ!");
+            }
+            else {
+                $btn.button("loading");
+                $.ajax({
+                    type: "POST",
+                    url: '/Sale/Product/SyncProduct',
+                    data: {
+                        ERPProductCode: SyncERPProductCode,
+                        CompanyCode : CompanyCode
+                    },
+                    success: function (html) {
+                        if (html.Success == true) {
+                            $(".divSyncProduct #divSyncProduct").modal("hide");
+                            if (html.Message != null && html.Message != "") {
+                                alertPopup(false, html.Message);
+                            }
+                            else {
+                                alertPopup(true, "Đã đồng bộ thành công sản phẩm có mã SAP \"" + SyncERPProductCode + "\".");
+                                //PaggingServerSide_Profile("@CurrentUrl");
+                            }
+                        }
+                        else {
+                            alertModalPopup("Đã có lỗi xảy ra: " + html.Message);
+                        }
+                        $btn.button("reset");
+                    }
+                });
+            }
+        });
+
+        $(document).on("change", "#divCancelPopup #CancelType", function () {
+            var dataText = $(this).val();
+            if (dataText != "Other") {
+                $("#divCancelPopup #CancelReason").prop("readonly", true);
+                $("#divCancelPopup #CancelReason").val(dataText);
+            } else {
+                $("#divCancelPopup #CancelReason").val("");
+                $("#divCancelPopup #CancelReason").prop("readonly", false);
+            }
+
+        });
+
+        //MES đồng bộ SO
+    $(document).on("click", ".btn-sync-saleorder", function () {
+        $(".divSyncSaleOrder input[name='SyncSaleOrderCode']").val("");
+        $(".divSyncSaleOrder #divSyncSaleOrder").modal("show");
+        });
+
+        $(document).on("click", "#btn-confirm-sync-saleorder", function () {
+            var $btn = $(this);
+            var CompanyCode = $(".divSyncSaleOrder select[name='CompanyCode']").val();
+            var SyncSaleOrderCode = $(".divSyncSaleOrder input[name='SyncSaleOrderCode']").val();
+            var SyncSOType = $(".divSyncSaleOrder input[name='SyncSOType']").val();
+            if (SyncSaleOrderCode == null || SyncSaleOrderCode == "") {
+                alertModalPopup("Vui lòng nhập mã SO cần đồng bộ!");
+            }
+            else {
+                $btn.button("loading");
+                $.ajax({
+                    type: "POST",
+                    url: '/Work/Task/SyncSaleOrder',
+                    data: {
+                        SaleOrderCode: SyncSaleOrderCode,
+                        CompanyCode: CompanyCode,
+                        SOType: SyncSOType
+                    },
+                    success: function (html) {
+                        if (html.Success == true) {
+                            $(".divSyncSaleOrder #divSyncSaleOrder").modal("hide");
+                            if (html.Message != null && html.Message != "") {
+                                alertPopup(false, html.Message);
+                            }
+                            else {
+                                alertPopup(true, "Đã đồng bộ thành công SO: \"" + SyncSaleOrderCode + "\".");
+                                //PaggingServerSide_Profile("@CurrentUrl");
+                            }
+                        }
+                        else {
+                            alertModalPopup("Đã có lỗi xảy ra: " + html.Message);
+                        }
+                        $btn.button("reset");
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+         function PaggingServerSide_Task(controller) {
+            $(".dataTableServerSide").DataTable().clear().destroy();
+            $(".dataTableServerSide")
+                .on("xhr.dt", function (e, settings, json, xhr) {
+                    //console.log("json", json);
+                    $("#btn-search").button('reset');
+                    if (json) {
+                        //Kanban
+                        if (json.isRenderKanban == true) {
+                            GetKanban(json);
+                            $(".hide-kanban").removeClass("hidden");
+                        }
+                        else {
+                            $(".hide-kanban").addClass("hidden");
+                        }
+                        //Calendar
+                        if ("@ViewBag.Type" == "@ConstWorkFlowCategory.MyWork" || "@ViewBag.Type" == "@ConstWorkFlowCategory.MyFollow")
+                        {
+                            $('#calendar').fullCalendar("destroy");
+                            calendarFunction(json.data);
+                        }
+                        //Maps
+                        if ("@ViewBag.Type" == "@ConstWorkFlowCategory.GTB") {
+                            var locationArr = [];
+                            $.each(json.data, function (index, item) {
+                                if (item.VisitAddress != null && item.Actived == true) {
+                                    locationArr.push({ name: item.Summary, address: item.VisitAddress, lat: item.lat, lng: item.lng });
+                                }
+                            });
+                            GoogleMapsInitialize(locationArr, json.CurrentLocation);
+
+                            $('#calendarGTB').fullCalendar("destroy");
+                            calendarFunction(json.calendarList);
+                        }
+                    }
+                })
+                .on('processing.dt', function (e, settings, processing) {
+                    ISD.LoadingDataTable(processing, '.dataTableServerSide');
+                })
+                .DataTable({
+                proccessing: true,
+                serverSide: true,
+                paging: true,
+                scrollX:  true,
+                //fix bug squashed header
+                autoWidth: true,
+                initComplete: function (settings) {
+                    $(window).resize();
+                },
+                drawCallback: function (settings) {
+                    $(window).trigger('resize');
+                },
+                //scrollCollapse: true,
+                //fixedColumns: {
+                //    leftColumns: 3
+                //},
+                ajax: {
+                    type: 'POST',
+                    url: "/" + controller + "/_PaggingServerSide",
+                    contentType: 'application/json',
+                    data: function (d) {
+                        var arr = {};
+                        //data search
+                        var data = $("#frmSearch").serializeArray();
+                        $.each(data, function (index, val) {
+                            var obj = {};
+                            obj[val.name] = val.value;
+                            $.extend(true, arr, obj);
+                        });
+                        //data datatable (draw, start, length,...)
+                        $.extend(true, arr, d);
+
+                        //Type
+                        var type = getParam("Type");
+                        var obj = {};
+                        obj["Type"] = type;
+                        $.extend(true, arr, obj);
+
+                        //UsualErrorCode
+                        var errorList = $('#UsualErrorCode').val();
+                        if (errorList != null && errorList.length > 0) {
+                            var error = {};
+                            error['UsualErrorCode'] = errorList;
+                            $.extend(true, arr, error);
+                        }
+
+                        //ProductColorCode
+                        var colorList = $('#ProductColorCode').val();
+                        if (colorList != null && colorList.length > 0) {
+                            var color = {};
+                            color['ProductColorCode'] = colorList;
+                            $.extend(true, arr, color);
+                        }
+
+                        var tabName = $(".nav-tabs li.active a").attr("href");
+                        if (tabName == "#tab-map") {
+                            var tab = {};
+                            tab['tab'] = tabName;
+                            $.extend(true, arr, tab);
+                        }
+
+                        return JSON.stringify(arr);
+                    }
+                },
+                columns: [
+                    //1. STT
+                    {
+                        "data": "STT",
+                        "className": "text-center"
+                    },
+                    //2. TaskCode
+                    {
+                        "data": "TaskCode",
+                        "className": "text-center @hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                if (row["SubtaskCode"]) {
+                                    data = row["SubtaskCode"];
+                                }
+                                var htmlContent = "";
+                                if (("@isHasPermissionEdit" == "True" || "@isHasPermissionEdit" == "true") && row["Actived"] == true) {
+                                    htmlContent += "<a target='_blank' href=\"/Work/Task/Edit/" + row["TaskId"] + "\">" + data + "</a><span><a class='btn-showTaskPopup' title='Cập nhật nhanh' data-id='" + row["TaskId"] + "'><i class='fa fa-pencil-square-o'></i></a></span>";
+                                    //htmlContent += "<a target='_blank' href=\"/Work/Task/Edit/" + row["TaskId"] + "\">" + data + "</a><span><a class='btn-showUpdateSOSAPPopup' title='Cập nhật nhanh' data-id='" + row["TaskId"] + "'><i class='fa fa-pencil-square-o'></i></a></span> <span><a class='btn btn-success btn-print-popup' data-SAP='" + row["Summary"] + "'  href='#' onclick='$(this).button('loading')'><i class='fa fa-print'></i></a></span>";
+                                }
+                                else {
+                                    htmlContent = data;
+                                }
+
+                                if (("@isHasPermissionCancel" == "True" || "@isHasPermissionCancel" == "true") && row["Actived"] == true) {
+                                          htmlContent += "<span><a class=\"btn-cancel\" title='Hủy' style=\"color: #f0ad4e;cursor: pointer;margin-left: 5px;\" data-current-url=\"Work/Task\" data-id='" + row["TaskId"] + "' data-item-name='" + row["Summary"] + "'><i class='fa fa-trash-o'></i></a></span>";
+                                }
+                                return htmlContent;
+                            }
+                            return "";
+                        }
+                    },
+                     //8. PriorityText_vi
+                    {
+                        "data": "PriorityText_vi",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true
+                    },
+                     //11. ProfileName // khách hàng
+                    {
+                        "data": "ProfileName",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                if (data != null && data != "") {
+                                    if ("@isHasPermissionEditProfile" == "True" || "@isHasPermissionEditProfile" == "true") {
+                                        return "<a  target='_blank' href=\"/Customer/Profile/Edit/" + row["ProfileId"] + "\" onclick=\"$(this).button('loading')\">" + data + "</a>";
+                                    }
+                                    else {
+                                        return data;
+                                    }
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                      //8. Property1 Số PO/Hợp đồng/Báo giá
+                    {
+                        "data": "Property1",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true
+                    },
+                       //8. Date1 Ngày giao hàng dự kiến
+                    {
+                        "data": "Date1",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                        //8. Property2 Số LSX tổng hợp
+                    {
+                        "data": "Property2",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true
+                    },
+                    //3. LSX SAP
+                    {
+                        "data": "LSXSAP",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                //if (row["Actived"] == true) {
+                                //    return "<a target='_blank' href=\"/Work/Task/Edit/" + row["TaskId"] + "\">" + data + "</a>";
+                                //}
+                                //return data;
+                                var htmlContent = "";
+                                if (row["Actived"] == true) {
+                                    if (("@isHasPermissionEdit" == "True" || "@isHasPermissionEdit" == "true")) {
+                                        //htmlContent += "<a target='_blank' href=\"/Work/Task/Edit/" + row["TaskId"] + "\">" + data + "</a><span><a class='btn-showTaskPopup' title='Cập nhật nhanh' data-id='" + row["TaskId"] + "'><i class='fa fa-pencil-square-o'></i></a></span>";
+                                        htmlContent += "<a target='_blank' href=\"/Work/Task/Edit/" + row["TaskId"] + "\">" + data + "</a><span><a class='btn-showUpdateSOSAPPopup' title='Cập nhật nhanh' data-id='" + row["TaskId"] + "'><i class='fa fa-pencil-square-o'></i></a></span>";
+                                    }
+                                    if (("@isHasPermissionPrint" == "True" || "@isHasPermissionPrint" == "true")) {
+                                        htmlContent += "<span><a class='btn btn-success btn-print-popup' data-id='" + row["TaskId"] + "' data-lsxsap='" + row["LSXSAP"] + "' href='#' onclick='$(this).button(\"loading\")' > <i class='fa fa-print'></i></a ></span>";
+                                    }
+                                }
+                                else {
+                                    htmlContent = data;
+                                }
+
+                                if (("@isHasPermissionCancel" == "True" || "@isHasPermissionCancel" == "true") && row["Actived"] == true) {
+                                          htmlContent += "<span><a class=\"btn-cancel\" title='Hủy' style=\"color: #f0ad4e;cursor: pointer;margin-left: 5px;\" data-current-url=\"Work/Task\" data-id='" + row["TaskId"] + "' data-item-name='" + row["LSXSAP"] + "'><i class='fa fa-trash-o'></i></a></span>";
+                                }
+                                return htmlContent;
+                            }
+                            return "";
+                        }
+                    },
+                    //Đợt SX
+                    {
+                        "data": "DSX",
+                         "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                var htmlContent = "";
+                                if (("@isHasPermissionEdit" == "True" || "@isHasPermissionEdit" == "true") && row["Actived"] == true) {
+                                    if ("@ViewBag.Type" === "LSXC") {
+                                        htmlContent = data;
+                                    }
+                                    else if ("@ViewBag.Type" === "LSXD") {
+                                        htmlContent += "<a target='_blank' href=\"/Work/Task/Edit/" + row["TaskId"] + "\">" + data + "</a><span><a class='btn-showUpdateSOSAPPopup' title='Cập nhật nhanh' data-id='" + row["TaskId"] + "'><i class='fa fa-pencil-square-o'></i></a></span>";
+                                    }
+                                }
+                                else {
+                                    htmlContent = data;
+                                }
+
+                                if (("@isHasPermissionCancel" == "True" || "@isHasPermissionCancel" == "true") && row["Actived"] == true) {
+                                          htmlContent += "<span><a class=\"btn-cancel\" title='Hủy' style=\"color: #f0ad4e;cursor: pointer;margin-left: 5px;\" data-current-url=\"Work/Task\" data-id='" + row["TaskId"] + "' data-item-name='" + row["Summary"] + "'><i class='fa fa-trash-o'></i></a></span>";
+                                }
+                                return htmlContent;
+                            }
+                            return "";
+                        }
+                    },
+                    //LSX ĐT (SAP)
+                    {
+                        "data": "LSXDTSAP",
+                         "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true
+                    },
+                    //LSX ĐT
+                    {
+                        "data": "LSXDT",
+                         "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true
+                    },
+                    //3. Description
+                    {
+                        "data": "Description",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    if (row["Actived"] == true) {
+                                        return "<a target='_blank' href=\"/Work/Task/Edit/" + row["TaskId"] + "\" title=\"" + row["DetailSummary"] + "\">" + data + "</a>";
+                                    }
+                                    return data;
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //4. WorkFlowName
+                    {
+                        "data": "WorkFlowName",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true
+                    },
+                    //6. ProductCode
+                    {
+                        "data": "ProductCode",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true,
+
+                    },
+                    //7. ProductName
+                    {
+                        "data": "ProductName",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true,
+                    },
+                    //Số lượng kế hoạch
+                    {
+                        "data": "SLKH",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass text-right",
+                        "orderable": true,
+                    },
+                    //Số lượng điều chỉnh theo đợt
+                    {
+                        "data": "SL",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass text-right",
+                        "orderable": true,
+                    },
+                     //6. Lệnh sản xuất
+                    {
+                        "data": "Summary",
+                        "className": "@hiddenLSXDClass",
+                        "orderable": true,
+
+                    },
+                    //6. ProductSOCode
+                    {
+                        "data": "ProductSOCode",
+                        "className": "@hiddenLSXDClass",
+                        "orderable": true,
+
+                    },
+                    //7. ProductSOName
+                    {
+                        "data": "ProductSOName",
+                        "className": "@hiddenLSXDClass",
+                        "orderable": true,
+                    },
+                     //7. Text1 //BOMVerrsion
+                    {
+                        "data": "Text1",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      //7. Number1 // Số lượng phát lệnh
+                    {
+                        "data": "Number1",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                       //7. Text2 // Đơn vị tính
+                    {
+                        "data": "Text2",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                    //VisitAddress
+                    {
+                        "data": "VisitAddress",
+                        "className": "@hiddenGTBClass @hiddenLSXDClass",
+                        "orderable": false,
+                        //"render": function (data, type, row) {
+                        //    //return data;
+                        //    return "<div>" + data + "</div>";
+                        //}
+                    },
+                    //9. ProfileCode
+                    {
+                        "data": "ProfileCode",
+                        "className": "text-center @hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                if (data != null && data != "") {
+                                    if ("@isHasPermissionEditProfile" == "True" || "@isHasPermissionEditProfile" == "true") {
+                                        return "<a target='_blank' href=\"/Customer/Profile/Edit/" + row["ProfileId"] + "\" onclick=\"$(this).button('loading')\">" + data + "</a>";
+                                    }
+                                    else {
+                                        return data;
+                                    }
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //10. ProfileForeignCode
+                    {
+                        "data": "ProfileForeignCode",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass text-center",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                if (data != null && data != "") {
+                                    if ("@isHasPermissionEditProfile" == "True" || "@isHasPermissionEditProfile" == "true") {
+                                        return "<a target='_blank' href=\"/Customer/Profile/Edit/" + row["ProfileId"] + "\" onclick=\"$(this).button('loading')\">" + data + "</a>";
+                                    }
+                                    else {
+                                        return data;
+                                    }
+                                }
+                            }
+                            return "";
+                        }
+                    },
+
+                    //12. ProfileAddress
+                    {
+                        "data": "ProfileAddress",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": false
+                    },
+                    //13. ReporterName
+                    {
+                        "data": "ReporterName",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "orderable": true
+                    },
+                    //14. AssigneeName
+                    {
+                        "data": "AssigneeName",
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                    },
+
+                    //LSXC bắt đầu ở đây
+                    {
+                        "data": "ReceiveDate",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        },
+                        "orderable": true,
+                    },
+                    {
+                        "data": "EstimateDate",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        },
+                        "orderable": true,
+                    },
+                    {
+                        "data": "StartDate",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        },
+                        "orderable": true,
+                    },
+                    {
+                        "data": "EndDate",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        },
+                        "orderable": true,
+                    },
+                    //phòng ban Property3
+                    {
+                         "data": "Property3",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                     //kho sản xuất Property5
+                    {
+                          "data": "Property5",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                    // Khuôn PrintMold
+                    {
+                          "data": "PrintMold",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      // Số serial Serial
+                    {
+                        "data": "Serial",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      // Ngày phát lệnh Date2
+                    {
+                        "data": "Date2",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        },
+                        "orderable": true,
+                    },
+                      // Created by Reporter
+                    {
+                        "data": "Reporter",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                       // Ghép bài Text3
+                    {
+                        "data": "Text3",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      //Số con/tờ Number2
+                    {
+                        "data": "Number2",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                       //Tên hạng mục in Text4
+                    {
+                        "data": "Text4",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                    // Kiểu in Text5
+                    {
+                        "data": "Text5",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                     // Tên Công ty gia công in Property7
+                    {
+                        "data": "Property7",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                     // Tên NCC Kẽm  Property9
+                    {
+                        "data": "Property9",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                     // Created by Component
+                    {
+                        "data": "Component",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      //  Description
+                    {
+                        "data": "Description",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      //Số lượng Qty
+                    {
+                        "data": "Qty",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      //  Unit
+                    {
+                        "data": "Unit",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                       // Trạng thái TaskStatusId
+                    {
+                        "data": "TaskStatusName",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                      // Ghi chú Property10
+                    {
+                        "data": "Property10",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+
+                     // Ngày hàng in về Date3
+                    {
+                        "data": "Date3",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        },
+                        "orderable": true,
+                    },
+                      // Khổ giấy in/cắt Property11
+                    {
+                        "data": "Property11",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": false
+                    },
+                        // Số lượng giao mẫu Number3
+                    {
+                        "data": "Number3",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+                    // Nhân viên xem bài SaleEmployeeCode
+                    {
+                        "data": "SaleEmployeeCode",
+                        "className": "@hiddenLSXDClass ",
+                        "orderable": true,
+                    },
+
+
+
+                    //
+
+                    @*//15. StartDate
+                    {
+                        "data": "StartDate",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    // BĐ ĐC
+                    {
+                        "data": "Date1",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //16. EstimateEndDate
+                    {
+                        "data": "EstimateEndDate",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //16. ReceivedDate
+                    {
+                        "data": "ReceiveDate",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //17. EndDate
+                    {
+                        "data": "EndDate",
+                        "className": "text-center @hiddenLSXDClass",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY");
+                                }
+                            }
+                            return "";
+                        }
+                    },*@
+                    //18. CheckInTime
+                    {
+                        "data": "CheckInTime",
+                        "className": "text-center @hiddenClass ",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY HH:mm:ss");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //19. CheckOutTime
+                    {
+                        "data": "CheckOutTime",
+                        "className": "text-center @hiddenClass",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                if (data != null) {
+                                    return moment(data).format("DD/MM/YYYY HH:mm:ss");
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //5. TaskStatusName
+                    {
+                        "data": "TaskStatusName",
+                        "orderable": true,
+                        "className": "@hiddenLSXDClass @hiddenLSXCClass",
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            if (cellData != "") {
+                                $(td).css("background-color", rowData["TaskStatusBackgroundColor"]);
+                                $(td).css("color", rowData["TaskStatusColor"]);
+                            }
+                        }
+                    },
+                    // isDeleted
+                    {
+                        "data": "isDeleted",
+                        "orderable": true,
+                        "className": "text-center @hiddenLSXDClass @hiddenLSXCClass",
+                        "render": function (data, type, row) {
+                            // If display or filter data is requested, format the date
+                            if (type === "display" || type === "filter") {
+                                console.log(data)
+                                if (data == 'true' || data == true) {
+                                    return "Đã đóng"
+                                } else {
+                                    return "Đang mở"
+                                }
+                            }
+                            return "";
+                        }
+                    },
+                    //20. Actions
+                    {
+                        "data": "TaskId",
+                        "orderable": false,
+                        "className": "text-center ",
+                        "render": function (data, type, row) {
+                            if (type === "display" || type === "filter") {
+                                var htmlContent = "";
+                                if (row["Actived"] == false) {
+                                    htmlContent = "<span style=\"color:#f39c12\"><i>Hủy (" + (row["CancelReason"] ? row["CancelReason"] : "") + ")</i></span>";
+                                }
+                                else
+                                {
+                                    if ("@isHasPermissionCancel" == "True" || "@isHasPermissionCancel" == "true") {
+                                        htmlContent += "<a class=\"btn btn-warning btn-cancel\" data-current-url=\"Work/Task\" data-id='" + data + "' data-item-name='" + row["Summary"] + "' onclick=\"$(this).button('loading')\"><i class='fa fa-ban'></i> Hủy</a>";
+                                    }
+                                    if ("@isHasPermissionCreate" == "True" || "@isHasPermissionCreate" == "true") {
+                                        htmlContent += "<a class=\"btn btn-success btn-DivionOfTask\" data-id='" + data + "' data-item-name='" + row["Summary"] + "' onclick=\"$(this).button('loading');\" ><i class='fa fa-plus'></i> Tạo task con</a>";
+                                    }
+                                    if ("@isHasPermissionDelete" == "True" || "@isHasPermissionDelete" == "true") {
+                                        htmlContent += "<a class=\"btn btn-danger btn-delete\" data-current-url=\"Work/Task\" data-id='" + data + "' data-item-name='" + row["Summary"] + "' onclick=\"$(this).button('loading')\"><i class='fa fa-trash-o'></i> Xóa</a>";
+                                    }
+                                }
+                                return htmlContent;
+                            }
+                            return "";
+                        }
+                    },
+                    //19.
+                    {
+                        "data": "ProcessCodeIndex",
+                        "className": "hidden",
+                    }
+                ],
+                destroy: true,
+                language: {
+                    sProcessing: "Đang xử lý...",
+                    sLengthMenu: "Xem _MENU_ mục",
+                    sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                    sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                    sInfoPostFix: "",
+                    sSearch: "Tìm nội dung:",
+                    sUrl: "",
+                    oPaginate: {
+                        sFirst: "Đầu",
+                        sPrevious: "&laquo;",
+                        sNext: "&raquo;",
+                        sLast: "Cuối"
+                    }
+                },
+                columnDefs: [
+                    { targets: [0, 1], visible: true },
+                    { targets: 'no-sort', visible: false }
+                ],
+                "sDom": '<"top"flp>rt<"bottom"ip><"clear">'
+            });
+        }
+
+    </script>
+
+
+    @if (ViewBag.Type == ConstWorkFlowCategory.GTB)
+    {
+        <script src="@MarkerCluster"></script>
+    }
+
+    <script>
+        //Get data of form search name function is required
+        function GetDataFormSearch() {
+            //Get value in search form
+            var formdata = $("#frmSearch").serializeArray();
+            var data = {};
+            $(formdata).each(function (index, obj) {
+                data[obj.name] = obj.value;
+            });
+            //console.log(data)
+            //Filter
+            var FiltersList = $('.Filters').val();
+            if (FiltersList != null && FiltersList.length > 0) {
+                var filters = {};
+
+                filters['Filters'] = FiltersList;
+                $.extend(true, data, filters);
+            }
+            //Mã màu SP
+            var ProductColorCodeList = $('#ProductColorCode').val();
+            if (ProductColorCodeList != null && ProductColorCodeList.length > 0) {
+                var productColorCode = {};
+
+                productColorCode['ProductColorCode'] = ProductColorCodeList;
+                $.extend(true, data, productColorCode);
+            }
+            //Các lỗi BH thường gặp
+            var UsualErrorCodeList = $('#UsualErrorCode').val();
+            if (UsualErrorCodeList != null && UsualErrorCodeList.length > 0) {
+                var usualErrorCode = {};
+
+                usualErrorCode['UsualErrorCode'] = UsualErrorCodeList;
+                $.extend(true, data, usualErrorCode);
+            }
+            return JSON.stringify(data);
+        }
+
+
+        function GetUsualError() {
+            $.ajax({
+                type: "POST",
+                url: "/Work/Task/GetUsualErrorByProductCategory",
+                data: {
+                    IsTakeAll: true
+                },
+                success: function (jsonData) {
+                    $("#UsualErrorCode").html("");
+                    //$("#UsualErrorCode").append("<option value=''>-- Vui lòng chọn --</option>");
+                    if (jsonData != null && jsonData.length > 0) {
+                        $.each(jsonData, function (index, value) {
+                            $("#UsualErrorCode").append("<option value='" + value.CatalogCode + "'>" + value.CatalogText_vi + "</option>");
+                        });
+                    }
+                }
+            });
+        };
+
+    </script>
+
+    @if (ViewBag.Type == ConstWorkFlow.LSXC)
+    {
+        <script>
+
+
+            //Print
+            $(document).on("click", ".btn-print-popup", function () {
+                loading2();
+                var $btn = $(this);
+                var TaskId = $btn.data("id");
+                var LSXSAP = $btn.data("lsxsap");
+
+
+                $.ajax({
+                    type: "GET",
+                    url: '/MES/ProductionOrder/_PrintQRCode/',
+                    data: {
+                        TaskId: TaskId,
+                        Summary: LSXSAP
+                    },
+                }).done(function (html) {
+                    $("#divFunctionModal").html(html);
+                    $('#divFunctionModal').modal('show');
+                    $btn.button('reset');
+                });
+            });
+
+            $(document).on("click", ".btn-print", function (e) {
+                loading2();
+                e.preventDefault();
+
+                var $btn = $(this);
+                var form = $('#frmHangTag').serialize()
+                $.ajax({
+                    type: "POST",
+                    url: '/MES/ProductionOrder/_PrintQRCode',
+                    data: form,
+                    success: function (xhr, status, error) {
+                        if (xhr.Success === true) {
+                            var MassProductionOrder = $('#MassProductionOrder').val();
+                            var BatchPrinting = $('#BatchPrinting').val();
+                            var CustomerReference = $('#CustomerReference').val();
+                            var url = "/Reports/ReportHangTag/Index?BatchPrinting=" + BatchPrinting + "&CustomerReference=" + CustomerReference;
+                            window.open(url);
+                            //Mở lại popup
+                            $("a[data-id='" + CustomerReference + "'].btn-print-popup").trigger("click")
+
+                        } else {
+                            //Báo lỗi trên popup
+                            ISD.setMessage("#divAlertWarningTask", xhr.Data);
+                            $('#divFunctionModal #divAlertWarningTask').show();
+                            $btn.button('reset');
+                        }
+                    },
+                    error: function () {
+                        $btn.button('reset');
+
+                        $('.alert-message').html(json.Data);
+                        $('#divAlertWarningTask').show();
+                    }
+                })
+            });
+
+            //Xử lý dropdown xem theo SL
+            //$(document).on('change', 'select[name="isViewQtyHasValue"]', function () {
+            //    var value = $(this).val();
+            //    if (!value) {
+            //        $('#search-qty').show();
+            //    }
+            //    else {
+            //        $('#search-qty').hide();
+            //    }
+            //});
+
+            function numericInput() {
+                $('#FromQty').inputFilter(function (value) {
+                    return /^-?\d*$/.test(value);
+                });
+                $('#ToQty').inputFilter(function (value) {
+                    return /^-?\d*$/.test(value);
+                });
+            }
+            //Số lượng từ - Số lượng đến
+            $(document).on("input", "#FromQty", function () {
+                $('.from-qty').css('display', 'none');
+                $('.to-qty').css('display', 'none');
+                var FromQty = $('#FromQty').val();
+                var ToQty = $('#ToQty').val();
+
+                if (FromQty && ToQty && parseFloat(FromQty) > parseFloat(ToQty)) {
+                    $('.from-qty .from-qty-message').html('SL từ phải bé hơn SL đến');
+                    $('.from-qty').css('display', 'block');
+                    return false;
+                }
+            });
+
+            $(document).on("input", "#ToQty", function () {
+                $('.from-qty').css('display', 'none');
+                $('.to-qty').css('display', 'none');
+                var FromQty = $('#FromQty').val();
+                var ToQty = $('#ToQty').val();
+
+                if (FromQty && ToQty && parseFloat(FromQty) > parseFloat(ToQty)) {
+                    $('.to-qty .to-qty-message').html('SL đến phải lớn hơn SL từ');
+                    $('.to-qty').css('display', 'block');
+                    return false;
+                }
+            });
+        </script>
+    }
+
+}

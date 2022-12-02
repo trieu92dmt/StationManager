@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ThucThiLenhSanXuatViewModel>
+@{
+    string CurrentArea = ConstArea.Work;
+    string CurrentController = ConstController.ProductionOrder;
+}
+
+<table class="table table-bordered table-striped table-hover dataTable no-footer">
+    <thead class="isd-table-header">
+        <tr>
+            <th class="text-center">@LanguageResource.NumberIndex</th>
+            <th>@Html.DisplayNameFor(p => p.ProductName)</th>
+            <th>@Html.DisplayNameFor(p => p.Qty)</th>
+            <th>@Html.DisplayNameFor(p => p.StartDate)</th>
+            <th>@Html.DisplayNameFor(p => p.EndDate)</th>
+            <th class="text-center">@LanguageResource.Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var item in Model)
+        {
+            i++;
+            <tr>
+                <td class="text-center">@i</td>
+                <td>@Html.DisplayFor(p => item.ProductName)</td>
+                <td>@Html.DisplayFor(p => item.Qty)</td>
+                <td>@Html.DisplayFor(p => item.StartDate)</td>
+                <td>@Html.DisplayFor(p => item.EndDate)</td>
+                
+                <td class="text-center">
+                    <button class="btn-success btn-DivionOfTask" id="@item.TaskId"> <i class="fa fa-plus"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot></tfoot>
+</table>
+

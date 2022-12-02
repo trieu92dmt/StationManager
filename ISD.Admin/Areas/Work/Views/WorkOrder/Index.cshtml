@@ -1,0 +1,945 @@
+﻿
+@model WorkOrderViewModel
+@{
+    ViewBag.Title = LanguageResource.LSX_WorkOrderCode;
+    string CurrentController = ConstController.WorkOrder;
+    string CurrentArea = ConstArea.Work;
+
+    string CurrentUrl = HtmlExtensions.GetCurrentUrl(CurrentArea, CurrentController);
+    bool isHasPermissionEdit = HtmlExtensions.GetPermission(CurrentUrl, ConstFunction.Edit);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @ViewBag.Title
+    </h1>
+    @*<a class="btn-default btn-get-profile">Chọn serial</a> >*@
+
+    <div class="pull-right">
+        @HtmlExtensions.CreateButton(CurrentArea, CurrentController)
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                @using (Html.BeginForm("_Search", null, FormMethod.Post, new { @id = "frmSearch", @class = "isd-form-search" }))
+                {
+                    <div class="panel-body">
+                        <div class="row">
+
+                            @*<div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            @Html.TooltipLabelFor(p => p.ERPProductCode)
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(p => p.ERPProductCode, new { @class = "form-control text-box single-line" })
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.ParentWorkOrderCode)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(p => p.ParentWorkOrderCode, new { @class = "form-control text-box single-line" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.ProductCode)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(p => p.ProductCode, new { @class = "form-control text-box single-line" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.WorkOrderCode)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(p => p.WorkOrderCode, new { @class = "form-control text-box single-line" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.TooltipLabelFor(p => p.PrintStatus)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("PrintStatus", null, LanguageResource.Dropdownlist_All, new { @class = "form-control with-search" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            @Html.TooltipLabelFor(p => p.IsUpdateSerial)
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("IsUpdateSerial", new List<SelectListItem>(){
+                                            new SelectListItem(){Text = LanguageResource.Dropdownlist_All, Value = ""},
+                                            new SelectListItem(){Text = "Có", Value = "true"},
+                                            new SelectListItem(){Text = "Không", Value = "false"}
+                                        }, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            @Html.TooltipLabelFor(p => p.IsUpdateProductsPerPage)
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("IsUpdateProductsPerPage", new List<SelectListItem>(){
+                                            new SelectListItem(){Text = LanguageResource.Dropdownlist_All, Value = ""},
+                                            new SelectListItem(){Text = "Có", Value = "true"},
+                                            new SelectListItem(){Text = "Không", Value = "false"}
+                                        }, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            @Html.TooltipLabelFor(p => p.EstimateFromDate)
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("ReceiveDate", null, new { @class = "form-control with-search" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row Create">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            @Html.TooltipLabelFor(p => p.FromDate)
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.RequiredTextboxFor(p => p.FromDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            @Html.TooltipLabelFor(p => p.ToDate)
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.RequiredTextboxFor(p => p.ToDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-5">
+                                    @HtmlExtensions.SearchButton()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div style="display:none" id="divSearchResult">
+                        <table class="table table-bordered table-striped table-hover dataTableServerSide no-footer">
+                            <thead class="isd-table-header">
+                                <tr>
+                                    @* STT *@
+                                    <th class="text-center isd-table-th-stt">@LanguageResource.NumberIndex</th>
+                                    @* Ưu tiên *@
+                                    <th>@Html.DisplayNameFor(p => p.Priority)</th>
+                                    @* Mã lệnh sx tổng hợp *@
+                                    <th>@Html.DisplayNameFor(p => p.ParentWorkOrderCode)</th>
+                                    @* Lệnh SX *@
+                                    <th>@Html.DisplayNameFor(p => p.WorkOrderCode)</th>
+                                    @* Mã TP/BTP *@
+                                    <th>@Html.DisplayNameFor(p => p.ProductCode)</th>
+                                    @* Tên TP/BTP *@
+                                    <th>@Html.DisplayNameFor(p => p.ProductName)</th>
+                                    @* BOM Version *@
+                                    <th>@Html.DisplayNameFor(p => p.BOMVersion)</th>
+                                    @* Số lượng phát lệnh *@
+                                    <th>@Html.DisplayNameFor(p => p.WorkOrderQty)</th>
+                                    @* Đơn vị *@
+                                    <th>@Html.DisplayNameFor(p => p.WorkOrderUnit)</th>
+                                    @* Ngày phát lệnh *@
+                                    <th>@Html.DisplayNameFor(p => p.DocumentDate)</th>
+                                    @* Ngày bắt đầu sx dự kiến *@
+                                    <th>@Html.DisplayNameFor(p => p.EstimateFromDate)</th>
+                                    @* Ngày kết thúc sx dự kiến *@
+                                    <th>@Html.DisplayNameFor(p => p.EstimateToDate)</th>
+                                    @* Ngày bắt đầu sx thực tế *@
+                                    <th>@Html.DisplayNameFor(p => p.ActualStartDate)</th>
+                                    @* Ngày kết thúc sx thực tế *@
+                                    <th>@Html.DisplayNameFor(p => p.ActualEndDate)</th>
+                                    @* Khách hàng *@
+                                    @*<th>@Html.DisplayNameFor(p => p.CustomerName)</th>*@
+                                    @* Số PO/Hợp đồng/Báo giá *@
+                                    <th>@Html.DisplayNameFor(p => p.PONumber)</th>
+                                    @* Số lượng SP đặt hàng
+                                        <th>@Html.DisplayNameFor(p => p.SO_Quantity)</th>
+                                        @* Số lượng giao mẫu
+                                        <th>@Html.DisplayNameFor(p => p.SO_DeliveryQuantity)</th>
+                                        @* ĐVT
+                                        <th>@Html.DisplayNameFor(p => p.SO_Unit)</th>
+                                        @* Phiếu tiếp nhận thông tin
+                                        <th>@Html.DisplayNameFor(p => p.SO_InforCard)</th>
+                                        @* Ngày giao hàng
+                                        <th>@Html.DisplayNameFor(p => p.SO_DeliveryDate)</th>
+                                        @* Kích thước SP(mm)
+                                        <th>@Html.DisplayNameFor(p => p.ProductSize)</th>
+                                        @* Kích thước khổ trải SP(mm)
+                                        <th>@Html.DisplayNameFor(p => p.ProductSpreadSize)</th>
+                                        @* Số SP/Khổ in(hoặc khổ cắt)
+                                        <th>@Html.DisplayNameFor(p => p.ProductPerPrintSize)</th>
+                                        @* Đơn vị gia công TP
+                                        <th>@Html.DisplayNameFor(p => p.ProcessingUnit)</th>
+                                        @* Tình trạng SP
+                                        <th>@Html.DisplayNameFor(p => p.SO_StatusProduct)</th>
+                                        @* Mô tả SP
+                                        <th>@Html.DisplayNameFor(p => p.SO_Description)</th>*@
+                                    @* Mã khuôn *@
+                                    <th>@Html.DisplayNameFor(p => p.SO_MoldCode)</th>
+                                    @* Tên khuôn *@
+                                    <th>@Html.DisplayNameFor(p => p.SO_MoldName)</th>
+                                    @* Số serial *@
+                                    <th>@Html.DisplayNameFor(p => p.SerialNumber)</th>
+                                    @* Số con/tờ
+                                        <th>@Html.DisplayNameFor(p => p.ProductPerPage)</th>
+                                        @* Số phiếu thiết kế
+                                        <th>@Html.DisplayNameFor(p => p.DesignVote)</th>
+                                        @* Phụ trách thiết kế
+                                        <th>@Html.DisplayNameFor(p => p.DesignBy)</th>
+                                        @* Mã bản vẽ Marquette
+                                        <th>@Html.DisplayNameFor(p => p.DesignBy)</th>
+                                        @* Mã bản vẽ khuôn
+                                        <th>@Html.DisplayNameFor(p => p.DesignBy)</th>
+                                        @* Ghi chú mẫu kèm theo
+                                        <th>@Html.DisplayNameFor(p => p.DesignBy)</th>
+                                        @* Created By
+                                        <th>@Html.DisplayNameFor(p => p.CreatedBy)</th>
+                                        @* Ghép bài
+                                        <th>@Html.DisplayNameFor(p => p.MatchCard)</th>
+                                        @* Tên hạng mục in
+                                        <th>@Html.DisplayNameFor(p => p.PrintItem)</th>
+                                        @* Kiểu in
+                                        <th>@Html.DisplayNameFor(p => p.PrintStyle)</th>
+                                        @* Công ty gia công in
+                                        <th>@Html.DisplayNameFor(p => p.PrintCompany)</th>
+                                        @* NCC kẽm
+                                        <th>@Html.DisplayNameFor(p => p.ZincSupplier)</th>
+                                        @* Ngày yêu cầu có hàng in
+                                        <th>@Html.DisplayNameFor(p => p.PrintReqDate)</th>*@
+                                    @* Trạng thái *@
+                                    <th>@Html.DisplayNameFor(p => p.PrintStatus)</th>
+                                    @* Component
+                                        <th>@Html.DisplayNameFor(p => p.Component)</th>
+                                        @* Description
+                                        <th>@Html.DisplayNameFor(p => p.LSX_ProductName)</th>
+                                        @* Số lượng
+                                        <th>@Html.DisplayNameFor(p => p.Component_Quantity)</th>
+                                        @* Component Unit
+                                        <th>@Html.DisplayNameFor(p => p.Component_Unit)</th>
+                                        @* Mã Marquette
+                                        <th>@Html.DisplayNameFor(p => p.Component_MarquetteCode)</th>
+                                        @* Khổ nguyên(mm)
+                                        <th>@Html.DisplayNameFor(p => p.Component_Size)</th>
+                                        @* Khổ in(mm)
+                                        <th>@Html.DisplayNameFor(p => p.Component_SizePrint)</th>
+                                        @* Số lượng NVL xuất kho
+                                        <th>@Html.DisplayNameFor(p => p.Component_QuantityExport)</th>
+                                        @* Số lượng tờ in (tờ cắt ) (được xả từ tờ nguyên)
+                                        <th>@Html.DisplayNameFor(p => p.Component_QuantityPaperCut)</th>
+                                        @* Số lượng tờ in ( tờ cắt) cần đạt tối thiểu
+                                        <th>@Html.DisplayNameFor(p => p.Component_QuantityPaperCutMin)</th>
+                                        @* Thông số màu
+                                        <th>@Html.DisplayNameFor(p => p.Component_ColorParam)</th>
+                                        @* Mã màu pha
+                                        <th>@Html.DisplayNameFor(p => p.Component_ColorCode)</th>
+                                        @* Quy cách in
+                                        <th>@Html.DisplayNameFor(p => p.Component_PrintSpecifications)</th>
+                                        @* Khổ kẽm
+                                        <th>@Html.DisplayNameFor(p => p.Component_ZincSize)</th>
+                                        @* Số kẽm
+                                        <th>@Html.DisplayNameFor(p => p.Component_ZincNumber)</th>
+                                        @* Ghi chú
+                                        <th>@Html.DisplayNameFor(p => p.Component_Note)</th>
+                                        @* Chức năng *@
+                                    <th>@LanguageResource.Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="delete-confirm"></div>*@
+@*<div class="loading-modal"></div>*@
+@section components {
+    <div class="divSerialPopup"></div>
+}
+
+@section scripts {
+    <script>
+        //load default and set event
+        $(document).ready(function() {
+            $("select[name='ReceiveDate']").trigger('change');
+            $("#btn-search").trigger("click");
+
+            ISD.ShowMessage(window.location.href);
+            ISD.UploadFile("@CurrentUrl");
+
+        });
+
+        setTimeout(function() {
+            $('#someid').addClass("done");
+        }, 2000);
+
+        $("#btn-search").click(function() {
+            PaggingServerSide("@CurrentUrl");
+            $("#divSearchResult").show();
+        });
+
+        //trigger enter click when fill in search form
+        $(document).on("keyup", "#frmSearch", function(evt) {
+            if (evt.keyCode == 13) {
+                $("#btn-search").trigger("click");
+            }
+        });
+
+        function PaggingServerSide(controller) {
+            $(".dataTableServerSide").DataTable().clear().destroy();
+            $(".dataTableServerSide")
+                .on('processing.dt', function(e, settings, processing) {
+                    ISD.LoadingDataTable(processing, '.dataTableServerSide');
+                })
+                .DataTable({
+                    proccessing: true,
+                    serverSide: true,
+                    paging: true,
+                    scrollX: true,
+                    ajax: {
+                        type: 'POST',
+                        url: "/" + controller + "/_PaggingServerSide",
+                        contentType: 'application/json',
+                        data: function(d) {
+                            var arr = {};
+                            //data search
+                            var data = $("#frmSearch").serializeArray();
+                            $.each(data, function(index, val) {
+                                var obj = {};
+                                obj[val.name] = val.value;
+                                $.extend(true, arr, obj);
+                            });
+                            //data datatable (draw, start, length,...)
+                            $.extend(true, arr, d);
+                            return JSON.stringify(arr);
+                        }
+                    },
+                    columns: [
+                        //STT
+                        {
+                            "data": "STT",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //Ưu tiên
+                        {
+                            "data": "Priority",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //Mã LSX tổng hợp
+                        {
+                            "data": "ParentWorkOrderCode",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        //Lệnh SX
+                        {
+                            "data": "WorkOrderCode",
+                            "className": "text-left",
+                            "orderable": true,
+                            "render": function(data, type, row) {
+                                if (type === "display" || type === "filter") {
+                                    if ("@isHasPermissionEdit" == "True" || "@isHasPermissionEdit" == "true") {
+                                        return "<a href='/Work/WorkOrder/Detail/" + row['WorkOrderId'] + "' title='" + data + "'>" + data + "</a>"
+                                    } else {
+                                        return data;
+                                    }
+                                }
+                                return data;
+                            }
+                        },
+                        //Mã TP/BTP
+                        {
+                            "data": "ProductCode",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //Tên TP/BTP
+                        {
+                            "data": "ProductName",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        //BOM Version
+                        {
+                            "data": "BOMVersion",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //Số lượng phát lệnh
+                        {
+                            "data": "WorkOrderQty",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //ĐVT
+                        {
+                            "data": "WorkOrderUnit",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //Ngày phát lệnh
+                        {
+                            "data": "DocumentDate",
+                            "className": "text-center",
+                            "orderable": true,
+                            "render": function(data, type, row) {
+                                // If display or filter data is requested, format the date
+                                if (type === "display" || type === "filter") {
+                                    if (data != null) {
+                                        return moment(data).format("DD/MM/YYYY");
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                        //Ngày bắt đầu SX dự kiến
+                        {
+                            "data": "EstimateFromDate",
+                            "className": "text-center",
+                            "orderable": true,
+                            "render": function(data, type, row) {
+                                // If display or filter data is requested, format the date
+                                if (type === "display" || type === "filter") {
+                                    if (data != null) {
+                                        return moment(data).format("DD/MM/YYYY");
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                        //Ngày kết thúc sx dự kiến
+                        {
+                            "data": "EstimateToDate",
+                            "className": "text-center",
+                            "orderable": true,
+                            "render": function(data, type, row) {
+                                // If display or filter data is requested, format the date
+                                if (type === "display" || type === "filter") {
+                                    if (data != null) {
+                                        return moment(data).format("DD/MM/YYYY");
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                        //Ngày bắt đầu sx thực tế
+                        {
+                            "data": "ActualStartDate",
+                            "className": "text-center",
+                            "orderable": true,
+                            "render": function(data, type, row) {
+                                // If display or filter data is requested, format the date
+                                if (type === "display" || type === "filter") {
+                                    if (data != null) {
+                                        return moment(data).format("DD/MM/YYYY");
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                        //Ngày kết thúc sx thực tế
+                        {
+                            "data": "ActualEndDate",
+                            "className": "text-center",
+                            "orderable": true,
+                            "render": function(data, type, row) {
+                                // If display or filter data is requested, format the date
+                                if (type === "display" || type === "filter") {
+                                    if (data != null) {
+                                        return moment(data).format("DD/MM/YYYY");
+                                    }
+                                }
+                                return "";
+                            }
+                        },
+                        //Khách hàng
+                        //{
+                        //    "data": "CustomerName",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        //Số PO/Hợp đồng/Báo giá
+                        {
+                            "data": "PONumber",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        ////Số lượng SP đặt hàng
+                        //{
+                        //    "data": "SO_Quantity",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Số lượng giao mẫu
+                        //{
+                        //    "data": "SO_DeliveryQuantity",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////ĐVT
+                        //{
+                        //    "data": "SO_Unit",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        //Phiếu tiếp nhận thông tin
+                        //{
+                        //    "data": "SO_InforCard",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Ngày giao hàng
+                        //{
+                        //    "data": "SO_DeliveryDate",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    "render": function (data, type, row) {
+                        //        // If display or filter data is requested, format the date
+                        //        if (type === "display" || type === "filter") {
+                        //            if (data != null) {
+                        //                return moment(data).format("DD/MM/YYYY");
+                        //            }
+                        //        }
+                        //        return "";
+                        //    }
+                        //    },
+                        ////Kích thước SP(mm)
+                        //{
+                        //    "data": "ProductSize",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Kích thước khổ trải SP(mm)
+                        //{
+                        //    "data": "ProductSpreadSize",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Số SP/Khổ in(hoặc khổ cắt)
+                        //{
+                        //    "data": "ProductPerPrintSize",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Đơn vị gia công TP
+                        //{
+                        //    "data": "ProcessingUnit",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Tình trạng SP
+                        //{
+                        //    "data": "SO_StatusProduct",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Mô tả SP
+                        //{
+                        //    "data": "SO_Description",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        //Mã khuôn
+                        {
+                            "data": "SO_MoldCode",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //Tên khuôn
+                        {
+                            "data": "SO_MoldName",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        //Số serial
+                        {
+                            "data": "SerialNumber",
+                            "className": "text-left",
+                            "orderable": true,
+                        },
+                        //Số con / tờ
+                        //{
+                        //    "data": "ProductPerPage",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Số phiếu thiết kế
+                        //{
+                        //    "data": "DesignVote",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Phụ trách thiết kế
+                        //{
+                        //    "data": "DesignBy",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Mã bản vẽ Marquette
+                        //{
+                        //    "data": "MarquetteDrawingCode",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Mã bản vẽ khuôn
+                        //{
+                        //    "data": "MoldDrawingCode",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Ghi chú mẫu kèm theo
+                        //{
+                        //    "data": "AttachedNoteForm",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Created By
+                        //{
+                        //    "data": "CreatedBy",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Ghép bài
+                        //{
+                        //    "data": "MatchCard",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Tên hạng mục in
+                        //{
+                        //    "data": "PrintItem",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Kiểu in
+                        //{
+                        //    "data": "PrintStyle",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Công ty gia công in
+                        //{
+                        //    "data": "PrintCompany",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////NCC kẽm
+                        //{
+                        //    "data": "ZincSupplier",
+                        //    "className": "text-left",
+                        //    "orderable": true,
+                        //    },
+                        ////Ngày yêu cầu có hàng in
+                        //{
+                        //    "data": "PrintReqDate",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    "render": function (data, type, row) {
+                        //        // If display or filter data is requested, format the date
+                        //        if (type === "display" || type === "filter") {
+                        //            if (data != null) {
+                        //                return moment(data).format("DD/MM/YYYY");
+                        //            }
+                        //        }
+                        //        return "";
+                        //    }
+                        //},
+                        //Trạng thái
+                        {
+                            "data": "PrintStatus",
+                            "className": "text-center",
+                            "orderable": true,
+                        },
+                        ////Component
+                        //{
+                        //    "data": "Component",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Description
+                        //{
+                        //    "data": "LSX_ProductName",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Số lượng
+                        //{
+                        //    "data": "Component_Quantity",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Component Unit
+                        //{
+                        //    "data": "Component_Unit",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Mã Marquette
+                        //{
+                        //    "data": "Component_MarquetteCode",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Khổ nguyên(mm)
+                        //{
+                        //    "data": "Component_MarquetteCode",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Khổ in(mm)
+                        //{
+                        //    "data": "Component_SizePrint",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Số lượng NVL xuất kho
+                        //{
+                        //    "data": "Component_QuantityExport",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Số lượng tờ in (tờ cắt ) (được xả từ tờ nguyên)
+                        //{
+                        //    "data": "Component_QuantityPaperCut",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Số lượng tờ in ( tờ cắt) cần đạt tối thiểu
+                        //{
+                        //    "data": "Component_QuantityPaperCutMin",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Thông số màu
+                        //{
+                        //    "data": "Component_ColorParam",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Mã màu pha
+                        //{
+                        //    "data": "Component_ColorCode",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Quy cách in
+                        //{
+                        //    "data": "Component_ColorCode",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Khổ kẽm
+                        //{
+                        //    "data": "Component_ZincSize",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Số kẽm
+                        //{
+                        //    "data": "Component_ZincNumber",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //    },
+                        ////Ghi chú
+                        //{
+                        //    "data": "Component_Note",
+                        //    "className": "text-center",
+                        //    "orderable": true,
+                        //},
+                        {
+                            "data": "WorkOrderId",
+                            "orderable": false,
+                            "className": "text-center",
+                            "render": function (data, type, row, meta) {
+                                if (type === "display" || type === "filter") {
+                                    var htmlContent = "";
+                                    htmlContent = "<a class ='btn btn-default bg-blue' href='/Reports/ReportTag/Index/" + data + "' target = '_blank' ><i class='fa fa-print'></i>  In thẻ treo</a>"
+                                }
+                                if (row.ProductCode != null && row.SerialNumber == null) {
+                                    htmlContent += '<a class="btn btn-default" data-id="' + data + '" data-code="' + row["PrintMold"] + '" data-name="' + row["PrintMold"] + '">' + "Thêm Serial" + "</a>";
+                                }
+                                if (row.ProductCode != null && row.SerialNumber == null) {
+                                    htmlContent += '<a class="btn btn-default" href="/Work/WorkOrder/SerialSearch?WorkOrderId=' + data + '" data-id="' + data + '" data-code="' + row["PrintMold"] + '" data-name="' + row["PrintMold"] + '">' + "Cập nhật Serial" + "</a>"
+                                }
+                                return htmlContent;
+                            }
+                        }
+                    ],
+                    destroy: true,
+                    language: {
+                        sProcessing: "Đang xử lý...",
+                        sLengthMenu: "Xem _MENU_ mục",
+                        sZeroRecords: "Không tìm thấy dòng nào phù hợp",
+                        sInfo: "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                        sInfoEmpty: "Đang xem 0 đến 0 trong tổng số 0 mục",
+                        sInfoFiltered: "(được lọc từ _MAX_ mục)",
+                        sInfoPostFix: "",
+                        sSearch: "Tìm nội dung:",
+                        sUrl: "",
+                        oPaginate: {
+                            sFirst: "Đầu",
+                            sPrevious: "&laquo;",
+                            sNext: "&raquo;",
+                            sLast: "Cuối"
+                        }
+                    },
+                    columnDefs: [{
+                            targets: [0, 1],
+                            visible: true
+                        },
+                        {
+                            targets: 'no-sort',
+                            visible: false
+                        }
+                    ],
+                    "sDom": '<"top"flp>rt<"bottom"ip><"clear">',
+                });
+        }
+
+        //begin: CommonDate
+
+        $(document).on("change", "#ReceiveDate", function() {
+            var commonDate = $(this).val();
+            if (commonDate == 'Custom') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Utilities/CommonDate/Get",
+                        data: {
+                            CommonDate: commonDate
+                        },
+                        success: function(jsonData) {
+                            $("#frmSearch input[name='FromDate']").val(jsonData.FromDate);
+                            $("#frmSearch input[name='ToDate']").val(jsonData.ToDate);
+                            if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                                $("#frmSearch input[name='FromDate']").prop("readonly", true);
+                                $("#frmSearch input[name='ToDate']").prop("readonly", true);
+                            } else {
+                                $("#frmSearch input[name='FromDate']").prop("readonly", false);
+                                $("#frmSearch input[name='ToDate']").prop("readonly", false);
+                            }
+                        }
+                    });
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/Utilities/CommonDate/Get",
+                    data: {
+                        CommonDate: commonDate
+                    },
+                    success: function(jsonData) {
+                        $("#frmSearch input[name='FromDate']").val(jsonData.FromDate);
+                        $("#frmSearch input[name='ToDate']").val(jsonData.ToDate);
+                        if (jsonData.FromDate != '' && jsonData.FromDate != '') {
+                            $("#frmSearch input[name='FromDate']").prop("readonly", true);
+                            $("#frmSearch input[name='ToDate']").prop("readonly", true);
+                        } else {
+                            $("#frmSearch input[name='FromDate']").prop("readonly", false);
+                            $("#frmSearch input[name='ToDate']").prop("readonly", false);
+                        }
+                    }
+                });
+            }
+
+        });
+        //end: CommonDate
+        $(document).on("change", "", function() {
+
+        });
+        //Begin: Tìm kiếm serial
+        $(document).on("click", ".btn-get-profile", function() {
+            var dataId = $(this).attr("data-id");
+            var dataCode = $(this).attr("data-code");
+            $.ajax({
+                type: "POST",
+                url: '/Work/WorkOrder/SerialSearch',
+                data: {
+                    //data: data,
+                },
+                success: function(html) {
+                    $(".divSerialPopup").html("");
+
+                    $(".divSerialPopup").html(html);
+                    $(".divSerialPopup input[id='SearchSerialId']").val(dataId);
+                    $(".divSerialPopup input[id='SearchSerialCode']").val(dataCode);
+                    /*   $(".with-search").select2();*/
+                    $(".divSerialPopup #divSerialSearch").modal("show");
+                    $("#btn-serial-search").trigger("click");
+                }
+            });
+        });
+
+        //End: Tìm kiếm serial
+
+        //load popup tìm kiếm serial
+        ISD.LoadingDataTable = function(processing, element) {
+                var height = $(element + " tbody").height();
+                var width = $(element).width();
+                var ele = $(element).parent(".dataTables_scrollBody");
+                var processingElement = ele.find('.dataTables_processing');
+                if (processingElement.length == 0) {
+                    $(element).parent(".dataTables_scrollBody").append('<div class="dataTables_processing"></div>');
+                }
+                $(processingElement).css('width', width + 10);
+                $(processingElement).css('padding-top', height / 2);
+                $(processingElement).css('display', processing ? 'block' : 'none');
+                if ($($("ul.nav-tabs li.active a").attr('href')).find('.dataTables_processing').length > 0 || $('.nav-tabs-custom').length == 0) {
+                    //Loading content
+                    var contentWidth = $(element).parent(".dataTables_scrollBody").width();
+                    if (contentWidth > 0) {
+                        $('.loading-content').css($(element).parent(".dataTables_scrollBody").position());
+                        $('.loading-content').css('left', contentWidth / 2);
+                        $('.loading-content').css('padding-top', height / 2);
+                        $('.loading-content').css('display', $(element + ' tbody tr').length > 0 && processing ? 'block' : 'none');
+                    }
+                }
+            }
+    </script>
+}

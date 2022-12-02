@@ -1,0 +1,37 @@
+﻿@model ParamRequestSyncPRPOModel
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "frmSyncPRPO" }))
+{
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.TooltipLabelFor(p => p.WERKS)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.RequiredTextboxFor(p => p.WERKS, new { @class = "numeric-input form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.TooltipLabelFor(p => p.VBELN)
+                    </div>
+                    <div class="col-md-8">
+                        @Html.RequiredTextboxFor(p => p.VBELN, new { @class = "numeric-input form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-5">
+                    <a class="btn btn-primary btn-inline" id="btn-sync-pr-po"><i class="fa fa-refresh" aria-hidden="true"></i> Đồng bộ PR_PO_MIGO</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

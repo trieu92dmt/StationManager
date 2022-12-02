@@ -1,0 +1,33 @@
+﻿@using System.Web.Configuration;
+@model PermissionViewModel
+
+
+<ul class="sidebar-menu" data-widget="tree" data-animation-speed="0">
+    @*<li class="active">
+            <a href="/Work/Calendar">
+                <i class="fa fa-calendar"></i> <span>@LanguageResource.Calendar</span>
+            </a>
+        </li>*@
+    @foreach (var menu in Model.MenuModel)
+    {
+        <li class="treeview">
+            <a href="#">
+                <i class="@menu.Icon"></i>
+                <span>@menu.MenuName</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                @foreach (var page in Model.PageModel.Where(p => p.MenuId == menu.MenuId).Select(p => new { p.PageUrl, p.Parameter, p.PageName, p.DomainConfig, p.DomainURL }).Distinct())
+                {
+                    <li>
+                        <a href="@page.DomainURL@page.PageUrl@page.Parameter" class="menu-item-link">
+                            <span class="menu-item-title">@page.DomainConfig @page.PageName</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+</ul>

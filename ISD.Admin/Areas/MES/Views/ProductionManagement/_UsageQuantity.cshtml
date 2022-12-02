@@ -1,0 +1,39 @@
+﻿@model List<UsageQuantityViewModel>
+
+@if (Model.Count > 0)
+{
+    <div class="rows-table-@Model.FirstOrDefault().ProductAttributes.Replace(".","-")">
+        <b>SL SP/CT/Cụm sử dụng cho "@Model.FirstOrDefault().ProductName":</b>
+        <table class="table table-bordered table-responsive dataTable table-usage-quantity table-sm">
+            <tbody>
+                @{var i = 0;}
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @Html.HiddenFor(p => item.ProductAttributes, new { Name = "usageQuantityViewModels[" + i + "].ProductAttributes", id = "usageQuantityViewModels[" + i + "].ProductAttributes", @class = "ProductAttributes" })
+                        @Html.HiddenFor(p => item.KTEXT, new { Name = "usageQuantityViewModels[" + i + "].KTEXT", id = "usageQuantityViewModels[" + i + "].KTEXT", @class = "KTEXT" })
+                        @Html.HiddenFor(p => item.ITMNO, new { Name = "usageQuantityViewModels[" + i + "].ITMNO", id = "usageQuantityViewModels[" + i + "].ITMNO", @class = "ITMNO" })
+                        <td rowspan="2">@(i + 1)</td>
+                        <td colspan="2">
+                            @Html.DisplayTextFor(p => item.KTEXT) @(item.POT12 != null && item.POT12 != "" ? "(" + @item.POT12 + ")":null)
+                        </td>
+                    </tr>
+                    <tr class="rows-@(item.ProductAttributes.Replace(".", "-"))">
+                        <td>
+                            Tồn:  @(string.Format("{0:n0}", item.Quantity) ?? "0")
+                        </td>
+                        <td>
+                            @Html.RequiredTextboxFor(p => item.BMSCHDC, new { @Name = "usageQuantityViewModels[" + i + "].BMSCHDC", id = "usageQuantityViewModels[" + i + "].BMSCHDC", @type = "number", @class = "form-control text-box single-line BMSCHDC" })
+                            @Html.HiddenFor(p => item.BMSCH, new { @Name = "usageQuantityViewModels[" + i + "].BMSCH", id = "usageQuantityViewModels[" + i + "].BMSCH", @class = "BMSCH" })
+                            @Html.HiddenFor(p => item.BMSCH, new { @Name = "usageQuantityViewModels[" + i + "].NotChange", id = "usageQuantityViewModels[" + i + "].NotChange", @class = "NotChange" })
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+
+    </div>
+}
+
+

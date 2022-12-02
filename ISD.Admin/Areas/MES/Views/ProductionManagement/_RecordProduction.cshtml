@@ -1,0 +1,560 @@
+﻿@using System.Globalization;
+@model ProductionManagementViewModel
+<style>
+    .pr-0 {
+        padding-right: 0 !important;
+    }
+
+    .pr-5 {
+        padding-right: 5px !important;
+    }
+
+    .pt-2 {
+        padding-top: 2px !important;
+    }
+
+    input.form-control.text-box.single-line {
+        padding: 0 !important;
+        text-align: center;
+    }
+</style>
+
+<div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h5 class="modal-title">Ghi nhận sản lượng</h5>
+        </div>
+        <div class="modal-body">
+            @* @if (Model.isHasRouting == null || Model.isHasRouting == false)
+                {
+                    <div id="divAlertWarningRouting" class="alert alert-warning alert-dismissable">
+                        <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarningRouting">×</button>
+                        <div>Chi tiết <span>"@Model.ProductAttributes"</span> không khai báo sản xuất tại công đoạn <span>""@Model.StepCode | @Model.StepName""</span></div>
+                    </div>
+                }
+            *@
+            @if (!string.IsNullOrEmpty(Model.StepCode) && (Model.isHasRouting == null || Model.isHasRouting == false))
+            {
+                <div id="divAlertWarningRouting" class="alert alert-warning alert-dismissable">
+                    <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarningRouting">×</button>
+                    <div>Chi tiết <span>"@Model.ProductAttributes"</span> không khai báo sản xuất tại công đoạn <span>"@Model.StepCode | @Model.StepName"</span></div>
+                </div>
+            }
+            else
+            {
+                <div id="divAlertWarningRouting" class="alert alert-warning alert-dismissable" style="display:none;">
+                    <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarningRouting">×</button>
+                    <div>Chi tiết <span>"@Model.ProductAttributes"</span> không khai báo sản xuất tại công đoạn <span>"@Model.StepCode | @Model.StepName"</span></div>
+                </div>
+            }
+            <form id="frm-record-production">
+                @Html.HiddenFor(p => p.TaskId)
+                @Html.HiddenFor(p => p.ProductionOrder)
+                @Html.HiddenFor(p => p.ProductionOrder_SAP)
+                @Html.HiddenFor(p => p.Summary)
+                @Html.HiddenFor(p => p.ProductCode)
+                @Html.HiddenFor(p => p.ProductId)
+                @Html.HiddenFor(p => p.ProductAttributes)
+
+                <div class="panel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Thông tin LSX</div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5 pr-0">
+                                        @Html.LabelByPropertyNameFor(p => p.ProductionOrder, "Đợt sản xuất: ")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        DT-48-06/22
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5">
+                                        @Html.LabelByPropertyNameFor(p => p.Summary, "LSX Tổng hợp: ")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        DT-48-06/22-01
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5 pr-0">
+                                        @Html.LabelByPropertyNameFor(p => p.Summary, "Lệnh sản xuất :")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        5001000086
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5 pr-0">
+                                        @Html.LabelByPropertyNameFor(p => p.ProductName, "Thành phẩm:")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        Hộp Tempura Shrimp Box
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5 pr-0">
+                                        @Html.LabelByPropertyNameFor(p => p.ProductName, "Số lượng:")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        35,600 Cái
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                        <div class="col-md-4 col-xs-5 pr-0">
+                            @Html.LabelByPropertyNameFor(p => p.ProductAttributes, "Chi tiết:")
+                        </div>
+                        <div class="col-md-8 col-xs-7 display-for">
+                            (@Html.DisplayFor(p => Model.ProductAttributesQtyD)/@Html.DisplayFor(p => Model.ProductAttributesQty) @Html.DisplayFor(p => Model.ProductAttributesUnit))
+                            @Html.DisplayFor(p => Model.ProductAttributes) |  @Html.DisplayFor(p => Model.ProductAttributesName)
+                            @if (!string.IsNullOrEmpty(Model.POT12))
+                            {
+                                <span>
+                                    (@Html.DisplayFor(p => Model.POT12))
+                                </span>
+                            }
+                        </div>
+                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Thông tin ghi nhận</div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                @if (string.IsNullOrEmpty(Model.ToStockCode) && Model.IsWorkCenterCompleted != true)
+                                {
+                                    @*<div class="form-group text-center">
+                            <div class="col-md-6 col-xs-6">
+                                <b>Một ngày:</b> @Html.RadioButton("radioDate", "0", new { id = "", Checked = true })
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <b>Nhiều ngày: </b>@Html.RadioButton("radioDate", "1", new { id = "" })
+
+                            </div>
+                        </div>*@
+
+                                    <div class="form-group from-date hidden">
+                                        <div class="col-md-4 col-xs-5">
+                                            @Html.LabelByPropertyNameFor(p => p.FromDate, "Từ Ngày:")
+                                        </div>
+                                        <div class="col-md-8 col-xs-7 display-for">
+                                            <input name="FromDate" disabled class="form-control text-box single-line" type="date" value="@string.Format("{0:yyyy-MM-dd}",DateTime.Now)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4 col-xs-5">
+                                            @Html.LabelByPropertyNameFor(p => p.WorkDate, "Ngày sản xuất: ")
+                                        </div>
+                                        <div class="col-md-4 col-xs-5">
+                                            <input name="WorkDate" class="form-control text-box single-line" type="date" value="@string.Format("{0:yyyy-MM-dd}",new DateTime(2022, 06, 14))">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4 col-xs-5 pr-0">
+                                            @Html.LabelByPropertyNameFor(p => p.Summary, "Máy móc /chuyền sử dụng: ")
+                                        </div>
+                                        <div class="col-md-8 col-xs-7 display-for">
+                                            Chuyền
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.IsWorkCenterCompleted != true)
+                                {
+                                    <div class="department-barcode">
+
+
+                                        @*<div class="form-group">
+                                <div class="col-md-4 col-xs-5">
+                                    @Html.LabelByPropertyNameFor(p => p.WorkShopId, "Phân xưởng:")
+                                </div>
+                                <div class="col-md-8 col-xs-12 display-for">
+                                    @Html.RequiredDropDownListFor(x => x.WorkShopId, null, LanguageResource.Dropdownlist_Choose, new { @class = "form-control", @Required = true })
+                                </div>
+                            </div>*@
+
+                                        <div class="form-group">
+                                            <div class="col-md-4 col-xs-5">
+                                                @Html.LabelByPropertyNameFor(p => p.DepartmentId, "Tổ sản xuất: ")
+                                            </div>
+                                            <div class="col-md-4 col-xs-5 department">
+                                                <select class="form-control">
+                                                    <option value="">Bế</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5">
+                                        @Html.LabelByPropertyNameFor(p => p.StepCode, "Công đoạn hoàn thành: ")
+                                    </div>
+                                    <div class="col-md-8 col-xs-12 display-for">
+                                        Bế
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5 pr-0">
+                                        @Html.LabelByPropertyNameFor(p => p.Summary, "Số người trong ca: ")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        5
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-4 col-xs-5 pr-0">
+                                        @Html.LabelByPropertyNameFor(p => p.Summary, "Nhân viên ghi nhận: ")
+                                    </div>
+                                    <div class="col-md-8 col-xs-7 display-for">
+                                        <i>Nguyễn Văn Hòa - 11:35 15/06/2022</i>
+                                    </div>
+                                </div>
+                                @if (string.IsNullOrEmpty(Model.ToStockCode) && Model.IsWorkCenterCompleted != true)
+                                {
+                                    <div class="form-group hidden">
+                                        <div class="col-md-5 col-xs-5">
+                                            <b>Thiết kế phôi:</b> @Html.RadioButtonFor(x => x.radio, "TKP", new { id = "TKP" })
+
+                                        </div>
+                                        <div class="col-md-3 col-xs-3">
+                                            <b> Ráp:</b> @Html.RadioButtonFor(x => x.radio, "RAP", new { id = "RAP" })
+                                        </div>
+                                        <div class="col-md-4 col-xs-4">
+                                            <b> Còn lại: </b>@Html.RadioButtonFor(x => x.radio, "OTHER", new { id = "OTHER" })
+
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.ToStockCode) && Model.IsWorkCenterCompleted != true)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-4 col-xs-5">
+                                            @Html.LabelByPropertyNameFor(p => p.ToStockCode, "CĐ kế tiếp:")
+                                        </div>
+                                        <div class="col-md-8 col-xs-12 display-for">
+                                            @(string.Format("{0} | {1}", Model.ToStockCode, Model.ToStockName))
+                                        </div>
+                                    </div>
+                                }
+                                @if (string.IsNullOrEmpty(Model.ToStockCode) && Model.IsWorkCenterCompleted != true)
+                                {
+                                    @*<div class="form-group">
+                            <div class="col-md-4 col-xs-5">
+                                @Html.LabelByPropertyNameFor(p => p.Phase, "Lần đi qua C.Đoạn:")
+                            </div>
+                            <div class="col-md-8 col-xs-7 display-for">
+                                <input name="Phase" class="form-control text-box single-line" type="number" min="0" value="1">
+                            </div>
+                        </div>*@
+                                }
+
+                                @*<div class="form-group">
+                        @if (string.IsNullOrEmpty(Model.ToStockCode) && Model.IsWorkCenterCompleted != true)
+                        {
+                            <button type="button" class="btn btn-primary load-Routing float-left" disabled>Chọn SP/Cụm/Chi tiết</button>
+                        }
+                    </div>*@
+
+
+                                @*<div class="form-group">
+                        @Html.Action("_RecordProductionDetail", "ProductionManagement", new { @TaskId = Model.TaskId })
+
+                    </div>*@
+                                @*@Html.Action("_RecordProductionDetailTransfer", "ProductionManagement", new { @TaskId = Model.TaskId })*@
+
+                                @*<div class="form-group table div-routing-result">
+                    </div>
+                    <div class="form-group table div-usage-quantity">
+
+                    </div>*@
+                            </div>
+                        </div>
+                        @*<div class="text-right">
+                <div><i>@string.Format("NV Tạo:{0} - {1: dd/MM/yyyy HH:mm}", Model.CreateByFullName, Model.CreateTime)</i></div>
+                @if (string.IsNullOrEmpty(Model.LastEditByFullName) && Model.LastEditTime != null)
+                {
+                    <div><i>@string.Format("NV cập nhật:{0} - {1: dd/MM/yyyy HH:mm}", Model.LastEditByFullName, Model.LastEditTime)</i></div>
+                }
+            </div>*@
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Sản phẩm/ Bán thành phẩm ghi nhận</div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                <table class="table table-bordered table-responsive dataTable table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                Số lượng
+                                            </th>
+                                            <td>
+                                                Đạt
+                                            </td>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="Quantity_D" class="form-control text-right" type="text" step="1" value="10,000">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                Không đạt
+                                            </td>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="Quantity_D" class="form-control" type="number" step="1" value="0">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                Thời gian
+                                            </th>
+                                            <td>
+                                                Từ
+                                            </td>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="FromTime" class="form-control text-box single-line" type="time" value="07:30">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                Đến
+                                            </td>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="productionOrderDetailOld[0].ToTime" class="form-control text-box single-line" type="time" value="11:30">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Khuôn sử dụng</div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                <table class="table table-bordered table-responsive dataTable table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">
+                                                1
+                                            </td>
+                                            <th>
+                                                Mã khuôn
+                                            </th>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="MaKhuon" class="form-control" type="text" step="1" value="KB.159-01">
+                                                </div>
+                                            </td>
+                                            <th>
+                                                Số tờ/ 1 nhịp
+                                            </th>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="Quantity_D" class="form-control" type="number" step="1" value="2">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                2
+                                            </td>
+                                            <th class="text-center">
+                                                Mã khuôn
+                                            </th>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="MaKhuon" class="form-control" type="text" step="1" value="KB.171-01">
+                                                </div>
+                                            </td>
+                                            <th>
+                                                Số tờ/ 1 nhịp
+                                            </th>
+                                            <td style="width: 100px;">
+                                                <div class="input-group input-group-required">
+                                                    <input name="Quantity_D" class="form-control" type="number" step="1" value="2">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right">
+                                                <a class="btn btn-primary btn-add-row-info"><i class="fa fa-plus" aria-hidden="true"> Thêm</i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="divAlertWarningTask" class="alert alert-warning alert-dismissable divPopupMessage" style="display: none">
+                        <button type="button" class="alert-close close" aria-hidden="true" data-div="divAlertWarning">×</button>
+                        <div class="alert-message">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span class="btn btn-default pull-left" data-dismiss="modal">@LanguageResource.Btn_Close</span>
+                        @if ((string.IsNullOrEmpty(Model.ToStockCode) && Model.IsWorkCenterCompleted != true) && (string.IsNullOrEmpty(Model.StepCode) || !string.IsNullOrEmpty(Model.StepCode) && Model.isHasRouting == true))
+                        {
+                            <a class="btn btn-primary pull-right" id="btn-save-record-production">
+                                @LanguageResource.Btn_Save
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary pull-right" id="btn-save-record-production" style="display:none;">
+                                @LanguageResource.Btn_Save
+                            </a>
+                        }
+
+                    </div>
+                </div>
+        </div>
+
+        </form>
+    </div>
+</div>
+</div>
+@*<script>
+        $(document).ready(function () {
+            loadTableSearchRoutingTable();
+        });
+
+    </script>*@
+<script>
+    var CheckStepCode = function (e) {
+        if (e.val() == '@LanguageResource.Dropdownlist_Choose' || e.val() == '' || e.val() == null) {
+
+        } else if (e.val() == "TKP"){
+            $('#TKP').trigger('click');
+        } else if (e.val() == "RAC" || e.val() == "RAH" || e.val() ==  "RAT") {
+            $('#RAP').trigger('click');
+        }else {
+            $('#OTHER').trigger('click');
+        }
+    }
+    $(document).ready(function () {
+        $value = $("input[name='StepCode']");
+        CheckStepCode($value);
+        if ($value.val() != '@LanguageResource.Dropdownlist_Choose' && $value.val() != '' && $value.val() != null) {
+            var formData = new FormData()
+            formData.append("StepCode", $value.val());
+            formData.append("radio", $("input[name='radio']:checked").val());
+            formData.append("TaskId", $("input[name='TaskId']").val());
+            //Load ghi nhận sản lượng
+            loadFormGhiNhanSanLuong(formData)
+            loadFormChiTietCon(formData)
+
+
+        }
+
+    })
+    $('#WorkShopId').on('change', function () {
+        if (this.value != '--- Vui lòng chọn ---' && this.value != '' && this.value != null) {
+            loadDepartmentbyWorkShop(this.value);
+        }
+
+    });
+
+    function loadFormGhiNhanSanLuong(formData) {
+        $.ajax({
+            type: "POST",
+            url: "/MES/ProductionManagement/_RecordProductionRouting",
+            data: formData,
+            processData: false,
+            contentType: false,
+        }).done(function (html) {
+            $('.div-routing-result').html(html);
+        });
+    }
+
+    function loadFormChiTietCon(formData) {
+        $.ajax({
+            type: "POST",
+            url: "/MES/ProductionManagement/_UsageQuantity",
+            data: formData,
+            processData: false,
+            contentType: false,
+        }).done(function (html) {
+            $('.div-usage-quantity').html(html);
+        });
+    }
+
+    function loadDepartmentbyWorkShop(WorkShopId) {
+        $.ajax({
+            type: "GET",
+            url: "/MES/ProductionManagement/GetDepartmentBy",
+            data: { WorkShopId: WorkShopId },
+            success: function (html) {
+                $('.department').html(html);
+            },
+        });
+    }
+
+    $('select[name="StepCode"]').on('change', function () {
+        var $btn = $(this);
+        CheckStepCode($btn)
+        if ($btn.val() != '@LanguageResource.Dropdownlist_Choose' && $btn.val() != '' && $btn.val() != null) {
+            var formData = new FormData()
+            formData.append("StepCode", $(this).val());
+            formData.append("radio", $("input[name='radio']:checked").val());
+            formData.append("TaskId", $("input[name='TaskId']").val());
+            //Load ghi nhận sản lượng
+            loadFormGhiNhanSanLuong(formData);
+            //Load chi tiết con
+            loadFormChiTietCon(formData);
+        }
+    });
+    $("input[name='radioDate']").on('click', function () {
+        if ($(this).val() == '0') {
+            $('.from-date').addClass("hidden");
+            $("input[name='FromDate']").attr("disabled",true)
+            $("label[for='WorkDate']").text("Ngày:")
+        } else {
+            $('.from-date').removeClass("hidden");
+            $("input[name='FromDate']").removeAttr("disabled")
+            $("label[for='WorkDate']").text("Đến ngày:")
+        }
+
+    })
+
+
+    $(document).on("change", '.table-routing-result input[type="number"]', function () {
+        //Lấy thông tin chi tiết
+        var ProductAttribute = $(this).data('id');
+        // Lấy row input
+        var input = ".row-" + ProductAttribute + " input[type='number']";
+        // Lấy danh sách row chi tiết con
+        var ct = ".rows-table-" + ProductAttribute +" .rows-" + ProductAttribute;
+        //Tổng số lượng
+        var Quantity = 0;
+        for (var i = 0; i < $(input).length; i++) {
+            var qty = $($(input)[i]).val();
+            if (qty == '' || qty == null) {
+                qty = 0;
+            }
+            Quantity += parseInt(qty);
+        }
+        for (var i = 0; i < $(ct).length; i++) {
+            console.log($($(ct)[i]).find($(".NotChange")).val())
+            console.log(Quantity)
+            console.log($($(ct)[i]).find($(".NotChange")).val() * Quantity)
+            var value = $($(ct)[i]).find($(".NotChange")).val() * Quantity;
+            $($(ct)[i]).find($(".BMSCH")).val(value)
+            $($(ct)[i]).find($(".BMSCHDC")).val(value)
+        }
+
+    })
+
+</script>

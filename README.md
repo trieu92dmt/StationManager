@@ -1,2 +1,2 @@
-# ITP_MES_API
-In Toàn Phát
+# TLG_API
+Tan Long Group

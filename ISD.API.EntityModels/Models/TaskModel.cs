@@ -14,7 +14,6 @@ namespace ISD.API.EntityModels.Models
     {
         public TaskModel()
         {
-            TaskProductModel = new HashSet<TaskProductModel>();
             Task_File_Mapping = new HashSet<Task_File_Mapping>();
             ThucThiLenhSanXuatModel = new HashSet<ThucThiLenhSanXuatModel>();
         }
@@ -187,8 +186,6 @@ namespace ISD.API.EntityModels.Models
         public string Text9 { get; set; }
         public string Text10 { get; set; }
 
-        [InverseProperty("Task")]
-        public virtual ICollection<TaskProductModel> TaskProductModel { get; set; }
         [InverseProperty("Task")]
         public virtual ICollection<Task_File_Mapping> Task_File_Mapping { get; set; }
         [InverseProperty("ParentTask")]

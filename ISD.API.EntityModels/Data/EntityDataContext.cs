@@ -24,7 +24,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<AccessoryDetailModel> AccessoryDetailModel { get; set; }
         public virtual DbSet<AccessoryModel> AccessoryModel { get; set; }
         public virtual DbSet<AccessoryPriceModel> AccessoryPriceModel { get; set; }
-        public virtual DbSet<AccessoryProductModel> AccessoryProductModel { get; set; }
         public virtual DbSet<AccessorySaleOrderDetailModel> AccessorySaleOrderDetailModel { get; set; }
         public virtual DbSet<AccessorySaleOrderModel> AccessorySaleOrderModel { get; set; }
         public virtual DbSet<AccessorySellTypeModel> AccessorySellTypeModel { get; set; }
@@ -68,7 +67,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<ClaimAccessoryStatusModel> ClaimAccessoryStatusModel { get; set; }
         public virtual DbSet<CollectingAuthorityModel> CollectingAuthorityModel { get; set; }
         public virtual DbSet<ColorModel> ColorModel { get; set; }
-        public virtual DbSet<ColorProductModel> ColorProductModel { get; set; }
         public virtual DbSet<CommandQCModel> CommandQCModel { get; set; }
         public virtual DbSet<Comment_File_Mapping> Comment_File_Mapping { get; set; }
         public virtual DbSet<CompanyModel> CompanyModel { get; set; }
@@ -83,6 +81,7 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<ContainerRequirementModel> ContainerRequirementModel { get; set; }
         public virtual DbSet<ContentModel> ContentModel { get; set; }
         public virtual DbSet<Counter> Counter { get; set; }
+        public virtual DbSet<CustmdSaleModel> CustmdSaleModel { get; set; }
         public virtual DbSet<CustomerGiftDetailModel> CustomerGiftDetailModel { get; set; }
         public virtual DbSet<CustomerGiftModel> CustomerGiftModel { get; set; }
         public virtual DbSet<CustomerLevelModel> CustomerLevelModel { get; set; }
@@ -133,7 +132,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<Hash> Hash { get; set; }
         public virtual DbSet<HeaderSaleOrderModel> HeaderSaleOrderModel { get; set; }
         public virtual DbSet<HistoryModel> HistoryModel { get; set; }
-        public virtual DbSet<ImageProductModel> ImageProductModel { get; set; }
         public virtual DbSet<Job> Job { get; set; }
         public virtual DbSet<JobParameter> JobParameter { get; set; }
         public virtual DbSet<JobQueue> JobQueue { get; set; }
@@ -185,16 +183,13 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<PlantRoutingConfigModel> PlantRoutingConfigModel { get; set; }
         public virtual DbSet<PlateFeeDetailModel> PlateFeeDetailModel { get; set; }
         public virtual DbSet<PlateFeeModel> PlateFeeModel { get; set; }
-        public virtual DbSet<PriceProductModel> PriceProductModel { get; set; }
         public virtual DbSet<PrintMoldModel> PrintMoldModel { get; set; }
-        public virtual DbSet<ProductAttributeModel> ProductAttributeModel { get; set; }
+        public virtual DbSet<ProductGroupModel> ProductGroupModel { get; set; }
         public virtual DbSet<ProductHierarchyModel> ProductHierarchyModel { get; set; }
-        public virtual DbSet<ProductImageModel> ProductImageModel { get; set; }
         public virtual DbSet<ProductModel> ProductModel { get; set; }
-        public virtual DbSet<ProductTypeModel> ProductTypeModel { get; set; }
+        public virtual DbSet<ProductModel1> ProductModel1 { get; set; }
         public virtual DbSet<ProductVersionModel> ProductVersionModel { get; set; }
         public virtual DbSet<ProductWarrantyModel> ProductWarrantyModel { get; set; }
-        public virtual DbSet<Product_FileAttachment_Mapping> Product_FileAttachment_Mapping { get; set; }
         public virtual DbSet<Product_Routing_Mapping> Product_Routing_Mapping { get; set; }
         public virtual DbSet<Product_Routing_Mapping_Deleted> Product_Routing_Mapping_Deleted { get; set; }
         public virtual DbSet<Product_Routing_Mold_Mapping> Product_Routing_Mold_Mapping { get; set; }
@@ -232,7 +227,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<PromotionByStoreModel> PromotionByStoreModel { get; set; }
         public virtual DbSet<PromotionGiftAccessoryModel> PromotionGiftAccessoryModel { get; set; }
         public virtual DbSet<PromotionModel> PromotionModel { get; set; }
-        public virtual DbSet<PropertiesProductModel> PropertiesProductModel { get; set; }
         public virtual DbSet<ProspectModel> ProspectModel { get; set; }
         public virtual DbSet<ProvinceModel> ProvinceModel { get; set; }
         public virtual DbSet<PurchaseOrderModel> PurchaseOrderModel { get; set; }
@@ -302,7 +296,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<ShowroomCategoryModel> ShowroomCategoryModel { get; set; }
         public virtual DbSet<SourceModel> SourceModel { get; set; }
         public virtual DbSet<SpecificationsModel> SpecificationsModel { get; set; }
-        public virtual DbSet<SpecificationsProductModel> SpecificationsProductModel { get; set; }
         public virtual DbSet<StageTransferModel> StageTransferModel { get; set; }
         public virtual DbSet<State> State { get; set; }
         public virtual DbSet<StateTreasuryModel> StateTreasuryModel { get; set; }
@@ -325,9 +318,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<TaskGroupDetailModel> TaskGroupDetailModel { get; set; }
         public virtual DbSet<TaskGroupModel> TaskGroupModel { get; set; }
         public virtual DbSet<TaskModel> TaskModel { get; set; }
-        public virtual DbSet<TaskProductAccessoryModel> TaskProductAccessoryModel { get; set; }
-        public virtual DbSet<TaskProductModel> TaskProductModel { get; set; }
-        public virtual DbSet<TaskProductUsualErrorModel> TaskProductUsualErrorModel { get; set; }
         public virtual DbSet<TaskReferenceModel> TaskReferenceModel { get; set; }
         public virtual DbSet<TaskReporterModel> TaskReporterModel { get; set; }
         public virtual DbSet<TaskRoleInChargeModel> TaskRoleInChargeModel { get; set; }
@@ -335,7 +325,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<Task_Component_Mapping> Task_Component_Mapping { get; set; }
         public virtual DbSet<Task_File_Mapping> Task_File_Mapping { get; set; }
         public virtual DbSet<Task_Mold_Mapping> Task_Mold_Mapping { get; set; }
-        public virtual DbSet<Task_ProductPerPage_Mapping> Task_ProductPerPage_Mapping { get; set; }
         public virtual DbSet<TaxConfigModel> TaxConfigModel { get; set; }
         public virtual DbSet<TemperatureConditionModel> TemperatureConditionModel { get; set; }
         public virtual DbSet<TemplateAndGiftCampaignModel> TemplateAndGiftCampaignModel { get; set; }
@@ -374,7 +363,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<View_Task_GTB> View_Task_GTB { get; set; }
         public virtual DbSet<WardModel> WardModel { get; set; }
         public virtual DbSet<WarehouseModel> WarehouseModel { get; set; }
-        public virtual DbSet<WarehouseProductModel> WarehouseProductModel { get; set; }
         public virtual DbSet<WarrantyModel> WarrantyModel { get; set; }
         public virtual DbSet<WeighModel> WeighModel { get; set; }
         public virtual DbSet<WeighingSessionDetailModel> WeighingSessionDetailModel { get; set; }
@@ -387,7 +375,6 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<WorkOrderCardModel> WorkOrderCardModel { get; set; }
         public virtual DbSet<WorkOrderModel> WorkOrderModel { get; set; }
         public virtual DbSet<WorkOrder_Mold_Mapping> WorkOrder_Mold_Mapping { get; set; }
-        public virtual DbSet<WorkOrder_ProductPerPage_Mapping> WorkOrder_ProductPerPage_Mapping { get; set; }
         public virtual DbSet<WorkOrder_Product_Mapping> WorkOrder_Product_Mapping { get; set; }
         public virtual DbSet<WorkOrder_Routing_Mapping> WorkOrder_Routing_Mapping { get; set; }
         public virtual DbSet<WorkShopModel> WorkShopModel { get; set; }
@@ -400,7 +387,6 @@ namespace ISD.API.EntityModels.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=192.168.100.233;Initial Catalog=TLG_MES;Persist Security Info=True;User ID=isd;Password=pm123@abcd");
             }
         }
@@ -431,23 +417,6 @@ namespace ISD.API.EntityModels.Data
             modelBuilder.Entity<AccessoryPriceModel>(entity =>
             {
                 entity.Property(e => e.AccessoryPriceId).HasDefaultValueSql("(newid())");
-            });
-
-            modelBuilder.Entity<AccessoryProductModel>(entity =>
-            {
-                entity.Property(e => e.AccessoryProductId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Accessory)
-                    .WithMany(p => p.AccessoryProductModel)
-                    .HasForeignKey(d => d.AccessoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AccessoryProductModel_AccessoryModel");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.AccessoryProductModel)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AccessoryProductModel_ProductModel");
             });
 
             modelBuilder.Entity<AccessorySaleOrderDetailModel>(entity =>
@@ -753,22 +722,6 @@ namespace ISD.API.EntityModels.Data
                 entity.Property(e => e.ColorId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<ColorProductModel>(entity =>
-            {
-                entity.Property(e => e.ColorProductId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ColorProductModel)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ColorProductModel_ProductModel");
-
-                entity.HasOne(d => d.Style)
-                    .WithMany(p => p.ColorProductModel)
-                    .HasForeignKey(d => d.StyleId)
-                    .HasConstraintName("FK_ColorProductModel_StyleModel");
-            });
-
             modelBuilder.Entity<CommandQCModel>(entity =>
             {
                 entity.Property(e => e.CommandQCId).ValueGeneratedNever();
@@ -886,6 +839,11 @@ namespace ISD.API.EntityModels.Data
                     .IsClustered();
             });
 
+            modelBuilder.Entity<CustmdSaleModel>(entity =>
+            {
+                entity.Property(e => e.CustmdSaleId).ValueGeneratedNever();
+            });
+
             modelBuilder.Entity<CustomerGiftDetailModel>(entity =>
             {
                 entity.HasKey(e => new { e.GiftId, e.CustomerId });
@@ -929,19 +887,6 @@ namespace ISD.API.EntityModels.Data
             modelBuilder.Entity<CustomerPromotionModel>(entity =>
             {
                 entity.Property(e => e.PromotionId).ValueGeneratedNever();
-
-                entity.HasMany(d => d.Product)
-                    .WithMany(p => p.Promotion)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "CustomerPromotionProductModel",
-                        l => l.HasOne<ProductModel>().WithMany().HasForeignKey("ProductId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_CustomerPromotionProductModel_ProductModel"),
-                        r => r.HasOne<CustomerPromotionModel>().WithMany().HasForeignKey("PromotionId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_CustomerPromotionProductModel_CustomerPromotionModel"),
-                        j =>
-                        {
-                            j.HasKey("PromotionId", "ProductId");
-
-                            j.ToTable("CustomerPromotionProductModel", "tSale");
-                        });
             });
 
             modelBuilder.Entity<CustomerTastesModel>(entity =>
@@ -1364,23 +1309,6 @@ namespace ISD.API.EntityModels.Data
             modelBuilder.Entity<HistoryModel>(entity =>
             {
                 entity.Property(e => e.HistoryModifyId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ImageProductModel>(entity =>
-            {
-                entity.Property(e => e.ImageId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.ColorProduct)
-                    .WithMany(p => p.ImageProductModel)
-                    .HasForeignKey(d => d.ColorProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ImageProductModel_ColorProductModel");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ImageProductModel)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ImageProductModel_ProductModel");
             });
 
             modelBuilder.Entity<Job>(entity =>
@@ -1818,19 +1746,6 @@ namespace ISD.API.EntityModels.Data
             modelBuilder.Entity<PeriodicallyCheckingModel>(entity =>
             {
                 entity.Property(e => e.PeriodicallyCheckingId).ValueGeneratedNever();
-
-                entity.HasMany(d => d.Product)
-                    .WithMany(p => p.PeriodicallyChecking)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "Product_PeriodicallyChecking_Mapping",
-                        l => l.HasOne<ProductModel>().WithMany().HasForeignKey("ProductId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Product_PeriodicallyChecking_Mapping_ProductModel"),
-                        r => r.HasOne<PeriodicallyCheckingModel>().WithMany().HasForeignKey("PeriodicallyCheckingId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Product_PeriodicallyChecking_Mapping_PeriodicallyCheckingModel"),
-                        j =>
-                        {
-                            j.HasKey("PeriodicallyCheckingId", "ProductId");
-
-                            j.ToTable("Product_PeriodicallyChecking_Mapping", "tSale");
-                        });
             });
 
             modelBuilder.Entity<PersonInChargeDeletedModel>(entity =>
@@ -1878,35 +1793,6 @@ namespace ISD.API.EntityModels.Data
             modelBuilder.Entity<PlateFeeModel>(entity =>
             {
                 entity.Property(e => e.PlateFeeId).ValueGeneratedNever();
-
-                entity.HasMany(d => d.Product)
-                    .WithMany(p => p.PlateFee)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "Product_PlateFee_Mapping",
-                        l => l.HasOne<ProductModel>().WithMany().HasForeignKey("ProductId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Product_PlateFee_Mapping_ProductModel"),
-                        r => r.HasOne<PlateFeeModel>().WithMany().HasForeignKey("PlateFeeId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Product_PlateFee_Mapping_PlateFeeModel"),
-                        j =>
-                        {
-                            j.HasKey("PlateFeeId", "ProductId");
-
-                            j.ToTable("Product_PlateFee_Mapping", "tSale");
-                        });
-            });
-
-            modelBuilder.Entity<PriceProductModel>(entity =>
-            {
-                entity.Property(e => e.PriceProductId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.PriceProductModel)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PriceProductModel_ProductModel");
-
-                entity.HasOne(d => d.Style)
-                    .WithMany(p => p.PriceProductModel)
-                    .HasForeignKey(d => d.StyleId)
-                    .HasConstraintName("FK_PriceProductModel_StyleModel");
             });
 
             modelBuilder.Entity<PrintMoldModel>(entity =>
@@ -1916,9 +1802,9 @@ namespace ISD.API.EntityModels.Data
                 entity.Property(e => e.PrintMoldIntId).ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<ProductAttributeModel>(entity =>
+            modelBuilder.Entity<ProductGroupModel>(entity =>
             {
-                entity.Property(e => e.ProductId).ValueGeneratedNever();
+                entity.Property(e => e.ProductGroupId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ProductHierarchyModel>(entity =>
@@ -1926,35 +1812,32 @@ namespace ISD.API.EntityModels.Data
                 entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
             });
 
-            modelBuilder.Entity<ProductImageModel>(entity =>
+            modelBuilder.Entity<ProductModel>(entity =>
             {
-                entity.HasKey(e => e.ERPProductCode)
-                    .HasName("PK_ProductImage");
+                entity.HasKey(e => e.ProductId)
+                    .HasName("PK_ProductModel_1");
+
+                entity.Property(e => e.ProductId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<ProductModel>(entity =>
+            modelBuilder.Entity<ProductModel1>(entity =>
             {
                 entity.Property(e => e.ProductId).ValueGeneratedNever();
 
                 entity.HasOne(d => d.CategoryDetail)
-                    .WithMany(p => p.ProductModelCategoryDetail)
+                    .WithMany(p => p.ProductModel1CategoryDetail)
                     .HasForeignKey(d => d.CategoryDetailId)
                     .HasConstraintName("FK_ProductModel_CategoryModel");
 
                 entity.HasOne(d => d.Category)
-                    .WithMany(p => p.ProductModelCategory)
+                    .WithMany(p => p.ProductModel1Category)
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_ProductModel_CategoryModel1");
 
                 entity.HasOne(d => d.ParentCategory)
-                    .WithMany(p => p.ProductModelParentCategory)
+                    .WithMany(p => p.ProductModel1ParentCategory)
                     .HasForeignKey(d => d.ParentCategoryId)
                     .HasConstraintName("FK_ProductModel_CategoryModel2");
-            });
-
-            modelBuilder.Entity<ProductTypeModel>(entity =>
-            {
-                entity.Property(e => e.ProductTypeId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ProductVersionModel>(entity =>
@@ -1985,11 +1868,6 @@ namespace ISD.API.EntityModels.Data
                     .HasForeignKey(d => d.WarrantyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductWarrantyModel_WarrantyModel");
-            });
-
-            modelBuilder.Entity<Product_FileAttachment_Mapping>(entity =>
-            {
-                entity.Property(e => e.Product_FileAttachment_MappingId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Product_Routing_Mapping>(entity =>
@@ -2273,30 +2151,6 @@ namespace ISD.API.EntityModels.Data
             modelBuilder.Entity<PromotionModel>(entity =>
             {
                 entity.Property(e => e.PromotionId).ValueGeneratedNever();
-
-                entity.HasMany(d => d.Product)
-                    .WithMany(p => p.PromotionNavigation)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "PromotionProductModel",
-                        l => l.HasOne<ProductModel>().WithMany().HasForeignKey("ProductId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ProductInPromotion_ProductModel"),
-                        r => r.HasOne<PromotionModel>().WithMany().HasForeignKey("PromotionId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ProductInPromotion_PromotionModel"),
-                        j =>
-                        {
-                            j.HasKey("PromotionId", "ProductId").HasName("PK_ProductInPromotion");
-
-                            j.ToTable("PromotionProductModel", "tSale");
-                        });
-            });
-
-            modelBuilder.Entity<PropertiesProductModel>(entity =>
-            {
-                entity.Property(e => e.PropertiesId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.PropertiesProductModel)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PropertiesProductModel_ProductModel");
             });
 
             modelBuilder.Entity<ProspectModel>(entity =>
@@ -2809,23 +2663,6 @@ namespace ISD.API.EntityModels.Data
                 entity.Property(e => e.SpecificationsId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<SpecificationsProductModel>(entity =>
-            {
-                entity.Property(e => e.SpecificationsProductId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.SpecificationsProductModel)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SpecificationsProductModel_ProductModel");
-
-                entity.HasOne(d => d.Specifications)
-                    .WithMany(p => p.SpecificationsProductModel)
-                    .HasForeignKey(d => d.SpecificationsId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SpecificationsProductModel_SpecificationsModel");
-            });
-
             modelBuilder.Entity<StageTransferModel>(entity =>
             {
                 entity.Property(e => e.StageTranferId).ValueGeneratedNever();
@@ -3125,38 +2962,6 @@ namespace ISD.API.EntityModels.Data
                 entity.Property(e => e.TaskCode).ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<TaskProductAccessoryModel>(entity =>
-            {
-                entity.Property(e => e.TaskProductAccessoryId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.TaskProduct)
-                    .WithMany(p => p.TaskProductAccessoryModel)
-                    .HasForeignKey(d => d.TaskProductId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_TaskProductAccessoryModel_TaskProductModel");
-            });
-
-            modelBuilder.Entity<TaskProductModel>(entity =>
-            {
-                entity.Property(e => e.TaskProductId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Task)
-                    .WithMany(p => p.TaskProductModel)
-                    .HasForeignKey(d => d.TaskId)
-                    .HasConstraintName("FK_TaskProductModel_TaskModel");
-            });
-
-            modelBuilder.Entity<TaskProductUsualErrorModel>(entity =>
-            {
-                entity.Property(e => e.TaskProductUsualErrorId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.TaskProduct)
-                    .WithMany(p => p.TaskProductUsualErrorModel)
-                    .HasForeignKey(d => d.TaskProductId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_TaskProductUsualErrorModel_TaskProductModel");
-            });
-
             modelBuilder.Entity<TaskReferenceModel>(entity =>
             {
                 entity.Property(e => e.TaskReferenceId).ValueGeneratedNever();
@@ -3206,14 +3011,6 @@ namespace ISD.API.EntityModels.Data
 
             modelBuilder.Entity<Task_Mold_Mapping>(entity =>
             {
-                entity.Property(e => e.MappingId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<Task_ProductPerPage_Mapping>(entity =>
-            {
-                entity.HasKey(e => e.MappingId)
-                    .HasName("PK_Task_Routing_Mapping");
-
                 entity.Property(e => e.MappingId).ValueGeneratedNever();
             });
 
@@ -3516,27 +3313,6 @@ namespace ISD.API.EntityModels.Data
                 entity.Property(e => e.WarehouseId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<WarehouseProductModel>(entity =>
-            {
-                entity.Property(e => e.WarehouseProductId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.WarehouseProductModel)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WarehouseProductModel_ProductModel");
-
-                entity.HasOne(d => d.Style)
-                    .WithMany(p => p.WarehouseProductModel)
-                    .HasForeignKey(d => d.StyleId)
-                    .HasConstraintName("FK_WarehouseProductModel_StyleModel");
-
-                entity.HasOne(d => d.Warehouse)
-                    .WithMany(p => p.WarehouseProductModel)
-                    .HasForeignKey(d => d.WarehouseId)
-                    .HasConstraintName("FK_WarehouseProductModel_WarehouseModel");
-            });
-
             modelBuilder.Entity<WarrantyModel>(entity =>
             {
                 entity.Property(e => e.WarrantyId).ValueGeneratedNever();
@@ -3617,11 +3393,6 @@ namespace ISD.API.EntityModels.Data
                     .WithMany(p => p.WorkOrder_Mold_Mapping)
                     .HasForeignKey(d => d.WorkOrderId)
                     .HasConstraintName("FK_WorkOrder_Mold_Mapping_WorkOrder_Mold_Mapping");
-            });
-
-            modelBuilder.Entity<WorkOrder_ProductPerPage_Mapping>(entity =>
-            {
-                entity.Property(e => e.WorkOrder_ProductPerPage_MappingId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<WorkOrder_Product_Mapping>(entity =>

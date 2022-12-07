@@ -11,11 +11,6 @@ namespace ISD.API.EntityModels.Models
     [Table("WarehouseModel", Schema = "tSale")]
     public partial class WarehouseModel
     {
-        public WarehouseModel()
-        {
-            WarehouseProductModel = new HashSet<WarehouseProductModel>();
-        }
-
         [Key]
         public Guid WarehouseId { get; set; }
         [Required]
@@ -29,8 +24,5 @@ namespace ISD.API.EntityModels.Models
         public Guid StoreId { get; set; }
         public int? OrderIndex { get; set; }
         public bool Actived { get; set; }
-
-        [InverseProperty("Warehouse")]
-        public virtual ICollection<WarehouseProductModel> WarehouseProductModel { get; set; }
     }
 }

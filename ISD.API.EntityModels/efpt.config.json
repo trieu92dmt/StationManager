@@ -155,6 +155,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[CustmdSaleModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[CustomerModel]",
          "ObjectType": 0
       },
@@ -176,6 +180,14 @@
       },
       {
          "Name": "[DataCollection].[PlantModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ProductGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ProductModel]",
          "ObjectType": 0
       },
       {
@@ -963,10 +975,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[Task].[Task_ProductPerPage_Mapping]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[Task].[TaskAssignModel]",
          "ObjectType": 0
       },
@@ -988,18 +996,6 @@
       },
       {
          "Name": "[Task].[TaskModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[Task].[TaskProductAccessoryModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[Task].[TaskProductModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[Task].[TaskProductUsualErrorModel]",
          "ObjectType": 0
       },
       {
@@ -1159,14 +1155,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[tMasterData].[Product_FileAttachment_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tMasterData].[ProductImageModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[tMasterData].[PrognosisModel]",
          "ObjectType": 0
       },
@@ -1227,10 +1215,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[tMasterData].[WorkOrder_ProductPerPage_Mapping]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[tSale].[AccessoryCategoryModel]",
          "ObjectType": 0
       },
@@ -1240,10 +1224,6 @@
       },
       {
          "Name": "[tSale].[AccessoryModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[AccessoryProductModel]",
          "ObjectType": 0
       },
       {
@@ -1259,19 +1239,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[tSale].[ColorProductModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[tSale].[ConfigurationModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[CustomerPromotionProductModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[ImageProductModel]",
          "ObjectType": 0
       },
       {
@@ -1287,35 +1255,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[tSale].[PriceProductModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[Product_PeriodicallyChecking_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[Product_PlateFee_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[ProductAttributeModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[tSale].[ProductModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[ProductTypeModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[PromotionProductModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[PropertiesProductModel]",
          "ObjectType": 0
       },
       {
@@ -1327,19 +1267,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[tSale].[SpecificationsProductModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[tSale].[StyleModel]",
          "ObjectType": 0
       },
       {
          "Name": "[tSale].[WarehouseModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[tSale].[WarehouseProductModel]",
          "ObjectType": 0
       },
       {

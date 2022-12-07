@@ -34,7 +34,7 @@ namespace ISD.API.EntityModels.Models
         public virtual AccountModel LastEditByNavigation { get; set; }
         [ForeignKey("ProductId")]
         [InverseProperty("TemplateAndGiftMemberAddressModel")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("TempalteAndGiftMemberId")]
         [InverseProperty("TemplateAndGiftMemberAddressModel")]
         public virtual TemplateAndGiftMemberModel TempalteAndGiftMember { get; set; }

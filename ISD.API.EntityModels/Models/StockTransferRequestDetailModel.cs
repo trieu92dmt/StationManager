@@ -29,7 +29,7 @@ namespace ISD.API.EntityModels.Models
 
         [ForeignKey("ProductId")]
         [InverseProperty("StockTransferRequestDetailModel")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("StockTransferRequestId")]
         [InverseProperty("StockTransferRequestDetailModel")]
         public virtual StockTransferRequestModel StockTransferRequest { get; set; }

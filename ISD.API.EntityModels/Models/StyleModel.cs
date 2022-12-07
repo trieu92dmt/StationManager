@@ -11,13 +11,6 @@ namespace ISD.API.EntityModels.Models
     [Table("StyleModel", Schema = "tSale")]
     public partial class StyleModel
     {
-        public StyleModel()
-        {
-            ColorProductModel = new HashSet<ColorProductModel>();
-            PriceProductModel = new HashSet<PriceProductModel>();
-            WarehouseProductModel = new HashSet<WarehouseProductModel>();
-        }
-
         [Key]
         public Guid StyleId { get; set; }
         [Required]
@@ -28,12 +21,5 @@ namespace ISD.API.EntityModels.Models
         public string StyleName { get; set; }
         public int? OrderIndex { get; set; }
         public bool Actived { get; set; }
-
-        [InverseProperty("Style")]
-        public virtual ICollection<ColorProductModel> ColorProductModel { get; set; }
-        [InverseProperty("Style")]
-        public virtual ICollection<PriceProductModel> PriceProductModel { get; set; }
-        [InverseProperty("Style")]
-        public virtual ICollection<WarehouseProductModel> WarehouseProductModel { get; set; }
     }
 }

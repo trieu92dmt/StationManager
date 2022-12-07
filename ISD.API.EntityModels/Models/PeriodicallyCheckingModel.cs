@@ -11,11 +11,6 @@ namespace ISD.API.EntityModels.Models
     [Table("PeriodicallyCheckingModel", Schema = "tSale")]
     public partial class PeriodicallyCheckingModel
     {
-        public PeriodicallyCheckingModel()
-        {
-            Product = new HashSet<ProductModel>();
-        }
-
         [Key]
         public Guid PeriodicallyCheckingId { get; set; }
         [StringLength(50)]
@@ -35,9 +30,5 @@ namespace ISD.API.EntityModels.Models
         public DateTime? LastModifyDate { get; set; }
         [StringLength(100)]
         public string LastModifyUser { get; set; }
-
-        [ForeignKey("PeriodicallyCheckingId")]
-        [InverseProperty("PeriodicallyChecking")]
-        public virtual ICollection<ProductModel> Product { get; set; }
     }
 }

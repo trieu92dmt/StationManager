@@ -35,7 +35,7 @@ namespace ISD.API.EntityModels.Models
         public virtual DeliveryModel Delivery { get; set; }
         [ForeignKey("ProductId")]
         [InverseProperty("DeliveryDetailModel")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("StockId")]
         [InverseProperty("DeliveryDetailModel")]
         public virtual StockModel Stock { get; set; }

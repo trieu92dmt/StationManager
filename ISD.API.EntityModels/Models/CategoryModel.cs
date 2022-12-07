@@ -14,9 +14,9 @@ namespace ISD.API.EntityModels.Models
         public CategoryModel()
         {
             InverseParentCategory = new HashSet<CategoryModel>();
-            ProductModelCategory = new HashSet<ProductModel>();
-            ProductModelCategoryDetail = new HashSet<ProductModel>();
-            ProductModelParentCategory = new HashSet<ProductModel>();
+            ProductModel1Category = new HashSet<ProductModel1>();
+            ProductModel1CategoryDetail = new HashSet<ProductModel1>();
+            ProductModel1ParentCategory = new HashSet<ProductModel1>();
         }
 
         [Key]
@@ -45,10 +45,10 @@ namespace ISD.API.EntityModels.Models
         [InverseProperty("ParentCategory")]
         public virtual ICollection<CategoryModel> InverseParentCategory { get; set; }
         [InverseProperty("Category")]
-        public virtual ICollection<ProductModel> ProductModelCategory { get; set; }
+        public virtual ICollection<ProductModel1> ProductModel1Category { get; set; }
         [InverseProperty("CategoryDetail")]
-        public virtual ICollection<ProductModel> ProductModelCategoryDetail { get; set; }
+        public virtual ICollection<ProductModel1> ProductModel1CategoryDetail { get; set; }
         [InverseProperty("ParentCategory")]
-        public virtual ICollection<ProductModel> ProductModelParentCategory { get; set; }
+        public virtual ICollection<ProductModel1> ProductModel1ParentCategory { get; set; }
     }
 }

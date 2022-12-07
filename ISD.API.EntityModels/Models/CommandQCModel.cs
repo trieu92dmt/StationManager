@@ -53,7 +53,7 @@ namespace ISD.API.EntityModels.Models
 
         [ForeignKey("ProductId")]
         [InverseProperty("CommandQCModel")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("StepId")]
         [InverseProperty("CommandQCModel")]
         public virtual RoutingModel Step { get; set; }

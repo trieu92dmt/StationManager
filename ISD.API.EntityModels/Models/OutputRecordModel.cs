@@ -58,7 +58,7 @@ namespace ISD.API.EntityModels.Models
         public virtual DepartmentModel Department { get; set; }
         [ForeignKey("ProductId")]
         [InverseProperty("OutputRecordModel")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("StockId")]
         [InverseProperty("OutputRecordModel")]
         public virtual StockModel Stock { get; set; }

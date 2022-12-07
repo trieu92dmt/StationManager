@@ -347,5 +347,167 @@ namespace ITP_MES_API.Areas.IntegrationNS
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Plant") });
         }
         #endregion
+
+        #region Tích hợp StorageLocation
+
+        /// <summary>Tích hợp StorageLocation</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/storage-location
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///                {
+        ///                  "storageLocation": "string",
+        ///                  "storageLocationDescription": "string",
+        ///                  "plant": "string",
+        ///                  "division": "string",
+        ///                  "salesOrganization": "string",
+        ///                  "distributionChannel": "string",
+        ///                  "vendor": "string",
+        ///                  "customer": "string"
+        ///                }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp StorageLocation thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("storage-location")]
+        public async Task<IActionResult> StorageLocationIntegration([FromBody] StorageLocationIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp StorageLocation") });
+        }
+        #endregion
+
+        #region Tích hợp Material Group
+        /// <summary>Tích hợp Material Group</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/material-group
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///                {
+        ///                     "materialGroup": "string",
+        ///                     "materialGroupName": "string"
+        ///                }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp material thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("material-group")]
+        public async Task<IActionResult> ProductGroupIntegration([FromBody] ProductGroupIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material Group") });
+        }
+        #endregion
+
+        #region Tích hợp Material
+        /// <summary>Tích hợp Material</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/material
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///                {
+        ///                  "plant": "string",
+        ///                  "plantDescription": "string",
+        ///                  "material": "string",
+        ///                  "materialDescription": "string",
+        ///                  "materialGroup": "string",
+        ///                  "materialGroupDesc": "string",
+        ///                  "materialType": "string",
+        ///                  "materialTypeDescription": "string",
+        ///                  "baseUnitofMeasure": "string",
+        ///                  "division": "string",
+        ///                  "salesOrganization": "string",
+        ///                  "distributionChannel": "string"
+        ///                }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp material thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("material")]
+        public async Task<IActionResult> ProductIntegration([FromBody] ProductIntegrationNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material") });
+        }
+        #endregion
+
+        #region Tích hợp CUSTMDSALES 
+        /// <summary>Tích hợp CUSTMDSALES </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/custmd-sales 
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///                {
+        ///                  "division": "string",
+        ///                  "salesOrganization": "string",
+        ///                  "distributionChannel": "string",
+        ///                  "customerGroup": "string",
+        ///                  "salesGroup": "string",
+        ///                  "saleOrgCode": "string",
+        ///                  "salesOffice": "string"
+        ///                }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp CUSTMDSALES thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("custmd-sales")]
+        public async Task<IActionResult> CUSTMDSALESIntegration([FromBody] CustmdSaleIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp CUSTMDSALES") });
+        }
+        #endregion
     }
 }

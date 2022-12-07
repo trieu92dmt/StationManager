@@ -11,11 +11,6 @@ namespace ISD.API.EntityModels.Models
     [Table("PromotionModel", Schema = "tMasterData")]
     public partial class PromotionModel
     {
-        public PromotionModel()
-        {
-            Product = new HashSet<ProductModel>();
-        }
-
         [Key]
         public Guid PromotionId { get; set; }
         [Required]
@@ -33,9 +28,5 @@ namespace ISD.API.EntityModels.Models
         public string ImageUrl { get; set; }
         [StringLength(4000)]
         public string Notes { get; set; }
-
-        [ForeignKey("PromotionId")]
-        [InverseProperty("PromotionNavigation")]
-        public virtual ICollection<ProductModel> Product { get; set; }
     }
 }

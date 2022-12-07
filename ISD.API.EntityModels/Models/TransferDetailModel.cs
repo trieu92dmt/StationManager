@@ -50,7 +50,7 @@ namespace ISD.API.EntityModels.Models
         public virtual DimDateModel DateKeyNavigation { get; set; }
         [ForeignKey("ProductId")]
         [InverseProperty("TransferDetailModel")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("ToStockId")]
         [InverseProperty("TransferDetailModel")]
         public virtual StockModel ToStock { get; set; }

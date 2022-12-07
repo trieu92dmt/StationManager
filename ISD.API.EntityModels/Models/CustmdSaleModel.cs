@@ -8,29 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ISD.API.EntityModels.Models
 {
-    [Table("StorageLocationModel", Schema = "DataCollection")]
-    public partial class StorageLocationModel
+    [Table("CustmdSaleModel", Schema = "DataCollection")]
+    public partial class CustmdSaleModel
     {
         [Key]
-        public Guid StorageLocationId { get; set; }
-        [StringLength(50)]
-        public string StorageLocationCode { get; set; }
-        [StringLength(50)]
-        public string StorageLocationName { get; set; }
-        [StringLength(50)]
-        public string PlantCode { get; set; }
+        public Guid CustmdSaleId { get; set; }
         [StringLength(50)]
         public string DivisionCode { get; set; }
         [StringLength(50)]
         public string SaleOrgCode { get; set; }
         [StringLength(50)]
-        public string PurchasingOrgCode { get; set; }
-        [StringLength(50)]
         public string DistributionChannelCode { get; set; }
         [StringLength(50)]
-        public string VendorCode { get; set; }
+        public string CustomerGroup { get; set; }
         [StringLength(50)]
-        public string CustomerCode { get; set; }
+        public string SalesGroup { get; set; }
+        [StringLength(50)]
+        public string SalesOffice { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

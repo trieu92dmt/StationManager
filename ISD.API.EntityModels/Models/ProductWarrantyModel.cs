@@ -61,7 +61,7 @@ namespace ISD.API.EntityModels.Models
 
         [ForeignKey("ProductId")]
         [InverseProperty("ProductWarrantyModel")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("ProfileId")]
         [InverseProperty("ProductWarrantyModel")]
         public virtual ProfileModel Profile { get; set; }

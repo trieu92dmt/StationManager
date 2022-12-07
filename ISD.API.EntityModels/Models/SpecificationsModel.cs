@@ -11,11 +11,6 @@ namespace ISD.API.EntityModels.Models
     [Table("SpecificationsModel", Schema = "tSale")]
     public partial class SpecificationsModel
     {
-        public SpecificationsModel()
-        {
-            SpecificationsProductModel = new HashSet<SpecificationsProductModel>();
-        }
-
         [Key]
         public Guid SpecificationsId { get; set; }
         [Required]
@@ -26,8 +21,5 @@ namespace ISD.API.EntityModels.Models
         public string SpecificationsName { get; set; }
         public int? OrderIndex { get; set; }
         public bool Actived { get; set; }
-
-        [InverseProperty("Specifications")]
-        public virtual ICollection<SpecificationsProductModel> SpecificationsProductModel { get; set; }
     }
 }

@@ -14,7 +14,6 @@ namespace ISD.API.EntityModels.Models
         public AccessoryModel()
         {
             AccessoryDetailModel = new HashSet<AccessoryDetailModel>();
-            AccessoryProductModel = new HashSet<AccessoryProductModel>();
         }
 
         [Key]
@@ -37,7 +36,5 @@ namespace ISD.API.EntityModels.Models
 
         [InverseProperty("Accessory")]
         public virtual ICollection<AccessoryDetailModel> AccessoryDetailModel { get; set; }
-        [InverseProperty("Accessory")]
-        public virtual ICollection<AccessoryProductModel> AccessoryProductModel { get; set; }
     }
 }

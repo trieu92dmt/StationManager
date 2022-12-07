@@ -22,7 +22,7 @@ namespace ISD.API.EntityModels.Models
 
         [ForeignKey("ProductId")]
         [InverseProperty("WorkOrder_Mold_Mapping")]
-        public virtual ProductModel Product { get; set; }
+        public virtual ProductModel1 Product { get; set; }
         [ForeignKey("WorkOrderId")]
         [InverseProperty("WorkOrder_Mold_Mapping")]
         public virtual WorkOrderModel WorkOrder { get; set; }

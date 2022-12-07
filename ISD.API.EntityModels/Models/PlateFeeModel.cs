@@ -14,7 +14,6 @@ namespace ISD.API.EntityModels.Models
         public PlateFeeModel()
         {
             PlateFeeDetailModel = new HashSet<PlateFeeDetailModel>();
-            Product = new HashSet<ProductModel>();
         }
 
         [Key]
@@ -37,9 +36,5 @@ namespace ISD.API.EntityModels.Models
 
         [InverseProperty("PlateFee")]
         public virtual ICollection<PlateFeeDetailModel> PlateFeeDetailModel { get; set; }
-
-        [ForeignKey("PlateFeeId")]
-        [InverseProperty("PlateFee")]
-        public virtual ICollection<ProductModel> Product { get; set; }
     }
 }

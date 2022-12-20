@@ -171,6 +171,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[GoodsReceiptModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[MaterialGroupModel]",
          "ObjectType": 0
       },
@@ -188,6 +192,14 @@
       },
       {
          "Name": "[DataCollection].[ProductModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[PurchaseOrderDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[PurchaseOrderMasterModel]",
          "ObjectType": 0
       },
       {

@@ -1,9 +1,12 @@
 ﻿using ISD.API.Applications.Commands.IntegrationNS;
+using ISD.API.Applications.DTOs.IntegrationNS;
 using ISD.API.Core;
 using ISD.API.Core.Extensions;
+using ISD.API.EntityModels.Models;
 using ISD.API.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ITP_MES_API.Areas.IntegrationNS
@@ -507,6 +510,86 @@ namespace ITP_MES_API.Areas.IntegrationNS
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp CUSTMDSALES") });
+        }
+        #endregion
+
+        #region Tích hợp PurchaseOrder 
+        /// <summary>Tích hợp PurchaseOrder </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/purchase-order 
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///                {
+        ///                  "division": "string",
+        ///                  "salesOrganization": "string",
+        ///                  "distributionChannel": "string",
+        ///                  "customerGroup": "string",
+        ///                  "salesGroup": "string",
+        ///                  "saleOrgCode": "string",
+        ///                  "salesOffice": "string"
+        ///                }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp CUSTMDSALES thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("purchase-order")]
+        public async Task<IActionResult> PurchaseOrderIntegration([FromBody] PurchaseOrderIntegrationNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp PurchaseOrder") });
+        }
+        #endregion
+
+        #region Tích hợp NKMH
+        /// <summary>Tích hợp NKMH </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nkmh 
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///                {
+        ///                  "division": "string",
+        ///                  "salesOrganization": "string",
+        ///                  "distributionChannel": "string",
+        ///                  "customerGroup": "string",
+        ///                  "salesGroup": "string",
+        ///                  "saleOrgCode": "string",
+        ///                  "salesOffice": "string"
+        ///                }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp CUSTMDSALES thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("nkmh")]
+        public async Task<IActionResult> PurchaseOrderIntegration([FromBody] NKMHIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<NKMHResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp NKMH") });
         }
         #endregion
     }

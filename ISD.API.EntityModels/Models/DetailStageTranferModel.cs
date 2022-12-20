@@ -21,8 +21,13 @@ namespace ISD.API.EntityModels.Models
         public Guid? StockId { get; set; }
         [StringLength(50)]
         public string ProductionStatus { get; set; }
+        [StringLength(50)]
+        public string Status { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? ExpirationDate { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? CreateTime { get; set; }
+        public Guid? CreateBy { get; set; }
 
         [ForeignKey("StageTranferId")]
         [InverseProperty("DetailStageTranferModel")]

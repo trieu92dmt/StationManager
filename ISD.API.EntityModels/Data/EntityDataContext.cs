@@ -128,6 +128,7 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<FixingTypeModel> FixingTypeModel { get; set; }
         public virtual DbSet<FunctionModel> FunctionModel { get; set; }
         public virtual DbSet<GH_NotificationModel> GH_NotificationModel { get; set; }
+        public virtual DbSet<GoodsReceiptModel> GoodsReceiptModel { get; set; }
         public virtual DbSet<HangTagModel> HangTagModel { get; set; }
         public virtual DbSet<Hash> Hash { get; set; }
         public virtual DbSet<HeaderSaleOrderModel> HeaderSaleOrderModel { get; set; }
@@ -229,6 +230,8 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<PromotionModel> PromotionModel { get; set; }
         public virtual DbSet<ProspectModel> ProspectModel { get; set; }
         public virtual DbSet<ProvinceModel> ProvinceModel { get; set; }
+        public virtual DbSet<PurchaseOrderDetailModel> PurchaseOrderDetailModel { get; set; }
+        public virtual DbSet<PurchaseOrderMasterModel> PurchaseOrderMasterModel { get; set; }
         public virtual DbSet<PurchaseOrderModel> PurchaseOrderModel { get; set; }
         public virtual DbSet<PurchaseRequisitionModel> PurchaseRequisitionModel { get; set; }
         public virtual DbSet<PurchasingGroupModel> PurchasingGroupModel { get; set; }
@@ -1287,6 +1290,16 @@ namespace ISD.API.EntityModels.Data
                 entity.Property(e => e.NotificationId).ValueGeneratedNever();
             });
 
+            modelBuilder.Entity<GoodsReceiptModel>(entity =>
+            {
+                entity.Property(e => e.GoodsReceiptId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.PurchaseOrder)
+                    .WithMany(p => p.GoodsReceiptModel)
+                    .HasForeignKey(d => d.PurchaseOrderId)
+                    .HasConstraintName("FK_GoodsReceiptModel_PurchaseOrderMasterModel");
+            });
+
             modelBuilder.Entity<HangTagModel>(entity =>
             {
                 entity.Property(e => e.HangTagId).ValueGeneratedNever();
@@ -2167,6 +2180,21 @@ namespace ISD.API.EntityModels.Data
                     .HasFilter("([ProvinceCode] IS NOT NULL)");
 
                 entity.Property(e => e.ProvinceId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<PurchaseOrderDetailModel>(entity =>
+            {
+                entity.Property(e => e.PurchaseOrderDetailId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.PurchaseOrder)
+                    .WithMany(p => p.PurchaseOrderDetailModel)
+                    .HasForeignKey(d => d.PurchaseOrderId)
+                    .HasConstraintName("FK_PurchaseOrderDetailModel_PurchaseOrderMasterModel");
+            });
+
+            modelBuilder.Entity<PurchaseOrderMasterModel>(entity =>
+            {
+                entity.Property(e => e.PurchaseOrderId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<PurchaseOrderModel>(entity =>

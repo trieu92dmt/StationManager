@@ -13,7 +13,7 @@ namespace ISD.API.EntityModels.Models
     {
         [Key]
         public Guid GoodsReceiptId { get; set; }
-        public Guid? PurchaseOrderId { get; set; }
+        public Guid? PurchaseOrderDetailId { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? BagQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -59,8 +59,8 @@ namespace ISD.API.EntityModels.Models
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
 
-        [ForeignKey("PurchaseOrderId")]
+        [ForeignKey("PurchaseOrderDetailId")]
         [InverseProperty("GoodsReceiptModel")]
-        public virtual PurchaseOrderMasterModel PurchaseOrder { get; set; }
+        public virtual PurchaseOrderDetailModel PurchaseOrderDetail { get; set; }
     }
 }

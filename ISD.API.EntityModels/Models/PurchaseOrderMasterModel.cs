@@ -13,7 +13,6 @@ namespace ISD.API.EntityModels.Models
     {
         public PurchaseOrderMasterModel()
         {
-            GoodsReceiptModel = new HashSet<GoodsReceiptModel>();
             PurchaseOrderDetailModel = new HashSet<PurchaseOrderDetailModel>();
         }
 
@@ -41,8 +40,6 @@ namespace ISD.API.EntityModels.Models
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
 
-        [InverseProperty("PurchaseOrder")]
-        public virtual ICollection<GoodsReceiptModel> GoodsReceiptModel { get; set; }
         [InverseProperty("PurchaseOrder")]
         public virtual ICollection<PurchaseOrderDetailModel> PurchaseOrderDetailModel { get; set; }
     }

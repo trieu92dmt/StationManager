@@ -50,7 +50,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
             var users = _userRep.GetQuery().AsNoTracking();
 
             var query = _nkmhRep.GetQuery(x => x.CreateTime >= request.FromTime && x.CreateTime <= request.ToTime)
-                                .Include(x => x.PurchaseOrder).ThenInclude(x => x.PurchaseOrderDetailModel).AsNoTracking();
+                                .Include(x => x.PurchaseOrderDetail).ThenInclude(x => x.PurchaseOrder).AsNoTracking();
 
             var data = query.AsEnumerable()
                             .Select(x => new NKMHResponse
@@ -77,29 +77,21 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                                 CreateTime = x.CreateTime,
                                 LastEditBy = users.FirstOrDefault(a => a.AccountId == x.LastEditBy)?.FullName,
                                 LastEditTime = x.LastEditTime,
-                                PurchaseOrder = new PurchaseOrderResponse
-                                {
-                                    Plant = x.PurchaseOrder?.Plant,
-                                    PurchaseOrderCode = x.PurchaseOrder?.PurchaseOrderCode,
-                                    POType = x.PurchaseOrder?.POType,
-                                    PurchasingOrg = x.PurchaseOrder?.PurchasingOrg,
-                                    PurchasingGroup = x.PurchaseOrder?.PurchasingGroup,
-                                    VendorCode = x.PurchaseOrder?.VendorCode,
-                                    ProductCode = x.PurchaseOrder?.ProductCode,
-                                    DocumentDate = x.PurchaseOrder?.DocumentDate,
-                                    DetailResponses = x.PurchaseOrder?.PurchaseOrderDetailModel?.Select(e => new PurchaseOrderDetailResponse
-                                    {
-                                        POLine = e.POLine,
-                                        StorageLocation = e.StorageLocation,
-                                        Batch = e.Batch,
-                                        VehicleCode = e.VehicleCode,
-                                        OrderQuantity = e.OrderQuantity,
-                                        OpenQuantity = e.OpenQuantity
-                                    }).ToList()
-                                }
+                                Plant = x.PurchaseOrderDetail?.PurchaseOrder?.Plant,
+                                PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
+                                POType = x.PurchaseOrderDetail?.PurchaseOrder?.POType,
+                                PurchasingOrg = x.PurchaseOrderDetail?.PurchaseOrder?.PurchasingOrg,
+                                PurchasingGroup = x.PurchaseOrderDetail?.PurchaseOrder?.PurchasingGroup,
+                                VendorCode = x.PurchaseOrderDetail?.PurchaseOrder?.VendorCode,
+                                ProductCode = x.PurchaseOrderDetail?.PurchaseOrder?.ProductCode,
+                                DocumentDate = x.PurchaseOrderDetail?.PurchaseOrder?.DocumentDate,
+                                POLine = x.PurchaseOrderDetail?.POLine,
+                                StorageLocation = x.PurchaseOrderDetail?.StorageLocation,
+                                Batch = x.PurchaseOrderDetail?.Batch,
+                                VehicleCode = x.PurchaseOrderDetail?.VehicleCode,
+                                OrderQuantity = x.PurchaseOrderDetail?.OrderQuantity,
+                                OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity
                             }).ToList();
-
-
             return data;
         }
     }

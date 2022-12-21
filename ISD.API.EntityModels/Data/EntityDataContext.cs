@@ -1294,10 +1294,10 @@ namespace ISD.API.EntityModels.Data
             {
                 entity.Property(e => e.GoodsReceiptId).ValueGeneratedNever();
 
-                entity.HasOne(d => d.PurchaseOrder)
+                entity.HasOne(d => d.PurchaseOrderDetail)
                     .WithMany(p => p.GoodsReceiptModel)
-                    .HasForeignKey(d => d.PurchaseOrderId)
-                    .HasConstraintName("FK_GoodsReceiptModel_PurchaseOrderMasterModel");
+                    .HasForeignKey(d => d.PurchaseOrderDetailId)
+                    .HasConstraintName("FK_GoodsReceiptModel_PurchaseOrderDetailModel");
             });
 
             modelBuilder.Entity<HangTagModel>(entity =>

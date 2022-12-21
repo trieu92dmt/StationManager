@@ -11,6 +11,11 @@ namespace ISD.API.EntityModels.Models
     [Table("PurchaseOrderDetailModel", Schema = "DataCollection")]
     public partial class PurchaseOrderDetailModel
     {
+        public PurchaseOrderDetailModel()
+        {
+            GoodsReceiptModel = new HashSet<GoodsReceiptModel>();
+        }
+
         [Key]
         public Guid PurchaseOrderDetailId { get; set; }
         public Guid? PurchaseOrderId { get; set; }
@@ -39,5 +44,7 @@ namespace ISD.API.EntityModels.Models
         [ForeignKey("PurchaseOrderId")]
         [InverseProperty("PurchaseOrderDetailModel")]
         public virtual PurchaseOrderMasterModel PurchaseOrder { get; set; }
+        [InverseProperty("PurchaseOrderDetail")]
+        public virtual ICollection<GoodsReceiptModel> GoodsReceiptModel { get; set; }
     }
 }

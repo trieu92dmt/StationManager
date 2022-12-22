@@ -16,13 +16,13 @@ namespace ISD.API.Applications.Commands.MasterData
 
     public class ImportEquipmentExcelCommandHandler : IRequestHandler<ImportEquipmentExcelCommand, bool>
     {
-        private readonly IGeneRepo<EquipmentModel> _equipRepo;
+        private readonly IRepository<EquipmentModel> _equipRepo;
         private readonly IISDUnitOfWork _unitOfWork;
-        private readonly IGeneRepo<CatalogModel> _cataRepo;
-        private readonly IGeneRepo<WorkShopModel> _workShopRepo;
+        private readonly IRepository<CatalogModel> _cataRepo;
+        private readonly IRepository<WorkShopModel> _workShopRepo;
 
-        public ImportEquipmentExcelCommandHandler(IGeneRepo<EquipmentModel> equipRepo, IISDUnitOfWork unitOfWork, IGeneRepo<CatalogModel> cataRepo,
-                                                  IGeneRepo<WorkShopModel> workShopRepo)
+        public ImportEquipmentExcelCommandHandler(IRepository<EquipmentModel> equipRepo, IISDUnitOfWork unitOfWork, IRepository<CatalogModel> cataRepo,
+                                                  IRepository<WorkShopModel> workShopRepo)
         {
             _equipRepo = equipRepo;
             _unitOfWork = unitOfWork;

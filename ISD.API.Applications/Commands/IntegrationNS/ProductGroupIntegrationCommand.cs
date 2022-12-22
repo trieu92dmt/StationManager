@@ -12,10 +12,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class ProductGroupIntegrationCommandHandler : IRequestHandler<ProductGroupIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<ProductGroupModel> _productGroupRep;
+        private readonly IRepository<ProductGroupModel> _productGroupRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public ProductGroupIntegrationCommandHandler(IGeneRepo<ProductGroupModel> productGroupRep, IISDUnitOfWork unitOfWork)
+        public ProductGroupIntegrationCommandHandler(IRepository<ProductGroupModel> productGroupRep, IISDUnitOfWork unitOfWork)
         {
             _productGroupRep = productGroupRep;
             _unitOfWork = unitOfWork;

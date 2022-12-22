@@ -22,10 +22,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class ProductIntegrationNSCommandHandler : IRequestHandler<ProductIntegrationNSCommand, bool>
     {
-        private readonly IGeneRepo<ProductModel> _productRep;
+        private readonly IRepository<ProductModel> _productRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public ProductIntegrationNSCommandHandler(IGeneRepo<ProductModel> productRep, IISDUnitOfWork unitOfWork)
+        public ProductIntegrationNSCommandHandler(IRepository<ProductModel> productRep, IISDUnitOfWork unitOfWork)
         {
             _productRep = productRep;
             _unitOfWork = unitOfWork;

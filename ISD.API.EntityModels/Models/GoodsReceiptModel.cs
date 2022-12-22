@@ -14,6 +14,10 @@ namespace ISD.API.EntityModels.Models
         [Key]
         public Guid GoodsReceiptId { get; set; }
         public Guid? PurchaseOrderDetailId { get; set; }
+        [StringLength(50)]
+        public string WeightId { get; set; }
+        [StringLength(50)]
+        public string WeitghtVote { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? BagQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -45,12 +49,13 @@ namespace ISD.API.EntityModels.Models
         public string Image { get; set; }
         [StringLength(50)]
         public string Status { get; set; }
-        [StringLength(50)]
-        public string QuantityWeitghtVote { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? StartTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? EndTime { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? DocumentDate { get; set; }
+        public int? DateKey { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         public Guid? CreateBy { get; set; }

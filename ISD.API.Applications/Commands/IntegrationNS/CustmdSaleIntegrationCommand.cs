@@ -17,10 +17,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class CustmdSaleIntegrationCommandHandler : IRequestHandler<CustmdSaleIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<CustmdSaleModel> _custmdSaleRep;
+        private readonly IRepository<CustmdSaleModel> _custmdSaleRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public CustmdSaleIntegrationCommandHandler(IGeneRepo<CustmdSaleModel> custmdSaleRep, IISDUnitOfWork unitOfWork)
+        public CustmdSaleIntegrationCommandHandler(IRepository<CustmdSaleModel> custmdSaleRep, IISDUnitOfWork unitOfWork)
         {
             _custmdSaleRep = custmdSaleRep;
             _unitOfWork = unitOfWork;

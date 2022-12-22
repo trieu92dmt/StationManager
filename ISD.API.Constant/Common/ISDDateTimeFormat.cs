@@ -9,6 +9,7 @@
         public const string Hour = "HH:mm";
         public const string DateAndHour = "dd/MM/yyyy HH:mm";
         public const string SimpleDate = "yyMMdd";
+        public const string DateKey = "yyyyMMdd";
         public const string DateOnly = "dd";
         public const string IsoString = "yyyy-MM-ddTHH:mm:ssZ";
         public const string IsoStringWithoutZ = "yyyy-MM-ddTHH:mm:ss";

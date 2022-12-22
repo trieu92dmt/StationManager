@@ -18,10 +18,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class StorageLocationIntegrationCommandHandler : IRequestHandler<StorageLocationIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<StorageLocationModel> _storageLocationRep;
+        private readonly IRepository<StorageLocationModel> _storageLocationRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public StorageLocationIntegrationCommandHandler(IGeneRepo<StorageLocationModel> storageLocationRep, IISDUnitOfWork unitOfWork)
+        public StorageLocationIntegrationCommandHandler(IRepository<StorageLocationModel> storageLocationRep, IISDUnitOfWork unitOfWork)
         {
             _storageLocationRep = storageLocationRep;
             _unitOfWork = unitOfWork;

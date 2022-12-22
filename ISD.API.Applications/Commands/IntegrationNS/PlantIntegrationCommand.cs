@@ -18,10 +18,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
 
     public class PlantIntegrationCommandHandler : IRequestHandler<PlantIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<PlantModel> _plantRep;
+        private readonly IRepository<PlantModel> _plantRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public PlantIntegrationCommandHandler(IGeneRepo<PlantModel> plantRep, IISDUnitOfWork unitOfWork)
+        public PlantIntegrationCommandHandler(IRepository<PlantModel> plantRep, IISDUnitOfWork unitOfWork)
         {
             _plantRep = plantRep;
             _unitOfWork = unitOfWork;

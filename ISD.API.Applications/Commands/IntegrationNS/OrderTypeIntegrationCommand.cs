@@ -15,10 +15,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
 
     public class OrderTypeIntegrationCommandHandler : IRequestHandler<OrderTypeIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<OrderTypeModel> _orderTypeRep;
+        private readonly IRepository<OrderTypeModel> _orderTypeRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public OrderTypeIntegrationCommandHandler(IGeneRepo<OrderTypeModel> orderTypeRep, IISDUnitOfWork unitOfWork)
+        public OrderTypeIntegrationCommandHandler(IRepository<OrderTypeModel> orderTypeRep, IISDUnitOfWork unitOfWork)
         {
             _orderTypeRep = orderTypeRep;
             _unitOfWork = unitOfWork;

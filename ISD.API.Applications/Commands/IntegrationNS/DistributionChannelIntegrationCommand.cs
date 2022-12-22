@@ -12,10 +12,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class DistributionChannelIntegrationCommandHandler : IRequestHandler<DistributionChannelIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<DistributionChannelModel> _disChanelRep;
+        private readonly IRepository<DistributionChannelModel> _disChanelRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public DistributionChannelIntegrationCommandHandler(IGeneRepo<DistributionChannelModel> disChanelRep, IISDUnitOfWork unitOfWork)
+        public DistributionChannelIntegrationCommandHandler(IRepository<DistributionChannelModel> disChanelRep, IISDUnitOfWork unitOfWork)
         {
             _disChanelRep = disChanelRep;
             _unitOfWork = unitOfWork;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ISD.API.Repositories.Infrastructure.Repositories
 {
-    public interface IGeneRepo<TEntity>
+    public interface IRepository<TEntity>
     {
         #region Get
         IQueryable<TEntity> GetQuery();

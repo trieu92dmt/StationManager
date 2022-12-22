@@ -5,14 +5,16 @@
         //PO
         public string Plant { get; set; }
         public string PurchaseOrderCode { get; set; }
+        public string WeightVote { get; set; }
+        public string WeightId { get; set; }
         public string POType { get; set; }
         public string PurchasingOrg { get; set; }
         public string PurchasingGroup { get; set; }
         public string VendorCode { get; set; }
-        public string ProductCode { get; set; }
+        public string Material { get; set; }
         public DateTime? DocumentDate { get; set; }
         //POitem
-        public string POLine { get; set; }
+        public string POItem { get; set; }
         public string StorageLocation { get; set; }
         public string Batch { get; set; }
         public string VehicleCode { get; set; }
@@ -34,7 +36,6 @@
         public string Description { get; set; }
         public string Image { get; set; }
         public string Status { get; set; }
-        public string QuantityWeitghtVote { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public DateTime? CreateTime { get; set; }

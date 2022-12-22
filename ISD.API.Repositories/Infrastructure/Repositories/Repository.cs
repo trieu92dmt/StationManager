@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace ISD.API.Repositories.Infrastructure.Repositories
 {
-    public class GeneRepo<TEntity> : IGeneRepo<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly EntityDataContext Context;
         private readonly Type _type;
 
-        public GeneRepo(EntityDataContext context)
+        public Repository(EntityDataContext context)
         {
             Context = context;
             DbSet = Context.Set<TEntity>();

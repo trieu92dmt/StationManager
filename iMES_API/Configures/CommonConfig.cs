@@ -38,7 +38,7 @@ namespace ITP_MES_API.Configures
                 .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
 
             // Inject IRepository
-            services.AddScoped(typeof(IGeneRepo<>), typeof(GeneRepo<>));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             // Inject UnitOfWork
             services.AddScoped<IISDUnitOfWork, ISDUnitOfWork>();

@@ -12,10 +12,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class DivisionIntegrationCommandHandler : IRequestHandler<DivisionIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<DivisionModel> _divisionRep;
+        private readonly IRepository<DivisionModel> _divisionRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public DivisionIntegrationCommandHandler(IGeneRepo<DivisionModel> divisionRep, IISDUnitOfWork unitOfWork)
+        public DivisionIntegrationCommandHandler(IRepository<DivisionModel> divisionRep, IISDUnitOfWork unitOfWork)
         {
             _divisionRep = divisionRep;
             _unitOfWork = unitOfWork;

@@ -18,10 +18,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class PurchasingGroupIntegrationCommandHandler : IRequestHandler<PurchasingGroupIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<PurchasingGroupModel> _purGroupRep;
+        private readonly IRepository<PurchasingGroupModel> _purGroupRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public PurchasingGroupIntegrationCommandHandler(IGeneRepo<PurchasingGroupModel> purGroupRep, IISDUnitOfWork unitOfWork)
+        public PurchasingGroupIntegrationCommandHandler(IRepository<PurchasingGroupModel> purGroupRep, IISDUnitOfWork unitOfWork)
         {
             _purGroupRep = purGroupRep;
             _unitOfWork = unitOfWork;

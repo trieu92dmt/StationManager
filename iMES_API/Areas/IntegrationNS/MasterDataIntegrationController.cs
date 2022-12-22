@@ -529,11 +529,70 @@ namespace ITP_MES_API.Areas.IntegrationNS
         #endregion
 
         #region Tích hợp NKMH
-        /// <summary>
-        /// Get data NKMH
-        /// </summary>
-        /// <param name="req"></param>
+        /// <summary>Get data NKMH</summary>
         /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nkmh
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///             {
+        ///               "fromTime": "2022-12-01",
+        ///               "toTime": "2022-12-15"
+        ///             }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                   "code": 200,
+        ///                   "data": [
+        ///                     {
+        ///                       "plant": "A100",                            - Plant
+        ///                       "purchaseOrderCode": "4010000204",          - Purchase Order
+        ///                       "weightVote": "000001",                     - Số phiếu cân
+        ///                       "weightId": "9000122005",                   - ID đợt cân
+        ///                       "poType": "",                               - PO Type
+        ///                       "purchasingOrg": "A001",                    - Purchasing Organization
+        ///                       "purchasingGroup": "101",                   - Purchasing Group
+        ///                       "vendorCode": "2100000000",                 - Vendor 
+        ///                       "material": null,                           - Material
+        ///                       "documentDate": "2022-12-15T00:00:00",      - DocumentDate
+        ///                       "poItem": "10",                             - Purchase Order Item
+        ///                       "storageLocation": null,                    - Storage Location
+        ///                       "batch": null,                              - Batch
+        ///                       "vehicleCode": "66C - 3591",                - Số phương tiện
+        ///                       "orderQuantity": 0,                         - Order Quantity
+        ///                       "openQuantity": 0,                          - Open Quantity
+        ///                       "bagQuantity": 0,                           - Số lượng bao
+        ///                       "singleWeight": 0,                          - Đơn trọng
+        ///                       "weightHeadCode": "DC01",                   - Mã đầu cân
+        ///                       "weight": 1000,                             - Trọng lượng cân
+        ///                       "confirmQty": 3000,                         - Confirm Qty
+        ///                       "quantityWithPackaging": 3005,              - Số lượng kèm bao bì
+        ///                       "quantityWeitght": 20,                      - Số lần cân
+        ///                       "totalQuantity": 20000,                     - Total Quantity
+        ///                       "deliveredQuantity": 0,                     - Delivered Quantity
+        ///                       "truckQuantity": 0,                         - Số xe tải
+        ///                       "inputWeight": 0,                           - Số cân đầu vào
+        ///                       "outputWeight": 0,                          - Số cân đầu ra
+        ///                       "description": "Chất lượng A",              - Ghi chú
+        ///                       "image": null,                              - Hình ảnh
+        ///                       "status": "Chưa tạo giao dịch",             - Trạng thái
+        ///                       "startTime": "2022-12-16T08:00:00",         - Thời gian bắt đầu
+        ///                       "endTime": "2022-12-16T08:30:00",           - Thời gian kết thúc
+        ///                       "createTime": "2022-12-22T10:05:17.03",     - Create On
+        ///                       "createBy": long.pt,                        - Create By
+        ///                       "lastEditTime": null,                       - Change On
+        ///                       "lastEditBy": null                          - Change By
+        ///                      }
+        ///                     ]
+        ///                 }
+        /// </remarks>
         [HttpPost("nkmh")]
         public async Task<IActionResult> PurchaseOrderIntegration([FromBody] NKMHIntegrationCommand req)
         {

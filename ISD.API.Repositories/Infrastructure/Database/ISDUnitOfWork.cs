@@ -27,9 +27,9 @@ namespace ISD.API.Repositories.Infrastructure.Database
             return _context.SaveChangesAsync();
         }
 
-        public IGeneRepo<T> AsyncRepository<T>() where T : class
+        public IRepository<T> AsyncRepository<T>() where T : class
         {
-            return new GeneRepo<T>(_context);
+            return new Repository<T>(_context);
         }
 
         private async Task Dispose(bool disposing)

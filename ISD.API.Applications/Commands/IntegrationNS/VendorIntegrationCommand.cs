@@ -13,10 +13,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class VendorIntegrationCommandHandler : IRequestHandler<VendorIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<VendorModel> _vendorRep;
+        private readonly IRepository<VendorModel> _vendorRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public VendorIntegrationCommandHandler(IGeneRepo<VendorModel> vendorRep, IISDUnitOfWork unitOfWork)
+        public VendorIntegrationCommandHandler(IRepository<VendorModel> vendorRep, IISDUnitOfWork unitOfWork)
         {
             _vendorRep = vendorRep;
             _unitOfWork = unitOfWork;

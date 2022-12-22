@@ -15,11 +15,11 @@ namespace ISD.API.Applications.Commands.Auth
     }
     public class LoginCommandHandler : IRequestHandler<LoginCommand, bool>
     {
-        private readonly IGeneRepo<AccountModel> _accountRep;
+        private readonly IRepository<AccountModel> _accountRep;
         private readonly IISDUnitOfWork _unitOfWork;
         private readonly IUtilitiesService _service;
 
-        public LoginCommandHandler(IGeneRepo<AccountModel> accountRep, IISDUnitOfWork unitOfWork, IUtilitiesService service)
+        public LoginCommandHandler(IRepository<AccountModel> accountRep, IISDUnitOfWork unitOfWork, IUtilitiesService service)
         {
             _accountRep = accountRep;
             _unitOfWork = unitOfWork;

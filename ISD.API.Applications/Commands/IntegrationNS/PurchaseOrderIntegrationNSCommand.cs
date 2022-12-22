@@ -34,11 +34,11 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class PurchaseOrderIntegrationNSCommandHandler : IRequestHandler<PurchaseOrderIntegrationNSCommand, bool>
     {
-        private readonly IGeneRepo<PurchaseOrderMasterModel> _poRep;
+        private readonly IRepository<PurchaseOrderMasterModel> _poRep;
         private readonly IISDUnitOfWork _unitOfWork;
-        private readonly IGeneRepo<PurchaseOrderDetailModel> _poDetailRep;
+        private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
 
-        public PurchaseOrderIntegrationNSCommandHandler(IGeneRepo<PurchaseOrderMasterModel> poRep, IISDUnitOfWork unitOfWork, IGeneRepo<PurchaseOrderDetailModel> poDetailRep)
+        public PurchaseOrderIntegrationNSCommandHandler(IRepository<PurchaseOrderMasterModel> poRep, IISDUnitOfWork unitOfWork, IRepository<PurchaseOrderDetailModel> poDetailRep)
         {
             _poRep = poRep;
             _unitOfWork = unitOfWork;
@@ -113,7 +113,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                         _poDetailRep.Add(new PurchaseOrderDetailModel
                         {
                             PurchaseOrderDetailId = Guid.NewGuid(),
-                            PurchaseOrderId = detailPO.PurchaseOrderId,
+                            PurchaseOrderId = purchaseOrder.PurchaseOrderId,
                             POLine = item.PurchaseOrderItem,
                             ProductCode = item.Material,
                             Batch = item.Batch,

@@ -13,10 +13,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
 
     public class SaleOrgIntegrationCommandHandler : IRequestHandler<SaleOrgIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<SaleOrgModel> _saleOrgRep;
+        private readonly IRepository<SaleOrgModel> _saleOrgRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public SaleOrgIntegrationCommandHandler(IGeneRepo<SaleOrgModel> saleOrgRep, IISDUnitOfWork unitOfWork)
+        public SaleOrgIntegrationCommandHandler(IRepository<SaleOrgModel> saleOrgRep, IISDUnitOfWork unitOfWork)
         {
             _saleOrgRep = saleOrgRep;
             _unitOfWork = unitOfWork;

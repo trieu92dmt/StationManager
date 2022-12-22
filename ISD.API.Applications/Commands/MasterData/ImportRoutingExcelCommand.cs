@@ -16,14 +16,14 @@ namespace ISD.API.Applications.Commands.MasterData
     }
     public class ImportRoutingExcelCommandHandler : IRequestHandler<ImportRoutingExcelCommand, bool>
     {
-        private readonly IGeneRepo<Product_Routing_Mapping> _prdRoutingRep;
+        private readonly IRepository<Product_Routing_Mapping> _prdRoutingRep;
         private readonly IISDUnitOfWork _unitOfWork;
-        private readonly IGeneRepo<Product_Routing_Mold_Mapping> _prdRoutingMoldRep;
-        private readonly IGeneRepo<WorkOrderModel> _woRep;
-        private readonly IGeneRepo<ProductModel> _prodRepo;
+        private readonly IRepository<Product_Routing_Mold_Mapping> _prdRoutingMoldRep;
+        private readonly IRepository<WorkOrderModel> _woRep;
+        private readonly IRepository<ProductModel> _prodRepo;
 
-        public ImportRoutingExcelCommandHandler(IGeneRepo<Product_Routing_Mapping> prdRoutingRep, IISDUnitOfWork unitOfWork, IGeneRepo<Product_Routing_Mold_Mapping> prdRoutingMoldRep
-                                                , IGeneRepo<WorkOrderModel> woRep, IGeneRepo<ProductModel> prodRepo)
+        public ImportRoutingExcelCommandHandler(IRepository<Product_Routing_Mapping> prdRoutingRep, IISDUnitOfWork unitOfWork, IRepository<Product_Routing_Mold_Mapping> prdRoutingMoldRep
+                                                , IRepository<WorkOrderModel> woRep, IRepository<ProductModel> prodRepo)
         {
             _prdRoutingRep = prdRoutingRep;
             _unitOfWork = unitOfWork;

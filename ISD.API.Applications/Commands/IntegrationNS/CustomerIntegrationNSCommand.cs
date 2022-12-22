@@ -14,10 +14,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
 
     public class CustomerIntegrationNSCommandHandler : IRequestHandler<CustomerIntegrationNSCommand, bool>
     {
-        private readonly IGeneRepo<CustomerModel> _customerRep;
+        private readonly IRepository<CustomerModel> _customerRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public CustomerIntegrationNSCommandHandler(IGeneRepo<CustomerModel> customerRep, IISDUnitOfWork unitOfWork)
+        public CustomerIntegrationNSCommandHandler(IRepository<CustomerModel> customerRep, IISDUnitOfWork unitOfWork)
         {
             _customerRep = customerRep;
             _unitOfWork = unitOfWork;

@@ -12,10 +12,10 @@ namespace ISD.API.Applications.Commands.IntegrationNS
     }
     public class PurchasingOrgIntegrationCommandHandler : IRequestHandler<PurchasingOrgIntegrationCommand, bool>
     {
-        private readonly IGeneRepo<PurchasingOrgModel> _purOrgRep;
+        private readonly IRepository<PurchasingOrgModel> _purOrgRep;
         private readonly IISDUnitOfWork _unitOfWork;
 
-        public PurchasingOrgIntegrationCommandHandler(IGeneRepo<PurchasingOrgModel> purOrgRep, IISDUnitOfWork unitOfWork)
+        public PurchasingOrgIntegrationCommandHandler(IRepository<PurchasingOrgModel> purOrgRep, IISDUnitOfWork unitOfWork)
         {
             _purOrgRep = purOrgRep;
             _unitOfWork = unitOfWork;

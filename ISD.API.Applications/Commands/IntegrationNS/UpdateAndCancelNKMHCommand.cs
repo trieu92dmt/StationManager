@@ -77,8 +77,6 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                     EndTime = nkmh.EndTime,
                     DocumentDate = nkmh.DocumentDate,
                     DateKey = nkmh.DateKey,
-                    Batch = nkmh.Batch,
-                    MaterialDocument = nkmh.MaterialDocument,
                     CreateTime = DateTime.Now,
                     Actived = true
                 };

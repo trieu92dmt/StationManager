@@ -601,5 +601,48 @@ namespace ITP_MES_API.Areas.IntegrationNS
             return Ok(new ApiSuccessResponse<IList<NKMHResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKMH") });
         }
         #endregion
+
+        #region Update phiếu và hủy nhập kho mua hàng
+        /// <summary>Update, cancel phiếu nhập kho mua hàng</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/update-nkmh
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKMH MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKMH MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        /// OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nkmh")]
+        public async Task<IActionResult> UpdateOrCancelNKMHAsync([FromBody] UpdateAndCancelNKMHCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NKMH") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NKMH") });
+        }
+        #endregion
     }
 }

@@ -56,6 +56,12 @@ namespace ISD.API.EntityModels.Models
         [Column(TypeName = "datetime")]
         public DateTime? DocumentDate { get; set; }
         public int? DateKey { get; set; }
+        [StringLength(50)]
+        public string Batch { get; set; }
+        [StringLength(50)]
+        public string MaterialDocument { get; set; }
+        [StringLength(50)]
+        public string ReverseDocument { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         public Guid? CreateBy { get; set; }

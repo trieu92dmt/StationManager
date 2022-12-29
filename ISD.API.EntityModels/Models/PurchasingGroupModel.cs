@@ -15,6 +15,7 @@ namespace ISD.API.EntityModels.Models
         public Guid PurchasingGroupId { get; set; }
         [StringLength(50)]
         public string PurchasingGroupCode { get; set; }
+        public int? PurchasingGroupCodeInt { get; set; }
         [StringLength(50)]
         public string PurchasingGroupName { get; set; }
         [Column(TypeName = "datetime")]

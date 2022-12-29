@@ -58,6 +58,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                 purchaseOrder = new PurchaseOrderMasterModel();
                 purchaseOrder.PurchaseOrderId = Guid.NewGuid();
                 purchaseOrder.PurchaseOrderCode = request.PurchaseOrder;
+                purchaseOrder.PurchaseOrderCodeInt = int.Parse(request.PurchaseOrder);
                 purchaseOrder.POType = request.POType;
                 purchaseOrder.Plant = request.Plant;
                 purchaseOrder.PurchasingOrg = request.PurchasingOrganization;

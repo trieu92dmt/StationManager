@@ -15,6 +15,7 @@ namespace ISD.API.EntityModels.Models
         public Guid VendorId { get; set; }
         [StringLength(50)]
         public string VendorCode { get; set; }
+        public int? VendorCodeInt { get; set; }
         [StringLength(50)]
         public string VendorName { get; set; }
         [StringLength(50)]

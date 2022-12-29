@@ -47,8 +47,6 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                     throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho mua hàng");
 
                 //Cập nhật Batch và MaterialDocument và ReverseDocument
-                nkmh.Batch = request.Batch;
-                nkmh.MaterialDocument = request.MaterialDocument;
                 nkmh.ReverseDocument = request.ReverseDocument;
                 nkmh.LastEditTime = DateTime.Now;
 
@@ -84,6 +82,8 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                     CreateTime = DateTime.Now,
                     Actived = true
                 };
+
+                _nkmhRep.Add(nkmhNew);
             }
             else
             {

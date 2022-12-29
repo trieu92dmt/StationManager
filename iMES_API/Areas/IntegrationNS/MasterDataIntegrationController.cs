@@ -343,7 +343,7 @@ namespace ITP_MES_API.Areas.IntegrationNS
         ///                }
         /// </remarks>
         [HttpPost("plant")]
-        public async Task<IActionResult> PlantIntegration([FromBody] DivisionIntegrationCommand req)
+        public async Task<IActionResult> PlantIntegration([FromBody] PlantIntegrationCommand req)
         {
             var response = await _mediator.Send(req);
 
@@ -528,7 +528,7 @@ namespace ITP_MES_API.Areas.IntegrationNS
         }
         #endregion
 
-        #region Tích hợp NKMH
+        #region Tích hợp NKMH MES
         /// <summary>Get data NKMH</summary>
         /// <returns></returns>
         /// <remarks>

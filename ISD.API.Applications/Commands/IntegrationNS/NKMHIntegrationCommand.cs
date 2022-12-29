@@ -8,6 +8,21 @@ namespace ISD.API.Applications.Commands.IntegrationNS
 {
     public class NKMHIntegrationCommand : IRequest<List<NKMHResponse>>
     {
+        public string Plant { get; set; }
+        public int? PurchasingOrgFrom { get; set; }
+        public int? PurchasingOrgTo { get; set; }
+
+        public int? PurchasingGroupFrom { get; set; }
+        public int? PurchasingGroupTo { get; set; }
+
+        public int? VendorFrom { get; set; }
+        public int? VendorTo { get; set; }
+        public string POType { get; set; }
+        public int? PurchaseOrderFrom { get; set; }
+        public int? PurchaseOrderTo { get; set; }
+        public int? MaterialFrom { get; set; }
+        public int? MaterialTo { get; set; }
+
         public DateTime? FromTime { get; set; }
         public DateTime? ToTime { get; set; }
     }
@@ -54,6 +69,40 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                                 .ThenInclude(x => x.PurchaseOrder)
                                 .AsNoTracking()
                                 .ToListAsync();
+
+            if (!string.IsNullOrEmpty(request.Plant))
+            {
+                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+            }
+
+            if (request.PurchasingOrgFrom.HasValue)
+            {
+                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
+                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
+            }
+
+            if (request.VendorFrom.HasValue)
+            {
+                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt >= request.VendorFrom &&
+                                         x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt <= request.VendorTo).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(request.POType))
+            {
+                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
+            }
+
+            if (request.MaterialFrom.HasValue)
+            {
+                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt >= request.MaterialFrom &&
+                                         x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt <= request.MaterialTo).ToList();
+            }
+
+            if (request.PurchasingGroupFrom.HasValue)
+            {
+                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt >= request.PurchasingGroupFrom &&
+                                         x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt <= request.PurchasingGroupTo).ToList();
+            }
 
             var data = query.AsEnumerable()
                             .Select(x => new NKMHResponse

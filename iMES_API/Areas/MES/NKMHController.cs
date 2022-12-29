@@ -53,9 +53,9 @@ namespace TLG_API.Areas.MES
             return Ok(new ApiSuccessResponse<IList<NKMHMesResponse>>
             {
                 Data = response.Data,
-                //RecordsTotal = response.Paging.TotalCount,
-                //PagesCount = response.Paging.TotalPages,
-                //ResultsCount = response.Paging.PageSize
+                RecordsTotal = response.Paging.TotalCount,
+                PagesCount = response.Paging.TotalPages,
+                ResultsCount = response.Paging.PageSize
             });
         }
     }

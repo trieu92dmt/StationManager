@@ -29,10 +29,13 @@ namespace ISD.API.EntityModels.Models
         public string PurchasingOrg { get; set; }
         [StringLength(50)]
         public string PurchasingGroup { get; set; }
+        public int? PurchasingGroupInt { get; set; }
         [StringLength(50)]
         public string VendorCode { get; set; }
+        public int? VendorCodeInt { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
+        public int? ProductCodeInt { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DocumentDate { get; set; }
         [Column(TypeName = "datetime")]

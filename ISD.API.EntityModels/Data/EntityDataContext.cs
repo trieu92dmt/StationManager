@@ -189,6 +189,7 @@ namespace ISD.API.EntityModels.Data
         public virtual DbSet<ProductHierarchyModel> ProductHierarchyModel { get; set; }
         public virtual DbSet<ProductModel> ProductModel { get; set; }
         public virtual DbSet<ProductModel1> ProductModel1 { get; set; }
+        public virtual DbSet<ProductTypeModel> ProductTypeModel { get; set; }
         public virtual DbSet<ProductVersionModel> ProductVersionModel { get; set; }
         public virtual DbSet<ProductWarrantyModel> ProductWarrantyModel { get; set; }
         public virtual DbSet<Product_Routing_Mapping> Product_Routing_Mapping { get; set; }
@@ -1851,6 +1852,11 @@ namespace ISD.API.EntityModels.Data
                     .WithMany(p => p.ProductModel1ParentCategory)
                     .HasForeignKey(d => d.ParentCategoryId)
                     .HasConstraintName("FK_ProductModel_CategoryModel2");
+            });
+
+            modelBuilder.Entity<ProductTypeModel>(entity =>
+            {
+                entity.Property(e => e.ProductTypeId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ProductVersionModel>(entity =>

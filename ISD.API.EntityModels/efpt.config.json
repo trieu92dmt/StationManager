@@ -195,6 +195,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[ProductTypeModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[PurchaseOrderDetailModel]",
          "ObjectType": 0
       },

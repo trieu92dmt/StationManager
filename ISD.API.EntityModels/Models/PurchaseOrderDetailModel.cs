@@ -21,6 +21,7 @@ namespace ISD.API.EntityModels.Models
         public Guid? PurchaseOrderId { get; set; }
         [StringLength(50)]
         public string POLine { get; set; }
+        public int? PoLinetInt { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
         [StringLength(50)]

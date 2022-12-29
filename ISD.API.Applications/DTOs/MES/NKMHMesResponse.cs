@@ -1,6 +1,6 @@
-﻿namespace ISD.API.Applications.DTOs.IntegrationNS
+﻿namespace ISD.API.Applications.DTOs.MES
 {
-    public class NKMHResponse
+    public class NKMHMesResponse
     {
         //PO
         public Guid NkmhId { get; set; }

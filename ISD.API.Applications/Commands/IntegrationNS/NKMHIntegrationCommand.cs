@@ -58,6 +58,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
             var data = query.AsEnumerable()
                             .Select(x => new NKMHResponse
                             {
+                                NkmhId = x.GoodsReceiptId,
                                 //ID đợt cân
                                 WeightId = x.WeightId,
                                 WeightVote = x.WeitghtVote,

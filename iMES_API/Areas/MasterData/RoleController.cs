@@ -5,6 +5,7 @@ using ISD.API.Applications.DTOs.Role;
 using ISD.API.Applications.Queries.MasterData;
 using ISD.API.Core;
 using ISD.API.Core.Extensions;
+using ISD.API.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +20,12 @@ namespace TLG_API.Areas.MasterData
     public class RoleController : ControllerBaseAPI
     {
         private readonly IRoleQuery _roleQuery;
+        private readonly IMediator _mediator;
 
         public RoleController(IRoleQuery roleQuery, IMediator mediator)
         {
             _roleQuery = roleQuery;
+            _mediator = mediator;
         }
 
         #region Search nhóm người dùng
@@ -47,26 +50,24 @@ namespace TLG_API.Areas.MasterData
         }
         #endregion
 
-        //#region Tạo nhóm người dùng
-        ///// <summary>
-        ///// Tạo nhóm người dùng
-        ///// </summary>
-        ///// <param name="req"></param>
-        ///// <returns></returns>
-        //[HttpPost("search-role")]
-        //public async Task<IActionResult> CreateRole(RoleCreateCommand req)
-        //{
-        //    var response = await _(req);
+        #region Tạo nhóm người dùng
+        /// <summary>
+        /// Tạo nhóm người dùng
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpPost("create-role")]
+        public async Task<IActionResult> CreateRole(RoleCreateCommand req)
+        {
+            var response = await _mediator.Send(req);
 
-        //    return Ok(new ApiSuccessResponse<IList<RoleSearchResponse>>
-        //    {
-        //        Data = response.Data,
-        //        IsSuccess = true,
-        //        RecordsTotal = response.Paging.TotalCount,
-        //        PagesCount = response.Paging.TotalPages,
-        //        ResultsCount = response.Paging.PageSize
-        //    });
-        //}
-        //#endregion
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Tạo nhóm người dùng")
+            });
+        }
+        #endregion
     }
 }

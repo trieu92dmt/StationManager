@@ -13,5 +13,9 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
     }
     public class NKMHQuery : INKMHQuery
     {
+        public Task<NKMHMesResponse> GetNKMH()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,0 +1,72 @@
+﻿using ISD.API.Applications.Commands.Company;
+using ISD.API.Applications.Commands.Role;
+using ISD.API.Applications.DTOs.Company;
+using ISD.API.Applications.DTOs.Role;
+using ISD.API.Applications.Queries.MasterData;
+using ISD.API.Core;
+using ISD.API.Core.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace TLG_API.Areas.MasterData
+{
+    [Route("api/v{version:apiVersion}/MasterData/[controller]")]
+    [ApiVersion("1.0")]
+    [ApiController]
+    public class RoleController : ControllerBaseAPI
+    {
+        private readonly IRoleQuery _roleQuery;
+
+        public RoleController(IRoleQuery roleQuery, IMediator mediator)
+        {
+            _roleQuery = roleQuery;
+        }
+
+        #region Search nhóm người dùng
+        /// <summary>
+        /// Search nhóm người dùng
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpPost("search-role")]
+        public async Task<IActionResult> SearchRole(RoleSearchCommand req)
+        {
+            var response = await _roleQuery.SearchRole(req);
+
+            return Ok(new ApiSuccessResponse<IList<RoleSearchResponse>>
+            {
+                Data = response.Data,
+                IsSuccess = true,
+                RecordsTotal = response.Paging.TotalCount,
+                PagesCount = response.Paging.TotalPages,
+                ResultsCount = response.Paging.PageSize
+            });
+        }
+        #endregion
+
+        //#region Tạo nhóm người dùng
+        ///// <summary>
+        ///// Tạo nhóm người dùng
+        ///// </summary>
+        ///// <param name="req"></param>
+        ///// <returns></returns>
+        //[HttpPost("search-role")]
+        //public async Task<IActionResult> CreateRole(RoleCreateCommand req)
+        //{
+        //    var response = await _(req);
+
+        //    return Ok(new ApiSuccessResponse<IList<RoleSearchResponse>>
+        //    {
+        //        Data = response.Data,
+        //        IsSuccess = true,
+        //        RecordsTotal = response.Paging.TotalCount,
+        //        PagesCount = response.Paging.TotalPages,
+        //        ResultsCount = response.Paging.PageSize
+        //    });
+        //}
+        //#endregion
+    }
+}

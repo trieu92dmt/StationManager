@@ -40,7 +40,7 @@ namespace ISD.API.Applications.Commands.Role
             //Kiểm tra trùng role code
             var role = await _roleRepo.FindOneAsync(x => x.RolesCode == request.RolesCode);
 
-            if (role == null)
+            if (role != null)
                 throw new ISDException(CommonResource.Msg_Existed, "Mã nhóm");
 
             _roleRepo.Add(new RolesModel

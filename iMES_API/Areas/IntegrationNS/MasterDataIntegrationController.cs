@@ -623,7 +623,7 @@ namespace ITP_MES_API.Areas.IntegrationNS
         ///             }
         ///             -- Cập nhật phiếu
         ///             {
-        ///               "isCancel": true,                                        
+        ///               "isCancel": false,                                        
         ///               "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKMH MES
         ///               "batch": "string",
         ///               "materialDocument": "string",

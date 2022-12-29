@@ -15,6 +15,7 @@ namespace ISD.API.EntityModels.Models
         public Guid ProductId { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
+        public int? ProductCodeInt { get; set; }
         [StringLength(50)]
         public string ProductName { get; set; }
         [StringLength(50)]

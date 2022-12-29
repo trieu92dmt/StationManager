@@ -42,6 +42,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                     ProductId = Guid.NewGuid(),
                     PlantCode = request.Plant,
                     ProductCode = request.Material,
+                    ProductCodeInt = int.Parse(request.Material),
                     ProductName = request.MaterialDescription,
                     ProductGroupCode = request.MaterialGroup,
                     ProductGroupDesc = request.MaterialGroupDesc,

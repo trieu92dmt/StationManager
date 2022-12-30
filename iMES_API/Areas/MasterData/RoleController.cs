@@ -57,7 +57,7 @@ namespace TLG_API.Areas.MasterData
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        [HttpPost("get-detail-role")]
+        [HttpGet("get-detail-role")]
         public async Task<IActionResult> DetailRole(Guid roleId)
         {
             var response = await _roleQuery.GetDetailRole(roleId);
@@ -97,7 +97,7 @@ namespace TLG_API.Areas.MasterData
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        [HttpPost("update-role")]
+        [HttpPut("update-role")]
         public async Task<IActionResult> UpdateRole(RoleUpdateCommand req)
         {
             var response = await _mediator.Send(req);
@@ -107,6 +107,26 @@ namespace TLG_API.Areas.MasterData
                 Data = response,
                 IsSuccess = true,
                 Message = string.Format(CommonResource.Msg_Success, "Chỉnh sửa nhóm người dùng")
+            });
+        }
+        #endregion
+
+        #region Xóa nhóm người dùng
+        /// <summary>
+        /// Xóa nhóm người dùng
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-role")]
+        public async Task<IActionResult> DeleteRole(RoleDeleteCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Xóa nhóm người dùng")
             });
         }
         #endregion

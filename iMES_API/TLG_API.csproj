@@ -68,6 +68,7 @@
 
 	<ItemGroup>
 		<Folder Include="Applications\" />
+		<Folder Include="Infrastructure\Validations\Role\" />
 		<Folder Include="Upload\" />
 		<Folder Include="Controllers\" />
 		<Folder Include="Controllers\" />

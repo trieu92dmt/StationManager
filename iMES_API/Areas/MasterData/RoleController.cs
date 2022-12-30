@@ -9,6 +9,7 @@ using ISD.API.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -50,6 +51,26 @@ namespace TLG_API.Areas.MasterData
         }
         #endregion
 
+        #region Chi tiết nhóm người dùng
+        /// <summary>
+        /// Chi tiết nhóm người dùng
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        [HttpPost("get-detail-role")]
+        public async Task<IActionResult> DetailRole(Guid roleId)
+        {
+            var response = await _roleQuery.GetDetailRole(roleId);
+
+            return Ok(new ApiSuccessResponse<RoleDetailResponse>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy chi tiết nhóm người dùng")
+            });
+        }
+        #endregion
+
         #region Tạo nhóm người dùng
         /// <summary>
         /// Tạo nhóm người dùng
@@ -66,6 +87,26 @@ namespace TLG_API.Areas.MasterData
                 Data = response,
                 IsSuccess = true,
                 Message = string.Format(CommonResource.Msg_Success, "Tạo nhóm người dùng")
+            });
+        }
+        #endregion
+
+        #region Chỉnh sửa nhóm người dùng
+        /// <summary>
+        /// Chỉnh sửa nhóm người dùng
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpPost("update-role")]
+        public async Task<IActionResult> UpdateRole(RoleUpdateCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Chỉnh sửa nhóm người dùng")
             });
         }
         #endregion

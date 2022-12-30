@@ -4,7 +4,6 @@ namespace ISD.API.Applications.Commands.MES
 {
     public class GetNKMHCommand
     {
-        public PagingQuery Paging { get; set; } = new PagingQuery();
         public string Plant { get; set; }
         public int? PurchasingOrgFrom { get; set; }
         public int? PurchasingOrgTo { get; set; }

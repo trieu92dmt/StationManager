@@ -20,7 +20,7 @@ namespace ISD.API.EntityModels.Models
         public Guid PurchaseOrderId { get; set; }
         [StringLength(50)]
         public string PurchaseOrderCode { get; set; }
-        public int? PurchaseOrderCodeInt { get; set; }
+        public long? PurchaseOrderCodeInt { get; set; }
         [StringLength(50)]
         public string POType { get; set; }
         [StringLength(50)]

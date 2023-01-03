@@ -17,6 +17,12 @@ namespace ISD.API.ViewModels
         public string Role { get; set; }
         public string RoleName { get; set; }
         public string Roles { get; set; }
+        public string VendorCode { get; set; }
+        public string VendorName { get; set; }
+        public string SaleOrgCode { get; set; }
+        public string SaleOrgName { get; set; }
+        public string CompanyCode { get; set; }
+        public string CompanyName { get; set; }
         public DateTime ExpiredTime { get; set; }
         public PermissionMobileViewModel Permission { get; set; }
         public PermissionViewModel WebPermission { get; set; }

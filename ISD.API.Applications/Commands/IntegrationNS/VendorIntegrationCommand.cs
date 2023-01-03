@@ -32,7 +32,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                 {
                     VendorId = Guid.NewGuid(),
                     VendorCode = request.Vendor,
-                    VendorCodeInt = int.Parse(request.Vendor),
+                    //VendorCodeInt = int.Parse(request.Vendor),
                     VendorName = request.VendorName,
                     Country = request.Country,
 

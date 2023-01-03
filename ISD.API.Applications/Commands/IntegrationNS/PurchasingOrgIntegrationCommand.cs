@@ -30,7 +30,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                 _purOrgRep.Add(new PurchasingOrgModel
                 {
                     PurchasingOrgId = Guid.NewGuid(),
-                    PurchasingOrgCodeInt = int.Parse(request.PurchasingOrganization),
+                    //PurchasingOrgCodeInt = int.Parse(request.PurchasingOrganization),
                     PurchasingOrgCode = request.PurchasingOrganization,
                     PurchasingOrgName = request.PurchasingOrganizationDescription,
 

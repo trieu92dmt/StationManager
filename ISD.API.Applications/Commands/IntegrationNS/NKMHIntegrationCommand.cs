@@ -3,6 +3,7 @@ using ISD.API.EntityModels.Models;
 using ISD.API.Repositories.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ISD.API.Applications.Commands.IntegrationNS
 {
@@ -22,6 +23,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
         public int? PurchaseOrderTo { get; set; }
         public int? MaterialFrom { get; set; }
         public int? MaterialTo { get; set; }
+        public List<int?> Materials { get; set; } = new List<int?>();
 
         public DateTime? FromTime { get; set; }
         public DateTime? ToTime { get; set; }
@@ -65,43 +67,55 @@ namespace ISD.API.Applications.Commands.IntegrationNS
             var users = _userRep.GetQuery().AsNoTracking();
 
             var query = await _nkmhRep.GetQuery(x => x.DocumentDate >= request.FromTime && x.DocumentDate <= request.ToTime)
-                                .Include(x => x.PurchaseOrderDetail)
-                                .ThenInclude(x => x.PurchaseOrder)
-                                .AsNoTracking()
-                                .ToListAsync();
+                                      .Include(x => x.PurchaseOrderDetail)
+                                      .ThenInclude(x => x.PurchaseOrder)
+                                      .AsNoTracking()
+                                      .ToListAsync();
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
             }
 
             if (request.PurchasingOrgFrom.HasValue)
             {
-                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
                                          x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
             }
 
             if (request.VendorFrom.HasValue)
             {
-                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt >= request.VendorFrom &&
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt >= request.VendorFrom &&
                                          x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt <= request.VendorTo).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.POType))
             {
-                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
             }
 
             if (request.MaterialFrom.HasValue)
             {
-                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt >= request.MaterialFrom &&
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt >= request.MaterialFrom &&
                                          x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt <= request.MaterialTo).ToList();
             }
 
             if (request.PurchasingGroupFrom.HasValue)
             {
-                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt >= request.PurchasingGroupFrom &&
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt >= request.PurchasingGroupFrom &&
                                          x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt <= request.PurchasingGroupTo).ToList();
+            }
+
+            if (request.Materials.Any())
+            {
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         request.Materials.Contains(x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt)).ToList();
             }
 
             var data = query.AsEnumerable()

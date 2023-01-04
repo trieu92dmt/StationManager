@@ -1,17 +1,21 @@
 ﻿using ISD.API.EntityModels.Data;
 using ISD.API.EntityModels.Models;
-using ISD.API.Extensions;
 using ISD.API.ViewModels;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ISD.API.Repositories.Jwt
 {
@@ -33,16 +37,10 @@ namespace ISD.API.Repositories.Jwt
                 new Claim(ClaimTypes.Role, account.Role??""),
                 new Claim(ClaimTypes.HomePhone, account.Roles??""),
                 new Claim("CompanyId", account.CompanyId.ToString()),
-                //Settings
-                //new Claim(ClaimTypes.Webpage, (account.isShowChoseModule == true).ToString()),
-                //new Claim(ClaimTypes.WindowsAccountName, (account.isShowDashboard == true).ToString()),
-                //Quyền xem dữ liệu
-                //new Claim(ClaimTypes.UserData, (account.isViewByStore == true).ToString()),
-                //Quyền truy cập chức năng khóa sổ
-                //new Claim(ClaimTypes.X500DistinguishedName, (isHasPermissionDateClosed == true).ToString()),
             };
             return claims;
         }
+
         /// <summary>
         /// Here GetClaims() Method is used to create return claims list from user token details.
         /// </summary>
@@ -54,63 +52,54 @@ namespace ISD.API.Repositories.Jwt
             Id = Guid.NewGuid();
             return GetClaims(userAccounts, Id);
         }
-        public static UserTokens GenUserTokens(AccountModel model,JwtSettings jwtSettings)
+        public static async Task<UserTokens> GenUserTokens(AccountModel model, string SaleOrg, JwtSettings jwtSettings)
         {
-            try
+
+            using (var _context = new EntityDataContext())
             {
-                if (model == null) throw new ArgumentException(nameof(model));
-                using (var _context = new EntityDataContext())
-                {
-                    Guid Id = Guid.Empty;
-                    DateTime expireTime = DateTime.Now;
-                    //Tạo Usertoken
-                    var UserToken = new UserTokens();
-                    UserToken.UserName = model.UserName;
-                    UserToken.AccountId = model.AccountId;
-                    UserToken.FullName = model.FullName;
-                    UserToken.EmployeeCode = model.EmployeeCode;
+                Guid Id = model.AccountId;
+                DateTime expireTime = DateTime.Now;
+                //Tạo Usertoken
+                var UserToken = new UserTokens();
+                UserToken.UserName = model.UserName;
+                UserToken.AccountId = model.AccountId;
+                UserToken.FullName = model.FullName;
+                UserToken.EmployeeCode = model.EmployeeCode;
 
-                    //UserToken.EmailId = model.emp;
-                    #region Role
-                    var role = (from p in _context.AccountModel
-                               from r in p.Roles
-                               where p.AccountId == UserToken.AccountId select r).FirstOrDefault();
+                #region Sale Org
 
-                    UserToken.Role = role.RolesCode;
-                    UserToken.RoleName = role.RolesName;
+                var saleOrg = await _context.SaleOrgModel.FirstOrDefaultAsync(x => x.SaleOrgCode == SaleOrg);
+                UserToken.SaleOrgCode = SaleOrg;
+                UserToken.SaleOrgName = saleOrg?.SaleOrgName;
 
-                    var roleList = (from p in _context.AccountModel
-                                    from r in p.Roles
-                                    where p.AccountId == UserToken.AccountId
-                                    select r.RolesCode).ToList();
-                    var roleCodeJoin = string.Join(",", roleList.ToArray());
-                    UserToken.Roles = roleCodeJoin;
-                    #endregion
+                #endregion
 
-                    // lấy Web permisstion module -> menu -> page -> page permission
-                    var sqlQuery = "pms.QTHT_PagePermission_GetPagePermissionByAccountId";
-                    var webPermissionDs = SqlProcHelper.GetWebPermissionByAccountId(_context, sqlQuery, new SqlParameter("@AccountId", UserToken.AccountId));
+                #region Role
+                var role = (from p in _context.AccountModel
+                            from r in p.Roles
+                            where p.AccountId == UserToken.AccountId
+                            select r.RolesCode).FirstOrDefault();
+                UserToken.Role = role;
+                var roleList = (from p in _context.AccountModel
+                                from r in p.Roles
+                                where p.AccountId == UserToken.AccountId
+                                select r.RolesCode).ToList();
+                var roleCodeJoin = string.Join(",", roleList.ToArray());
+                UserToken.Roles = roleCodeJoin;
+                #endregion
 
-                    // Convert Dataset -> Json -> Object
-                    var jsonDt = JsonConvert.SerializeObject(webPermissionDs);
-                    UserToken.WebPermission = JsonConvert.DeserializeObject<PermissionViewModel>(jsonDt);
-                    if (UserToken.WebPermission != null && UserToken.WebPermission.PageModel != null)
-                    {
-                        UserToken.WebPermission.PageModel = UserToken.WebPermission.PageModel.DistinctBy(x => x.PageId).ToList();
-                    }
-                    //UserToken.Permission = new AccountRepository(_context).GetMenuMobileList(model.AccountId);
-                    //Lấy token
-                    var jWtToken = GenJwtToken(UserToken, jwtSettings, out expireTime, out Id);
-                    UserToken.Validaty = expireTime.TimeOfDay;
-                    UserToken.ExpiredTime = expireTime;
-                    UserToken.Token = jWtToken;
-                     
-                    return UserToken;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                #region Permission
+
+                UserToken.Permission = GetMenuMobileList(model.AccountId);
+                //Lấy token
+                var jWtToken = GenJwtToken(UserToken, jwtSettings, out expireTime, out Id);
+                UserToken.Validaty = expireTime.TimeOfDay;
+                UserToken.ExpiredTime = expireTime;
+                UserToken.Token = jWtToken;
+
+                #endregion 
+
+                return UserToken;
             }
         }
 
@@ -127,6 +116,7 @@ namespace ISD.API.Repositories.Jwt
             return token;
         }
 
+
         public static RefreshTokenViewModel GenRefreshToken(string UserName)
         {
             using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
@@ -141,7 +131,123 @@ namespace ISD.API.Repositories.Jwt
                     CreatedByUserName = UserName
                 };
             }
-        }    
+        }
+
+        #region GET permission mobile list
+        /// <summary>
+        /// GET permission mobile list
+        /// </summary>
+        /// <param name="AccountId"></param>
+        /// <returns></returns>
+        public static PermissionMobileViewModel GetMenuMobileList(Guid AccountId)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                               .SetBasePath(Directory.GetCurrentDirectory())
+                               .AddJsonFile("appsettings.json")
+                               .Build();
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var permission = new PermissionMobileViewModel();
+            //using dataset to get multiple table in store procedure: page, menu, page permission
+            DataSet ds = new DataSet();
+            using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connectionString))
+            {
+                using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand())
+                {
+                    cmd.CommandText = "pms.QTHT_PagePermissionMobile_GetPagePermissionByAccountId";
+                    cmd.Parameters.AddWithValue("@AccountId", AccountId);
+                    cmd.Connection = conn;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    conn.Open();
+                    System.Data.SqlClient.SqlDataAdapter adapter = new System.Data.SqlClient.SqlDataAdapter(cmd);
+                    adapter.Fill(ds);
+                    conn.Close();
+                }
+            }
+            ds.Tables[0].TableName = "PageModel";
+            ds.Tables[1].TableName = "MenuModel";
+            ds.Tables[2].TableName = "PagePermissionModel";
+
+            //Convert datatable into list
+            var pageList = (from p in ds.Tables[0].AsEnumerable()
+                            select new MobileScreenViewModel()
+                            {
+                                MobileScreenId = p.Field<Guid>("MobileScreenId"),
+                                ScreenName = p.Field<string>("ScreenName"),
+                                ScreenCode = p.Field<string>("ScreenCode"),
+                                MenuId = p.Field<Guid>("MenuId"),
+                                IconName = p.Field<string>("Icon"),
+                                OrderIndex = p.Field<int>("OrderIndex"),
+                            }).ToList();
+
+            var menuList = (from p in ds.Tables[1].AsEnumerable()
+                            select new MenuViewModel()
+                            {
+                                MenuId = p.Field<Guid>("MenuId"),
+                                MenuName = p.Field<string>("MenuName"),
+                                Icon = p.Field<string>("Icon"),
+                                OrderIndex = p.Field<int>("OrderIndex"),
+                            }).ToList();
+
+            var funcList = (from p in ds.Tables[2].AsEnumerable()
+                            select new MobileScreenPermissionViewModel()
+                            {
+                                RolesId = p.Field<Guid>("RolesId"),
+                                MobileScreenId = p.Field<Guid>("MobileScreenId"),
+                                FunctionId = p.Field<string>("FunctionId"),
+                            }).ToList();
+
+
+            //add list into model Permission
+            permission.MobileScreenModel = pageList;
+            permission.MenuModel = menuList;
+            permission.MobileScreenPermissionModel = funcList;
+            return permission;
+        }
+        #endregion
+
+        #region Get web permission by accountId
+        /// <summary>
+        /// Get web permission by accountId
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="AccountId"></param>
+        /// <returns></returns>
+        public static PermissionViewModel GetWebPermissionByAccountId(EntityDataContext context, Guid AccountId)
+        {
+            var response = new PermissionViewModel();
+
+            try
+            {
+                var sp = "pms.QTHT_PagePermission_GetPagePermissionByAccountId";
+
+                DataSet ds = new DataSet();
+                using (SqlDataAdapter sda = new SqlDataAdapter(sp, context.Database.GetConnectionString()))
+                {
+                    sda.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+                    sda.SelectCommand.Parameters.Add(AccountId);
+
+                    sda.Fill(ds);
+
+                    ds.Tables[0].TableName = "PageModel";
+                    ds.Tables[1].TableName = "MenuModel";
+                    ds.Tables[2].TableName = "PagePermissionModel";
+                    ds.Tables[3].TableName = "ModuleModel";
+                }
+
+                context.Database.CloseConnection();
+
+                var jsonDt = JsonConvert.SerializeObject(ds);
+                response = JsonConvert.DeserializeObject<PermissionViewModel>(jsonDt);
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        #endregion
     }
 
 }

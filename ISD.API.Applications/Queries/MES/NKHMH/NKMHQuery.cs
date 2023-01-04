@@ -91,7 +91,7 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
 
 
             //Data NKMH
-            var dataNKMH = queryNKMH.Select(x => new ListNKMHResponse
+            var dataNKMH = queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
             {
                 NkmhId = x.GoodsReceiptId,
                 //Plant

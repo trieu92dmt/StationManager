@@ -37,7 +37,7 @@ namespace ISD.API.Applications.Commands.IntegrationNS
                 {
                     PurchasingGroupId = Guid.NewGuid(),
                     PurchasingGroupCode = request.PurchasingGroup,
-                    PurchasingGroupCodeInt = int.Parse(request.PurchasingGroup),
+                    //PurchasingGroupCodeInt = int.Parse(request.PurchasingGroup),
                     PurchasingGroupName = request.PurchasingGroupDescription,
 
                     //Common

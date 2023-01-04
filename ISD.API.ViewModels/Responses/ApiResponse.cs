@@ -8,7 +8,6 @@
         public string DeveloperMessage { get; set; }
         public object Data { get; set; }
         public object AdditionalData { get; set; }
-
     }
 
     public class ApiExResponse

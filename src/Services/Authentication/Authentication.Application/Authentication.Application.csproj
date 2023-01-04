@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="MediatR" Version="10.0.1" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Common\ISD.Core\ISD.Core\ISD.Core.csproj" />
+	  <ProjectReference Include="..\..\..\Common\ISD.Infrastructure\ISD.Infrastructure\ISD.Infrastructure.csproj" />
+	</ItemGroup>
+	
+</Project>

@@ -54,10 +54,11 @@ namespace MP_CRM_API
             CommonConfig.Configure(services, Configuration);
 
             services.Configure<JwtSettings>(Configuration.GetSection("JsonWebTokenKeys"));
+
             services.AddControllers(config =>
             {
                 config.Filters.Add(new ValidateModelAttribute());
-            });/*.AddNewtonsoftJson()*/
+            });
 
             services.AddHttpContextAccessor();
 
@@ -111,12 +112,6 @@ namespace MP_CRM_API
             app.UseMiddleware<JwtMiddleware>();
 
             ControllerBaseAPI.SetHttpContextAccessor(accessor);
-
-            //app.UseStaticFiles(new StaticFileOptions()
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Upload", "Images")),
-            //    RequestPath = new PathString("/Images")
-            //});
 
             app.UseEndpoints(endpoints =>
             {

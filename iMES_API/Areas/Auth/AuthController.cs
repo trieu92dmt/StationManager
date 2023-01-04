@@ -19,21 +19,16 @@ namespace TLG_API.Areas.Auth
             _mediator = mediator;
         }
 
-        /// <summary>
-        /// Đăng nhập
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        [HttpPost("login")]
-        public async Task<IActionResult> GetNKMHAsync([FromBody] LoginCommand command)
-        {
-            var response = await _mediator.Send(command);
+        //[HttpPost("login")]
+        //public async Task<IActionResult> GetNKMHAsync([FromBody] LoginCommand command)
+        //{
+        //    var response = await _mediator.Send(command);
 
-            return Ok(new ApiSuccessResponse<UserTokens>
-            {
-                Data = response,
-                Message = string.Format(CommonResource.Msg_Success , "Đăng nhập")
-            });
-        }
+        //    return Ok(new ApiSuccessResponse<UserTokens>
+        //    {
+        //        Data = response,
+        //        Message = string.Format(CommonResource.Msg_Success , "Đăng nhập")
+        //    });
+        //}
     }
 }

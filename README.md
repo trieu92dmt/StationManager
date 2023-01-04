@@ -30,9 +30,11 @@
 
 # Environment Configuration
 #Development
-- Backend Api: https://tlg-mes-api.isdcorp.vn/swagger/index.html
-- Mobile Api: https://tlg-mes-api.isdcorp.vn/swagger/index.html
-- Frontend: https://tlg-mes-api.isdcorp.vn/swagger/index.html
+- Authentication Api: https://tlg-auth-api.isdcorp.vn/swagger/index.html
+- MES Api: https://tlg-mes-api.isdcorp.vn/swagger/index.html
+- Masterdata Api: https://tlg-masterdata-api.isdcorp.vn/swagger/index.html
+- Integration Netsuite Api: https://tlg-api.isdcorp.vn/swagger/index.html
+
 - Database:
 	+ ip = 192.168.100.233
 	+ port = 1433

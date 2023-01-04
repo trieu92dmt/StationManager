@@ -105,6 +105,7 @@ namespace MP_CRM_API
             app.UseRouting();
 
             app.UseAuthorization();
+
             app.UseAuthentication();
 
             app.UseCors(MyAllowSpecificOrigins);

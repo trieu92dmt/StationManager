@@ -37,7 +37,6 @@
 
 - Database:
 	+ ip = 192.168.100.233
-	+ port = 1433
 	+ db = TLG_MES
 	+ id = isd
 	+ pass = pm123@abcd

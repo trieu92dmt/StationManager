@@ -150,7 +150,24 @@ namespace TLG_API.Areas.MES
         {
             var response = await _query.GetNKMHAsync(command);
 
-            return Ok(new ApiSuccessResponse<NKMHMesResponse>
+            return Ok(new ApiSuccessResponse<List<ListNKMHResponse>>
+            {
+                Data = response
+            });
+        }
+
+
+        /// <summary>
+        /// Get PO
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-po")]
+        public async Task<IActionResult> GetPOAsync([FromBody] GetNKMHCommand command)
+        {
+            var response = await _query.GetPOAsync(command);
+
+            return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
             {
                 Data = response
             });

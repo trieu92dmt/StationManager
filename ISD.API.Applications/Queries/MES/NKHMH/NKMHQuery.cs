@@ -8,7 +8,19 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
 {
     public interface INKMHQuery
     {
-        Task<NKMHMesResponse> GetNKMHAsync(GetNKMHCommand request);
+        /// <summary>
+        /// Get Nhập kho mua hàng
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request);
+
+        /// <summary>
+        /// Get PO
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<List<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request);
     }
     public class NKMHQuery : INKMHQuery
     {
@@ -30,10 +42,8 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
             _vendorRep = vendorRep;
         }
 
-        public async Task<NKMHMesResponse> GetNKMHAsync(GetNKMHCommand request)
+        public async Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)
         {
-            var response = new NKMHMesResponse();
-
             #region Format Day
 
             //Ngày phát lệnh
@@ -145,13 +155,34 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
                 MaterialDocument = x.MaterialDocument,
                 VendorName = x.PurchaseOrderDetail == null ? null : vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrderDetail.PurchaseOrder.VendorCode)?.VendorName,
 
-            });;
+            }).ToList();
 
-            response.ListNKMHs = dataNKMH.ToList();
+            return dataNKMH;
+        }
+
+        public async Task<List<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request)
+        {
+            #region Format Day
+
+            //Ngày phát lệnh
+            if (request.DocumentDateFrom.HasValue)
+            {
+                request.DocumentDateFrom = request.DocumentDateFrom.Value.Date;
+            }
+            if (request.DocumentDateTo.HasValue)
+            {
+                request.DocumentDateTo = request.DocumentDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+            }
+            #endregion
+
+            var user = _userRep.GetQuery().AsNoTracking();
+
+            //Product
+            var product = await _prdRep.GetQuery().AsNoTracking().ToListAsync();
 
             //Query PO
             var queryPO = await _poDetailRep.GetQuery()
-                                            .Include(x => x.PurchaseOrder)
+            .Include(x => x.PurchaseOrder)
                                             .AsNoTracking().ToListAsync();
 
             if (!string.IsNullOrEmpty(request.Plant))
@@ -159,7 +190,7 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
 
             if (request.PurchasingOrgFrom.HasValue)
                 queryPO = queryPO.Where(x => x.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
-                             x.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
+                x.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
 
             if (request.VendorFrom.HasValue)
                 queryPO = queryPO.Where(x => x.PurchaseOrder.VendorCodeInt >= request.VendorFrom &&
@@ -178,6 +209,7 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
                 queryPO = queryPO.Where(x => x.PurchaseOrder.PurchasingGroupInt >= request.PurchasingGroupFrom &&
                                              x.PurchaseOrder.PurchasingGroupInt <= request.PurchasingGroupTo).ToList();
 
+            var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
             //Data PO
             var dataPO = queryPO.Select(x => new PuchaseOrderNKMHResponse
@@ -199,7 +231,7 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
                 VendorName = vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode)?.VendorName,
                 OrderQuantity = x.OrderQuantity,
                 OpenQuantity = x.OpenQuantity
-                
+
             }).ToList();
 
             if (request.MaterialFrom.HasValue)
@@ -213,9 +245,8 @@ namespace ISD.API.Applications.Queries.MES.NKHMH
                 });
             }
 
-            response.PuchaseOrderNKMHs = dataPO;
 
-            return response;
+            return dataPO;
         }
     }
 }

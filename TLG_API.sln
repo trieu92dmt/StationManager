@@ -38,19 +38,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{B6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "Features", "{C50718AF-7343-40C0-9427-CEB7A2BCE8E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISD.Core", "src\Common\ISD.Core\ISD.Core\ISD.Core.csproj", "{8A08002B-DD93-484F-B14D-9C8E7104B7DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISD.Core", "src\Common\ISD.Core\ISD.Core\ISD.Core.csproj", "{8A08002B-DD93-484F-B14D-9C8E7104B7DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISD.Infrastructure", "src\Common\ISD.Infrastructure\ISD.Infrastructure\ISD.Infrastructure.csproj", "{2A5B3872-DB3D-4415-A9B7-D353BC205064}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISD.Infrastructure", "src\Common\ISD.Infrastructure\ISD.Infrastructure\ISD.Infrastructure.csproj", "{2A5B3872-DB3D-4415-A9B7-D353BC205064}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{4115EBFB-0D8B-4C32-B658-5C711C5247A1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{42578249-F595-4C35-9959-F200B7FEAB59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.API", "src\Services\Authentication\Authentication.API\Authentication.API.csproj", "{309D0AB1-075A-4893-9D75-E095B2AD6BB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.API", "src\Services\Authentication\Authentication.API\Authentication.API.csproj", "{309D0AB1-075A-4893-9D75-E095B2AD6BB2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{44F831E3-DF44-48EF-A173-02646A2F4039}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Application", "src\Services\Authentication\Authentication.Application\Authentication.Application.csproj", "{008BC04A-D93B-47CB-8CFF-D6BC600F166C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Application", "src\Services\Authentication\Authentication.Application\Authentication.Application.csproj", "{008BC04A-D93B-47CB-8CFF-D6BC600F166C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MES", "MES", "{E15C55E8-8059-41C0-B6FC-5490D92CD586}"
 EndProject
@@ -60,17 +60,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterData", "MasterData", "{183E65B5-BCDF-48EF-8CC6-8E2C229CBDB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MES.API", "src\Services\MES\MES.API\MES.API.csproj", "{47FB8BE2-77D6-4DCC-9F82-2C65A2CF8F63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MES.API", "src\Services\MES\MES.API\MES.API.csproj", "{47FB8BE2-77D6-4DCC-9F82-2C65A2CF8F63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MES.Application", "src\Services\MES\MES.Application\MES.Application.csproj", "{22A32FAF-E3F2-4713-97E4-9099061BB182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MES.Application", "src\Services\MES\MES.Application\MES.Application.csproj", "{22A32FAF-E3F2-4713-97E4-9099061BB182}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{77679458-F004-4389-A880-C9DBFA1110EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{BD5CF131-F325-46F4-9CDD-8F1F2A011EE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterData.API", "src\Services\MasterData\MasterData.API\MasterData.API.csproj", "{8376E1AB-33B1-4457-B26E-B482E3D30CDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterData.API", "src\Services\MasterData\MasterData.API\MasterData.API.csproj", "{8376E1AB-33B1-4457-B26E-B482E3D30CDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterData.Application", "src\Services\MasterData\MasterData.Application\MasterData.Application.csproj", "{C1EE6DA4-69B7-4531-8830-CE1F92E4A27B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterData.Application", "src\Services\MasterData\MasterData.Application\MasterData.Application.csproj", "{C1EE6DA4-69B7-4531-8830-CE1F92E4A27B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationNS", "IntegrationNS", "{0A6F35E9-FD6A-4253-8244-B2C897CB00BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationNS.API", "src\Services\IntegrationNS\IntegrationNS.API\IntegrationNS.API.csproj", "{DAB5C2EE-3E28-4F68-BC19-2A426811B9A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationNS.Application", "src\Services\IntegrationNS\IntegrationNS.Application\IntegrationNS.Application.csproj", "{8A281013-75BE-4EAD-A2B2-4ECB558A2C72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -146,6 +152,14 @@ Global
 		{C1EE6DA4-69B7-4531-8830-CE1F92E4A27B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1EE6DA4-69B7-4531-8830-CE1F92E4A27B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1EE6DA4-69B7-4531-8830-CE1F92E4A27B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAB5C2EE-3E28-4F68-BC19-2A426811B9A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAB5C2EE-3E28-4F68-BC19-2A426811B9A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAB5C2EE-3E28-4F68-BC19-2A426811B9A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAB5C2EE-3E28-4F68-BC19-2A426811B9A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A281013-75BE-4EAD-A2B2-4ECB558A2C72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A281013-75BE-4EAD-A2B2-4ECB558A2C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A281013-75BE-4EAD-A2B2-4ECB558A2C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A281013-75BE-4EAD-A2B2-4ECB558A2C72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,6 +194,9 @@ Global
 		{BD5CF131-F325-46F4-9CDD-8F1F2A011EE1} = {183E65B5-BCDF-48EF-8CC6-8E2C229CBDB1}
 		{8376E1AB-33B1-4457-B26E-B482E3D30CDC} = {77679458-F004-4389-A880-C9DBFA1110EE}
 		{C1EE6DA4-69B7-4531-8830-CE1F92E4A27B} = {BD5CF131-F325-46F4-9CDD-8F1F2A011EE1}
+		{0A6F35E9-FD6A-4253-8244-B2C897CB00BE} = {B6018DB4-5C5C-4B8E-B6DF-7FFEB8DAF19F}
+		{DAB5C2EE-3E28-4F68-BC19-2A426811B9A1} = {0A6F35E9-FD6A-4253-8244-B2C897CB00BE}
+		{8A281013-75BE-4EAD-A2B2-4ECB558A2C72} = {0A6F35E9-FD6A-4253-8244-B2C897CB00BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD436992-6C52-4C3B-8DDA-98E985E5CB15}

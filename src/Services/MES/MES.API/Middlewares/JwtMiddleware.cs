@@ -1,37 +1,25 @@
-﻿using ISD.Core.Jwt;
+﻿using ISD.API.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Authentication.API.Middlewares
+namespace MES.Middlewares
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly JwtSettings _appSettings;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="next"></param>
-        /// <param name="appSettings"></param>
         public JwtMiddleware(RequestDelegate next, IOptions<JwtSettings> appSettings)
         {
             _next = next;
             _appSettings = appSettings.Value;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
@@ -61,7 +49,8 @@ namespace Authentication.API.Middlewares
             var identity = new ClaimsIdentity(jwtToken.Claims, DefaultAuthenticationTypes.ExternalBearer);
             var user = new ClaimsPrincipal(identity);
             context.User = user;
+            context.Items["CurrentUser"] = new AppUserPrincipal(context.User as ClaimsPrincipal);
+            context.Items["Permission"] = JsonConvert.DeserializeObject<PermissionMobileViewModel>(jwtToken.Claims.First(x => x.Type == "Permission").Value);
         }
     }
-
 }

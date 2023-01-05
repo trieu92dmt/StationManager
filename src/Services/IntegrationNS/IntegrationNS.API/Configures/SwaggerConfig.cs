@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using System.IO;
-using System.Reflection;
-using System;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
-namespace Authentication.API.Configures
+namespace IntegrationNS.API.Configures
 {
     public static class SwaggerConfig
     {
@@ -16,7 +12,7 @@ namespace Authentication.API.Configures
             {
                 option.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "ISD - TLG - Auth API",
+                    Title = "TLG - Integration Netsuite API",
                     Version = "v1"
                 });
                 //option.OperationFilter<AddAuthorizationHeader>();
@@ -44,5 +40,5 @@ namespace Authentication.API.Configures
             });
         }
     }
-    
+
 }

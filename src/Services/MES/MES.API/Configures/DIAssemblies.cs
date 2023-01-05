@@ -1,6 +1,6 @@
-﻿using ISD.API.Repositories.Infrastructure.Database;
+﻿using ISD.Core.Interfaces.Databases;
 using ISD.Infrastructure.Data;
-using MES.Application.Commands;
+using MES.Application.Commands.MES;
 using System.Reflection;
 
 namespace MES.API.Configures
@@ -11,8 +11,8 @@ namespace MES.API.Configures
         {
             Assembly.GetExecutingAssembly(),
             Assembly.GetAssembly(typeof(EntityDataContext)),
-            Assembly.GetAssembly(typeof(ISDUnitOfWork)),
-            Assembly.GetAssembly(typeof(TestCommand)),
+            Assembly.GetAssembly(typeof(IUnitOfWork)),
+            Assembly.GetAssembly(typeof(GetNKMHCommand)),
             Assembly.GetAssembly(typeof(Program)),
         };
     }

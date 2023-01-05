@@ -4,9 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MES.Application.Commands
+namespace ISD.API.Applications.Queries.MasterData
 {
-    public class TestCommand
+    public interface ICatalogQuery
     {
+
+    }
+
+    public class CatalogQuery
+    {
+
     }
 }

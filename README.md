@@ -1,4 +1,4 @@
-﻿# DDD(Domain Driven Design)
+﻿#Microservice, DDD(Domain Driven Design), CQRS Pattern
 - Docs: https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture
 - Templates: https://github.com/yanpitangui/dotnet-api-boilerplate
 
@@ -15,6 +15,7 @@
 - Serilog with request logging and easily configurable sinks
 - .Net Dependency Injection
 - Identity server
+- MediatR
 
 # Project Structure
 1. Services

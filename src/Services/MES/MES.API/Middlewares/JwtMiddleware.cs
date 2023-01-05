@@ -1,4 +1,5 @@
-﻿using ISD.API.ViewModels;
+﻿using ISD.Core.Jwt;
+using ISD.Core.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -49,8 +50,7 @@ namespace MES.Middlewares
             var identity = new ClaimsIdentity(jwtToken.Claims, DefaultAuthenticationTypes.ExternalBearer);
             var user = new ClaimsPrincipal(identity);
             context.User = user;
-            context.Items["CurrentUser"] = new AppUserPrincipal(context.User as ClaimsPrincipal);
-            context.Items["Permission"] = JsonConvert.DeserializeObject<PermissionMobileViewModel>(jwtToken.Claims.First(x => x.Type == "Permission").Value);
+            context.Items["Permission"] = JsonConvert.DeserializeObject<PermissionMobile>(jwtToken.Claims.First(x => x.Type == "Permission").Value);
         }
     }
 }

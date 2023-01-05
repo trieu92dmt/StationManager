@@ -97,4 +97,6 @@ app.UseMiddleware<JwtMiddleware>();
 
 app.MapControllers();
 
+TokenExtensions.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
+
 app.Run();

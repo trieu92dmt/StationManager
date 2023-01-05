@@ -1,5 +1,5 @@
 ﻿using IntegrationNS.Application.Commands;
-using ISD.API.Repositories.Infrastructure.Database;
+using ISD.Core.Interfaces.Databases;
 using ISD.Infrastructure.Data;
 using System.Reflection;
 
@@ -11,7 +11,7 @@ namespace IntegrationNS.API.Configures
         {
             Assembly.GetExecutingAssembly(),
             Assembly.GetAssembly(typeof(EntityDataContext)),
-            Assembly.GetAssembly(typeof(ISDUnitOfWork)),
+            Assembly.GetAssembly(typeof(IUnitOfWork)),
             Assembly.GetAssembly(typeof(VendorIntegrationCommand)),
             Assembly.GetAssembly(typeof(Startup)),
         };

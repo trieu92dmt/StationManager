@@ -1,4 +1,4 @@
-﻿using ISD.API.Repositories.Infrastructure.Database;
+﻿using ISD.Core.Interfaces.Databases;
 using ISD.Infrastructure.Data;
 using MasterData.Application.Commands;
 using System.Reflection;
@@ -11,7 +11,7 @@ namespace MasterData.API.Configures
         {
             Assembly.GetExecutingAssembly(),
             Assembly.GetAssembly(typeof(EntityDataContext)),
-            Assembly.GetAssembly(typeof(ISDUnitOfWork)),
+            Assembly.GetAssembly(typeof(IUnitOfWork)),
             Assembly.GetAssembly(typeof(TestCommand)),
             Assembly.GetAssembly(typeof(Program)),
         };

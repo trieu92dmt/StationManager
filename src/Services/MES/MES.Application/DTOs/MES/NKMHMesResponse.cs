@@ -1,6 +1,31 @@
-﻿namespace IntegrationNS.Application.DTOs
+﻿namespace MES.Application.DTOs.MES
 {
-    public class NKMHResponse
+    public class NKMHMesResponse
+    {
+        public List<PuchaseOrderNKMHResponse> PuchaseOrderNKMHs { get; set; } = new List<PuchaseOrderNKMHResponse>();
+        public List<ListNKMHResponse> ListNKMHs { get; set; } = new List<ListNKMHResponse>();
+
+    }
+    public class PuchaseOrderNKMHResponse
+    {
+        //PO
+        public Guid PoDetailId { get; set; }
+        public string Plant { get; set; }
+        public string PurchaseOrderCode { get; set; }
+        public string POItem { get; set; }
+        public string VendorCode { get; set; }
+        public string VendorName { get; set; }
+        public string Material { get; set; }
+        public string MaterialName { get; set; }
+        public string Batch { get; set; }
+        public string VehicleCode { get; set; }
+        public decimal? OrderQuantity { get; set; }
+        public decimal? OpenQuantity { get; set; }
+        public string StorageLocation { get; set; }
+        public string Unit { get; set; }
+    }
+
+    public class ListNKMHResponse
     {
         //PO
         public Guid NkmhId { get; set; }
@@ -13,14 +38,15 @@
         public string PurchasingGroup { get; set; }
         public string VendorCode { get; set; }
         public string Material { get; set; }
+        public string MaterialName { get; set; }
         public DateTime? DocumentDate { get; set; }
         //POitem
         public string POItem { get; set; }
         public string StorageLocation { get; set; }
-        public string Batch { get; set; }
         public string VehicleCode { get; set; }
         public decimal? OrderQuantity { get; set; }
         public decimal? OpenQuantity { get; set; }
+        public string Unit { get; set; }
         //NKMH
         public decimal? BagQuantity { get; set; }
         public decimal? SingleWeight { get; set; }
@@ -43,5 +69,9 @@
         public string CreateBy { get; set; }
         public DateTime? LastEditTime { get; set; }
         public string LastEditBy { get; set; }
+        public string MaterialDocument { get; set; }
+        public string ReverseDocument { get; set; }
+        public string Batch { get; set; }
+        public string VendorName { get; set; }
     }
 }

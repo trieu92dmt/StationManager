@@ -46,7 +46,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\..\ISD.API.Core\ISD.API.Core.csproj" />
 		<ProjectReference Include="..\..\..\Common\ISD.Infrastructure\ISD.Infrastructure\ISD.Infrastructure.csproj" />
 		<ProjectReference Include="..\MasterData.Application\MasterData.Application.csproj" />
 	</ItemGroup>

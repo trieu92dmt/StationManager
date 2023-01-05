@@ -29,14 +29,6 @@
 	  <Content Remove="appsettings.json" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Remove="Templates\bc_tinhtrang_maymoc.xlsx" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Include="Templates\bc_tinhtrang_maymoc.xlsx">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.4.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="AutoMapper" Version="11.0.1" />
@@ -69,6 +61,7 @@
 	<ItemGroup>
 		<Folder Include="Applications\" />
 		<Folder Include="Infrastructure\Validations\Role\" />
+		<Folder Include="Templates\" />
 		<Folder Include="Upload\" />
 		<Folder Include="Controllers\" />
 		<Folder Include="Controllers\" />

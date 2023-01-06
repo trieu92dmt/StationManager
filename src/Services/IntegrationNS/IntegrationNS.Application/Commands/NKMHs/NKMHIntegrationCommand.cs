@@ -4,7 +4,7 @@ using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IntegrationNS.Application.Commands
+namespace IntegrationNS.Application.Commands.NKMHs
 {
     public class NKMHIntegrationCommand : IRequest<List<NKMHResponse>>
     {

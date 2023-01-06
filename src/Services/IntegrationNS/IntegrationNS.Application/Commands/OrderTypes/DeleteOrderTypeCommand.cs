@@ -6,58 +6,59 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 
-namespace IntegrationNS.Application.Commands.Customers
+namespace IntegrationNS.Application.Commands.OrderTypes
 {
-    public class DeleteCustomerNSCommand : IRequest<DeleteNSResponse>
+    public class DeleteOrderTypeCommand : IRequest<DeleteNSResponse>
     {
-        public List<string> Customers { get; set; } = new List<string>();
+        public List<string> OrderTypes { get; set; } = new List<string>();
+
     }
-    public class DeleteCustomerNSCommandHandler : IRequestHandler<DeleteCustomerNSCommand, DeleteNSResponse>
+    public class DeleteOrderTypeCommandHandler : IRequestHandler<DeleteOrderTypeCommand, DeleteNSResponse>
     {
-        private readonly IRepository<CustomerModel> _customerRep;
+        private readonly IRepository<OrderTypeModel> _orderTypeRep;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteCustomerNSCommandHandler(IRepository<CustomerModel> customerRep, IUnitOfWork unitOfWork)
+        public DeleteOrderTypeCommandHandler(IRepository<OrderTypeModel> orderTypeRep, IUnitOfWork unitOfWork)
         {
-            _customerRep = customerRep;
+            _orderTypeRep = orderTypeRep;
             _unitOfWork = unitOfWork;
         }
-
-        public async Task<DeleteNSResponse> Handle(DeleteCustomerNSCommand request, CancellationToken cancellationToken)
+        public async Task<DeleteNSResponse> Handle(DeleteOrderTypeCommand request, CancellationToken cancellationToken)
         {
             var response = new DeleteNSResponse();
 
-            if (!request.Customers.Any())
+            if (!request.OrderTypes.Any())
                 throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
 
-            response.TotalRecord = request.Customers.Count();
+            response.TotalRecord = request.OrderTypes.Count();
 
-            foreach (var customerDelete in request.Customers)
+            foreach (var orderTypeDelete in request.OrderTypes)
             {
                 try
                 {
                     //Xóa Disivision
-                    var customer = await _customerRep.FindOneAsync(x => x.CustomerCode == customerDelete);
-                    if (customer is not null)
+                    var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == orderTypeDelete);
+                    if (orderType is not null)
                     {
-                        _customerRep.Remove(customer);
+                        _orderTypeRep.Remove(orderType);
                         await _unitOfWork.SaveChangesAsync();
 
                         //Xóa thành công
                         response.RecordDeleteSuccess++;
+                        response.ListRecordDeleteFailed.Add(orderTypeDelete);
+
                     }
                     else
                     {
                         //Xóa thất bại
                         response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(customerDelete);
+                        response.ListRecordDeleteFailed.Add(orderTypeDelete);
                     }
                 }
                 catch (Exception)
                 {
                     //Xóa thất bại
                     response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(customerDelete);
                 }
 
             }

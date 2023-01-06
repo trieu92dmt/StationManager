@@ -50,12 +50,14 @@ namespace IntegrationNS.Application.Commands.DistributionChannels
                     {
                         //Xóa thất bại
                         response.RecordDeleteFail++;
+                        response.ListRecordDeleteFailed.Add(distributionChannelDelete);
                     }
                 }
                 catch (Exception)
                 {
                     //Xóa thất bại
                     response.RecordDeleteFail++;
+                    response.ListRecordDeleteFailed.Add(distributionChannelDelete);
                 }
 
             }

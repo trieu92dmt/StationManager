@@ -6,7 +6,7 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 
-namespace IntegrationNS.Application.Commands
+namespace IntegrationNS.Application.Commands.OrderTypes
 {
     public class OrderTypeIntegrationCommand : IRequest<IntegrationNSResponse>
     {

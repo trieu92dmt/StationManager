@@ -7,7 +7,7 @@ using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace IntegrationNS.Application.Commands
+namespace IntegrationNS.Application.Commands.PurchaseOrders
 {
     public class PurchaseOrderIntegrationNSCommand : IRequest<IntegrationNSResponse>
     {

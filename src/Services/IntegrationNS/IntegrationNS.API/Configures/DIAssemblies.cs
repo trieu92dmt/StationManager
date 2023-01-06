@@ -1,4 +1,4 @@
-﻿using IntegrationNS.Application.Commands;
+﻿using IntegrationNS.Application.Commands.Vendors;
 using ISD.Core.Interfaces.Databases;
 using ISD.Infrastructure.Data;
 using System.Reflection;

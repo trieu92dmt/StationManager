@@ -50,12 +50,14 @@ namespace IntegrationNS.Application.Commands.Divisions
                     {
                         //Xóa thất bại
                         response.RecordDeleteFail++;
+                        response.ListRecordDeleteFailed.Add(divisionDelete);
                     }
                 }
                 catch (Exception)
                 {
                     //Xóa thất bại
                     response.RecordDeleteFail++;
+                    response.ListRecordDeleteFailed.Add(divisionDelete);
                 }
 
             }

@@ -5,13 +5,8 @@ using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IntegrationNS.Application.Commands
+namespace IntegrationNS.Application.Commands.Plants
 {
     public class PlantIntegrationCommand : IRequest<IntegrationNSResponse>
     {
@@ -93,7 +88,7 @@ namespace IntegrationNS.Application.Commands
                 {
                     response.RecordSyncFailed++;
                     response.ListRecordSyncFailed.Add($"{plantIntegration.Plant}");
-                }              
+                }
             }
 
             return response;

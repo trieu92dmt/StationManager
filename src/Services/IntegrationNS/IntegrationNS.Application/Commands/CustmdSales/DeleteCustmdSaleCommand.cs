@@ -49,14 +49,16 @@ namespace IntegrationNS.Application.Commands.CustmdSales
                     {
                         //Xóa thất bại
                         response.RecordDeleteFail++;
+                        response.ListRecordDeleteFailed.Add(custmdSaleDelete);
                     }
                 }
                 catch (Exception)
                 {
                     //Xóa thất bại
                     response.RecordDeleteFail++;
+                    response.ListRecordDeleteFailed.Add(custmdSaleDelete);
                 }
-                
+
             }
             return response;
         }

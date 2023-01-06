@@ -6,7 +6,7 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 
-namespace IntegrationNS.Application.Commands
+namespace IntegrationNS.Application.Commands.PurchasingOrganizations
 {
     public class PurchasingOrgIntegrationCommand : IRequest<IntegrationNSResponse>
     {
@@ -34,7 +34,7 @@ namespace IntegrationNS.Application.Commands
 
             if (!request.PurchasingOrgs.Any())
                 throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu đồng bộ");
-            
+
             response.TotalRecord = request.PurchasingOrgs.Count();
 
             foreach (var purOrgIntegration in request.PurchasingOrgs)

@@ -66,35 +66,36 @@ namespace MES.Application.Queries
                                     .Include(x => x.PurchaseOrderDetail)
                                     .ThenInclude(x => x.PurchaseOrder)
                                     .AsNoTracking().ToListAsync();
+
             if (!string.IsNullOrEmpty(request.Plant))
             {
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
             }
-            if (request.PurchasingOrgFrom.HasValue)
+            if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
-                                                 x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
+                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
             }
-            if (request.VendorFrom.HasValue)
+            if (!string.IsNullOrEmpty(request.VendorFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt >= request.VendorFrom &&
-                                                 x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt <= request.VendorTo).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) >= int.Parse(request.VendorFrom) &&
+                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) <= int.Parse(request.VendorTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.POType))
             {
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
             }
-            if (request.MaterialFrom.HasValue)
+            if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt >= request.MaterialFrom &&
-                                                 x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt <= request.MaterialTo).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.ProductCode) >= int.Parse(request.MaterialFrom) &&
+                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
             }
 
-            if (request.PurchasingGroupFrom.HasValue)
+            if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt >= request.PurchasingGroupFrom &&
-                                                 x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt <= request.PurchasingGroupTo).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
+                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
             }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
@@ -182,32 +183,40 @@ namespace MES.Application.Queries
 
             //Query PO
             var queryPO = await _poDetailRep.GetQuery()
-            .Include(x => x.PurchaseOrder)
+                                            .Include(x => x.PurchaseOrder)
                                             .AsNoTracking().ToListAsync();
 
+
             if (!string.IsNullOrEmpty(request.Plant))
-                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
-
-            if (request.PurchasingOrgFrom.HasValue)
-                queryPO = queryPO.Where(x => x.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
-                x.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
-
-            if (request.VendorFrom.HasValue)
-                queryPO = queryPO.Where(x => x.PurchaseOrder.VendorCodeInt >= request.VendorFrom &&
-                                                 x.PurchaseOrder.VendorCodeInt <= request.VendorTo).ToList();
-
-            if (!string.IsNullOrEmpty(request.POType))
-                queryPO = queryPO.Where(x => x.PurchaseOrder.POType.Contains(request.POType)).ToList();
-
-            if (request.MaterialFrom.HasValue)
             {
-                queryPO = queryPO.Where(x => x.PurchaseOrder.ProductCodeInt >= request.MaterialFrom &&
-                                             x.PurchaseOrder.ProductCodeInt <= request.MaterialTo).ToList();
+                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+            }
+            if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
+            {
+                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
+                                             int.Parse(x.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
+            }
+            if (!string.IsNullOrEmpty(request.VendorFrom))
+            {
+                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.VendorCode) >= int.Parse(request.VendorFrom) &&
+                                             int.Parse(x.PurchaseOrder.VendorCode) <= int.Parse(request.VendorTo)).ToList();
             }
 
-            if (request.PurchasingGroupFrom.HasValue)
-                queryPO = queryPO.Where(x => x.PurchaseOrder.PurchasingGroupInt >= request.PurchasingGroupFrom &&
-                                             x.PurchaseOrder.PurchasingGroupInt <= request.PurchasingGroupTo).ToList();
+            if (!string.IsNullOrEmpty(request.POType))
+            {
+                queryPO = queryPO.Where(x => x.PurchaseOrder.POType.Contains(request.POType)).ToList();
+            }
+            if (!string.IsNullOrEmpty(request.MaterialFrom))
+            {
+                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.ProductCode) >= int.Parse(request.MaterialFrom) &&
+                                             int.Parse(x.PurchaseOrder.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
+            {
+                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
+                                             int.Parse(x.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
+            }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
@@ -234,9 +243,9 @@ namespace MES.Application.Queries
 
             }).ToList();
 
-            if (request.MaterialFrom.HasValue)
+            if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                var material = await _prdRep.FindOneAsync(x => x.ProductCodeInt == request.MaterialFrom);
+                var material = await _prdRep.FindOneAsync(x => int.Parse(x.ProductCode) == int.Parse(request.MaterialFrom));
 
                 dataPO.Add(new PuchaseOrderNKMHResponse
                 {
@@ -244,7 +253,6 @@ namespace MES.Application.Queries
                     MaterialName = material?.ProductName
                 });
             }
-
 
             return dataPO;
         }

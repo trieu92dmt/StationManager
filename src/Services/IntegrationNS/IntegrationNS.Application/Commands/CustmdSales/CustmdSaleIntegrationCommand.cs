@@ -6,7 +6,7 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 
-namespace IntegrationNS.Application.Commands
+namespace IntegrationNS.Application.Commands.CustmdSales
 {
     public class CustmdSaleIntegrationCommand : IRequest<IntegrationNSResponse>
     {
@@ -42,8 +42,6 @@ namespace IntegrationNS.Application.Commands
                 throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu đồng bộ");
 
             response.TotalRecord = request.CustmdSales.Count();
-
-            var custmdSales = _custmdSaleRep.GetQuery();
 
             foreach (var custmdSale in request.CustmdSales)
             {

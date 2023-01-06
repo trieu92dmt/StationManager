@@ -1,4 +1,8 @@
 ﻿using IntegrationNS.Application.Commands;
+using IntegrationNS.Application.Commands.CustmdSales;
+using IntegrationNS.Application.Commands.Customers;
+using IntegrationNS.Application.Commands.DistributionChannels;
+using IntegrationNS.Application.Commands.Divisions;
 using IntegrationNS.Application.DTOs;
 using ISD.Core.Models;
 using ISD.Core.Properties;
@@ -57,7 +61,7 @@ namespace IntegrationNS.API.Controllers
         }
         #endregion
 
-        #region Tích hợp Purchasing Organization
+         #region Tích hợp Purchasing Organization
 
         /// <summary>Tích hợp PurchasingOrganization</summary>
         /// <returns></returns>
@@ -92,8 +96,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp PurchasingOrganization") });
         }
         #endregion      
-
-        #region Tích hợp Purchasing Group
+         
+         #region Tích hợp Purchasing Group
 
         /// <summary>Tích hợp PurchasingGroup</summary>
         /// <returns></returns>
@@ -128,8 +132,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp PurchasingGroup") });
         }
         #endregion
-
-        #region Tích hợp Vendor
+         
+         #region Tích hợp Vendor
 
         /// <summary>Tích hợp Vendor</summary>
         /// <returns></returns>
@@ -165,8 +169,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Vendor") });
         }
         #endregion
-
-        #region Tích hợp Customer
+         
+         #region Tích hợp Customer
 
         /// <summary>Tích hợp Customer</summary>
         /// <returns></returns>
@@ -202,8 +206,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Customer") });
         }
         #endregion
-
-        #region Tích hợp DistributionChannel
+         
+         #region Tích hợp DistributionChannel
 
         /// <summary>Tích hợp DistributionChannel</summary>
         /// <returns></returns>
@@ -238,8 +242,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp DistributionChannel") });
         }
         #endregion
-
-        #region Tích hợp SALES ORGANIZATION
+         
+         #region Tích hợp SALES ORGANIZATION
 
         /// <summary>Tích hợp SALESORGANIZATION</summary>
         /// <returns></returns>
@@ -274,8 +278,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp SalesOrrgania") });
         }
         #endregion
-
-        #region Tích hợp Division
+         
+         #region Tích hợp Division
 
         /// <summary>Tích hợp Division</summary>
         /// <returns></returns>
@@ -310,8 +314,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Division") });
         }
         #endregion
-
-        #region Tích hợp Plant
+         
+         #region Tích hợp Plant
 
         /// <summary>Tích hợp Plant</summary>
         /// <returns></returns>
@@ -346,8 +350,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Plant") });
         }
         #endregion
-
-        #region Tích hợp StorageLocation
+         
+         #region Tích hợp StorageLocation
 
         /// <summary>Tích hợp StorageLocation</summary>
         /// <returns></returns>
@@ -388,8 +392,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp StorageLocation") });
         }
         #endregion
-
-        #region Tích hợp Material Group
+         
+         #region Tích hợp Material Group
         /// <summary>Tích hợp Material Group</summary>
         /// <returns></returns>
         /// <remarks>
@@ -423,8 +427,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material Group") });
         }
         #endregion
-
-        #region Tích hợp Material
+         
+         #region Tích hợp Material
         /// <summary>Tích hợp Material</summary>
         /// <returns></returns>
         /// <remarks>
@@ -468,8 +472,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material") });
         }
         #endregion
-
-        #region Tích hợp CUSTMDSALES 
+         
+         #region Tích hợp CUSTMDSALES 
         /// <summary>Tích hợp CUSTMDSALES </summary>
         /// <returns></returns>
         /// <remarks>
@@ -508,8 +512,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp CUSTMDSALES") });
         }
         #endregion
-
-        #region Tích hợp PurchaseOrder 
+         
+         #region Tích hợp PurchaseOrder 
         /// <summary>
         /// Tích hợp PurchaseOrder
         /// </summary>
@@ -523,8 +527,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp PurchaseOrder") });
         }
         #endregion
-
-        #region Tích hợp NKMH MES
+         
+         #region Tích hợp NKMH MES
         /// <summary>Get data NKMH</summary>
         /// <returns></returns>
         /// <remarks>
@@ -597,8 +601,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IList<NKMHResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKMH") });
         }
         #endregion
-
-        #region Update phiếu và hủy nhập kho mua hàng
+         
+         #region Update phiếu và hủy nhập kho mua hàng
         /// <summary>Update, cancel phiếu nhập kho mua hàng</summary>
         /// <returns></returns>
         /// <remarks>

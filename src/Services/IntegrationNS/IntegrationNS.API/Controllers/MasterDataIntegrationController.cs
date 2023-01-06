@@ -69,9 +69,23 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp OrderType") });
         }
+
+        /// <summary>
+        /// Xóa Order Type
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+
+        [HttpDelete("delete-order-type")]
+        public async Task<IActionResult> DeleteOrderTypeIntegrationAsync([FromBody] DeleteOrderTypeCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa OrderType") });
+        }
         #endregion
 
-         #region Tích hợp Purchasing Organization
+        #region Tích hợp Purchasing Organization
 
         /// <summary>Tích hợp PurchasingOrganization</summary>
         /// <returns></returns>

@@ -45,7 +45,6 @@ namespace IntegrationNS.Application.Commands.OrderTypes
 
                         //Xóa thành công
                         response.RecordDeleteSuccess++;
-                        response.ListRecordDeleteFailed.Add(orderTypeDelete);
 
                     }
                     else
@@ -59,6 +58,7 @@ namespace IntegrationNS.Application.Commands.OrderTypes
                 {
                     //Xóa thất bại
                     response.RecordDeleteFail++;
+                    response.ListRecordDeleteFailed.Add(orderTypeDelete);
                 }
 
             }

@@ -17,5 +17,12 @@ namespace ISD.Infrastructure.Models
         public string SalesOfficeCode { get; set; }
         [StringLength(50)]
         public string SalesOfficeName { get; set; }
+        public Guid? CreateBy { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? CreateTime { get; set; }
+        public Guid? LastEditBy { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? LastEditTime { get; set; }
+        public bool? Actived { get; set; }
     }
 }

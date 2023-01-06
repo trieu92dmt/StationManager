@@ -15,8 +15,14 @@ namespace ISD.Infrastructure.Models
         public Guid ScaleId { get; set; }
         [StringLength(50)]
         public string ScaleName { get; set; }
-        [StringLength(10)]
-        public string ScaleType { get; set; }
+        public bool? ScaleType { get; set; }
         public bool? isCantai { get; set; }
+        public Guid? CreateBy { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? CreateTime { get; set; }
+        public Guid? LastEditBy { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? LastEditTime { get; set; }
+        public bool? Actived { get; set; }
     }
 }

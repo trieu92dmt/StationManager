@@ -42,6 +42,7 @@
 	+ db = TLG_MES
 	+ id = isd
 	+ pass = pm123@abcd
-- Test Environment
+- Test Environment 
+   - Web: https://tlg-mes-fe.isdcorp.vn/
 	+ username = admin
 	+ password = isd@2023

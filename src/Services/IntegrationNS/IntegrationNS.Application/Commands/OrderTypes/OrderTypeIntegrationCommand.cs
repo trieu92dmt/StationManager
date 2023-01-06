@@ -51,7 +51,6 @@ namespace IntegrationNS.Application.Commands.OrderTypes
                         _orderTypeRep.Add(new OrderTypeModel
                         {
                             OrderTypeId = Guid.NewGuid(),
-                            PlanningPlant = orderTypeIntegration.PlanningPlant,
                             OrderTypeCode = orderTypeIntegration.OrderType,
                             OrderTypeName = orderTypeIntegration.Name,
                             ShortText = orderTypeIntegration.ShortText,
@@ -61,7 +60,6 @@ namespace IntegrationNS.Application.Commands.OrderTypes
                     }
                     else
                     {
-                        orderType.PlanningPlant = orderTypeIntegration.PlanningPlant;
                         orderType.OrderTypeName = orderTypeIntegration.Name;
                         orderType.ShortText = orderTypeIntegration.ShortText;
                         orderType.LastEditTime = DateTime.Now;

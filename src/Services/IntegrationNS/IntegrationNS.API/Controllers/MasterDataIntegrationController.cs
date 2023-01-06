@@ -119,9 +119,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp PurchasingOrganization") });
         }
-        #endregion      
-         
-         #region Tích hợp Purchasing Group
+
+        /// <summary>
+        /// Xóa Purchasing Organization
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-purchasing-organization")]
+        public async Task<IActionResult> DeletePurchasingOrganizationIntegrationAsync([FromBody] DeletePurchasingGroupCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchasingOrganization") });
+        }
+        #endregion
+
+        #region Tích hợp Purchasing Group
 
         /// <summary>Tích hợp PurchasingGroup</summary>
         /// <returns></returns>
@@ -155,9 +168,23 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp PurchasingGroup") });
         }
+
+        /// <summary>
+        /// Xóa Purchasing Group
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+
+        [HttpDelete("delete-purchasing-group")]
+        public async Task<IActionResult> DeletePurchasingGroupIntegrationAsync([FromBody] DeletePurchasingGroupCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchasingGroup") });
+        }
         #endregion
-         
-         #region Tích hợp Vendor
+
+        #region Tích hợp Vendor
 
         /// <summary>Tích hợp Vendor</summary>
         /// <returns></returns>
@@ -186,15 +213,28 @@ namespace IntegrationNS.API.Controllers
         ///                }
         /// </remarks>
         [HttpPost("vendor")]
-        public async Task<IActionResult> VendorIntegration([FromBody] VendorIntegrationCommand req)
+        public async Task<IActionResult> VendorIntegrationAsync([FromBody] VendorIntegrationCommand req)
         {
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Vendor") });
         }
+
+        /// <summary>
+        /// Xóa vendor
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-vendor")]
+        public async Task<IActionResult> DeleteVendorIntegrationAsync([FromBody] DeleteVendorCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xoá Vendor") }) ;
+        }
         #endregion
-         
-         #region Tích hợp Customer
+
+        #region Tích hợp Customer
 
         /// <summary>Tích hợp Customer</summary>
         /// <returns></returns>
@@ -229,9 +269,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Customer") });
         }
+
+        /// <summary>
+        /// Xóa customer
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-customer")]
+        public async Task<IActionResult> DeleteCustomerAsync([FromBody] DeleteCustomerNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Customer") });
+        }
         #endregion
-         
-         #region Tích hợp DistributionChannel
+
+        #region Tích hợp DistributionChannel
 
         /// <summary>Tích hợp DistributionChannel</summary>
         /// <returns></returns>
@@ -265,9 +318,23 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp DistributionChannel") });
         }
+
+        /// <summary>
+        /// Xóa DistributionChannel
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+
+        [HttpDelete("delete-distribution-channel")]
+        public async Task<IActionResult> DeleteDistributionChannelIntegrationAsync([FromBody] DeleteDistributionChannelCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa DistributionChannel") });
+        }
         #endregion
-         
-         #region Tích hợp SALES ORGANIZATION
+
+        #region Tích hợp SALES ORGANIZATION
 
         /// <summary>Tích hợp SALESORGANIZATION</summary>
         /// <returns></returns>
@@ -290,7 +357,7 @@ namespace IntegrationNS.API.Controllers
         /// 
         ///                {
         ///                     "code": 200,
-        ///                     "message": "Tích hợp DistributionChannel thành công.",
+        ///                     "message": "Tích hợp SalesOrganization thành công.",
         ///                     "data": true
         ///                }
         /// </remarks>
@@ -299,11 +366,24 @@ namespace IntegrationNS.API.Controllers
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp SalesOrrgania") });
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp SalesOrganization") });
+        }
+
+        /// <summary>
+        /// Xóa SalesOrganization
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-sale-Org")]
+        public async Task<IActionResult> DeleteSALESORGANIZATIONIntegrationAsync([FromBody] DeleteSaleOrgCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa SalesOrganization") });
         }
         #endregion
-         
-         #region Tích hợp Division
+
+        #region Tích hợp Division
 
         /// <summary>Tích hợp Division</summary>
         /// <returns></returns>
@@ -337,9 +417,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Division") });
         }
+
+        /// <summary>
+        /// Xóa division
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-division")]
+        public async Task<IActionResult> DeleteDivisionIntegrationAsync([FromBody] DeleteDivisionCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Division") });
+        }
         #endregion
-         
-         #region Tích hợp Plant
+
+        #region Tích hợp Plant
 
         /// <summary>Tích hợp Plant</summary>
         /// <returns></returns>
@@ -373,9 +466,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Plant") });
         }
+
+        /// <summary>
+        /// Xóa plant
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-plant")]
+        public async Task<IActionResult> DeletePlantIntegrationAsync([FromBody] DeletePlantCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Plant") });
+        }
         #endregion
-         
-         #region Tích hợp StorageLocation
+
+        #region Tích hợp StorageLocation
 
         /// <summary>Tích hợp StorageLocation</summary>
         /// <returns></returns>
@@ -415,9 +521,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp StorageLocation") });
         }
+
+        /// <summary>
+        /// Xóa Storage Location
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-storage-location")]
+        public async Task<IActionResult> DeleteStorageLocationIntegrationAsync([FromBody] DeleteStorageLocationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa StorageLocation") });
+        }
         #endregion
-         
-         #region Tích hợp Material Group
+
+        #region Tích hợp Material Group
         /// <summary>Tích hợp Material Group</summary>
         /// <returns></returns>
         /// <remarks>
@@ -450,9 +569,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material Group") });
         }
+
+        /// <summary>
+        /// Xóa Material Group
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-material-group")]
+        public async Task<IActionResult> DeleteProductGroupIntegrationAsync([FromBody] ProductGroupIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material Group") });
+        }
         #endregion
-         
-         #region Tích hợp Material
+
+        #region Tích hợp Material
         /// <summary>Tích hợp Material</summary>
         /// <returns></returns>
         /// <remarks>
@@ -495,9 +627,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material") });
         }
+
+        /// <summary>
+        /// Xóa Material
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-material")]
+        public async Task<IActionResult> DeleteProductIntegrationAsync([FromBody] DeleteProductGroupCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Material") });
+        }
         #endregion
-         
-         #region Tích hợp CUSTMDSALES 
+
+        #region Tích hợp CUSTMDSALES 
         /// <summary>Tích hợp CUSTMDSALES </summary>
         /// <returns></returns>
         /// <remarks>
@@ -535,9 +680,23 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp CUSTMDSALES") });
         }
+
+
+        /// <summary>
+        /// Xóa CUSTMDSALES
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-custmd-sales")]
+        public async Task<IActionResult> DeleteCUSTMDSALESIntegrationAsync([FromBody] DeleteCustomerNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa CUSTMDSALES") });
+        }
         #endregion
-         
-         #region Tích hợp PurchaseOrder 
+
+        #region Tích hợp PurchaseOrder 
         /// <summary>
         /// Tích hợp PurchaseOrder
         /// </summary>
@@ -550,9 +709,22 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp PurchaseOrder") });
         }
+
+        /// <summary>
+        /// Xóa PurchaseOrder
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-purchase-order")]
+        public async Task<IActionResult> DeletePurchaseOrderIntegrationAsync([FromBody] DeletePurchaseOrderCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchaseOrder") });
+        }
         #endregion
-         
-         #region Tích hợp NKMH MES
+
+        #region Tích hợp NKMH MES
         /// <summary>Get data NKMH</summary>
         /// <returns></returns>
         /// <remarks>

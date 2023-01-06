@@ -18,12 +18,15 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         private readonly IRepository<PurchaseOrderMasterModel> _poRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
+        private readonly IRepository<GoodsReceiptModel> _nkmhRep;
 
-        public DeletePurchaseOrderCommandHandler(IRepository<PurchaseOrderMasterModel> poRep, IUnitOfWork unitOfWork, IRepository<PurchaseOrderDetailModel> poDetailRep)
+        public DeletePurchaseOrderCommandHandler(IRepository<PurchaseOrderMasterModel> poRep, IUnitOfWork unitOfWork, IRepository<PurchaseOrderDetailModel> poDetailRep,
+                                                 IRepository<GoodsReceiptModel> nkmhRep)
         {
             _poRep = poRep;
             _unitOfWork = unitOfWork;
             _poDetailRep = poDetailRep;
+            _nkmhRep = nkmhRep;
         }
 
         public async Task<DeleteNSResponse> Handle(DeletePurchaseOrderCommand request, CancellationToken cancellationToken)
@@ -41,10 +44,15 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                 {
                     //Xóa Disivision
                     var po = await _poRep.GetQuery(x => x.PurchaseOrderCode == poDelete)
-                                              .Include(x => x.PurchaseOrderDetailModel)
+                                              .Include(x => x.PurchaseOrderDetailModel).ThenInclude(x => x.GoodsReceiptModel)
                                               .FirstOrDefaultAsync();
                     if (po is not null)
                     {
+                        foreach (var poDetail in po.PurchaseOrderDetailModel)
+                        {
+                            _nkmhRep.RemoveRange(poDetail.GoodsReceiptModel);
+                        }
+
                         _poDetailRep.RemoveRange(po.PurchaseOrderDetailModel);
 
                         _poRep.Remove(po);

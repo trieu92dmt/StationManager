@@ -17,8 +17,10 @@ namespace ISD.Infrastructure.Models
         public string OrderTypeCode { get; set; }
         [StringLength(50)]
         public string OrderTypeName { get; set; }
+        [StringLength(30)]
+        public string Category { get; set; }
         [StringLength(50)]
-        public string PlanningPlant { get; set; }
+        public string Plant { get; set; }
         [StringLength(50)]
         public string ShortText { get; set; }
         [Column(TypeName = "datetime")]

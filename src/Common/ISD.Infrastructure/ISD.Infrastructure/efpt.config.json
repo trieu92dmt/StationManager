@@ -223,7 +223,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[SalesOfficeModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[ScaleModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ShippingPointModel]",
          "ObjectType": 0
       },
       {

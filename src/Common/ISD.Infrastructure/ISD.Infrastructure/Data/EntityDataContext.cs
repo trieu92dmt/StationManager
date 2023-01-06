@@ -281,6 +281,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<SaleProcessModel> SaleProcessModel { get; set; }
         public virtual DbSet<SaleUnitModel> SaleUnitModel { get; set; }
         public virtual DbSet<SalesEmployeeModel> SalesEmployeeModel { get; set; }
+        public virtual DbSet<SalesOfficeModel> SalesOfficeModel { get; set; }
         public virtual DbSet<ScaleModel> ScaleModel { get; set; }
         public virtual DbSet<Schema> Schema { get; set; }
         public virtual DbSet<SearchResultDetailTemplateModel> SearchResultDetailTemplateModel { get; set; }
@@ -299,6 +300,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<ServiceOrderTypeModel> ServiceOrderTypeModel { get; set; }
         public virtual DbSet<ServiceTypeModel> ServiceTypeModel { get; set; }
         public virtual DbSet<Set> Set { get; set; }
+        public virtual DbSet<ShippingPointModel> ShippingPointModel { get; set; }
         public virtual DbSet<ShowroomCategoryModel> ShowroomCategoryModel { get; set; }
         public virtual DbSet<SourceModel> SourceModel { get; set; }
         public virtual DbSet<SpecificationsModel> SpecificationsModel { get; set; }
@@ -1645,6 +1647,8 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<OrderTypeModel>(entity =>
             {
                 entity.Property(e => e.OrderTypeId).ValueGeneratedNever();
+
+                entity.Property(e => e.Category).IsFixedLength();
             });
 
             modelBuilder.Entity<OutputRecordModel>(entity =>
@@ -2550,6 +2554,11 @@ namespace ISD.Infrastructure.Data
                     .HasConstraintName("FK_SalesEmployeeModel_DepartmentModel");
             });
 
+            modelBuilder.Entity<SalesOfficeModel>(entity =>
+            {
+                entity.Property(e => e.SalesOfficeId).ValueGeneratedNever();
+            });
+
             modelBuilder.Entity<ScaleModel>(entity =>
             {
                 entity.Property(e => e.ScaleId).ValueGeneratedNever();
@@ -2697,6 +2706,11 @@ namespace ISD.Infrastructure.Data
 
                 entity.HasIndex(e => e.ExpireAt, "IX_HangFire_Set_ExpireAt")
                     .HasFilter("([ExpireAt] IS NOT NULL)");
+            });
+
+            modelBuilder.Entity<ShippingPointModel>(entity =>
+            {
+                entity.Property(e => e.ShippingPointId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<SourceModel>(entity =>

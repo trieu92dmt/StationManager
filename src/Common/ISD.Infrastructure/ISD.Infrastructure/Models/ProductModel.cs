@@ -45,5 +45,13 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public bool? Activce { get; set; }
+        [StringLength(50)]
+        public string Status { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? GrossWeight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? NetWeight { get; set; }
+        [StringLength(50)]
+        public string OldMaterialNum { get; set; }
     }
 }

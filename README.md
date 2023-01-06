@@ -1,5 +1,6 @@
 ﻿#Microservice, DDD(Domain Driven Design), CQRS Pattern
 - Docs: https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture
+- Architecture: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices
 - Templates: https://github.com/yanpitangui/dotnet-api-boilerplate
 
 # Environment, Tool

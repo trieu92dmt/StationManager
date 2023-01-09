@@ -31,5 +31,19 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách plant") });
         }
         #endregion
+
+        #region Lấy dropdown sale org
+        /// <summary>
+        /// Lấy dropdown sale org
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-sale-org")]
+        public async Task<IActionResult> GetListSaleOrg()
+        {
+            var dropdownList = await _commonQuery.GetDropdownSaleOrg();
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách plant") });
+        }
+        #endregion
     }
 }

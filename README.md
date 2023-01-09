@@ -1,5 +1,6 @@
 ﻿#Microservice, DDD(Domain Driven Design), CQRS Pattern
 - Docs: https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture
+- Architecture: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices
 - Templates: https://github.com/yanpitangui/dotnet-api-boilerplate
 
 # Environment, Tool
@@ -41,6 +42,7 @@
 	+ db = TLG_MES
 	+ id = isd
 	+ pass = pm123@abcd
-- Test Environment
+- Test Environment 
+   - Web: https://tlg-mes-fe.isdcorp.vn/
 	+ username = admin
 	+ password = isd@2023

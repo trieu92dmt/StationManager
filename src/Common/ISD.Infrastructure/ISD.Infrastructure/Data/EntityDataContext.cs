@@ -1868,6 +1868,8 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<ProductTypeModel>(entity =>
             {
                 entity.Property(e => e.ProductTypeId).ValueGeneratedNever();
+
+                entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<ProductVersionModel>(entity =>
@@ -2557,11 +2559,15 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<SalesOfficeModel>(entity =>
             {
                 entity.Property(e => e.SalesOfficeId).ValueGeneratedNever();
+
+                entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<ScaleModel>(entity =>
             {
                 entity.Property(e => e.ScaleId).ValueGeneratedNever();
+
+                entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<Schema>(entity =>
@@ -2711,6 +2717,8 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<ShippingPointModel>(entity =>
             {
                 entity.Property(e => e.ShippingPointId).ValueGeneratedNever();
+
+                entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<SourceModel>(entity =>

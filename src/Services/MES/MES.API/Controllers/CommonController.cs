@@ -58,5 +58,75 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách material") });
         }
         #endregion
+
+        #region Lấy Purchasing Org theo Plant Code
+        /// <summary>
+        /// Lấy Purchasing Org theo Plant Code
+        /// </summary>
+        /// <param name="plantCode"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-purchasingorg-by-plant")]
+        public async Task<IActionResult> GetListPurchasingOrgByPlant(string keyword, string plantCode)
+        {
+            var dropdownList = await _commonQuery.GetDropdownPurchasingOrgByPlant(keyword,plantCode);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách purchasing org") });
+        }
+        #endregion
+
+        #region Lấy dropdown purchasing gr
+        /// <summary>
+        /// Lấy dropdown purchasing gr
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-purchasing-gr")]
+        public async Task<IActionResult> GetListPurchasingGr(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownPurchasingGr(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách purchasing gr") });
+        }
+        #endregion
+
+        #region Lấy dropdown vendor
+        /// <summary>
+        /// Lấy dropdown vendor
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-vendor")]
+        public async Task<IActionResult> GetListVendor(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownVendor(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách vendor") });
+        }
+        #endregion
+
+        #region Lấy dropdown POType
+        /// <summary>
+        /// Lấy dropdown POType
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-potype")]
+        public async Task<IActionResult> GetListPOType(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownPOType(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách po type") });
+        }
+        #endregion
+
+        #region Lấy dropdown PO
+        /// <summary>
+        /// Lấy dropdown PO
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-po")]
+        public async Task<IActionResult> GetListPO(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownPO(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách po") });
+        }
+        #endregion
     }
 }

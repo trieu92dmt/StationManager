@@ -98,6 +98,7 @@ namespace MES.Application.Queries
                                                                                         int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
             }
 
+
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
 

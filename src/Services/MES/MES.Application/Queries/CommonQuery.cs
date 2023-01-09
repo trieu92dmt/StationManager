@@ -22,11 +22,47 @@ namespace MES.Application.Queries
         Task<List<CommonResponse>> GetDropdownSaleOrg();
 
         /// <summary>
+        /// Dropdown Purchasing Gr
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownPurchasingGr(string keyword);
+
+        /// <summary>
         /// Dropdown Material
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownMaterial(string keyword);
+
+        /// <summary>
+        /// Dropdown Purchasing Org by Plant
+        /// </summary>
+        /// <param name="plantCode"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownPurchasingOrgByPlant(string keyword, string plantCode);
+
+        /// <summary>
+        /// Dropdown Vendor
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownVendor(string keyword);
+
+        /// <summary>
+        /// Dropdown POType
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownPOType(string keyword);
+
+        /// <summary>
+        /// Dropdown Material
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownPO(string keyword);
+
     }
 
     public class CommonQuery : ICommonQuery
@@ -34,12 +70,22 @@ namespace MES.Application.Queries
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<SaleOrgModel> _saleOrgRepo;
         private readonly IRepository<ProductModel> _prodRepo;
+        private readonly IRepository<PurchasingOrgModel> _purOrgRepo;
+        private readonly IRepository<PurchasingGroupModel> _purGrRepo;
+        private readonly IRepository<VendorModel> _vendorRepo;
+        private readonly IRepository<PurchaseOrderMasterModel> _poMasterRepo;
 
-        public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo)
+        public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
+                           IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
+                           IRepository<PurchaseOrderMasterModel> poMasterRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
             _prodRepo = prodRepo;
+            _purOrgRepo = purOrgRepo;
+            _purGrRepo = purGrRepo;
+            _vendorRepo = vendorRepo;
+            _poMasterRepo = poMasterRepo;
         }
 
         #region
@@ -80,6 +126,77 @@ namespace MES.Application.Queries
                 Key = x.SaleOrgCode,
                 Value = $"{x.SaleOrgCode} | {x.SaleOrgName}"
             }).AsNoTracking().ToListAsync();
+
+            return response;
+        }
+        #endregion
+
+        #region Dropdown Purchasing Gr
+        public async Task<List<CommonResponse>> GetDropdownPurchasingGr(string keyword)
+        {
+            var response = await _purGrRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchasingGroupName.Contains(keyword) || x.PurchasingGroupCode.Contains(keyword) : true).Select(x => new CommonResponse
+            {
+                Key = x.PurchasingGroupCode,
+                Value = $"{x.PurchasingGroupCode} | {x.PurchasingGroupName}"
+            }).AsNoTracking().ToListAsync();
+
+            return response;
+        }
+        #endregion
+
+        #region Dropdown Purchasing Org by Plant
+        public async Task<List<CommonResponse>> GetDropdownPurchasingOrgByPlant(string keyword, string plantCode)
+        {
+            var response = await _purOrgRepo.GetQuery(x => (!string.IsNullOrEmpty(plantCode) ? x.PurchasingOrgCode == plantCode : true) &&
+                                                           (!string.IsNullOrEmpty(keyword) ? x.PurchasingOrgName.Contains(keyword) || x.PurchasingOrgCode.Contains(keyword) : true)).Select(x => new CommonResponse
+            {
+                Key = x.PurchasingOrgCode,
+                Value = $"{x.PurchasingOrgCode} | {x.PurchasingOrgName}"
+            }).AsNoTracking().ToListAsync();
+
+            return response;
+        }
+
+        #endregion
+
+        #region Dropdown Vendor
+        public async Task<List<CommonResponse>> GetDropdownVendor(string keyword)
+        {
+            var response = await _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true).Select(x => new CommonResponse
+            {
+                Key = x.VendorCode,
+                Value = $"{x.VendorCode} | {x.VendorName}"
+            }).AsNoTracking().ToListAsync();
+
+            return response;
+        }
+        #endregion
+
+        #region Dropdown po type
+        public async Task<List<CommonResponse>> GetDropdownPOType(string keyword)
+        {
+            var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.POType.Contains(keyword) : true) &&
+                                                             (x.POType != null) &&
+                                                             (x.POType != ""))
+                                        .Select(x => new CommonResponse
+                                        {
+                                            Key = x.POType,
+                                            Value = x.POType
+                                        }).AsNoTracking().ToListAsync();
+
+            return response.DistinctBy(x => x.Key).ToList();
+        }
+        #endregion
+
+        #region Dropdown po
+        public async Task<List<CommonResponse>> GetDropdownPO(string keyword)
+        {
+            var response = await _poMasterRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.POType.Contains(keyword) : true)
+                                        .Select(x => new CommonResponse
+                                        {
+                                            Key = x.PurchaseOrderCode,
+                                            Value = x.PurchaseOrderCode
+                                        }).AsNoTracking().ToListAsync();
 
             return response;
         }

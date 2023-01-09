@@ -14,6 +14,7 @@ using IntegrationNS.Application.Commands.SalesOrgs;
 using IntegrationNS.Application.Commands.StorageLocations;
 using IntegrationNS.Application.Commands.Vendors;
 using IntegrationNS.Application.DTOs;
+using IntegrationNS.Application.Queries;
 using ISD.Core.Models;
 using ISD.Core.Properties;
 using MediatR;
@@ -27,10 +28,12 @@ namespace IntegrationNS.API.Controllers
     public class MasterDataIntegrationController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly INKMHQuery _nkmhQuery;
 
-        public MasterDataIntegrationController(IMediator mediator)
+        public MasterDataIntegrationController(IMediator mediator, INKMHQuery nkmhQuery)
         {
             _mediator = mediator;
+            _nkmhQuery = nkmhQuery;
         }
 
          #region Tích hợp Order Type
@@ -838,6 +841,26 @@ namespace IntegrationNS.API.Controllers
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NKMH") :
                                                                                                        string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NKMH") });
+        }
+        #endregion
+
+        #region Chi tiết NKMH
+        [HttpGet("get-detail-nkmh")]
+        public async Task<IActionResult> NKMHDetail(Guid NKMHId)
+        {
+            var response = await _nkmhQuery.GetNKMHAsync(NKMHId);
+
+            return Ok(new ApiSuccessResponse<NKMHResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get detail NKMH") });
+        }
+        #endregion
+
+        #region Chi tiết PO
+        [HttpGet("get-detail-po")]
+        public async Task<IActionResult> PODetail(string poCode)
+        {
+            var response = await _nkmhQuery.GetPOAsync(poCode);
+
+            return Ok(new ApiSuccessResponse<PuchaseOrderNKMHResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get detail pó") });
         }
         #endregion
     }

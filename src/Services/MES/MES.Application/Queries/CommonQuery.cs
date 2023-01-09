@@ -20,18 +20,42 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownSaleOrg();
+
+        /// <summary>
+        /// Dropdown Material
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownMaterial(string keyword);
     }
 
     public class CommonQuery : ICommonQuery
     {
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<SaleOrgModel> _saleOrgRepo;
+        private readonly IRepository<ProductModel> _prodRepo;
 
-        public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo)
+        public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
+            _prodRepo = prodRepo;
         }
+
+        #region
+        public Task<List<CommonResponse>> GetDropdownMaterial(string keyword)
+        {
+            var response = _prodRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCode.Contains(keyword) : true)
+                                    .OrderBy(x => x.ProductCode)
+                                    .Select(x => new CommonResponse
+                                     {
+                                         Key = x.ProductCode,
+                                         Value = $"{x.ProductCode} | {x.ProductName}"
+                                     }).Take(10).ToListAsync();
+
+            return response;
+        }
+        #endregion
 
         #region Dropdown Plant
         public async Task<List<CommonResponse>> GetDropdownPlant(string keyword)

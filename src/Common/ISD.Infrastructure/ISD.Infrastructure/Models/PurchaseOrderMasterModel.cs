@@ -38,6 +38,10 @@ namespace ISD.Infrastructure.Models
         public int? ProductCodeInt { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DocumentDate { get; set; }
+        [StringLength(50)]
+        public string ReleaseIndicator { get; set; }
+        [StringLength(50)]
+        public string DeletionInd { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

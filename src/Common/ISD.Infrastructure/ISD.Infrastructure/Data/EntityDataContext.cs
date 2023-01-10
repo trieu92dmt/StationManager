@@ -373,6 +373,8 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<WarehouseModel> WarehouseModel { get; set; }
         public virtual DbSet<WarrantyModel> WarrantyModel { get; set; }
         public virtual DbSet<WeighModel> WeighModel { get; set; }
+        public virtual DbSet<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
+        public virtual DbSet<WeighSessionModel> WeighSessionModel { get; set; }
         public virtual DbSet<WeighingSessionDetailModel> WeighingSessionDetailModel { get; set; }
         public virtual DbSet<WeighingSessionModel> WeighingSessionModel { get; set; }
         public virtual DbSet<WorkCenterModel> WorkCenterModel { get; set; }
@@ -3389,6 +3391,28 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<WeighModel>(entity =>
             {
                 entity.Property(e => e.WeighId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<WeighSessionDetailModel>(entity =>
+            {
+                entity.Property(e => e.WeighSessionDetailID).ValueGeneratedNever();
+
+                entity.HasOne(d => d.WeighSession)
+                    .WithMany(p => p.WeighSessionDetailModel)
+                    .HasForeignKey(d => d.WeighSessionID)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WeighSessionDetailModel_WeighSessionModel");
+            });
+
+            modelBuilder.Entity<WeighSessionModel>(entity =>
+            {
+                entity.Property(e => e.WeighSessionID).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Scale)
+                    .WithMany(p => p.WeighSessionModel)
+                    .HasForeignKey(d => d.ScaleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WeighSessionModel_ScaleModel");
             });
 
             modelBuilder.Entity<WeighingSessionDetailModel>(entity =>

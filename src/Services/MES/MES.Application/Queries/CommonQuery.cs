@@ -106,7 +106,7 @@ namespace MES.Application.Queries
         #region Dropdown Plant
         public async Task<List<CommonResponse>> GetDropdownPlant(string keyword)
         {
-            var response = await _plantRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PlantName.Contains(keyword) : true)
+            var response = await _plantRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PlantName.Contains(keyword) || x.PlantCode.Contains(keyword) : true)
                                      .OrderBy(x => x.PlantCode)
                                      .Select(x => new CommonResponse
                                      {
@@ -191,7 +191,7 @@ namespace MES.Application.Queries
         #region Dropdown po
         public async Task<List<CommonResponse>> GetDropdownPO(string keyword)
         {
-            var response = await _poMasterRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.POType.Contains(keyword) : true)
+            var response = await _poMasterRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true)
                                         .Select(x => new CommonResponse
                                         {
                                             Key = x.PurchaseOrderCode,

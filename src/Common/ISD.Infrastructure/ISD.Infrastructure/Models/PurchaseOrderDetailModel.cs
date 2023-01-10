@@ -36,6 +36,8 @@ namespace ISD.Infrastructure.Models
         public decimal? OpenQuantity { get; set; }
         [StringLength(50)]
         public string Unit { get; set; }
+        [StringLength(50)]
+        public string DeletionInd { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

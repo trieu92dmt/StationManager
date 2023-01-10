@@ -243,6 +243,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[WeighSessionDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[WeighSessionModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ApplicationConfig]",
          "ObjectType": 0
       },

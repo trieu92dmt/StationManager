@@ -2,6 +2,7 @@
 using ISD.Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
+using MES.Application.DTOs.MES.NKMH;
 using Microsoft.EntityFrameworkCore;
 
 namespace MES.Application.Queries
@@ -21,6 +22,13 @@ namespace MES.Application.Queries
         /// <param name="request"></param>
         /// <returns></returns>
         Task<List<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request);
+
+        /// <summary>
+        /// Lấy số cân
+        /// </summary>
+        /// <param name="weightHead"></param>
+        /// <returns></returns>
+        //Task<List<GetWeighNumResponse>> GetWeighNum(List<string> weightHead);
     }
     public class NKMHQuery : INKMHQuery
     {
@@ -30,9 +38,11 @@ namespace MES.Application.Queries
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
         private readonly IRepository<AccountModel> _userRep;
         private readonly IRepository<VendorModel> _vendorRep;
+        private readonly IRepository<WeighingSessionModel> _weighSsRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
-                         IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep)
+                         IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
+                         IRepository<WeighingSessionModel> weighSsRepo)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -40,6 +50,7 @@ namespace MES.Application.Queries
             _poDetailRep = poDetailRep;
             _userRep = userRep;
             _vendorRep = vendorRep;
+            _weighSsRepo = weighSsRepo;
         }
 
         public async Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)

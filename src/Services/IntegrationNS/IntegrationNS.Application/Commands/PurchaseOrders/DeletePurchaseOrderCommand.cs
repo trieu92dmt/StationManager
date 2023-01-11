@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -9,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IntegrationNS.Application.Commands.PurchaseOrders
 {
-    public class DeletePurchaseOrderCommand : IRequest<DeleteNSResponse>
+    public class DeletePurchaseOrderCommand : IRequest<bool>
     {
-        public List<string> PurchaseOrders { get; set; } = new List<string>();
+        public string PurchaseOrder { get; set; }
     }
-    public class DeletePurchaseOrderCommandHandler : IRequestHandler<DeletePurchaseOrderCommand, DeleteNSResponse>
+    public class DeletePurchaseOrderCommandHandler : IRequestHandler<DeletePurchaseOrderCommand, bool>
     {
         private readonly IRepository<PurchaseOrderMasterModel> _poRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -29,54 +28,29 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
             _nkmhRep = nkmhRep;
         }
 
-        public async Task<DeleteNSResponse> Handle(DeletePurchaseOrderCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeletePurchaseOrderCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //PO
+            var po = await _poRep.GetQuery(x => x.PurchaseOrderCode == request.PurchaseOrder)
+                                      .Include(x => x.PurchaseOrderDetailModel).ThenInclude(x => x.GoodsReceiptModel)
+                                      .FirstOrDefaultAsync();
+            if (po is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"PO {request.PurchaseOrder}");
 
-            if (!request.PurchaseOrders.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
-
-            response.TotalRecord = request.PurchaseOrders.Count();
-
-            foreach (var poDelete in request.PurchaseOrders)
+            //Xóa data nhập kho mua hàng
+            foreach (var poDetail in po.PurchaseOrderDetailModel)
             {
-                try
-                {
-                    //Xóa Disivision
-                    var po = await _poRep.GetQuery(x => x.PurchaseOrderCode == poDelete)
-                                              .Include(x => x.PurchaseOrderDetailModel).ThenInclude(x => x.GoodsReceiptModel)
-                                              .FirstOrDefaultAsync();
-                    if (po is not null)
-                    {
-                        foreach (var poDetail in po.PurchaseOrderDetailModel)
-                        {
-                            _nkmhRep.RemoveRange(poDetail.GoodsReceiptModel);
-                        }
-
-                        _poDetailRep.RemoveRange(po.PurchaseOrderDetailModel);
-
-                        _poRep.Remove(po);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(poDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(poDelete);
-                }
-
+                _nkmhRep.RemoveRange(poDetail.GoodsReceiptModel);
             }
-            return response;
+
+            //Xóa PO Detail
+            _poDetailRep.RemoveRange(po.PurchaseOrderDetailModel);
+
+            //Xóa PO
+            _poRep.Remove(po);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
         }
     }
 }

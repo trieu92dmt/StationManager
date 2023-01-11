@@ -187,10 +187,14 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{poIntegration.PurchaseOrder}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = poIntegration.PurchaseOrder,
+                        Msg = ex.Message
+                    });
                 }
             }
 

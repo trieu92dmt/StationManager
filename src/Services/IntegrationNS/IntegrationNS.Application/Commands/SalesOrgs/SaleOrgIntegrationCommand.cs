@@ -71,10 +71,14 @@ namespace IntegrationNS.Application.Commands.SalesOrgs
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{saleOrgIntegration.SalesOrganization}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = saleOrgIntegration.SalesOrganization,
+                        Msg = ex.Message
+                    });
                 }
             }
 

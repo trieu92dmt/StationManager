@@ -71,10 +71,14 @@ namespace IntegrationNS.Application.Commands.ProductGroups
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{productGroupIntegration.MaterialGroup}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = productGroupIntegration.MaterialGroup,
+                        Msg = ex.Message
+                    });
                 }
             }
 

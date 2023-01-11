@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,12 +7,12 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.PurchasingOrganizations
 {
-    public class DeletePurchasingOrgCommand : IRequest<DeleteNSResponse>
+    public class DeletePurchasingOrgCommand : IRequest<bool>
     {
-        public List<string> PurchasingOrgs { get; set; } = new List<string>();
+        public string PurchasingOrg { get; set; }
     }
 
-    public class DeletePurchasingOrgCommandHandler : IRequestHandler<DeletePurchasingOrgCommand, DeleteNSResponse>
+    public class DeletePurchasingOrgCommandHandler : IRequestHandler<DeletePurchasingOrgCommand, bool>
     {
         private readonly IRepository<PurchasingOrgModel> _purOrgRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,45 +22,17 @@ namespace IntegrationNS.Application.Commands.PurchasingOrganizations
             _purOrgRep = purOrgRep;
             _unitOfWork = unitOfWork;
         }
-        public async Task<DeleteNSResponse> Handle(DeletePurchasingOrgCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeletePurchasingOrgCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa Purchasing Org
+            var purOrg = await _purOrgRep.FindOneAsync(x => x.PurchasingOrgCode == request.PurchasingOrg);
+            if (purOrg is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"Purchasing Org {request.PurchasingOrg}");
 
-            if (!request.PurchasingOrgs.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
+            _purOrgRep.Remove(purOrg);
+            await _unitOfWork.SaveChangesAsync();
 
-            response.TotalRecord = request.PurchasingOrgs.Count();
-
-            foreach (var purOrgDelete in request.PurchasingOrgs)
-            {
-                try
-                {
-                    //Xóa Purchasing Org
-                    var purOrg = await _purOrgRep.FindOneAsync(x => x.PurchasingOrgCode == purOrgDelete);
-                    if (purOrg is not null)
-                    {
-                        _purOrgRep.Remove(purOrg);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(purOrgDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(purOrgDelete);
-                }
-
-            }
-            return response;
-        }
+            return true;
+        } 
     }
 }

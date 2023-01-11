@@ -84,10 +84,14 @@ namespace IntegrationNS.Application.Commands.Plants
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{plantIntegration.Plant}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = plantIntegration.Plant,
+                        Msg = ex.Message
+                    });
                 }
             }
 

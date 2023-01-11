@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,11 +7,11 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.CustmdSales
 {
-    public class DeleteCustmdSaleCommand : IRequest<DeleteNSResponse>
+    public class DeleteCustmdSaleCommand : IRequest<bool>
     {
-        public List<string> CustmdSales { get; set; } = new List<string>();
+        public string CustmdSales { get; set; }
     }
-    public class DeleteCustmdSaleCommandHandler : IRequestHandler<DeleteCustmdSaleCommand, DeleteNSResponse>
+    public class DeleteCustmdSaleCommandHandler : IRequestHandler<DeleteCustmdSaleCommand, bool>
     {
         private readonly IRepository<CustmdSaleModel> _custmdSaleRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -22,45 +21,18 @@ namespace IntegrationNS.Application.Commands.CustmdSales
             _custmdSaleRep = custmdSaleRep;
             _unitOfWork = unitOfWork;
         }
-        public async Task<DeleteNSResponse> Handle(DeleteCustmdSaleCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteCustmdSaleCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa CustmdSales
+            var custmdSale = await _custmdSaleRep.FindOneAsync(x => x.SalesOffice == request.CustmdSales);
+            if (custmdSale is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"CustmdSales {request.CustmdSales}");
 
-            if (!request.CustmdSales.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
 
-            response.TotalRecord = request.CustmdSales.Count();
+            _custmdSaleRep.Remove(custmdSale);
+            await _unitOfWork.SaveChangesAsync();
 
-            foreach (var custmdSaleDelete in request.CustmdSales)
-            {
-                try
-                {
-                    //Xóa CustmdSales
-                    var custmdSale = await _custmdSaleRep.FindOneAsync(x => x.SalesOffice == custmdSaleDelete);
-                    if (custmdSale is not null)
-                    {
-                        _custmdSaleRep.Remove(custmdSale);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(custmdSaleDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(custmdSaleDelete);
-                }
-
-            }
-            return response;
+            return true;
         }
     }
 }

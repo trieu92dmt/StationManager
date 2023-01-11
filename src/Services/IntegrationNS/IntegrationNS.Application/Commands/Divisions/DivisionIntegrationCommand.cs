@@ -70,10 +70,14 @@ namespace IntegrationNS.Application.Commands.Divisions
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{divisionIntegration.Division}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = divisionIntegration.Division,
+                        Msg = ex.Message
+                    });
                 }
             }
 

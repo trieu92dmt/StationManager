@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,11 +7,11 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.PurchasingGroups
 {
-    public class DeletePurchasingGroupCommand : IRequest<DeleteNSResponse>
+    public class DeletePurchasingGroupCommand : IRequest<bool>
     {
-        public List<string> PurchasingGroups { get; set; } = new List<string>();
+        public string PurchasingGroup { get; set; }
     }
-    public class DeletePurchasingGroupCommandHandler : IRequestHandler<DeletePurchasingGroupCommand, DeleteNSResponse>
+    public class DeletePurchasingGroupCommandHandler : IRequestHandler<DeletePurchasingGroupCommand, bool>
     {
         private readonly IRepository<PurchasingGroupModel> _purGroupRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,45 +22,17 @@ namespace IntegrationNS.Application.Commands.PurchasingGroups
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<DeleteNSResponse> Handle(DeletePurchasingGroupCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeletePurchasingGroupCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa Purchasing Group
+            var purGroup = await _purGroupRep.FindOneAsync(x => x.PurchasingGroupCode == request.PurchasingGroup);
+            if (purGroup is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"Purchasing Group {request.PurchasingGroup}");
 
-            if (!request.PurchasingGroups.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
+            _purGroupRep.Remove(purGroup);
+            await _unitOfWork.SaveChangesAsync();
 
-            response.TotalRecord = request.PurchasingGroups.Count();
-
-            foreach (var purGroupDelete in request.PurchasingGroups)
-            {
-                try
-                {
-                    //Xóa Purchasing Group
-                    var purGroup = await _purGroupRep.FindOneAsync(x => x.PurchasingGroupCode == purGroupDelete);
-                    if (purGroup is not null)
-                    {
-                        _purGroupRep.Remove(purGroup);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(purGroupDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(purGroupDelete);
-                }
-
-            }
-            return response;
-        }
+            return true;
+        } 
     }
 }

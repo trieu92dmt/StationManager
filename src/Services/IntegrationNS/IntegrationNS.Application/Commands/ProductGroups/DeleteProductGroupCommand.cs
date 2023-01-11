@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,12 +7,12 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.ProductGroups
 {
-    public class DeleteProductGroupCommand : IRequest<DeleteNSResponse>
+    public class DeleteProductGroupCommand : IRequest<bool>
     {
-        public List<string> ProductGroups { get; set; } = new List<string>();
+        public string ProductGroup { get; set; }
     }
 
-    public class DeleteProductGroupCommandHandler : IRequestHandler<DeleteProductGroupCommand, DeleteNSResponse>
+    public class DeleteProductGroupCommandHandler : IRequestHandler<DeleteProductGroupCommand, bool>
     {
         private readonly IRepository<ProductGroupModel> _productGroupRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,45 +22,17 @@ namespace IntegrationNS.Application.Commands.ProductGroups
             _productGroupRep = productGroupRep;
             _unitOfWork = unitOfWork;
         }
-        public async Task<DeleteNSResponse> Handle(DeleteProductGroupCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteProductGroupCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa ProductGroup
+            var productGroup = await _productGroupRep.FindOneAsync(x => x.ProductGroupCode == request.ProductGroup);
+            if (productGroup is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"Material Group {request.ProductGroup}");
 
-            if (!request.ProductGroups.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
+            _productGroupRep.Remove(productGroup);
+            await _unitOfWork.SaveChangesAsync();
 
-            response.TotalRecord = request.ProductGroups.Count();
-
-            foreach (var productGroupDelete in request.ProductGroups)
-            {
-                try
-                {
-                    //Xóa Disivision
-                    var productGroup = await _productGroupRep.FindOneAsync(x => x.ProductGroupCode == productGroupDelete);
-                    if (productGroup is not null)
-                    {
-                        _productGroupRep.Remove(productGroup);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(productGroupDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(productGroupDelete);
-                }
-
-            }
-            return response;
+            return true;
         }
     }
 }

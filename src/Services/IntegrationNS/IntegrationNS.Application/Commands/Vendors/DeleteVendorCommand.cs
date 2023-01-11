@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,11 +7,11 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.Vendors
 {
-    public class DeleteVendorCommand : IRequest<DeleteNSResponse>
+    public class DeleteVendorCommand : IRequest<bool>
     {
-        public List<string> Vendors { get; set; } = new List<string>();
+        public string Vendor { get; set; } 
     }
-    public class DeleteVendorCommandHandler : IRequestHandler<DeleteVendorCommand, DeleteNSResponse>
+    public class DeleteVendorCommandHandler : IRequestHandler<DeleteVendorCommand, bool>
     {
         private readonly IRepository<VendorModel> _vendorRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -22,45 +21,18 @@ namespace IntegrationNS.Application.Commands.Vendors
             _vendorRep = vendorRep;
             _unitOfWork = unitOfWork;
         }
-        public async Task<DeleteNSResponse> Handle(DeleteVendorCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteVendorCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa Storage Location
+            var vendor = await _vendorRep.FindOneAsync(x => x.VendorCode == request.Vendor);
+            if (vendor is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"Vendor {request.Vendor}");
 
-            if (!request.Vendors.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
 
-            response.TotalRecord = request.Vendors.Count();
+            _vendorRep.Remove(vendor);
+            await _unitOfWork.SaveChangesAsync();
 
-            foreach (var vendorDelete in request.Vendors)
-            {
-                try
-                {
-                    //Xóa Storage Location
-                    var storageLocation = await _vendorRep.FindOneAsync(x => x.VendorCode == vendorDelete);
-                    if (storageLocation is not null)
-                    {
-                        _vendorRep.Remove(storageLocation);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(vendorDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(vendorDelete);
-                }
-
-            }
-            return response;
+            return true;
         }
     }
 }

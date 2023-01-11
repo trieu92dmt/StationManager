@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,11 +7,11 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.Customers
 {
-    public class DeleteCustomerNSCommand : IRequest<DeleteNSResponse>
+    public class DeleteCustomerNSCommand : IRequest<bool>
     {
-        public List<string> Customers { get; set; } = new List<string>();
+        public string Customer { get; set; }
     }
-    public class DeleteCustomerNSCommandHandler : IRequestHandler<DeleteCustomerNSCommand, DeleteNSResponse>
+    public class DeleteCustomerNSCommandHandler : IRequestHandler<DeleteCustomerNSCommand, bool>
     {
         private readonly IRepository<CustomerModel> _customerRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,45 +22,17 @@ namespace IntegrationNS.Application.Commands.Customers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<DeleteNSResponse> Handle(DeleteCustomerNSCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteCustomerNSCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa customer
+            var customer = await _customerRep.FindOneAsync(x => x.CustomerCode == request.Customer);
+            if (customer is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"Customer {request.Customer}");
 
-            if (!request.Customers.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
+            _customerRep.Remove(customer);
+            await _unitOfWork.SaveChangesAsync();
 
-            response.TotalRecord = request.Customers.Count();
-
-            foreach (var customerDelete in request.Customers)
-            {
-                try
-                {
-                    //Xóa Disivision
-                    var customer = await _customerRep.FindOneAsync(x => x.CustomerCode == customerDelete);
-                    if (customer is not null)
-                    {
-                        _customerRep.Remove(customer);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(customerDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(customerDelete);
-                }
-
-            }
-            return response;
+            return true;
         }
     }
 }

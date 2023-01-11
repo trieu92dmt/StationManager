@@ -66,10 +66,14 @@ namespace IntegrationNS.Application.Commands.CustmdSales
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{custmdSale.SalesOffice}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = custmdSale.SalesOffice,
+                        Msg = ex.Message
+                    });
                 }
             }
 

@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,12 +7,12 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.StorageLocations
 {
-    public class DeleteStorageLocationCommand : IRequest<DeleteNSResponse>
+    public class DeleteStorageLocationCommand : IRequest<bool>
     {
-        public List<string> StorageLocations { get; set; } = new List<string>();
+        public string StorageLocation { get; set; }
     }
 
-    public class DeleteStorageLocationCommandHandler : IRequestHandler<DeleteStorageLocationCommand, DeleteNSResponse>
+    public class DeleteStorageLocationCommandHandler : IRequestHandler<DeleteStorageLocationCommand, bool>
     {
         private readonly IRepository<StorageLocationModel> _storageLocationRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -24,45 +23,18 @@ namespace IntegrationNS.Application.Commands.StorageLocations
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<DeleteNSResponse> Handle(DeleteStorageLocationCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteStorageLocationCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa Storage Location
+            var storageLocation = await _storageLocationRep.FindOneAsync(x => x.StorageLocationName == request.StorageLocation);
+            if (storageLocation is not null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"Storage Location {request.StorageLocation}");
 
-            if (!request.StorageLocations.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
 
-            response.TotalRecord = request.StorageLocations.Count();
+            _storageLocationRep.Remove(storageLocation);
+            await _unitOfWork.SaveChangesAsync();
 
-            foreach (var storageLocationDelete in request.StorageLocations)
-            {
-                try
-                {
-                    //Xóa Storage Location
-                    var storageLocation = await _storageLocationRep.FindOneAsync(x => x.StorageLocationName == storageLocationDelete);
-                    if (storageLocation is not null)
-                    {
-                        _storageLocationRep.Remove(storageLocation);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(storageLocationDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(storageLocationDelete);
-                }
-
-            }
-            return response;
+            return true;
         }
     }
 }

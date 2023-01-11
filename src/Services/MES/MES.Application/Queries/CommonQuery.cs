@@ -63,6 +63,20 @@ namespace MES.Application.Queries
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPO(string keyword);
 
+        /// <summary>
+        /// Dropdown WeightHead
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<Common2Response>> GetDropdownWeightHead(string keyword);
+
+        /// <summary>
+        /// Dropdown Sloc
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownSloc(string keyword);
+
     }
 
     public class CommonQuery : ICommonQuery
@@ -74,10 +88,12 @@ namespace MES.Application.Queries
         private readonly IRepository<PurchasingGroupModel> _purGrRepo;
         private readonly IRepository<VendorModel> _vendorRepo;
         private readonly IRepository<PurchaseOrderMasterModel> _poMasterRepo;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
-                           IRepository<PurchaseOrderMasterModel> poMasterRepo)
+                           IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -86,6 +102,8 @@ namespace MES.Application.Queries
             _purGrRepo = purGrRepo;
             _vendorRepo = vendorRepo;
             _poMasterRepo = poMasterRepo;
+            _slocRepo = slocRepo;
+            _scaleRepo = scaleRepo;
         }
 
         #region
@@ -121,11 +139,13 @@ namespace MES.Application.Queries
         #region Dropdown Sale Org
         public async Task<List<CommonResponse>> GetDropdownSaleOrg()
         {
-            var response = await _saleOrgRepo.GetQuery(x => x.Actived == true).Select(x => new CommonResponse
-            {
-                Key = x.SaleOrgCode,
-                Value = $"{x.SaleOrgCode} | {x.SaleOrgName}"
-            }).AsNoTracking().ToListAsync();
+            var response = await _saleOrgRepo.GetQuery(x => x.Actived == true)
+                .OrderBy(x => x.SaleOrgCode)
+                .Select(x => new CommonResponse
+                {
+                    Key = x.SaleOrgCode,
+                    Value = $"{x.SaleOrgCode} | {x.SaleOrgName}"
+                }).AsNoTracking().ToListAsync();
 
             return response;
         }
@@ -134,11 +154,13 @@ namespace MES.Application.Queries
         #region Dropdown Purchasing Gr
         public async Task<List<CommonResponse>> GetDropdownPurchasingGr(string keyword)
         {
-            var response = await _purGrRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchasingGroupName.Contains(keyword) || x.PurchasingGroupCode.Contains(keyword) : true).Select(x => new CommonResponse
-            {
-                Key = x.PurchasingGroupCode,
-                Value = $"{x.PurchasingGroupCode} | {x.PurchasingGroupName}"
-            }).AsNoTracking().ToListAsync();
+            var response = await _purGrRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchasingGroupName.Contains(keyword) || x.PurchasingGroupCode.Contains(keyword) : true)
+                .OrderBy(x => x.PurchasingGroupCode)
+                .Select(x => new CommonResponse
+                {
+                    Key = x.PurchasingGroupCode,
+                    Value = $"{x.PurchasingGroupCode} | {x.PurchasingGroupName}"
+                }).AsNoTracking().ToListAsync();
 
             return response;
         }
@@ -148,11 +170,13 @@ namespace MES.Application.Queries
         public async Task<List<CommonResponse>> GetDropdownPurchasingOrgByPlant(string keyword, string plantCode)
         {
             var response = await _purOrgRepo.GetQuery(x => (!string.IsNullOrEmpty(plantCode) ? x.PurchasingOrgCode == plantCode : true) &&
-                                                           (!string.IsNullOrEmpty(keyword) ? x.PurchasingOrgName.Contains(keyword) || x.PurchasingOrgCode.Contains(keyword) : true)).Select(x => new CommonResponse
-            {
-                Key = x.PurchasingOrgCode,
-                Value = $"{x.PurchasingOrgCode} | {x.PurchasingOrgName}"
-            }).AsNoTracking().ToListAsync();
+                                                           (!string.IsNullOrEmpty(keyword) ? x.PurchasingOrgName.Contains(keyword) || x.PurchasingOrgCode.Contains(keyword) : true))
+                .OrderBy(x => x.PurchasingOrgCode)
+                .Select(x => new CommonResponse
+                {
+                    Key = x.PurchasingOrgCode,
+                    Value = $"{x.PurchasingOrgCode} | {x.PurchasingOrgName}"
+                }).AsNoTracking().ToListAsync();
 
             return response;
         }
@@ -162,11 +186,13 @@ namespace MES.Application.Queries
         #region Dropdown Vendor
         public async Task<List<CommonResponse>> GetDropdownVendor(string keyword)
         {
-            var response = await _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true).Select(x => new CommonResponse
-            {
-                Key = x.VendorCode,
-                Value = $"{x.VendorCode} | {x.VendorName}"
-            }).AsNoTracking().ToListAsync();
+            var response = await _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true)
+                .OrderBy(x => x.VendorCode)
+                .Select(x => new CommonResponse
+                {
+                    Key = x.VendorCode,
+                    Value = $"{x.VendorCode} | {x.VendorName}"
+                }).AsNoTracking().ToListAsync();
 
             return response;
         }
@@ -192,11 +218,38 @@ namespace MES.Application.Queries
         public async Task<List<CommonResponse>> GetDropdownPO(string keyword)
         {
             var response = await _poMasterRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true)
+                                        .OrderBy(x => x.PurchaseOrderCode)
                                         .Select(x => new CommonResponse
                                         {
                                             Key = x.PurchaseOrderCode,
                                             Value = x.PurchaseOrderCode
                                         }).AsNoTracking().ToListAsync();
+
+            return response;
+        }
+
+        public async Task<List<Common2Response>> GetDropdownWeightHead(string keyword)
+        {
+            var response = await _scaleRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true)
+                                    .OrderBy(x => x.ScaleName)
+                                    .Select(x => new Common2Response
+                                    {
+                                        Key = x.ScaleId,
+                                        Value = x.ScaleName
+                                    }).AsNoTracking().ToListAsync();
+
+            return response;
+        }
+
+        public async Task<List<CommonResponse>> GetDropdownSloc(string keyword)
+        {
+            var response = await _slocRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.StorageLocationCode.Contains(keyword) || x.StorageLocationName.Contains(keyword) : true)
+                                    .OrderBy(x => x.StorageLocationCode)
+                                    .Select(x => new CommonResponse
+                                    {
+                                        Key = x.StorageLocationCode,
+                                        Value = x.StorageLocationName
+                                    }).AsNoTracking().ToListAsync();
 
             return response;
         }

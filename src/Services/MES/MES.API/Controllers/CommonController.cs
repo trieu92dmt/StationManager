@@ -128,5 +128,33 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách po") });
         }
         #endregion
+
+        #region Lấy dropdown đầu cân
+        /// <summary>
+        /// Lấy dropdown đầu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-weight-head")]
+        public async Task<IActionResult> GetListWeightHead(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownWeightHead(keyword);
+            return Ok(new ApiSuccessResponse<List<Common2Response>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
+        }
+        #endregion
+
+        #region Lấy dropdown sloc
+        /// <summary>
+        /// Lấy dropdown sloc
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-sloc")]
+        public async Task<IActionResult> GetListSloc(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownSloc(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sloc") });
+        }
+        #endregion
     }
 }

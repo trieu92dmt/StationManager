@@ -182,7 +182,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Số lô
                                 Batch = x.PurchaseOrderDetail?.Batch,
                                 //Số phương tiện
-                                VehicleCode = x.PurchaseOrderDetail?.VehicleCode,
+                                VehicleCode = x.VehicleCode,
 
                                 //Số lượng đặt hàng
                                 OrderQuantity = x.PurchaseOrderDetail?.OrderQuantity,

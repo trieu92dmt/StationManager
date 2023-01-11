@@ -45,12 +45,15 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         private readonly IRepository<PurchaseOrderMasterModel> _poRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
+        private readonly IRepository<ProductModel> _prdRepo;
 
-        public PurchaseOrderIntegrationNSCommandHandler(IRepository<PurchaseOrderMasterModel> poRep, IUnitOfWork unitOfWork, IRepository<PurchaseOrderDetailModel> poDetailRep)
+        public PurchaseOrderIntegrationNSCommandHandler(IRepository<PurchaseOrderMasterModel> poRep, IUnitOfWork unitOfWork, IRepository<PurchaseOrderDetailModel> poDetailRep,
+                                                        IRepository<ProductModel> prdRepo)
         {
             _poRep = poRep;
             _unitOfWork = unitOfWork;
             _poDetailRep = poDetailRep;
+            _prdRepo = prdRepo;
         }
         public async Task<IntegrationNSResponse> Handle(PurchaseOrderIntegrationNSCommand request, CancellationToken cancellationToken)
         {
@@ -60,6 +63,9 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                 throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu đồng bộ");
 
             response.TotalRecord = request.PurchaseOrders.Count();
+
+            //Dữ liệu material
+            var materials = _prdRepo.GetQuery().AsNoTracking();
 
             foreach (var poIntegration in request.PurchaseOrders)
             {
@@ -90,20 +96,41 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         purchaseOrder.Actived = true;
 
                         //Detail
-                        var detailPOs = poIntegration.PurchaseOrderDetails.Select(x => new PurchaseOrderDetailModel
+                        var detailPOs = new List<PurchaseOrderDetailModel>();
+                        foreach (var item in poIntegration.PurchaseOrderDetails)
                         {
-                            PurchaseOrderDetailId = Guid.NewGuid(),
-                            PurchaseOrderId = purchaseOrder.PurchaseOrderId,
-                            POLine = x.PurchaseOrderItem,
-                            ProductCode = x.Material,
-                            OrderQuantity = x.OrderQuantity,
-                            OpenQuantity = x.OpenQuantity,
-                            Unit = x.UoM,
+                            if (materials.FirstOrDefault(x => x.ProductCode == item.Material) == null)
+                                throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
 
-                            CreateTime = DateTime.Now,
-                            Actived = true
+                            detailPOs.Add(new PurchaseOrderDetailModel
+                            {
+                                PurchaseOrderDetailId = Guid.NewGuid(),
+                                PurchaseOrderId = purchaseOrder.PurchaseOrderId,
+                                POLine = item.PurchaseOrderItem,
+                                ProductCode = item.Material,
+                                OrderQuantity = item.OrderQuantity,
+                                OpenQuantity = item.OpenQuantity,
+                                Unit = item.UoM,
 
-                        }).ToList();
+                                CreateTime = DateTime.Now,
+                                Actived = true
+                            });
+
+                        }
+                        //var detailPOs = poIntegration.PurchaseOrderDetails.Select(x => new PurchaseOrderDetailModel
+                        //{
+                        //    PurchaseOrderDetailId = Guid.NewGuid(),
+                        //    PurchaseOrderId = purchaseOrder.PurchaseOrderId,
+                        //    POLine = x.PurchaseOrderItem,
+                        //    ProductCode = x.Material,
+                        //    OrderQuantity = x.OrderQuantity,
+                        //    OpenQuantity = x.OpenQuantity,
+                        //    Unit = x.UoM,
+
+                        //    CreateTime = DateTime.Now,
+                        //    Actived = true
+
+                        //}).ToList();
 
                         purchaseOrder.PurchaseOrderDetailModel = detailPOs;
                         _poRep.Add(purchaseOrder);

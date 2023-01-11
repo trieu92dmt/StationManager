@@ -82,9 +82,11 @@ namespace IntegrationNS.Application.Queries
                 //Số lần cân
                 QuantityWeitght = nkmh.QuantityWeitght,
                 //Total Quantity
-                TotalQuantity = nkmh.TotalQuantity,
+                TotalQuantity = nkmh.PurchaseOrderDetail?.OrderQuantity,
                 //Delivered Quantity
-                DeliveredQuantity = nkmh.DeliveredQuantity,
+                DeliveredQuantity = nkmh.PurchaseOrderDetail?.QuantityReceived,
+                //Open Quantity
+                OpenQuantity = nkmh.PurchaseOrderDetail?.OpenQuantity,
                 //Số xe tải
                 TruckQuantity = nkmh.TruckQuantity,
                 //Số cân đầu vào
@@ -125,11 +127,8 @@ namespace IntegrationNS.Application.Queries
                 //Số lô
                 Batch = nkmh.PurchaseOrderDetail?.Batch,
                 //Số phương tiện
-                VehicleCode = nkmh.PurchaseOrderDetail?.VehicleCode,
+                VehicleCode = nkmh.VehicleCode,
 
-                //Số lượng đặt hàng
-                OrderQuantity = nkmh.PurchaseOrderDetail?.OrderQuantity,
-                OpenQuantity = nkmh.PurchaseOrderDetail?.OpenQuantity
             };
 
 

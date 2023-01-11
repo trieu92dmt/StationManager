@@ -14,6 +14,8 @@ namespace ISD.Infrastructure.Models
         [Key]
         public Guid GoodsReceiptId { get; set; }
         public Guid? PurchaseOrderDetailId { get; set; }
+        [StringLength(10)]
+        public string MaterialCode { get; set; }
         [StringLength(50)]
         public string WeightId { get; set; }
         [StringLength(50)]
@@ -34,10 +36,6 @@ namespace ISD.Infrastructure.Models
         public string VehicleCode { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? QuantityWeitght { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveredQuantity { get; set; }
         public int? TruckQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? InputWeight { get; set; }
@@ -50,12 +48,18 @@ namespace ISD.Infrastructure.Models
         [StringLength(50)]
         public string Status { get; set; }
         [Column(TypeName = "datetime")]
+        public DateTime? WeighDate { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime? StartTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? EndTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DocumentDate { get; set; }
         public int? DateKey { get; set; }
+        [StringLength(50)]
+        public string SlocCode { get; set; }
+        [StringLength(50)]
+        public string SlocName { get; set; }
         [StringLength(50)]
         public string Batch { get; set; }
         [StringLength(50)]

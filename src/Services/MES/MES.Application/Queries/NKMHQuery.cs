@@ -100,8 +100,8 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                queryNKMH = queryNKMH.Where(x => !x.PurchaseOrderDetailId.HasValue ? true : int.Parse(x?.PurchaseOrderDetail?.ProductCode) >= int.Parse(request.MaterialFrom) &&
-                                                                                            int.Parse(x?.PurchaseOrderDetail?.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => !x.PurchaseOrderDetailId.HasValue ? true : long.Parse(x?.PurchaseOrderDetail?.ProductCode) >= long.Parse(request.MaterialFrom) &&
+                                                                                            long.Parse(x?.PurchaseOrderDetail?.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))

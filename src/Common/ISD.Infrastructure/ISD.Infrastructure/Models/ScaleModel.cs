@@ -11,6 +11,11 @@ namespace ISD.Infrastructure.Models
     [Table("ScaleModel", Schema = "DataCollection")]
     public partial class ScaleModel
     {
+        public ScaleModel()
+        {
+            WeighSessionModel = new HashSet<WeighSessionModel>();
+        }
+
         [Key]
         public Guid ScaleId { get; set; }
         [StringLength(50)]
@@ -24,5 +29,8 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
+
+        [InverseProperty("Scale")]
+        public virtual ICollection<WeighSessionModel> WeighSessionModel { get; set; }
     }
 }

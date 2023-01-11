@@ -8,141 +8,59 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ISD.Infrastructure.Models
 {
-    [Table("WorkOrderModel", Schema = "MESP2")]
+    [Table("WorkOrderModel", Schema = "DataCollection")]
     public partial class WorkOrderModel
     {
-        public WorkOrderModel()
-        {
-            ConfirmStageModel = new HashSet<ConfirmStageModel>();
-            DetailSaleOrderModel = new HashSet<DetailSaleOrderModel>();
-            OutputRecordModel = new HashSet<OutputRecordModel>();
-            StageTransferModel = new HashSet<StageTransferModel>();
-            WorkOrderCardModel = new HashSet<WorkOrderCardModel>();
-            WorkOrder_Mold_Mapping = new HashSet<WorkOrder_Mold_Mapping>();
-            WorkOrder_Product_Mapping = new HashSet<WorkOrder_Product_Mapping>();
-            WorkOrder_Routing_Mapping = new HashSet<WorkOrder_Routing_Mapping>();
-        }
-
         [Key]
         public Guid WorkOrderId { get; set; }
-        public int? WorkOrderIdInt { get; set; }
         [StringLength(50)]
         public string WorkOrderCode { get; set; }
         [StringLength(50)]
-        public string KSSXNumber { get; set; }
-        [StringLength(50)]
-        public string ParentWorkOrderCode { get; set; }
-        public int? Priority { get; set; }
-        [StringLength(50)]
         public string ProductCode { get; set; }
         [StringLength(50)]
-        public string BOMVersion { get; set; }
+        public string OrderTypeCode { get; set; }
+        [StringLength(50)]
+        public string Plant { get; set; }
+        [StringLength(50)]
+        public string StorageLocation { get; set; }
+        [StringLength(50)]
+        public string Batch { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? Quantity { get; set; }
+        public decimal? TargetQuantity { get; set; }
         [StringLength(50)]
         public string Unit { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? DocumentDate { get; set; }
+        public DateTime? ActualFinishDate { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? EstimateFromDate { get; set; }
+        public DateTime? ScheduledFinishDate { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? EstimateToDate { get; set; }
+        public DateTime? ScheduledStartDate { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? DeliveredQuantity { get; set; }
+        [StringLength(50)]
+        public string SalesOrder { get; set; }
+        [StringLength(50)]
+        public string SalesOrderItem { get; set; }
+        [StringLength(50)]
+        public string OrderCategory { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? ActualStartDate { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? ActualEndDate { get; set; }
-        public Guid? SOId { get; set; }
-        public Guid? SOLineId { get; set; }
-        [StringLength(200)]
-        public string ProductSpreadSize { get; set; }
+        public DateTime? StartDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? PrintSize { get; set; }
-        [StringLength(500)]
-        public string ProcessingUnit { get; set; }
-        [StringLength(500)]
-        public string DesignVote { get; set; }
-        [StringLength(500)]
-        public string DesignBy { get; set; }
-        public Guid? MatchCardCommandId { get; set; }
+        public decimal? ConfirmedYieldQuantity { get; set; }
         [StringLength(50)]
-        public string MatchCard { get; set; }
+        public string DeletionFlag { get; set; }
         [StringLength(50)]
-        public string PrintItem { get; set; }
+        public string LongTextExists { get; set; }
         [StringLength(50)]
-        public string PrintStyle { get; set; }
+        public string ReferenceOrder { get; set; }
         [StringLength(50)]
-        public string PrintCompany { get; set; }
-        [StringLength(50)]
-        public string ZincSupplier { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? PrintReqDate { get; set; }
-        [StringLength(50)]
-        public string WOStatus { get; set; }
-        public int? CustomerId { get; set; }
-        [StringLength(50)]
-        public string CustomerName { get; set; }
-        [StringLength(50)]
-        public string AssemblyCode { get; set; }
-        [StringLength(50)]
-        public string ClassProduct { get; set; }
-        [StringLength(50)]
-        public string Location { get; set; }
-        [StringLength(50)]
-        public string NumOnPaper { get; set; }
-        [StringLength(4000)]
-        public string AttachedNote { get; set; }
-        [StringLength(50)]
-        public string InforForm { get; set; }
-        [StringLength(50)]
-        public string POCode { get; set; }
-        [StringLength(50)]
-        public string ProductSize { get; set; }
-        [StringLength(20)]
-        public string OutResource { get; set; }
-        [StringLength(50)]
-        public string MoldDrawCode { get; set; }
-        [StringLength(50)]
-        public string DrawCode { get; set; }
-        public bool? isUpdateMold { get; set; }
+        public string SystemStatus { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
-        public Guid? CreateBy { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
-        public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
-        [StringLength(50)]
-        public string Specification { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? QuantitCompensation { get; set; }
-        public bool? isParentWorkOrder { get; set; }
-        [StringLength(50)]
-        public string WorkOrderType { get; set; }
-
-        [ForeignKey("MatchCardCommandId")]
-        [InverseProperty("WorkOrderModel")]
-        public virtual MatchCardCommandModel MatchCardCommand { get; set; }
-        [ForeignKey("SOId")]
-        [InverseProperty("WorkOrderModel")]
-        public virtual HeaderSaleOrderModel SO { get; set; }
-        [ForeignKey("SOLineId")]
-        [InverseProperty("WorkOrderModel")]
-        public virtual DetailSaleOrderModel SOLine { get; set; }
-        [InverseProperty("WorkOrder")]
-        public virtual ICollection<ConfirmStageModel> ConfirmStageModel { get; set; }
-        [InverseProperty("WorkOder")]
-        public virtual ICollection<DetailSaleOrderModel> DetailSaleOrderModel { get; set; }
-        [InverseProperty("WorkOrder")]
-        public virtual ICollection<OutputRecordModel> OutputRecordModel { get; set; }
-        [InverseProperty("WorkOrder")]
-        public virtual ICollection<StageTransferModel> StageTransferModel { get; set; }
-        [InverseProperty("WorkOrder")]
-        public virtual ICollection<WorkOrderCardModel> WorkOrderCardModel { get; set; }
-        [InverseProperty("WorkOrder")]
-        public virtual ICollection<WorkOrder_Mold_Mapping> WorkOrder_Mold_Mapping { get; set; }
-        [InverseProperty("WorkOrder")]
-        public virtual ICollection<WorkOrder_Product_Mapping> WorkOrder_Product_Mapping { get; set; }
-        [InverseProperty("WorkOrder")]
-        public virtual ICollection<WorkOrder_Routing_Mapping> WorkOrder_Routing_Mapping { get; set; }
     }
 }

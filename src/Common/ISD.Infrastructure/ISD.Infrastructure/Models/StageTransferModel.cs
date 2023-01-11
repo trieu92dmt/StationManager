@@ -50,7 +50,7 @@ namespace ISD.Infrastructure.Models
         public virtual StockModel ToStock { get; set; }
         [ForeignKey("WorkOrderId")]
         [InverseProperty("StageTransferModel")]
-        public virtual WorkOrderModel WorkOrder { get; set; }
+        public virtual WorkOrderModel1 WorkOrder { get; set; }
         [InverseProperty("StageTranfer")]
         public virtual ICollection<DetailStageTranferModel> DetailStageTranferModel { get; set; }
     }

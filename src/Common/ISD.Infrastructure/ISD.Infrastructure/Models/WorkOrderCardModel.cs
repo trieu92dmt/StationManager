@@ -50,7 +50,7 @@ namespace ISD.Infrastructure.Models
         public virtual EquipmentCardModel EquipmentCard { get; set; }
         [ForeignKey("WorkOrderId")]
         [InverseProperty("WorkOrderCardModel")]
-        public virtual WorkOrderModel WorkOrder { get; set; }
+        public virtual WorkOrderModel1 WorkOrder { get; set; }
         [InverseProperty("WorkOrderCar")]
         public virtual ICollection<EquipmentCard_WorkOrder_Log_Mapping> EquipmentCard_WorkOrder_Log_Mapping { get; set; }
         [InverseProperty("WorkOrderCard")]

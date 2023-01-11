@@ -69,8 +69,6 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     QuantityWithPackaging = nkmh.QuantityWithPackaging,
                     VehicleCode = nkmh.VehicleCode,
                     QuantityWeitght = nkmh.QuantityWeitght,
-                    TotalQuantity = nkmh.TotalQuantity,
-                    DeliveredQuantity = nkmh.DeliveredQuantity,
                     TruckQuantity = nkmh.TruckQuantity,
                     InputWeight = nkmh.InputWeight,
                     OutputWeight = nkmh.OutputWeight,

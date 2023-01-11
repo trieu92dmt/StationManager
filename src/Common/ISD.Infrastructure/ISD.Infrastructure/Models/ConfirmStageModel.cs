@@ -26,6 +26,6 @@ namespace ISD.Infrastructure.Models
 
         [ForeignKey("WorkOrderId")]
         [InverseProperty("ConfirmStageModel")]
-        public virtual WorkOrderModel WorkOrder { get; set; }
+        public virtual WorkOrderModel1 WorkOrder { get; set; }
     }
 }

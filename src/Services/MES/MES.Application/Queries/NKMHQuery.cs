@@ -2,7 +2,10 @@
 using ISD.Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
+using MES.Application.DTOs.MES.NKMH;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MES.Application.Queries
 {
@@ -21,6 +24,13 @@ namespace MES.Application.Queries
         /// <param name="request"></param>
         /// <returns></returns>
         Task<List<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request);
+
+        /// <summary>
+        /// Lấy số cân
+        /// </summary>
+        /// <param name="weightHead"></param>
+        /// <returns></returns>
+        //Task<List<GetWeighNumResponse>> GetWeighNum(List<string> weightHead);
     }
     public class NKMHQuery : INKMHQuery
     {
@@ -30,9 +40,11 @@ namespace MES.Application.Queries
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
         private readonly IRepository<AccountModel> _userRep;
         private readonly IRepository<VendorModel> _vendorRep;
+        private readonly IRepository<WeighingSessionModel> _weighSsRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
-                         IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep)
+                         IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
+                         IRepository<WeighingSessionModel> weighSsRepo)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -40,6 +52,7 @@ namespace MES.Application.Queries
             _poDetailRep = poDetailRep;
             _userRep = userRep;
             _vendorRep = vendorRep;
+            _weighSsRepo = weighSsRepo;
         }
 
         public async Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)
@@ -73,8 +86,7 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
-                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom).ToList();
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
@@ -86,16 +98,23 @@ namespace MES.Application.Queries
             {
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
             }
+
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.ProductCode) >= int.Parse(request.MaterialFrom) &&
-                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => !x.PurchaseOrderDetailId.HasValue ? true : long.Parse(x?.PurchaseOrderDetail?.ProductCode) >= long.Parse(request.MaterialFrom) &&
+                                                                                            long.Parse(x?.PurchaseOrderDetail?.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
                                                                                         int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
+            {
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
+                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
             }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
@@ -106,7 +125,7 @@ namespace MES.Application.Queries
             {
                 NkmhId = x.GoodsReceiptId,
                 //Plant
-                Plant = x.PurchaseOrderDetail?.PurchaseOrder?.Plant,
+                Plant = x.PlantCode,
                 //PO và POLine
                 PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
                 POItem = x.PurchaseOrderDetail?.POLine,
@@ -137,7 +156,11 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeitght = x.QuantityWeitght,
                 //Total Quantity
-                TotalQuantity = x.TotalQuantity,
+                TotalQuantity = x.PurchaseOrderDetail?.OrderQuantity,
+                //Open quantity
+                OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity,
+                //Delivery Quantity
+                DeliveredQuantity = x.PurchaseOrderDetail?.QuantityReceived,
                 //Unit
                 Unit = x.PurchaseOrderDetail?.Unit,
                 //Số xe tải
@@ -189,18 +212,20 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant == request.Plant).ToList();
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
-                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
-                                             int.Parse(x.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
+                if (string.IsNullOrEmpty(request.PurchasingOrgTo)) request.PurchasingOrgTo = request.PurchasingOrgFrom;
+                queryPO = queryPO.Where(x => x.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom).ToList();
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
-                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.VendorCode) >= int.Parse(request.VendorFrom) &&
-                                             int.Parse(x.PurchaseOrder.VendorCode) <= int.Parse(request.VendorTo)).ToList();
-            }
+                if (string.IsNullOrEmpty(request.VendorFrom)) request.VendorTo = request.VendorFrom;
+                queryPO = queryPO.Where(x => !x.PurchaseOrder.VendorCode.IsNullOrEmpty() && 
+                                             long.Parse(x.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
+                                             long.Parse(x.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo)).ToList();
+            }   
 
             if (!string.IsNullOrEmpty(request.POType))
             {
@@ -208,14 +233,23 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.ProductCode) >= int.Parse(request.MaterialFrom) &&
-                                             int.Parse(x.PurchaseOrder.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
+                if (string.IsNullOrEmpty(request.MaterialFrom)) request.MaterialTo = request.MaterialFrom;
+                queryPO = queryPO.Where(x => long.Parse(x.ProductCode) >= long.Parse(request.MaterialFrom) &&
+                                             long.Parse(x.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
+                if (string.IsNullOrEmpty(request.PurchasingGroupFrom)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
                 queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
                                              int.Parse(x.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
+            {
+                if (string.IsNullOrEmpty(request.PurchaseOrderFrom)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
+                queryPO = queryPO.Where(x => long.Parse(x.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
+                                             long.Parse(x.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
@@ -245,10 +279,11 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                var material = await _prdRep.FindOneAsync(x => int.Parse(x.ProductCode) == int.Parse(request.MaterialFrom));
+                var material = await _prdRep.FindOneAsync(x => x.ProductCode == request.MaterialFrom);
 
                 dataPO.Add(new PuchaseOrderNKMHResponse
                 {
+                    Plant = request.Plant,
                     Material = request.MaterialFrom.ToString(),
                     MaterialName = material?.ProductName
                 });

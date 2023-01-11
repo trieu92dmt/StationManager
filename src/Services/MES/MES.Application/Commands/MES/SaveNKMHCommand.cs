@@ -4,6 +4,7 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MES.Application.Commands.MES
 {
@@ -14,7 +15,30 @@ namespace MES.Application.Commands.MES
 
     public class NKMHRequest
     {
+        //Plant
+        public string PlantCode { get; set; }
+        //Material
+        public string MaterialCode { get; set; }
+        //Sloc
+        public string SlocCode { get; set; }
+        //SL bao
+        public decimal? BagQuantity { get; set; }
+        //Đơn trọng
+        public decimal? SingleWeight { get; set; }
+        //Confỉm Qty
+        public decimal? ConfirmQty { get; set; }
+        //SL kèm bao bì
+        public decimal? QuantityWithPackaging { get; set; }
+        //Số phương tiện
+        public string VehicleCode { get; set; }
+        //Ghi chú
+        public string Description { get; set; }
+        //Hình ảnh
+        public string Image { get; set; }
+        //Trạng thái
+        public string Status { get; set; }
         public Guid PoDetailId { get; set; }
+        //Đầu cân
         public string WeightHeadCode { get; set; }
     }
 
@@ -23,16 +47,21 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<GoodsReceiptModel> _nkRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
-                                      IRepository<PurchaseOrderDetailModel> poDetailRep)
+                                      IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
             _poDetailRep = poDetailRep;
+            _slocRepo = slocRepo;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
+
+            //Danh sách storage location
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
 
             foreach (var x in request.NKMHRequests)
             {
@@ -49,7 +78,28 @@ namespace MES.Application.Commands.MES
                     PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
                     //Mã đầu cân
                     WeightHeadCode = x.WeightHeadCode,
-
+                    //PlantCode
+                    PlantCode = x?.PlantCode,
+                    //Material Desc
+                    MaterialCode = x?.MaterialCode,
+                    //Sloc code
+                    SlocCode = x?.SlocCode,
+                    //Sloc Name
+                    SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null,
+                    //SL bao
+                    BagQuantity = x.BagQuantity,
+                    //Đơn trọng
+                    SingleWeight = x.SingleWeight,  
+                    //Confirm Qty
+                    ConfirmQty = x.ConfirmQty,  
+                    //Sl kèm bao bì
+                    QuantityWithPackaging = x.QuantityWithPackaging,
+                    //Số phương tiện
+                    VehicleCode = x.VehicleCode,
+                    //Ghi chú
+                    Description = x.Description,
+                    //Hình ảnh
+                    //Trạng thái
                     DocumentDate = DateTime.Now,
 
                     //Common

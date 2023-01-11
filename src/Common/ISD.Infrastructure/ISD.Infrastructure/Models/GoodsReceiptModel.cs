@@ -14,6 +14,8 @@ namespace ISD.Infrastructure.Models
         [Key]
         public Guid GoodsReceiptId { get; set; }
         public Guid? PurchaseOrderDetailId { get; set; }
+        [StringLength(50)]
+        public string PlantCode { get; set; }
         [StringLength(10)]
         public string MaterialCode { get; set; }
         [StringLength(50)]

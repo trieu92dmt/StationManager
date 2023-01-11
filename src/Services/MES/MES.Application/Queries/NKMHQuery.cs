@@ -4,6 +4,7 @@ using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MES.Application.Queries
@@ -85,8 +86,7 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
-                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom).ToList();
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
@@ -212,14 +212,16 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
-                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
-                                             int.Parse(x.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
+                if (string.IsNullOrEmpty(request.PurchasingOrgTo)) request.PurchasingOrgTo = request.PurchasingOrgFrom;
+                queryPO = queryPO.Where(x => x.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom).ToList();
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
-                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.VendorCode) >= int.Parse(request.VendorFrom) &&
-                                             int.Parse(x.PurchaseOrder.VendorCode) <= int.Parse(request.VendorTo)).ToList();
-            }
+                if (string.IsNullOrEmpty(request.VendorFrom)) request.VendorTo = request.VendorFrom;
+                queryPO = queryPO.Where(x => !x.PurchaseOrder.VendorCode.IsNullOrEmpty() && 
+                                             long.Parse(x.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
+                                             long.Parse(x.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo)).ToList();
+            }   
 
             if (!string.IsNullOrEmpty(request.POType))
             {
@@ -227,18 +229,21 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
+                if (string.IsNullOrEmpty(request.MaterialFrom)) request.MaterialTo = request.MaterialFrom;
                 queryPO = queryPO.Where(x => long.Parse(x.ProductCode) >= long.Parse(request.MaterialFrom) &&
                                              long.Parse(x.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
+                if (string.IsNullOrEmpty(request.PurchasingGroupFrom)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
                 queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
                                              int.Parse(x.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
+                if (string.IsNullOrEmpty(request.PurchaseOrderFrom)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryPO = queryPO.Where(x => long.Parse(x.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
                                              long.Parse(x.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }

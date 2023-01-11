@@ -96,7 +96,6 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                             PurchaseOrderId = purchaseOrder.PurchaseOrderId,
                             POLine = x.PurchaseOrderItem,
                             ProductCode = x.Material,
-                            VehicleCode = x.VehicleCode,
                             OrderQuantity = x.OrderQuantity,
                             OpenQuantity = x.OpenQuantity,
                             Unit = x.UoM,
@@ -138,7 +137,6 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                     POLine = item.PurchaseOrderItem,
                                     ProductCode = item.Material,
                                     Batch = item.Batch,
-                                    VehicleCode = item.VehicleCode,
                                     OrderQuantity = item.OrderQuantity,
                                     OpenQuantity = item.OpenQuantity,
 
@@ -150,7 +148,6 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                             {
                                 detailPO.ProductCode = item.Material;
                                 detailPO.Batch = item.Batch;
-                                detailPO.VehicleCode = item.VehicleCode;
                                 detailPO.OrderQuantity = item.OrderQuantity;
                                 detailPO.OpenQuantity = item.OpenQuantity;
                                 detailPO.LastEditTime = DateTime.Now;

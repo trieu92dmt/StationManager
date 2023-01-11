@@ -97,10 +97,11 @@ namespace MES.Application.Queries
             {
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
             }
+
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : string.Compare(request.MaterialFrom, x.PurchaseOrderDetail.PurchaseOrder.ProductCode) <0 &&
-                                                                                        string.Compare(x.PurchaseOrderDetail.PurchaseOrder.ProductCode, request.MaterialTo) <0).ToList();
+                queryNKMH = queryNKMH.Where(x => !x.PurchaseOrderDetailId.HasValue ? true : int.Parse(x?.PurchaseOrderDetail?.ProductCode) >= int.Parse(request.MaterialFrom) &&
+                                                                                            int.Parse(x?.PurchaseOrderDetail?.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
@@ -220,8 +221,8 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.ProductCode) >= int.Parse(request.MaterialFrom) &&
-                                             int.Parse(x.PurchaseOrder.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
+                queryPO = queryPO.Where(x => long.Parse(x.ProductCode) >= long.Parse(request.MaterialFrom) &&
+                                             long.Parse(x.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
@@ -257,7 +258,7 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                var material = await _prdRep.FindOneAsync(x => int.Parse(x.ProductCode) == int.Parse(request.MaterialFrom));
+                var material = await _prdRep.FindOneAsync(x => x.ProductCode == request.MaterialFrom);
 
                 dataPO.Add(new PuchaseOrderNKMHResponse
                 {

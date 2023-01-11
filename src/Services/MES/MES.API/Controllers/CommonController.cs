@@ -139,7 +139,7 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetListWeightHead(string keyword)
         {
             var dropdownList = await _commonQuery.GetDropdownWeightHead(keyword);
-            return Ok(new ApiSuccessResponse<List<Common2Response>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
         }
         #endregion
 

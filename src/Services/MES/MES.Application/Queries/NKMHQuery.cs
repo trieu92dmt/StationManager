@@ -156,11 +156,11 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeitght = x.QuantityWeitght,
                 //Total Quantity
-                TotalQuantity = x.PurchaseOrderDetail.OrderQuantity,
+                TotalQuantity = x.PurchaseOrderDetail?.OrderQuantity,
                 //Open quantity
-                OpenQuantity = x.PurchaseOrderDetail.OpenQuantity,
+                OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity,
                 //Delivery Quantity
-                DeliveredQuantity = x.PurchaseOrderDetail.QuantityReceived,
+                DeliveredQuantity = x.PurchaseOrderDetail?.QuantityReceived,
                 //Unit
                 Unit = x.PurchaseOrderDetail?.Unit,
                 //Số xe tải

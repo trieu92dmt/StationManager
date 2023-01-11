@@ -24,6 +24,8 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         public string PurchaseOrder { get; set; }
         public string Material { get; set; }
         public DateTime? DocumentDate { get; set; }
+        public string ReleaseIndicator { get; set; }
+        public string DeletionInd { get; set; }
         public List<PurchaseOrderDetailIntegration> PurchaseOrderDetails { get; set; } = new List<PurchaseOrderDetailIntegration>();
     }
 
@@ -111,7 +113,6 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 OrderQuantity = item.OrderQuantity,
                                 OpenQuantity = item.OpenQuantity,
                                 Unit = item.UoM,
-
                                 CreateTime = DateTime.Now,
                                 Actived = true
                             });

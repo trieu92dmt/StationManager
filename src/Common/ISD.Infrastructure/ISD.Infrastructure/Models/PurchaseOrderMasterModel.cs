@@ -42,14 +42,6 @@ namespace ISD.Infrastructure.Models
         public string ReleaseIndicator { get; set; }
         [StringLength(50)]
         public string DeletionInd { get; set; }
-        [StringLength(50)]
-        public string Deliver { get; set; }
-        [StringLength(50)]
-        public string VehicleCode { get; set; }
-        [StringLength(50)]
-        public string VehicleOwner { get; set; }
-        [StringLength(50)]
-        public string TransportUnit { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

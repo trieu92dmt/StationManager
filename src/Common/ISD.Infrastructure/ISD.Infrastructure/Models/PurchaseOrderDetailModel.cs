@@ -51,6 +51,8 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
+        [StringLength(50)]
+        public string DeliveryCompleted { get; set; }
 
         [ForeignKey("PurchaseOrderId")]
         [InverseProperty("PurchaseOrderDetailModel")]

@@ -40,7 +40,12 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         public decimal? OrderQuantity { get; set; }
         public decimal? OpenQuantity { get; set; }
         public string UoM { get; set; }
-
+        public decimal? QuantityReceived { get; set; }
+        public string DeletionInd { get; set; }
+        public string Deliver { get; set; }
+        public string VehicleOwner { get; set; }
+        public string TransportUnit { get; set; }
+        public string DeliveryCompleted { get; set; }
     }
     public class PurchaseOrderIntegrationNSCommandHandler : IRequestHandler<PurchaseOrderIntegrationNSCommand, IntegrationNSResponse>
     {
@@ -93,6 +98,8 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         purchaseOrder.VendorCode = poIntegration.Vendor;
                         //purchaseOrder.VendorCodeInt = int.Parse(poIntegration.Vendor);
                         purchaseOrder.DocumentDate = poIntegration.DocumentDate;
+                        purchaseOrder.ReleaseIndicator = poIntegration.ReleaseIndicator;
+                        purchaseOrder.DeletionInd = poIntegration.DeletionInd;
 
                         purchaseOrder.CreateTime = DateTime.Now;
                         purchaseOrder.Actived = true;
@@ -114,7 +121,14 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 OpenQuantity = item.OpenQuantity,
                                 Unit = item.UoM,
                                 CreateTime = DateTime.Now,
-                                Actived = true
+                                Actived = true,
+                                QuantityReceived = item.QuantityReceived,
+                                DeletionInd = item.DeletionInd,
+                                Deliver = item.Deliver,
+                                VehicleCode = item.VehicleCode,
+                                VehicleOwner = item.VehicleOwner,
+                                TransportUnit = item.TransportUnit,
+                                DeliveryCompleted = item.DeliveryCompleted
                             });
 
                         }
@@ -169,7 +183,14 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                     OpenQuantity = item.OpenQuantity,
 
                                     CreateTime = DateTime.Now,
-                                    Actived = true
+                                    Actived = true,
+                                    QuantityReceived = item.QuantityReceived,
+                                    DeletionInd = item.DeletionInd,
+                                    Deliver = item.Deliver,
+                                    VehicleCode = item.VehicleCode,
+                                    VehicleOwner = item.VehicleOwner,
+                                    TransportUnit = item.TransportUnit,
+                                    DeliveryCompleted = item.DeliveryCompleted
                                 });
                             }
                             else
@@ -179,6 +200,13 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 detailPO.OrderQuantity = item.OrderQuantity;
                                 detailPO.OpenQuantity = item.OpenQuantity;
                                 detailPO.LastEditTime = DateTime.Now;
+                                detailPO.QuantityReceived = item.QuantityReceived;
+                                detailPO.DeletionInd = item.DeletionInd;
+                                detailPO.Deliver = item.Deliver;
+                                detailPO.VehicleCode = item.VehicleCode;
+                                detailPO.VehicleOwner = item.VehicleOwner;
+                                detailPO.TransportUnit = item.TransportUnit;
+                                detailPO.DeliveryCompleted = item.DeliveryCompleted;
                             }
                         }
                         #endregion

@@ -86,10 +86,12 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
+                if (string.IsNullOrEmpty(request.PurchasingOrgTo)) request.PurchasingOrgTo = request.PurchasingOrgFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom).ToList();
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
+                if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) >= int.Parse(request.VendorFrom) &&
                                                                                         int.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) <= int.Parse(request.VendorTo)).ToList();
             }
@@ -101,18 +103,21 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
+                if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
                 queryNKMH = queryNKMH.Where(x => !x.PurchaseOrderDetailId.HasValue ? true : long.Parse(x?.PurchaseOrderDetail?.ProductCode) >= long.Parse(request.MaterialFrom) &&
                                                                                             long.Parse(x?.PurchaseOrderDetail?.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
+                if (string.IsNullOrEmpty(request.PurchasingGroupTo)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
                                                                                         int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
+                if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
                                                                                         int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
             }
@@ -221,7 +226,7 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
-                if (string.IsNullOrEmpty(request.VendorFrom)) request.VendorTo = request.VendorFrom;
+                if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
                 queryPO = queryPO.Where(x => !x.PurchaseOrder.VendorCode.IsNullOrEmpty() && 
                                              long.Parse(x.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
                                              long.Parse(x.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo)).ToList();
@@ -233,21 +238,21 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                if (string.IsNullOrEmpty(request.MaterialFrom)) request.MaterialTo = request.MaterialFrom;
+                if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
                 queryPO = queryPO.Where(x => long.Parse(x.ProductCode) >= long.Parse(request.MaterialFrom) &&
                                              long.Parse(x.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
-                if (string.IsNullOrEmpty(request.PurchasingGroupFrom)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
+                if (string.IsNullOrEmpty(request.PurchasingGroupTo)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
                 queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
                                              int.Parse(x.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
-                if (string.IsNullOrEmpty(request.PurchaseOrderFrom)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
+                if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryPO = queryPO.Where(x => long.Parse(x.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
                                              long.Parse(x.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }

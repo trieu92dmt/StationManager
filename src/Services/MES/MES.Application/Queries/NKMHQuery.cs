@@ -99,8 +99,8 @@ namespace MES.Application.Queries
             }
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.ProductCode) >= int.Parse(request.MaterialFrom) &&
-                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.ProductCode) <= int.Parse(request.MaterialTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : string.Compare(request.MaterialFrom, x.PurchaseOrderDetail.PurchaseOrder.ProductCode) <0 &&
+                                                                                        string.Compare(x.PurchaseOrderDetail.PurchaseOrder.ProductCode, request.MaterialTo) <0).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))

@@ -139,9 +139,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Số lần cân
                                 QuantityWeitght = x.QuantityWeitght,
                                 //Total Quantity
-                                TotalQuantity = x.TotalQuantity,
+                                TotalQuantity = x.PurchaseOrderDetail.OrderQuantity,
                                 //Delivered Quantity
-                                DeliveredQuantity = x.DeliveredQuantity,
+                                DeliveredQuantity = x.PurchaseOrderDetail.QuantityReceived,
                                 //Số xe tải
                                 TruckQuantity = x.TruckQuantity,
                                 //Số cân đầu vào

@@ -13,7 +13,7 @@ namespace ISD.Infrastructure.Models
     {
         public MatchCardCommandModel()
         {
-            WorkOrderModel = new HashSet<WorkOrderModel>();
+            WorkOrderModel1 = new HashSet<WorkOrderModel1>();
         }
 
         [Key]
@@ -45,6 +45,6 @@ namespace ISD.Infrastructure.Models
         public bool? Actived { get; set; }
 
         [InverseProperty("MatchCardCommand")]
-        public virtual ICollection<WorkOrderModel> WorkOrderModel { get; set; }
+        public virtual ICollection<WorkOrderModel1> WorkOrderModel1 { get; set; }
     }
 }

@@ -49,8 +49,6 @@ namespace MES.Application.Commands.MES
                     PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
                     //Mã đầu cân
                     WeightHeadCode = x.WeightHeadCode,
-                    //Số phương tiện
-                    VehicleCode = poLine.VehicleCode,
 
                     DocumentDate = DateTime.Now,
 

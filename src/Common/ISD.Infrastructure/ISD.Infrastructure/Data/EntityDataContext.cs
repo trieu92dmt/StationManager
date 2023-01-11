@@ -384,6 +384,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<WorkFlowModel> WorkFlowModel { get; set; }
         public virtual DbSet<WorkOrderCardModel> WorkOrderCardModel { get; set; }
         public virtual DbSet<WorkOrderModel> WorkOrderModel { get; set; }
+        public virtual DbSet<WorkOrderModel1> WorkOrderModel1 { get; set; }
         public virtual DbSet<WorkOrder_Mold_Mapping> WorkOrder_Mold_Mapping { get; set; }
         public virtual DbSet<WorkOrder_Product_Mapping> WorkOrder_Product_Mapping { get; set; }
         public virtual DbSet<WorkOrder_Routing_Mapping> WorkOrder_Routing_Mapping { get; set; }
@@ -397,6 +398,7 @@ namespace ISD.Infrastructure.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=192.168.100.233;Initial Catalog=TLG_MES;Persist Security Info=True;User ID=isd;Password=pm123@abcd");
             }
         }
@@ -3454,20 +3456,28 @@ namespace ISD.Infrastructure.Data
 
             modelBuilder.Entity<WorkOrderModel>(entity =>
             {
+                entity.HasKey(e => e.WorkOrderId)
+                    .HasName("PK_WorkOrderModel_1");
+
+                entity.Property(e => e.WorkOrderId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<WorkOrderModel1>(entity =>
+            {
                 entity.Property(e => e.WorkOrderId).ValueGeneratedNever();
 
                 entity.HasOne(d => d.MatchCardCommand)
-                    .WithMany(p => p.WorkOrderModel)
+                    .WithMany(p => p.WorkOrderModel1)
                     .HasForeignKey(d => d.MatchCardCommandId)
                     .HasConstraintName("FK_WorkOrderModel_MatchCardCommandModel");
 
                 entity.HasOne(d => d.SO)
-                    .WithMany(p => p.WorkOrderModel)
+                    .WithMany(p => p.WorkOrderModel1)
                     .HasForeignKey(d => d.SOId)
                     .HasConstraintName("FK_WorkOrderModel_HeaderSaleOrderModel");
 
                 entity.HasOne(d => d.SOLine)
-                    .WithMany(p => p.WorkOrderModel)
+                    .WithMany(p => p.WorkOrderModel1)
                     .HasForeignKey(d => d.SOLineId)
                     .HasConstraintName("FK_WorkOrderModel_DetailSaleOrderModel");
             });

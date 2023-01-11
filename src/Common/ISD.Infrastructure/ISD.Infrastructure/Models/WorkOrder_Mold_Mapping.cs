@@ -25,6 +25,6 @@ namespace ISD.Infrastructure.Models
         public virtual ProductModel1 Product { get; set; }
         [ForeignKey("WorkOrderId")]
         [InverseProperty("WorkOrder_Mold_Mapping")]
-        public virtual WorkOrderModel WorkOrder { get; set; }
+        public virtual WorkOrderModel1 WorkOrder { get; set; }
     }
 }

@@ -28,10 +28,10 @@ namespace ISD.Infrastructure.Models
         public string StorageLocation { get; set; }
         [StringLength(50)]
         public string Batch { get; set; }
-        [StringLength(50)]
-        public string VehicleCode { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? OrderQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? QuantityReceived { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? OpenQuantity { get; set; }
         [StringLength(50)]

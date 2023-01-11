@@ -20,7 +20,7 @@ namespace ISD.Infrastructure.Models
         public Guid WeighSessionID { get; set; }
         public Guid ScaleId { get; set; }
         public int? TotalNumberOfWeigh { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "decimal(18, 3)")]
         public decimal? TotalWeight { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? StartTime { get; set; }
@@ -28,9 +28,6 @@ namespace ISD.Infrastructure.Models
         public DateTime? EndTime { get; set; }
         [StringLength(50)]
         public string Status { get; set; }
-        public int? BagNum { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? WeightPerBag { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         public Guid? CreateBy { get; set; }

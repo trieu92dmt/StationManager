@@ -4,6 +4,7 @@ using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MES.Application.Queries
 {
@@ -110,6 +111,11 @@ namespace MES.Application.Queries
                                                                                         int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
             }
 
+            if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
+            {
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
+                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
+            }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
@@ -229,6 +235,12 @@ namespace MES.Application.Queries
             {
                 queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
                                              int.Parse(x.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
+            {
+                queryPO = queryPO.Where(x => long.Parse(x.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
+                                             long.Parse(x.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();

@@ -251,6 +251,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[WorkOrderModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ApplicationConfig]",
          "ObjectType": 0
       },

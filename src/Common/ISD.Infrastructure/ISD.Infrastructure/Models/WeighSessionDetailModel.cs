@@ -15,7 +15,7 @@ namespace ISD.Infrastructure.Models
         public Guid WeighSessionDetailID { get; set; }
         public Guid WeighSessionID { get; set; }
         public int? NumberOfWeigh { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "decimal(18, 3)")]
         public decimal? DetailWeight { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? WeighTime { get; set; }

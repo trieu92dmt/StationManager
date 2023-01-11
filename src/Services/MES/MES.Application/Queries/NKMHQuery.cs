@@ -125,7 +125,7 @@ namespace MES.Application.Queries
             {
                 NkmhId = x.GoodsReceiptId,
                 //Plant
-                Plant = x.PurchaseOrderDetail?.PurchaseOrder?.Plant,
+                Plant = x.PlantCode,
                 //PO và POLine
                 PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
                 POItem = x.PurchaseOrderDetail?.POLine,

@@ -202,7 +202,7 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant == request.Plant).ToList();
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {

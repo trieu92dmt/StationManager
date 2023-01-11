@@ -19,6 +19,8 @@ namespace ISD.Infrastructure.Models
         [Key]
         public Guid ScaleId { get; set; }
         [StringLength(50)]
+        public string ScaleCode { get; set; }
+        [StringLength(50)]
         public string ScaleName { get; set; }
         public bool? ScaleType { get; set; }
         public bool? isCantai { get; set; }

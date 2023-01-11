@@ -68,7 +68,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<Common2Response>> GetDropdownWeightHead(string keyword);
+        Task<List<CommonResponse>> GetDropdownWeightHead(string keyword);
 
         /// <summary>
         /// Dropdown Sloc
@@ -228,15 +228,15 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<Common2Response>> GetDropdownWeightHead(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownWeightHead(string keyword)
         {
             var response = await _scaleRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true)
-                                    .OrderBy(x => x.ScaleName)
-                                    .Select(x => new Common2Response
+                                    .OrderBy(x => x.ScaleCode)
+                                    .Select(x => new CommonResponse
                                     {
-                                        Key = x.ScaleId,
+                                        Key = x.ScaleCode,
                                         Value = x.ScaleName
-                                    }).AsNoTracking().ToListAsync();
+                                    }).Take(10).AsNoTracking().ToListAsync();
 
             return response;
         }
@@ -249,7 +249,7 @@ namespace MES.Application.Queries
                                     {
                                         Key = x.StorageLocationCode,
                                         Value = x.StorageLocationName
-                                    }).AsNoTracking().ToListAsync();
+                                    }).Take(10).AsNoTracking().ToListAsync();
 
             return response;
         }

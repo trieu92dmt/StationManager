@@ -53,5 +53,7 @@ namespace ISD.Infrastructure.Models
         public decimal? NetWeight { get; set; }
         [StringLength(50)]
         public string OldMaterialNum { get; set; }
+        [StringLength(3)]
+        public string WeightUnit { get; set; }
     }
 }

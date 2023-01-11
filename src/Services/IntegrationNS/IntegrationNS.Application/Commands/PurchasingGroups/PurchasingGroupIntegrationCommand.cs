@@ -69,10 +69,14 @@ namespace IntegrationNS.Application.Commands.PurchasingGroups
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{purGroupIntegration.PurchasingGroup}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = purGroupIntegration.PurchasingGroup,
+                        Msg = ex.Message
+                    });
                 }
             }
 

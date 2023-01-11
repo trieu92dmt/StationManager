@@ -18,11 +18,6 @@ namespace IntegrationNS.Application.Commands.StorageLocations
         public string StorageLocation { get; set; }
         public string StorageLocationDescription { get; set; }
         public string Plant { get; set; }
-        //public string division { get; set; }
-        //public string salesorganization { get; set; }
-        //public string distributionchannel { get; set; }
-        //public string vendor { get; set; }
-        //public string customer { get; set; }
     }
     public class StorageLocationIntegrationCommandHandler : IRequestHandler<StorageLocationIntegrationCommand, IntegrationNSResponse>
     {
@@ -58,12 +53,6 @@ namespace IntegrationNS.Application.Commands.StorageLocations
                             StorageLocationCode = storageLocationIntegration.StorageLocation,
                             StorageLocationName = storageLocationIntegration.StorageLocationDescription,
                             PlantCode = storageLocationIntegration.Plant,
-                            //DivisionCode = storageLocationIntegration.Division,
-                            //SaleOrgCode = storageLocationIntegration.SalesOrganization,
-                            //DistributionChannelCode = storageLocationIntegration.DistributionChannel,
-                            //VendorCode = storageLocationIntegration.Vendor,
-                            //CustomerCode = storageLocationIntegration.Customer,
-
                             //Common
                             CreateTime = DateTime.Now,
                             Actived = true
@@ -73,12 +62,6 @@ namespace IntegrationNS.Application.Commands.StorageLocations
                     {
                         storageLocation.StorageLocationName = storageLocationIntegration.StorageLocationDescription;
                         storageLocation.PlantCode = storageLocationIntegration.Plant;
-                        //storageLocation.DivisionCode = storageLocationIntegration.Division;
-                        //storageLocation.PlantCode = storageLocationIntegration.Plant;
-                        //storageLocation.SaleOrgCode = storageLocationIntegration.SalesOrganization;
-                        //storageLocation.DistributionChannelCode = storageLocationIntegration.DistributionChannel;
-                        //storageLocation.VendorCode = storageLocationIntegration.Vendor;
-                        //storageLocation.CustomerCode = storageLocationIntegration.Customer;
                         //Common
                         storageLocation.LastEditTime = DateTime.Now;
                     }
@@ -86,10 +69,14 @@ namespace IntegrationNS.Application.Commands.StorageLocations
                     await _unitOfWork.SaveChangesAsync();
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{storageLocationIntegration.StorageLocation}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = storageLocationIntegration.StorageLocation,
+                        Msg = ex.Message
+                    });
                 }
             }
 

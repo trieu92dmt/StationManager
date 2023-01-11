@@ -76,10 +76,14 @@ namespace IntegrationNS.Application.Commands.Vendors
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{vendorIntegration.Vendor} | {vendorIntegration.VendorName}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = vendorIntegration.Vendor,
+                        Msg = ex.Message
+                    });
                 }
             }
 

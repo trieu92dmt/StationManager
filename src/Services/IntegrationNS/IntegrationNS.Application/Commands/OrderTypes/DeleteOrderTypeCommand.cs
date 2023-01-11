@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,12 +7,12 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.OrderTypes
 {
-    public class DeleteOrderTypeCommand : IRequest<DeleteNSResponse>
+    public class DeleteOrderTypeCommand : IRequest<bool>
     {
-        public List<string> OrderTypes { get; set; } = new List<string>();
+        public string OrderType { get; set; }
 
     }
-    public class DeleteOrderTypeCommandHandler : IRequestHandler<DeleteOrderTypeCommand, DeleteNSResponse>
+    public class DeleteOrderTypeCommandHandler : IRequestHandler<DeleteOrderTypeCommand, bool>
     {
         private readonly IRepository<OrderTypeModel> _orderTypeRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,46 +22,16 @@ namespace IntegrationNS.Application.Commands.OrderTypes
             _orderTypeRep = orderTypeRep;
             _unitOfWork = unitOfWork;
         }
-        public async Task<DeleteNSResponse> Handle(DeleteOrderTypeCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteOrderTypeCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa Order Type
+            var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == request.OrderType);
+            if (orderType is null)
+                throw new ISDException(CommonResource.Msg_NotFound, "Order Type");
 
-            if (!request.OrderTypes.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
-
-            response.TotalRecord = request.OrderTypes.Count();
-
-            foreach (var orderTypeDelete in request.OrderTypes)
-            {
-                try
-                {
-                    //Xóa Disivision
-                    var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == orderTypeDelete);
-                    if (orderType is not null)
-                    {
-                        _orderTypeRep.Remove(orderType);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(orderTypeDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(orderTypeDelete);
-                }
-
-            }
-            return response;
+            _orderTypeRep.Remove(orderType);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }

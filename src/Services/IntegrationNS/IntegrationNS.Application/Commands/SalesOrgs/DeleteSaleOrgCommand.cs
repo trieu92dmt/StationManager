@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,12 +7,12 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.SalesOrgs
 {
-    public class DeleteSaleOrgCommand : IRequest<DeleteNSResponse>
+    public class DeleteSaleOrgCommand : IRequest<bool>
     {
-        public List<string> SaleOrgs { get; set; } = new List<string>();
+        public string SaleOrg { get; set; } 
     }
 
-    public class DeleteSaleOrgCommandHandler : IRequestHandler<DeleteSaleOrgCommand, DeleteNSResponse>
+    public class DeleteSaleOrgCommandHandler : IRequestHandler<DeleteSaleOrgCommand, bool>
     {
         private readonly IRepository<SaleOrgModel> _saleOrgRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,45 +22,18 @@ namespace IntegrationNS.Application.Commands.SalesOrgs
             _saleOrgRep = saleOrgRep;
             _unitOfWork = unitOfWork;
         }
-        public async Task<DeleteNSResponse> Handle(DeleteSaleOrgCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteSaleOrgCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa Sale Org
+            var saleOrg = await _saleOrgRep.FindOneAsync(x => x.SaleOrgCode == request.SaleOrg);
+            if (saleOrg is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"SaleOrg {request.SaleOrg}");
 
-            if (!request.SaleOrgs.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
 
-            response.TotalRecord = request.SaleOrgs.Count();
+            _saleOrgRep.Remove(saleOrg);
+            await _unitOfWork.SaveChangesAsync();
 
-            foreach (var saleOrgDelete in request.SaleOrgs)
-            {
-                try
-                {
-                    //Xóa Sale Org
-                    var saleOrg = await _saleOrgRep.FindOneAsync(x => x.SaleOrgCode == saleOrgDelete);
-                    if (saleOrg is not null)
-                    {
-                        _saleOrgRep.Remove(saleOrg);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(saleOrgDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(saleOrgDelete);
-                }
-
-            }
-            return response;
+            return true;
         }
     }
 }

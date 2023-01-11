@@ -1,5 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
+﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
@@ -8,12 +7,12 @@ using MediatR;
 
 namespace IntegrationNS.Application.Commands.Plants
 {
-    public class DeletePlantCommand : IRequest<DeleteNSResponse>
+    public class DeletePlantCommand : IRequest<bool>
     {
-        public List<string> Plants { get; set; } = new List<string>();
+        public string Plant { get; set; }
     }
 
-    public class DeletePlantCommandHandler : IRequestHandler<DeletePlantCommand, DeleteNSResponse>
+    public class DeletePlantCommandHandler : IRequestHandler<DeletePlantCommand, bool>
     {
         private readonly IRepository<PlantModel> _plantRep;
         private readonly IUnitOfWork _unitOfWork;
@@ -24,45 +23,17 @@ namespace IntegrationNS.Application.Commands.Plants
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<DeleteNSResponse> Handle(DeletePlantCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeletePlantCommand request, CancellationToken cancellationToken)
         {
-            var response = new DeleteNSResponse();
+            //Xóa Disivision
+            var plant = await _plantRep.FindOneAsync(x => x.PlantCode == request.Plant);
+            if (plant is null)
+                throw new ISDException(CommonResource.Msg_NotFound, $"Plant {request.Plant}");
 
-            if (!request.Plants.Any())
-                throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xóa");
+            _plantRep.Remove(plant);
+            await _unitOfWork.SaveChangesAsync();
 
-            response.TotalRecord = request.Plants.Count();
-
-            foreach (var plantDelete in request.Plants)
-            {
-                try
-                {
-                    //Xóa Disivision
-                    var plant = await _plantRep.FindOneAsync(x => x.PlantCode == plantDelete);
-                    if (plant is not null)
-                    {
-                        _plantRep.Remove(plant);
-                        await _unitOfWork.SaveChangesAsync();
-
-                        //Xóa thành công
-                        response.RecordDeleteSuccess++;
-                    }
-                    else
-                    {
-                        //Xóa thất bại
-                        response.RecordDeleteFail++;
-                        response.ListRecordDeleteFailed.Add(plantDelete);
-                    }
-                }
-                catch (Exception)
-                {
-                    //Xóa thất bại
-                    response.RecordDeleteFail++;
-                    response.ListRecordDeleteFailed.Add(plantDelete);
-                }
-
-            }
-            return response;
+            return true;
         }
     }
 }

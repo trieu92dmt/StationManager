@@ -69,10 +69,14 @@ namespace IntegrationNS.Application.Commands.OrderTypes
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{orderTypeIntegration.OrderType}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = orderTypeIntegration.OrderType,
+                        Msg = ex.Message
+                    });
                 }
             }
 

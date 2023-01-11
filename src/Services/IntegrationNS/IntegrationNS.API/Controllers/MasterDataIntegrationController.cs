@@ -33,7 +33,7 @@ namespace IntegrationNS.API.Controllers
             _mediator = mediator;
         }
 
-         #region Tích hợp Order Type
+        #region Tích hợp Order Type
 
         /// <summary>Tích hợp Order Type</summary>
         /// <returns></returns>
@@ -77,11 +77,11 @@ namespace IntegrationNS.API.Controllers
         /// <returns></returns>
 
         [HttpDelete("delete-order-type")]
-        public async Task<IActionResult> DeleteOrderTypeIntegrationAsync([FromBody] DeleteOrderTypeCommand req)
+        public async Task<IActionResult> DeleteOrderTypeIntegrationAsync([FromQuery] DeleteOrderTypeCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa OrderType") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa OrderType") });
         }
         #endregion
 
@@ -126,11 +126,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-purchasing-organization")]
-        public async Task<IActionResult> DeletePurchasingOrganizationIntegrationAsync([FromBody] DeletePurchasingGroupCommand req)
+        public async Task<IActionResult> DeletePurchasingOrganizationIntegrationAsync([FromQuery] DeletePurchasingOrgCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchasingOrganization") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchasingOrganization") });
         }
         #endregion
 
@@ -176,11 +176,11 @@ namespace IntegrationNS.API.Controllers
         /// <returns></returns>
 
         [HttpDelete("delete-purchasing-group")]
-        public async Task<IActionResult> DeletePurchasingGroupIntegrationAsync([FromBody] DeletePurchasingGroupCommand req)
+        public async Task<IActionResult> DeletePurchasingGroupIntegrationAsync([FromQuery] DeletePurchasingGroupCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchasingGroup") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchasingGroup") });
         }
         #endregion
 
@@ -226,11 +226,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-vendor")]
-        public async Task<IActionResult> DeleteVendorIntegrationAsync([FromBody] DeleteVendorCommand req)
+        public async Task<IActionResult> DeleteVendorIntegrationAsync([FromQuery] DeleteVendorCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xoá Vendor") }) ;
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xoá Vendor") });
         }
         #endregion
 
@@ -276,11 +276,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-customer")]
-        public async Task<IActionResult> DeleteCustomerAsync([FromBody] DeleteCustomerNSCommand req)
+        public async Task<IActionResult> DeleteCustomerAsync([FromQuery] DeleteCustomerNSCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Customer") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Customer") });
         }
         #endregion
 
@@ -326,11 +326,11 @@ namespace IntegrationNS.API.Controllers
         /// <returns></returns>
 
         [HttpDelete("delete-distribution-channel")]
-        public async Task<IActionResult> DeleteDistributionChannelIntegrationAsync([FromBody] DeleteDistributionChannelCommand req)
+        public async Task<IActionResult> DeleteDistributionChannelIntegrationAsync([FromQuery] DeleteDistributionChannelCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa DistributionChannel") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa DistributionChannel") });
         }
         #endregion
 
@@ -375,11 +375,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-sale-Org")]
-        public async Task<IActionResult> DeleteSALESORGANIZATIONIntegrationAsync([FromBody] DeleteSaleOrgCommand req)
+        public async Task<IActionResult> DeleteSALESORGANIZATIONIntegrationAsync([FromQuery] DeleteSaleOrgCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa SalesOrganization") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa SalesOrganization") });
         }
         #endregion
 
@@ -424,11 +424,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-division")]
-        public async Task<IActionResult> DeleteDivisionIntegrationAsync([FromBody] DeleteDivisionCommand req)
+        public async Task<IActionResult> DeleteDivisionIntegrationAsync([FromQuery] DeleteDivisionCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Division") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Division") });
         }
         #endregion
 
@@ -473,11 +473,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-plant")]
-        public async Task<IActionResult> DeletePlantIntegrationAsync([FromBody] DeletePlantCommand req)
+        public async Task<IActionResult> DeletePlantIntegrationAsync([FromQuery] DeletePlantCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Plant") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Plant") });
         }
         #endregion
 
@@ -532,7 +532,7 @@ namespace IntegrationNS.API.Controllers
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa StorageLocation") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa StorageLocation") });
         }
         #endregion
 
@@ -576,11 +576,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-material-group")]
-        public async Task<IActionResult> DeleteProductGroupIntegrationAsync([FromBody] ProductGroupIntegrationCommand req)
+        public async Task<IActionResult> DeleteProductGroupIntegrationAsync([FromQuery] DeleteProductGroupCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material Group") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Material Group") });
         }
         #endregion
 
@@ -634,11 +634,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-material")]
-        public async Task<IActionResult> DeleteProductIntegrationAsync([FromBody] DeleteProductGroupCommand req)
+        public async Task<IActionResult> DeleteProductIntegrationAsync([FromQuery] DeleteProductNSCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Material") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Material") });
         }
         #endregion
 
@@ -688,11 +688,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-custmd-sales")]
-        public async Task<IActionResult> DeleteCUSTMDSALESIntegrationAsync([FromBody] DeleteCustomerNSCommand req)
+        public async Task<IActionResult> DeleteCUSTMDSALESIntegrationAsync([FromQuery] DeleteCustmdSaleCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa CUSTMDSALES") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa CUSTMDSALES") });
         }
         #endregion
 
@@ -716,11 +716,11 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-purchase-order")]
-        public async Task<IActionResult> DeletePurchaseOrderIntegrationAsync([FromBody] DeletePurchaseOrderCommand req)
+        public async Task<IActionResult> DeletePurchaseOrderIntegrationAsync([FromQuery] DeletePurchaseOrderCommand req)
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<DeleteNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchaseOrder") });
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchaseOrder") });
         }
         #endregion
 
@@ -797,8 +797,8 @@ namespace IntegrationNS.API.Controllers
             return Ok(new ApiSuccessResponse<IList<NKMHResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKMH") });
         }
         #endregion
-         
-         #region Update phiếu và hủy nhập kho mua hàng
+
+        #region Update phiếu và hủy nhập kho mua hàng
         /// <summary>Update, cancel phiếu nhập kho mua hàng</summary>
         /// <returns></returns>
         /// <remarks>
@@ -836,8 +836,12 @@ namespace IntegrationNS.API.Controllers
         {
             var response = await _mediator.Send(req);
 
-            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NKMH") :
-                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NKMH") });
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NKMH") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NKMH")
+            });
         }
         #endregion
     }

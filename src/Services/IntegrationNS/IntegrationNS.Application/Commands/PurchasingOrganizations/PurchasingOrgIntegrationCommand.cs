@@ -70,10 +70,14 @@ namespace IntegrationNS.Application.Commands.PurchasingOrganizations
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{purOrgIntegration.PurchasingOrganization}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = purOrgIntegration.PurchasingOrganization,
+                        Msg = ex.Message
+                    });
                 }
             }
 

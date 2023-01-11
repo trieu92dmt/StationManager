@@ -73,10 +73,14 @@ namespace IntegrationNS.Application.Commands.Customers
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{customerIntegration.Customer} | {customerIntegration.Name}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = customerIntegration.Customer,
+                        Msg = ex.Message
+                    });
                 }
             }
 

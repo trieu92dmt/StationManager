@@ -73,10 +73,14 @@ namespace IntegrationNS.Application.Commands.DistributionChannels
 
                     response.RecordSyncSuccess++;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.RecordSyncFailed++;
-                    response.ListRecordSyncFailed.Add($"{disChannelIntegration.DistributionChannel} | {disChannelIntegration.Name}");
+                    response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
+                    {
+                        RecordFail = disChannelIntegration.DistributionChannel,
+                        Msg = ex.Message
+                    });
                 }
             }
 

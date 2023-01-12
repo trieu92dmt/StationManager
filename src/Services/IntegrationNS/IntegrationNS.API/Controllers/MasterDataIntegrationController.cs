@@ -668,7 +668,6 @@ namespace IntegrationNS.API.Controllers
         ///                  "distributionChannel": "string",
         ///                  "customerGroup": "string",
         ///                  "salesGroup": "string",
-        ///                  "saleOrgCode": "string",
         ///                  "salesOffice": "string",
         ///                  "customerNumber": "string",
         ///                  "customerName": "string",

@@ -24,6 +24,8 @@ namespace ISD.Infrastructure.Models
         public string ScaleName { get; set; }
         public bool? ScaleType { get; set; }
         public bool? isCantai { get; set; }
+        [StringLength(50)]
+        public string Plant { get; set; }
         public Guid? CreateBy { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }

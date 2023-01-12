@@ -68,7 +68,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownWeightHead(string keyword);
+        Task<List<CommonResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
 
         /// <summary>
         /// Dropdown Sloc
@@ -228,9 +228,10 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<CommonResponse>> GetDropdownWeightHead(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode)
         {
-            var response = await _scaleRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true)
+            var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
+                                                          (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
                                     .OrderBy(x => x.ScaleCode)
                                     .Select(x => new CommonResponse
                                     {

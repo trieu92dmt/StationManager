@@ -129,16 +129,16 @@ namespace MES.API.Controllers
         }
         #endregion
 
-        #region Lấy dropdown đầu cân
+        #region Lấy dropdown đầu cân theo plant
         /// <summary>
-        /// Lấy dropdown đầu cân
+        /// Lấy dropdown đầu cân theo plant
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        [HttpGet("list-dropdown-weight-head")]
-        public async Task<IActionResult> GetListWeightHead(string keyword)
+        [HttpGet("list-dropdown-weight-head-by-plant")]
+        public async Task<IActionResult> GetListWeightHeadByPlant(string keyword, string plantCode)
         {
-            var dropdownList = await _commonQuery.GetDropdownWeightHead(keyword);
+            var dropdownList = await _commonQuery.GetDropdownWeightHeadByPlant(keyword, plantCode);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
         }
         #endregion

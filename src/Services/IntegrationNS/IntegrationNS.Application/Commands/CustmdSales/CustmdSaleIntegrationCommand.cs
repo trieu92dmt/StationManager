@@ -20,8 +20,10 @@ namespace IntegrationNS.Application.Commands.CustmdSales
         public string DistributionChannel { get; set; }
         public string CustomerGroup { get; set; }
         public string SalesGroup { get; set; }
-        public string SaleOrgCode { get; set; }
         public string SalesOffice { get; set; }
+        public string CustomerNumber { get; set; }
+        public string CustomerName { get; set; }
+        public string Status { get; set; }
     }
 
     public class CustmdSaleIntegrationCommandHandler : IRequestHandler<CustmdSaleIntegrationCommand, IntegrationNSResponse>
@@ -47,21 +49,40 @@ namespace IntegrationNS.Application.Commands.CustmdSales
             {
                 try
                 {
-                    _custmdSaleRep.Add(new CustmdSaleModel
+                    //Check tồn tại
+                    var customerSale = await _custmdSaleRep.FindOneAsync(x => x.DivisionCode == custmdSale.Division && 
+                                                                              x.SaleOrgCode == custmdSale.SalesOrganization &&
+                                                                              x.DistributionChannelCode == custmdSale.DistributionChannel &&
+                                                                              x.CustomerNumber == custmdSale.CustomerNumber);
+                    //Tạo
+                    if (customerSale is null)
                     {
-                        CustmdSaleId = Guid.NewGuid(),
-                        DivisionCode = custmdSale.Division,
-                        SaleOrgCode = custmdSale.SalesOrganization,
-                        DistributionChannelCode = custmdSale.DistributionChannel,
-                        CustomerGroup = custmdSale.CustomerGroup,
-                        SalesGroup = custmdSale.SalesGroup,
-                        SalesOffice = custmdSale.SalesOffice,
+                        _custmdSaleRep.Add(new CustmdSaleModel
+                        {
+                            CustmdSaleId = Guid.NewGuid(),
+                            DivisionCode = custmdSale.Division,
+                            SaleOrgCode = custmdSale.SalesOrganization,
+                            DistributionChannelCode = custmdSale.DistributionChannel,
+                            CustomerGroup = custmdSale.CustomerGroup,
+                            SalesGroup = custmdSale.SalesGroup,
+                            SalesOffice = custmdSale.SalesOffice,
+                            CustomerNumber = custmdSale.CustomerNumber,
+                            CustomerName = custmdSale.CustomerName,
+                            Status = custmdSale.Status,
 
-                        //Common
-                        CreateTime = DateTime.Now,
-                        Actived = true
-                    });
-
+                            //Common
+                            CreateTime = DateTime.Now,
+                            Actived = true
+                        });
+                    }
+                    else
+                    {
+                        customerSale.CustomerGroup = custmdSale.CustomerGroup;
+                        customerSale.SalesGroup = custmdSale.SalesGroup;
+                        customerSale.SalesOffice = custmdSale.SalesOffice;
+                        customerSale.CustomerName = custmdSale.CustomerName;
+                        customerSale.Status = custmdSale.Status;
+                    }
                     await _unitOfWork.SaveChangesAsync();
 
                     response.RecordSyncSuccess++;

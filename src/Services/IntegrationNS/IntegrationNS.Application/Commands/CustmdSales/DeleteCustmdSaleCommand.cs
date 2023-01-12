@@ -9,7 +9,10 @@ namespace IntegrationNS.Application.Commands.CustmdSales
 {
     public class DeleteCustmdSaleCommand : IRequest<bool>
     {
-        public string CustmdSales { get; set; }
+        public string CustomerNumber { get; set; }
+        public string DivisionCode { get; set; }
+        public string SalesOrganization { get; set; }
+        public string DistributionChannel { get; set; }
     }
     public class DeleteCustmdSaleCommandHandler : IRequestHandler<DeleteCustmdSaleCommand, bool>
     {
@@ -24,9 +27,12 @@ namespace IntegrationNS.Application.Commands.CustmdSales
         public async Task<bool> Handle(DeleteCustmdSaleCommand request, CancellationToken cancellationToken)
         {
             //Xóa CustmdSales
-            var custmdSale = await _custmdSaleRep.FindOneAsync(x => x.SalesOffice == request.CustmdSales);
+            var custmdSale = await _custmdSaleRep.FindOneAsync(x => x.CustomerNumber == request.CustomerNumber &&
+                                                                    x.SaleOrgCode == request.SalesOrganization &&
+                                                                    x.DistributionChannelCode == request.DistributionChannel &&
+                                                                    x.DivisionCode == request.DivisionCode);
             if (custmdSale is null)
-                throw new ISDException(CommonResource.Msg_NotFound, $"CustmdSales {request.CustmdSales}");
+                throw new ISDException(CommonResource.Msg_NotFound, "CustmdSales");
 
 
             _custmdSaleRep.Remove(custmdSale);

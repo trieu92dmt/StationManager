@@ -667,7 +667,10 @@ namespace IntegrationNS.API.Controllers
         ///                  "customerGroup": "string",
         ///                  "salesGroup": "string",
         ///                  "saleOrgCode": "string",
-        ///                  "salesOffice": "string"
+        ///                  "salesOffice": "string",
+        ///                  "customerNumber": "string",
+        ///                  "customerName": "string",
+        ///                  "status": "string"
         ///                }
         /// OUT PUT
         /// 

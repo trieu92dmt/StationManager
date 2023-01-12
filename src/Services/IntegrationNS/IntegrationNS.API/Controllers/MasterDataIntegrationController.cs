@@ -532,7 +532,7 @@ namespace IntegrationNS.API.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpDelete("delete-storage-location")]
-        public async Task<IActionResult> DeleteStorageLocationIntegrationAsync([FromBody] DeleteStorageLocationCommand req)
+        public async Task<IActionResult> DeleteStorageLocationIntegrationAsync([FromQuery] DeleteStorageLocationCommand req)
         {
             var response = await _mediator.Send(req);
 

@@ -10,6 +10,7 @@ namespace IntegrationNS.Application.Commands.OrderTypes
     public class DeleteOrderTypeCommand : IRequest<bool>
     {
         public string OrderType { get; set; }
+        public string Plant { get; set; }
 
     }
     public class DeleteOrderTypeCommandHandler : IRequestHandler<DeleteOrderTypeCommand, bool>
@@ -25,7 +26,8 @@ namespace IntegrationNS.Application.Commands.OrderTypes
         public async Task<bool> Handle(DeleteOrderTypeCommand request, CancellationToken cancellationToken)
         {
             //Xóa Order Type
-            var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == request.OrderType);
+            var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == request.OrderType &&
+                                                                  x.Plant == request.Plant);
             if (orderType is null)
                 throw new ISDException(CommonResource.Msg_NotFound, "Order Type");
 

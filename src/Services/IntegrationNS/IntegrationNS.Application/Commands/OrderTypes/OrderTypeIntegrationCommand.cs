@@ -43,34 +43,72 @@ namespace IntegrationNS.Application.Commands.OrderTypes
             {
                 try
                 {
-                    //Check tồn tại
-                    var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == orderTypeIntegration.OrderType);
-
-                    //Chưa tồn tại tạo mới
-                    if (orderType is null)
+                    //Nếu Category là 02 thì Plant và Ordertype là key
+                    if (orderTypeIntegration.Category == "02")
                     {
-                        _orderTypeRep.Add(new OrderTypeModel
+                        //Check tồn tại
+                        var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == orderTypeIntegration.OrderType &&
+                                                                              x.Plant == orderTypeIntegration.PlanningPlant &&
+                                                                              x.Category == "02");
+
+                        //Chưa tồn tại tạo mới
+                        if (orderType is null)
                         {
-                            OrderTypeId = Guid.NewGuid(),
-                            OrderTypeCode = orderTypeIntegration.OrderType,
-                            OrderTypeName = orderTypeIntegration.Name,
-                            ShortText = orderTypeIntegration.ShortText,
-                            Category = orderTypeIntegration.Category,  
-                            CreateTime = DateTime.Now,
-                            Actived = true,
-                        });
+                            _orderTypeRep.Add(new OrderTypeModel
+                            {
+                                OrderTypeId = Guid.NewGuid(),
+                                OrderTypeCode = orderTypeIntegration.OrderType,
+                                OrderTypeName = orderTypeIntegration.Name,
+                                ShortText = orderTypeIntegration.ShortText,
+                                Category = orderTypeIntegration.Category,
+                                Plant = orderTypeIntegration.PlanningPlant,
+                                CreateTime = DateTime.Now,
+                                Actived = true,
+                            });
+                        }
+                        else
+                        {
+                            orderType.OrderTypeName = orderTypeIntegration.Name;
+                            orderType.ShortText = orderTypeIntegration.ShortText;
+                            orderType.Category = orderTypeIntegration.Category;
+                            orderType.LastEditTime = DateTime.Now;
+                        }
+
+                        await _unitOfWork.SaveChangesAsync();
+
+                        response.RecordSyncSuccess++;
                     }
                     else
                     {
-                        orderType.OrderTypeName = orderTypeIntegration.Name;
-                        orderType.ShortText = orderTypeIntegration.ShortText;
-                        orderType.Category = orderTypeIntegration.Category;
-                        orderType.LastEditTime = DateTime.Now;
+                        //Check tồn tại
+                        var orderType = await _orderTypeRep.FindOneAsync(x => x.OrderTypeCode == orderTypeIntegration.OrderType && x.Category != "02");
+
+                        //Chưa tồn tại tạo mới
+                        if (orderType is null)
+                        {
+                            _orderTypeRep.Add(new OrderTypeModel
+                            {
+                                OrderTypeId = Guid.NewGuid(),
+                                OrderTypeCode = orderTypeIntegration.OrderType,
+                                OrderTypeName = orderTypeIntegration.Name,
+                                ShortText = orderTypeIntegration.ShortText,
+                                Category = orderTypeIntegration.Category,
+                                CreateTime = DateTime.Now,
+                                Actived = true,
+                            });
+                        }
+                        else
+                        {
+                            orderType.OrderTypeName = orderTypeIntegration.Name;
+                            orderType.ShortText = orderTypeIntegration.ShortText;
+                            orderType.Category = orderTypeIntegration.Category;
+                            orderType.LastEditTime = DateTime.Now;
+                        }
+
+                        await _unitOfWork.SaveChangesAsync();
+
+                        response.RecordSyncSuccess++;
                     }
-
-                    await _unitOfWork.SaveChangesAsync();
-
-                    response.RecordSyncSuccess++;
                 }
                 catch (Exception ex)
                 {

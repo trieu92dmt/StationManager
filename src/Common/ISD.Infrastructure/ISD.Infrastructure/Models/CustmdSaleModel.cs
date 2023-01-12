@@ -25,6 +25,12 @@ namespace ISD.Infrastructure.Models
         public string SalesGroup { get; set; }
         [StringLength(50)]
         public string SalesOffice { get; set; }
+        [StringLength(50)]
+        public string CustomerNumber { get; set; }
+        [StringLength(500)]
+        public string CustomerName { get; set; }
+        [StringLength(50)]
+        public string Status { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

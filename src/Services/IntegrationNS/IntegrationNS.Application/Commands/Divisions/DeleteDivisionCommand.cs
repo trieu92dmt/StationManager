@@ -9,7 +9,8 @@ namespace IntegrationNS.Application.Commands.Divisions
 {
     public class DeleteDivisionCommand : IRequest<bool>
     {
-        public string Division { get; set; } 
+        public string Division { get; set; }
+        public string SalesOrganization { get; set; }
     }
 
     public class DeleteDistributionChannelCommandHandler : IRequestHandler<DeleteDivisionCommand, bool>
@@ -25,7 +26,7 @@ namespace IntegrationNS.Application.Commands.Divisions
         public async Task<bool> Handle(DeleteDivisionCommand request, CancellationToken cancellationToken)
         {
             //Xóa Disivision
-            var disivision = await _divisionRep.FindOneAsync(x => x.DivisionCode == request.Division);
+            var disivision = await _divisionRep.FindOneAsync(x => x.DivisionCode == request.Division && x.SaleOrgCode == request.SalesOrganization);
             if (disivision is null)
                 throw new ISDException(CommonResource.Msg_NotFound, $"Disivision {request.Division}");
 

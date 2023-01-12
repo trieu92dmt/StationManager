@@ -44,7 +44,7 @@ namespace IntegrationNS.Application.Commands.Divisions
                 try
                 {
                     //Check tồn tại
-                    var division = await _divisionRep.FindOneAsync(x => x.DivisionCode == divisionIntegration.Division);
+                    var division = await _divisionRep.FindOneAsync(x => x.DivisionCode == divisionIntegration.Division && x.SaleOrgCode == divisionIntegration.SalesOrganization);
 
                     if (division is null)
                     {

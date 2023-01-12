@@ -163,6 +163,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[DetailSalesDocumentModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[DistributionChannelModel]",
          "ObjectType": 0
       },
@@ -172,10 +176,6 @@
       },
       {
          "Name": "[DataCollection].[GoodsReceiptModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[DataCollection].[MaterialGroupModel]",
          "ObjectType": 0
       },
       {
@@ -199,10 +199,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[DataCollection].[ProductTypeModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[DataCollection].[PurchaseOrderDetailModel]",
          "ObjectType": 0
       },
@@ -220,6 +216,10 @@
       },
       {
          "Name": "[DataCollection].[SaleOrgModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[SalesDocumentModel]",
          "ObjectType": 0
       },
       {

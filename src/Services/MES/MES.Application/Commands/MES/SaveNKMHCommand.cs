@@ -25,6 +25,8 @@ namespace MES.Application.Commands.MES
         public decimal? BagQuantity { get; set; }
         //Đơn trọng
         public decimal? SingleWeight { get; set; }
+        //Trọng lượng cân
+        public decimal? Weight { get; set; }
         //Confỉm Qty
         public decimal? ConfirmQty { get; set; }
         //SL kèm bao bì
@@ -89,7 +91,9 @@ namespace MES.Application.Commands.MES
                     //SL bao
                     BagQuantity = x.BagQuantity,
                     //Đơn trọng
-                    SingleWeight = x.SingleWeight,  
+                    SingleWeight = x.SingleWeight, 
+                    //Trọng lượng cân
+                    Weight = x.Weight,
                     //Confirm Qty
                     ConfirmQty = x.ConfirmQty,  
                     //Sl kèm bao bì

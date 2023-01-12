@@ -8,18 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ISD.Infrastructure.Models
 {
-    [Table("MaterialGroupModel", Schema = "DataCollection")]
+    [Table("MaterialGroupModel", Schema = "MES")]
     public partial class MaterialGroupModel
     {
         [Key]
         public Guid MaterialGroupId { get; set; }
+        [StringLength(10)]
+        public string MANDT { get; set; }
         [StringLength(50)]
-        public string MaterialGroupCode { get; set; }
-        [StringLength(50)]
-        public string MaterialGroupName { get; set; }
+        public string MATKL { get; set; }
+        [StringLength(1000)]
+        public string WGBEZ { get; set; }
+        public string WGBEZ60 { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
-        public Guid? CreateBy { get; set; }
-        public bool? Actived { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? LastEditTime { get; set; }
     }
 }

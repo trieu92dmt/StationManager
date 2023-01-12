@@ -14,6 +14,7 @@ using IntegrationNS.Application.Commands.SalesOrgs;
 using IntegrationNS.Application.Commands.ShippingPoint;
 using IntegrationNS.Application.Commands.StorageLocations;
 using IntegrationNS.Application.Commands.Vendors;
+using IntegrationNS.Application.Commands.WorkOrder;
 using IntegrationNS.Application.DTOs;
 using IntegrationNS.Application.Queries;
 using ISD.Core.Models;
@@ -782,6 +783,59 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa ShippingPoint") });
+        }
+        #endregion
+
+        #region Tích hợp WorkOrder
+        /// <summary>Tích hợp WorkOrder</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/workorder
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///             {
+        ///               "shippingPoints": [
+        ///                 {
+        ///                   "shippingCode": "string",
+        ///                   "shippingName": "string"
+        ///                 }
+        ///               ]
+        ///             }
+        ///     OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp Division thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("workorder")]
+        public async Task<IActionResult> WorkorderIntegration([FromBody] WorkOrderIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp WorkOrder") });
+        }
+
+        /// <summary>
+        /// Xóa WorkOrder
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+
+        [HttpDelete("delete-workorder")]
+        public async Task<IActionResult> DeleteWorkOrderIntegrationAsync([FromQuery] DeleteWorkOrderCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa WorkOrder") });
         }
         #endregion
 

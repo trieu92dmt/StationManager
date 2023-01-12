@@ -103,6 +103,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<Department_Routing_Mapping> Department_Routing_Mapping { get; set; }
         public virtual DbSet<DetailQCModel> DetailQCModel { get; set; }
         public virtual DbSet<DetailSaleOrderModel> DetailSaleOrderModel { get; set; }
+        public virtual DbSet<DetailSalesDocumentModel> DetailSalesDocumentModel { get; set; }
         public virtual DbSet<DetailStageTranferModel> DetailStageTranferModel { get; set; }
         public virtual DbSet<DimDateModel> DimDateModel { get; set; }
         public virtual DbSet<DistributionChannelModel> DistributionChannelModel { get; set; }
@@ -149,7 +150,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<MarmModel> MarmModel { get; set; }
         public virtual DbSet<MatchCardCommandModel> MatchCardCommandModel { get; set; }
         public virtual DbSet<MaterialGroupModel> MaterialGroupModel { get; set; }
-        public virtual DbSet<MaterialGroupModel1> MaterialGroupModel1 { get; set; }
         public virtual DbSet<MaterialModel> MaterialModel { get; set; }
         public virtual DbSet<MaterialTypeModel> MaterialTypeModel { get; set; }
         public virtual DbSet<MaterialTypeModel1> MaterialTypeModel1 { get; set; }
@@ -190,7 +190,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<ProductHierarchyModel> ProductHierarchyModel { get; set; }
         public virtual DbSet<ProductModel> ProductModel { get; set; }
         public virtual DbSet<ProductModel1> ProductModel1 { get; set; }
-        public virtual DbSet<ProductTypeModel> ProductTypeModel { get; set; }
         public virtual DbSet<ProductVersionModel> ProductVersionModel { get; set; }
         public virtual DbSet<ProductWarrantyModel> ProductWarrantyModel { get; set; }
         public virtual DbSet<Product_Routing_Mapping> Product_Routing_Mapping { get; set; }
@@ -280,6 +279,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<SaleOrgModel> SaleOrgModel { get; set; }
         public virtual DbSet<SaleProcessModel> SaleProcessModel { get; set; }
         public virtual DbSet<SaleUnitModel> SaleUnitModel { get; set; }
+        public virtual DbSet<SalesDocumentModel> SalesDocumentModel { get; set; }
         public virtual DbSet<SalesEmployeeModel> SalesEmployeeModel { get; set; }
         public virtual DbSet<SalesOfficeModel> SalesOfficeModel { get; set; }
         public virtual DbSet<ScaleModel> ScaleModel { get; set; }
@@ -398,6 +398,7 @@ namespace ISD.Infrastructure.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=192.168.100.233;Initial Catalog=TLG_MES;Persist Security Info=True;User ID=isd;Password=pm123@abcd");
             }
         }
@@ -1076,6 +1077,16 @@ namespace ISD.Infrastructure.Data
                     .HasConstraintName("FK_DetailSaleOrderModel_WorkOrderModel");
             });
 
+            modelBuilder.Entity<DetailSalesDocumentModel>(entity =>
+            {
+                entity.Property(e => e.DetailSalesDocumentId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.SalesDocument)
+                    .WithMany(p => p.DetailSalesDocumentModel)
+                    .HasForeignKey(d => d.SalesDocumentId)
+                    .HasConstraintName("FK_DetailSalesDocumentModel_DetailSalesDocumentModel");
+            });
+
             modelBuilder.Entity<DetailStageTranferModel>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -1447,11 +1458,6 @@ namespace ISD.Infrastructure.Data
             });
 
             modelBuilder.Entity<MaterialGroupModel>(entity =>
-            {
-                entity.Property(e => e.MaterialGroupId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<MaterialGroupModel1>(entity =>
             {
                 entity.HasKey(e => e.MaterialGroupId)
                     .HasName("PK_MaterialGroup");
@@ -1866,13 +1872,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.ProductModel1ParentCategory)
                     .HasForeignKey(d => d.ParentCategoryId)
                     .HasConstraintName("FK_ProductModel_CategoryModel2");
-            });
-
-            modelBuilder.Entity<ProductTypeModel>(entity =>
-            {
-                entity.Property(e => e.ProductTypeId).ValueGeneratedNever();
-
-                entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<ProductVersionModel>(entity =>
@@ -2547,6 +2546,11 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<SaleUnitModel>(entity =>
             {
                 entity.Property(e => e.SaleUnitId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<SalesDocumentModel>(entity =>
+            {
+                entity.Property(e => e.SalesDocumentId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<SalesEmployeeModel>(entity =>

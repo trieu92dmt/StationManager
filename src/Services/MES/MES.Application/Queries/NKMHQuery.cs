@@ -306,18 +306,11 @@ namespace MES.Application.Queries
             //Lấy đầu cân
             var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == weightHeadCode);
 
-            //Check tồn tại đầu cân
-            if (scale == null)
-                throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Đầu cân"));
 
             //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
             var weighSs = _weighSsRepo.GetQuery(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN").FirstOrDefault();
 
-            //Check status
-            if (weighSs == null)
-                throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Số cân"));
-
-            decimal result = weighSs != null ? weighSs.TotalWeight.Value : 0;
+            var result = weighSs != null ? weighSs.TotalWeight.Value : 0;
 
             return result;
         }

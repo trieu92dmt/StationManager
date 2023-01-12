@@ -173,9 +173,9 @@ namespace MES.API.Controllers
         /// <summary>
         /// Lấy số cân
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="weightHeadCode"></param>
         /// <returns></returns>
-        [HttpPost("get-weight-num")]
+        [HttpGet("get-weight-num")]
         public async Task<IActionResult> GetWeighNum(string weightHeadCode)
         {
             var response = await _query.GetWeighNum(weightHeadCode);

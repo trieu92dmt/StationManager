@@ -18,6 +18,7 @@ namespace IntegrationNS.Application.Commands.OrderTypes
         public string Name { get; set; }
         public string OrderType { get; set; }
         public string ShortText { get; set; }
+        public string Category { get; set; }
     }
     public class OrderTypeIntegrationCommandHandler : IRequestHandler<OrderTypeIntegrationCommand, IntegrationNSResponse>
     {
@@ -54,6 +55,7 @@ namespace IntegrationNS.Application.Commands.OrderTypes
                             OrderTypeCode = orderTypeIntegration.OrderType,
                             OrderTypeName = orderTypeIntegration.Name,
                             ShortText = orderTypeIntegration.ShortText,
+                            Category = orderTypeIntegration.Category,  
                             CreateTime = DateTime.Now,
                             Actived = true,
                         });
@@ -62,6 +64,7 @@ namespace IntegrationNS.Application.Commands.OrderTypes
                     {
                         orderType.OrderTypeName = orderTypeIntegration.Name;
                         orderType.ShortText = orderTypeIntegration.ShortText;
+                        orderType.Category = orderTypeIntegration.Category;
                         orderType.LastEditTime = DateTime.Now;
                     }
 

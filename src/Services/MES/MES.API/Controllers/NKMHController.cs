@@ -169,5 +169,23 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+
+        /// <summary>
+        /// Lấy số cân
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-weight-num")]
+        public async Task<IActionResult> GetWeighNum(string scaleCode)
+        {
+            var response = await _query.GetWeighNum(scaleCode);
+
+            return Ok(new ApiSuccessResponse<decimal>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy số cân")
+            });
+        }
     }
 }

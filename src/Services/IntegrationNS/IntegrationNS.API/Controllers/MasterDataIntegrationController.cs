@@ -205,8 +205,7 @@ namespace IntegrationNS.API.Controllers
         ///
         ///                {
         ///                  "vendor": "string",
-        ///                  "vendorName": "string",
-        ///                  "country": "string"
+        ///                  "vendorName": "string"
         ///                }
         /// OUT PUT
         /// 
@@ -404,6 +403,7 @@ namespace IntegrationNS.API.Controllers
         ///
         ///                {
         ///                  "division": "string",
+        ///                  "divisionName": "string".
         ///                  "salesOrganization": "string",
         ///                }
         /// OUT PUT

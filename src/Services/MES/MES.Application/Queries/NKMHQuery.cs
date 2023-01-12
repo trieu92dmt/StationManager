@@ -1,4 +1,6 @@
-﻿using ISD.Core.SeedWork.Repositories;
+﻿using ISD.Core.Exceptions;
+using ISD.Core.Properties;
+using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
@@ -30,7 +32,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="weightHead"></param>
         /// <returns></returns>
-        //Task<List<GetWeighNumResponse>> GetWeighNum(List<string> weightHead);
+        Task<decimal> GetWeighNum(string scaleCode);
     }
     public class NKMHQuery : INKMHQuery
     {
@@ -40,11 +42,12 @@ namespace MES.Application.Queries
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
         private readonly IRepository<AccountModel> _userRep;
         private readonly IRepository<VendorModel> _vendorRep;
-        private readonly IRepository<WeighingSessionModel> _weighSsRepo;
+        private readonly IRepository<WeighSessionModel> _weighSsRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
                          IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
-                         IRepository<WeighingSessionModel> weighSsRepo)
+                         IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -53,6 +56,7 @@ namespace MES.Application.Queries
             _userRep = userRep;
             _vendorRep = vendorRep;
             _weighSsRepo = weighSsRepo;
+            _scaleRepo = scaleRepo;
         }
 
         public async Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)
@@ -295,6 +299,27 @@ namespace MES.Application.Queries
             }
 
             return dataPO;
+        }
+
+        public async Task<decimal> GetWeighNum(string scaleCode)
+        {
+            //Lấy đầu cân
+            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == scaleCode);
+
+            //Check tồn tại đầu cân
+            if (scale == null)
+                throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Đầu cân"));
+
+            //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
+            var weighSs = _weighSsRepo.GetQuery(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN").FirstOrDefault();
+
+            //Check status
+            if (weighSs == null)
+                throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Số cân"));
+
+            decimal result = weighSs != null ? weighSs.TotalWeight.Value : 0;
+
+            return result;
         }
     }
 }

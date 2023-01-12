@@ -18,7 +18,6 @@ namespace IntegrationNS.Application.Commands.Vendors
     {
         public string Vendor { get; set; }
         public string VendorName { get; set; }
-        public string Country { get; set; }
     }
 
     public class VendorIntegrationCommandHandler : IRequestHandler<VendorIntegrationCommand, IntegrationNSResponse>
@@ -56,7 +55,6 @@ namespace IntegrationNS.Application.Commands.Vendors
                             VendorId = Guid.NewGuid(),
                             VendorCode = vendorIntegration.Vendor,
                             VendorName = vendorIntegration.VendorName,
-                            Country = vendorIntegration.Country,
 
                             //Common
                             CreateTime = DateTime.Now,
@@ -66,7 +64,6 @@ namespace IntegrationNS.Application.Commands.Vendors
                     else
                     {
                         vendor.VendorName = vendorIntegration.VendorName;
-                        vendor.Country = vendorIntegration.Country;
 
                         //Common
                         vendor.LastEditTime = DateTime.Now;

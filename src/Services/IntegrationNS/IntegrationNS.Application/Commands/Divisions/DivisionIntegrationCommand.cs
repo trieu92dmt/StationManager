@@ -15,6 +15,7 @@ namespace IntegrationNS.Application.Commands.Divisions
     public class DivisionIntegration
     {
         public string Division { get; set; }
+        public string DivisionName { get; set; }
         public string SalesOrganization { get; set; }
     }
     public class DivisionIntegrationCommandHandler : IRequestHandler<DivisionIntegrationCommand, IntegrationNSResponse>
@@ -51,6 +52,7 @@ namespace IntegrationNS.Application.Commands.Divisions
                         {
                             DivisionId = Guid.NewGuid(),
                             DivisionCode = divisionIntegration.Division,
+                            DivisionName = divisionIntegration.DivisionName,
                             SaleOrgCode = divisionIntegration.SalesOrganization,
 
                             //Common
@@ -60,6 +62,7 @@ namespace IntegrationNS.Application.Commands.Divisions
                     }
                     else
                     {
+                        division.DivisionName = divisionIntegration.DivisionName;   
                         division.SaleOrgCode = divisionIntegration.SalesOrganization;
 
                         //Common

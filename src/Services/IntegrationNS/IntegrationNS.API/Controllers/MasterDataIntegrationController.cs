@@ -55,7 +55,8 @@ namespace IntegrationNS.API.Controllers
         ///                 "planningPlant": "string",
         ///                 "name": "string",
         ///                 "orderType": "string",
-        ///                 "shortText": "string"
+        ///                 "shortText": "string",
+        ///                 "category": "string"
         ///               }
         /// OUT PUT
         /// 

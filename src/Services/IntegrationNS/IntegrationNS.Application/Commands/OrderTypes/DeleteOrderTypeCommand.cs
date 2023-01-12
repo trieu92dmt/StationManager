@@ -9,6 +9,7 @@ namespace IntegrationNS.Application.Commands.OrderTypes
 {
     public class DeleteOrderTypeCommand : IRequest<bool>
     {
+        public string Category { get; set; }
         public string OrderType { get; set; }
         public string Plant { get; set; }
 

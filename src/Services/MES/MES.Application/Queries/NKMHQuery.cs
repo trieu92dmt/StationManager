@@ -96,8 +96,8 @@ namespace MES.Application.Queries
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
                 if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) >= int.Parse(request.VendorFrom) &&
-                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) <= int.Parse(request.VendorTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
+                                                                                        long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.POType))
@@ -122,8 +122,8 @@ namespace MES.Application.Queries
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= int.Parse(request.PurchaseOrderFrom) &&
-                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= int.Parse(request.PurchaseOrderTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
+                                                                                        long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();

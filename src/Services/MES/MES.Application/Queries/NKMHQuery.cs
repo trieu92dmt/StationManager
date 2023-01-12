@@ -301,10 +301,10 @@ namespace MES.Application.Queries
             return dataPO;
         }
 
-        public async Task<decimal> GetWeighNum(string scaleCode)
+        public async Task<decimal> GetWeighNum(string weightHeadCode)
         {
             //Lấy đầu cân
-            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == scaleCode);
+            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == weightHeadCode);
 
             //Check tồn tại đầu cân
             if (scale == null)

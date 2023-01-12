@@ -11,6 +11,7 @@ using IntegrationNS.Application.Commands.PurchaseOrders;
 using IntegrationNS.Application.Commands.PurchasingGroups;
 using IntegrationNS.Application.Commands.PurchasingOrganizations;
 using IntegrationNS.Application.Commands.SalesOrgs;
+using IntegrationNS.Application.Commands.ShippingPoint;
 using IntegrationNS.Application.Commands.StorageLocations;
 using IntegrationNS.Application.Commands.Vendors;
 using IntegrationNS.Application.DTOs;
@@ -728,6 +729,59 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchaseOrder") });
+        }
+        #endregion
+
+        #region Tích hợp Shipping Point
+        /// <summary>Tích hợp Shipping Point</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/shipping-point
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///             {
+        ///               "shippingPoints": [
+        ///                 {
+        ///                   "shippingCode": "string",
+        ///                   "shippingName": "string"
+        ///                 }
+        ///               ]
+        ///             }
+        ///     OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp Division thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("shipping-point")]
+        public async Task<IActionResult> ShippingPointIntegration([FromBody] ShippingPointIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Shipping Point") });
+        }
+
+        /// <summary>
+        /// Xóa Shipping Point
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+
+        [HttpDelete("delete-shipping-point")]
+        public async Task<IActionResult> DeleteShippingPointIntegrationAsync([FromQuery] DeleteShippingPointCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa ShippingPoint") });
         }
         #endregion
 

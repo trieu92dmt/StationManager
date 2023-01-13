@@ -109,12 +109,12 @@ namespace MES.Application.Queries
         #region
         public Task<List<CommonResponse>> GetDropdownMaterial(string keyword)
         {
-            var response = _prodRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCode.Contains(keyword) : true)
+            var response = _prodRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCodeInt.ToString().Contains(keyword) : true)
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new CommonResponse
                                      {
                                          Key = x.ProductCode,
-                                         Value = $"{x.ProductCode} | {x.ProductName}"
+                                         Value = $"{x.ProductCodeInt} | {x.ProductName}"
                                      }).Take(10).ToListAsync();
 
             return response;

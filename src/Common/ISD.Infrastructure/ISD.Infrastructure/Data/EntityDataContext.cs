@@ -398,7 +398,7 @@ namespace ISD.Infrastructure.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-\                optionsBuilder.UseSqlServer("Data Source=192.168.100.233;Initial Catalog=TLG_MES;Persist Security Info=True;User ID=isd;Password=pm123@abcd");
+                optionsBuilder.UseSqlServer("Data Source=192.168.100.233;Initial Catalog=TLG_MES;Persist Security Info=True;User ID=isd;Password=pm123@abcd");
             }
         }
 

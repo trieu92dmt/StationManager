@@ -62,7 +62,7 @@ namespace IntegrationNS.Application.Commands.Products
                             ProductId = Guid.NewGuid(),
                             PlantCode = productGroupIntegration.Plant,
                             ProductCode = productGroupIntegration.Material,
-                            ProductCodeInt = int.Parse(productGroupIntegration.Material),
+                            ProductCodeInt = long.Parse(productGroupIntegration.Material),
                             ProductName = productGroupIntegration.MaterialDescription,
                             ProductGroupCode = productGroupIntegration.MaterialGroup,
                             ProductGroupDesc = productGroupIntegration.MaterialGroupDesc,
@@ -108,7 +108,7 @@ namespace IntegrationNS.Application.Commands.Products
                     response.RecordSyncFailed++;
                     response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
                     {
-                        RecordFail = productGroupIntegration.Material,
+                        RecordFail = $"{productGroupIntegration.Material} | {productGroupIntegration.Plant}",
                         Msg = ex.Message
                     });
                 }

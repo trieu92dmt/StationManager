@@ -10,6 +10,7 @@ using IntegrationNS.Application.Commands.Products;
 using IntegrationNS.Application.Commands.PurchaseOrders;
 using IntegrationNS.Application.Commands.PurchasingGroups;
 using IntegrationNS.Application.Commands.PurchasingOrganizations;
+using IntegrationNS.Application.Commands.SalesDocument;
 using IntegrationNS.Application.Commands.SalesOrgs;
 using IntegrationNS.Application.Commands.ShippingPoint;
 using IntegrationNS.Application.Commands.StorageLocations;
@@ -800,10 +801,30 @@ namespace IntegrationNS.API.Controllers
         ///
         ///
         ///             {
-        ///               "shippingPoints": [
+        ///               "workOrderIntegrations": [
         ///                 {
-        ///                   "shippingCode": "string",
-        ///                   "shippingName": "string"
+        ///                   "workOrderCode": "string",
+        ///                   "productCode": "string",
+        ///                   "orderType": "string",
+        ///                   "plant": "string",
+        ///                   "storageLocation": "string",
+        ///                   "batch": "string",
+        ///                   "targetQuantity": 0,
+        ///                   "unit": "string",
+        ///                   "actualFinishDate": "2023-01-13T02:16:17.868Z",
+        ///                   "scheduledFinishDate": "2023-01-13T02:16:17.868Z",
+        ///                   "scheduledStartDate": "2023-01-13T02:16:17.868Z",
+        ///                   "deliveredQuantity": 0,
+        ///                   "salesOrder": "string",
+        ///                   "salesOrderItem": "string",
+        ///                   "orderCategory": "string",
+        ///                   "actualStartDate": "2023-01-13T02:16:17.868Z",
+        ///                   "startDate": "2023-01-13T02:16:17.868Z",
+        ///                   "confirmedYieldQuantity": 0,
+        ///                   "deletionFlag": "string",
+        ///                   "longTextExists": "string",
+        ///                   "referenceOrder": "string",
+        ///                   "systemStatus": "string"
         ///                 }
         ///               ]
         ///             }
@@ -835,6 +856,79 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa WorkOrder") });
+        }
+        #endregion
+
+        #region Tích hợp SalesDocument
+        /// <summary>Tích hợp SalesDocument</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/workorder
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///             {
+        ///               "workOrderIntegrations": [
+        ///                 {
+        ///                   "workOrderCode": "string",
+        ///                   "productCode": "string",
+        ///                   "orderType": "string",
+        ///                   "plant": "string",
+        ///                   "storageLocation": "string",
+        ///                   "batch": "string",
+        ///                   "targetQuantity": 0,
+        ///                   "unit": "string",
+        ///                   "actualFinishDate": "2023-01-13T02:16:17.868Z",
+        ///                   "scheduledFinishDate": "2023-01-13T02:16:17.868Z",
+        ///                   "scheduledStartDate": "2023-01-13T02:16:17.868Z",
+        ///                   "deliveredQuantity": 0,
+        ///                   "salesOrder": "string",
+        ///                   "salesOrderItem": "string",
+        ///                   "orderCategory": "string",
+        ///                   "actualStartDate": "2023-01-13T02:16:17.868Z",
+        ///                   "startDate": "2023-01-13T02:16:17.868Z",
+        ///                   "confirmedYieldQuantity": 0,
+        ///                   "deletionFlag": "string",
+        ///                   "longTextExists": "string",
+        ///                   "referenceOrder": "string",
+        ///                   "systemStatus": "string"
+        ///                 }
+        ///               ]
+        ///             }
+        ///     OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp Division thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("sales-document")]
+        public async Task<IActionResult> SalesDocumentIntegration([FromBody] SalesDocumentIntegrationNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Sales Document") });
+        }
+
+        /// <summary>
+        /// Xóa SalesDocument
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+
+        [HttpDelete("delete-sales-document")]
+        public async Task<IActionResult> DeleteSalesDocumentIntegrationAsync([FromQuery] DeleteSalesDocumentNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa SalesDocument") });
         }
         #endregion
 

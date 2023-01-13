@@ -10,6 +10,7 @@ namespace IntegrationNS.Application.Commands.Products
     public class DeleteProductNSCommand : IRequest<bool>
     {
         public string Product { get; set; }
+        public string Plant { get; set; }
     }
     public class DeleteProductNSCommandHandler : IRequestHandler<DeleteProductNSCommand, bool>
     {
@@ -24,7 +25,7 @@ namespace IntegrationNS.Application.Commands.Products
         public async Task<bool> Handle(DeleteProductNSCommand request, CancellationToken cancellationToken)
         {
             //Xóa Product
-            var product = await _productRep.FindOneAsync(x => x.ProductGroupCode == request.Product);
+            var product = await _productRep.FindOneAsync(x => x.ProductGroupCode == request.Product && x.PlantCode == request.Plant);
             if (product is not null)
                 throw new ISDException(CommonResource.Msg_NotFound, $"Material {request.Product}");
 

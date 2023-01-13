@@ -36,6 +36,8 @@ namespace ISD.Infrastructure.Models
         public string ProductCode { get; set; }
         [StringLength(50)]
         public string OverallStatus { get; set; }
+        [StringLength(50)]
+        public string DeliveryStatus { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

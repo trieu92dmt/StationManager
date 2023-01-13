@@ -15,7 +15,6 @@ namespace IntegrationNS.Application.Commands.Products
     public class ProductIntegration
     {
         public string Plant { get; set; }
-        public string PlantDescription { get; set; }
         public string Material { get; set; }
         public string MaterialDescription { get; set; }
         public string MaterialGroup { get; set; }
@@ -23,9 +22,11 @@ namespace IntegrationNS.Application.Commands.Products
         public string MaterialType { get; set; }
         public string MaterialTypeDescription { get; set; }
         public string BaseUnitofMeasure { get; set; }
-        public string Division { get; set; }
-        public string SalesOrganization { get; set; }
-        public string DistributionChannel { get; set; }
+        public string Status { get; set; }
+        public decimal? GrossWeight { get; set; }
+        public decimal? NetWeight { get; set; }
+        public string OldMaterialNum { get; set; }
+        public string WeightUnit { get; set; }
     }
 
     public class ProductIntegrationNSCommandHandler : IRequestHandler<ProductIntegrationNSCommand, IntegrationNSResponse>
@@ -52,7 +53,7 @@ namespace IntegrationNS.Application.Commands.Products
                 try
                 {
                     //Check tồn tại
-                    var product = await _productRep.FindOneAsync(x => x.ProductCode == productGroupIntegration.Material);
+                    var product = await _productRep.FindOneAsync(x => x.ProductCode == productGroupIntegration.Material && x.PlantCode == productGroupIntegration.Plant);
 
                     if (product is null)
                     {
@@ -68,9 +69,11 @@ namespace IntegrationNS.Application.Commands.Products
                             ProductTypeCode = productGroupIntegration.MaterialType,
                             ProductTypeName = productGroupIntegration.MaterialTypeDescription,
                             Unit = productGroupIntegration.BaseUnitofMeasure,
-                            DivisionCode = productGroupIntegration.Division,
-                            SaleOrgCode = productGroupIntegration.SalesOrganization,
-                            DistributionChannelCode = productGroupIntegration.DistributionChannel,
+                            Status = productGroupIntegration.Status,
+                            GrossWeight = productGroupIntegration.GrossWeight,
+                            NetWeight = productGroupIntegration.NetWeight,
+                            OldMaterialNum = productGroupIntegration.OldMaterialNum,
+                            WeightUnit = productGroupIntegration.WeightUnit,
 
                             //Common
                             CreateTime = DateTime.Now,
@@ -86,9 +89,11 @@ namespace IntegrationNS.Application.Commands.Products
                         product.ProductTypeCode = productGroupIntegration.MaterialType;
                         product.ProductTypeName = productGroupIntegration.MaterialTypeDescription;
                         product.Unit = productGroupIntegration.BaseUnitofMeasure;
-                        product.DivisionCode = productGroupIntegration.Division;
-                        product.SaleOrgCode = productGroupIntegration.SalesOrganization;
-                        product.DistributionChannelCode = productGroupIntegration.DistributionChannel;
+                        product.Status = productGroupIntegration.Status;
+                        product.GrossWeight = productGroupIntegration.GrossWeight;
+                        product.NetWeight = productGroupIntegration.NetWeight;
+                        product.OldMaterialNum = productGroupIntegration.OldMaterialNum;
+                        product.WeightUnit = productGroupIntegration.WeightUnit;
 
                         //Common
                         product.LastEditTime = DateTime.Now;

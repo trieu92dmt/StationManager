@@ -61,7 +61,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownPO(string keyword);
+        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant);
 
         /// <summary>
         /// Dropdown WeightHead
@@ -215,9 +215,10 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown po
-        public async Task<List<CommonResponse>> GetDropdownPO(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant)
         {
-            var response = await _poMasterRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true)
+            var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                                                             (x.Plant == plant))
                                         .OrderBy(x => x.PurchaseOrderCode)
                                         .Select(x => new CommonResponse
                                         {

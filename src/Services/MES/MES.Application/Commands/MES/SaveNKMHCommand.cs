@@ -67,6 +67,9 @@ namespace MES.Application.Commands.MES
             //Danh sách storage location
             var slocs = _slocRepo.GetQuery().AsNoTracking();
 
+            //Danh sách nhập kho mua hàng
+            var nkmh = await _nkRep.GetQuery().ToListAsync();
+
             foreach (var x in request.NKMHRequests)
             {
 
@@ -109,6 +112,8 @@ namespace MES.Application.Commands.MES
                     //Hình ảnh
                     //Trạng thái
                     DocumentDate = DateTime.Now,
+                    //Số phiếu cân
+                    WeitghtVote = $"N{1000000 + nkmh.Count()}",
 
                     //Common
                     DateKey = int.Parse(DateTime.Now.ToString(DateTimeFormat.DateKey)),

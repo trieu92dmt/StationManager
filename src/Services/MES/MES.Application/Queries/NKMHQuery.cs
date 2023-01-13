@@ -300,7 +300,7 @@ namespace MES.Application.Queries
                 dataPO.Add(new PuchaseOrderNKMHResponse
                 {
                     Plant = request.Plant,
-                    Material = request.MaterialFrom.ToString(),
+                    Material = material.ProductCodeInt.ToString(),
                     MaterialName = material?.ProductName
                 });
             }

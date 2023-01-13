@@ -14,6 +14,8 @@ namespace MES.Application.DTOs.MES.NKMH
         public decimal? Weight { get; set; }
         //Confirm Qty
         public decimal? ConfirmQty { get; set; }
+        //Số lần cân
+        public int WeightQuantity { get; set; }
         //Trạng thái
         public string Status { get; set; }
     }

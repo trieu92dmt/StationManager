@@ -138,6 +138,9 @@ namespace MES.API.Controllers
         [HttpGet("list-dropdown-weight-head-by-plant")]
         public async Task<IActionResult> GetListWeightHeadByPlant(string keyword, string plantCode)
         {
+            //Lấy danh sách mã đầu cân đã được chọn
+
+            //Query những thằng chưa được chọn
             var dropdownList = await _commonQuery.GetDropdownWeightHeadByPlant(keyword, plantCode);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
         }

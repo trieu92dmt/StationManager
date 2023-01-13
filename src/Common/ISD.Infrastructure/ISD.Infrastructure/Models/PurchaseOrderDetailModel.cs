@@ -50,6 +50,8 @@ namespace ISD.Infrastructure.Models
         public decimal? GrossWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? NetWeight { get; set; }
+        [StringLength(50)]
+        public string WeightUnit { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

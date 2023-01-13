@@ -729,7 +729,6 @@ namespace IntegrationNS.API.Controllers
         ///                   "vendor": "string",
         ///                   "poType": "string",
         ///                   "purchaseOrder": "string",
-        ///                   "material": "string",
         ///                   "documentDate": "2023-01-13T08:21:49.947Z",
         ///                   "releaseIndicator": "string",
         ///                   "purchaseOrderDetails": [
@@ -750,7 +749,8 @@ namespace IntegrationNS.API.Controllers
         ///                       "transportUnit": "string",
         ///                       "deliveryCompleted": "string",
         ///                       "grossWeight": 0,
-        ///                       "netWeight": 0
+        ///                       "netWeight": 0,
+        ///                       "weightUnit": "string",
         ///                     }
         ///                   ]
         ///                 }

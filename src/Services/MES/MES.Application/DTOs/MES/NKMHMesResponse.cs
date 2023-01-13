@@ -25,6 +25,7 @@
         public decimal? OpenQuantity { get; set; }
         public string StorageLocation { get; set; }
         public string Unit { get; set; }
+        public string WeightHeadCode { get; set; }
     }
 
     public class ListNKMHResponse

@@ -22,7 +22,6 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         public string Vendor { get; set; }
         public string POType { get; set; }
         public string PurchaseOrder { get; set; }
-        public string Material { get; set; }
         public DateTime? DocumentDate { get; set; }
         public string ReleaseIndicator { get; set; }
         public List<PurchaseOrderDetailIntegration> PurchaseOrderDetails { get; set; } = new List<PurchaseOrderDetailIntegration>();
@@ -47,6 +46,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         public string DeliveryCompleted { get; set; }
         public decimal? GrossWeight { get; set; }
         public decimal? NetWeight { get; set; }
+        public string WeightUnit { get; set; }
     }
     public class PurchaseOrderIntegrationNSCommandHandler : IRequestHandler<PurchaseOrderIntegrationNSCommand, IntegrationNSResponse>
     {
@@ -130,7 +130,8 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 TransportUnit = item.TransportUnit,
                                 DeliveryCompleted = item.DeliveryCompleted,
                                 GrossWeight = item.GrossWeight,
-                                NetWeight = item.NetWeight
+                                NetWeight = item.NetWeight,
+                                WeightUnit = item.WeightUnit  
                             });
 
                         }
@@ -194,7 +195,8 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                     TransportUnit = item.TransportUnit,
                                     DeliveryCompleted = item.DeliveryCompleted,
                                     GrossWeight = item.GrossWeight,
-                                    NetWeight = item.NetWeight
+                                    NetWeight = item.NetWeight,
+                                    WeightUnit = item.WeightUnit
                                 });
                             }
                             else
@@ -213,6 +215,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 detailPO.DeliveryCompleted = item.DeliveryCompleted;
                                 detailPO.GrossWeight = item.GrossWeight;
                                 detailPO.NetWeight = item.NetWeight;
+                                detailPO.WeightUnit = item.WeightUnit;
                             }
                         }
                         #endregion

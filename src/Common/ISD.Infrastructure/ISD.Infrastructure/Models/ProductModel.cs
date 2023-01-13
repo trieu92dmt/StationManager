@@ -25,21 +25,11 @@ namespace ISD.Infrastructure.Models
         [StringLength(50)]
         public string ProductGroupDesc { get; set; }
         [StringLength(50)]
-        public string PurchasingOrgCode { get; set; }
-        [StringLength(50)]
         public string ProductTypeCode { get; set; }
         [StringLength(50)]
         public string ProductTypeName { get; set; }
         [StringLength(50)]
-        public string CustomerCode { get; set; }
-        [StringLength(50)]
         public string Unit { get; set; }
-        [StringLength(50)]
-        public string DivisionCode { get; set; }
-        [StringLength(50)]
-        public string SaleOrgCode { get; set; }
-        [StringLength(50)]
-        public string DistributionChannelCode { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

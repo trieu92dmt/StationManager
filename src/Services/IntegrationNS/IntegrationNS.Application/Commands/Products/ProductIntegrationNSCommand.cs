@@ -62,7 +62,7 @@ namespace IntegrationNS.Application.Commands.Products
                             ProductId = Guid.NewGuid(),
                             PlantCode = productGroupIntegration.Plant,
                             ProductCode = productGroupIntegration.Material,
-                            //ProductCodeInt = int.Parse(request.Material),
+                            ProductCodeInt = int.Parse(productGroupIntegration.Material),
                             ProductName = productGroupIntegration.MaterialDescription,
                             ProductGroupCode = productGroupIntegration.MaterialGroup,
                             ProductGroupDesc = productGroupIntegration.MaterialGroupDesc,

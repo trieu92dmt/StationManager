@@ -113,7 +113,7 @@ namespace MES.Application.Commands.MES
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân
-                    WeitghtVote = $"N{1000000 + nkmh.Count()}",
+                    WeitghtVote = $"N{1000000 + nkmh.Count() + 1}",
 
                     //Common
                     DateKey = int.Parse(DateTime.Now.ToString(DateTimeFormat.DateKey)),

@@ -92,7 +92,7 @@ namespace IntegrationNS.Application.Commands.CustmdSales
                     response.RecordSyncFailed++;
                     response.ListRecordSyncFailed.Add(new DetailIntegrationFailResponse
                     {
-                        RecordFail = custmdSale.SalesOffice,
+                        RecordFail = $"{custmdSale.Division} | {custmdSale.SalesOrganization} | {custmdSale.DistributionChannel} | {custmdSale.CustomerNumber}",
                         Msg = ex.Message
                     });
                 }

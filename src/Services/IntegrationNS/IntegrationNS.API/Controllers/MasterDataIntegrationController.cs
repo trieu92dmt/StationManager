@@ -708,9 +708,62 @@ namespace IntegrationNS.API.Controllers
         #region Tích hợp PurchaseOrder 
         /// <summary>
         /// Tích hợp PurchaseOrder
-        /// </summary>
-        /// <param name="req"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/purchase-order
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///             {
+        ///               "purchaseOrders": [
+        ///                 {
+        ///                   "plant": "string",
+        ///                   "purchasingOrganization": "string",
+        ///                   "purchasingGroup": "string",
+        ///                   "vendor": "string",
+        ///                   "poType": "string",
+        ///                   "purchaseOrder": "string",
+        ///                   "material": "string",
+        ///                   "documentDate": "2023-01-13T08:21:49.947Z",
+        ///                   "releaseIndicator": "string",
+        ///                   "purchaseOrderDetails": [
+        ///                     {
+        ///                       "purchaseOrder": "string",
+        ///                       "purchaseOrderItem": "string",
+        ///                       "material": "string",
+        ///                       "storageLocation": "string",
+        ///                       "batch": "string",
+        ///                       "vehicleCode": "string",
+        ///                       "orderQuantity": 0,
+        ///                       "openQuantity": 0,
+        ///                       "uoM": "string",
+        ///                       "quantityReceived": 0,
+        ///                       "deletionInd": "string",
+        ///                       "deliver": "string",
+        ///                       "vehicleOwner": "string",
+        ///                       "transportUnit": "string",
+        ///                       "deliveryCompleted": "string",
+        ///                       "grossWeight": 0,
+        ///                       "netWeight": 0
+        ///                     }
+        ///                   ]
+        ///                 }
+        ///               ]
+        ///             }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp PurchaseOrder thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
         [HttpPost("purchase-order")]
         public async Task<IActionResult> PurchaseOrderIntegration([FromBody] PurchaseOrderIntegrationNSCommand req)
         {

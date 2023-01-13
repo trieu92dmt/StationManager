@@ -25,7 +25,6 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         public string Material { get; set; }
         public DateTime? DocumentDate { get; set; }
         public string ReleaseIndicator { get; set; }
-        public string DeletionInd { get; set; }
         public List<PurchaseOrderDetailIntegration> PurchaseOrderDetails { get; set; } = new List<PurchaseOrderDetailIntegration>();
     }
 
@@ -46,6 +45,8 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         public string VehicleOwner { get; set; }
         public string TransportUnit { get; set; }
         public string DeliveryCompleted { get; set; }
+        public decimal? GrossWeight { get; set; }
+        public decimal? NetWeight { get; set; }
     }
     public class PurchaseOrderIntegrationNSCommandHandler : IRequestHandler<PurchaseOrderIntegrationNSCommand, IntegrationNSResponse>
     {
@@ -99,7 +100,6 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         //purchaseOrder.VendorCodeInt = int.Parse(poIntegration.Vendor);
                         purchaseOrder.DocumentDate = poIntegration.DocumentDate;
                         purchaseOrder.ReleaseIndicator = poIntegration.ReleaseIndicator;
-                        purchaseOrder.DeletionInd = poIntegration.DeletionInd;
 
                         purchaseOrder.CreateTime = DateTime.Now;
                         purchaseOrder.Actived = true;
@@ -128,7 +128,9 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 VehicleCode = item.VehicleCode,
                                 VehicleOwner = item.VehicleOwner,
                                 TransportUnit = item.TransportUnit,
-                                DeliveryCompleted = item.DeliveryCompleted
+                                DeliveryCompleted = item.DeliveryCompleted,
+                                GrossWeight = item.GrossWeight,
+                                NetWeight = item.NetWeight
                             });
 
                         }
@@ -190,7 +192,9 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                     VehicleCode = item.VehicleCode,
                                     VehicleOwner = item.VehicleOwner,
                                     TransportUnit = item.TransportUnit,
-                                    DeliveryCompleted = item.DeliveryCompleted
+                                    DeliveryCompleted = item.DeliveryCompleted,
+                                    GrossWeight = item.GrossWeight,
+                                    NetWeight = item.NetWeight
                                 });
                             }
                             else
@@ -207,6 +211,8 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 detailPO.VehicleOwner = item.VehicleOwner;
                                 detailPO.TransportUnit = item.TransportUnit;
                                 detailPO.DeliveryCompleted = item.DeliveryCompleted;
+                                detailPO.GrossWeight = item.GrossWeight;
+                                detailPO.NetWeight = item.NetWeight;
                             }
                         }
                         #endregion

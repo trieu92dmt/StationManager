@@ -213,6 +213,9 @@ namespace MES.Application.Queries
             //Product
             var product = await _prdRep.GetQuery().AsNoTracking().ToListAsync();
 
+            //Dữ liệu đợt cân
+            //var weightSs = await _weighSsRepo.GetQuery().AsNoTracking().ToListAsync();
+
             //Query PO
             var queryPO = await _poDetailRep.GetQuery(x => x.DeliveryCompleted != "X" &&
                                                            x.DeletionInd != "X")
@@ -284,7 +287,9 @@ namespace MES.Application.Queries
                 VendorCode = x.PurchaseOrder.VendorCode,
                 VendorName = vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode)?.VendorName,
                 OrderQuantity = x.OrderQuantity,
-                OpenQuantity = x.OpenQuantity
+                OpenQuantity = x.OpenQuantity,
+                //Số lần cân
+                //QuantityWeight = 
 
             }).ToList();
 

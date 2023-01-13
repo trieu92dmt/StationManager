@@ -18,6 +18,8 @@
         public string Material { get; set; }
         public string MaterialName { get; set; }
         public string Batch { get; set; }
+        //Số lần cân
+        public int QuantityWeight { get; set; }
         public string VehicleCode { get; set; }
         public decimal? OrderQuantity { get; set; }
         public decimal? OpenQuantity { get; set; }

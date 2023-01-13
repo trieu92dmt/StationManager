@@ -46,6 +46,10 @@ namespace ISD.Infrastructure.Models
         public string VehicleOwner { get; set; }
         [StringLength(50)]
         public string TransportUnit { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? GrossWeight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? NetWeight { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]

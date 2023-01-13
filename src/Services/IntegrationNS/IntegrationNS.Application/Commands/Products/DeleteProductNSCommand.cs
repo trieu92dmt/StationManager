@@ -25,7 +25,7 @@ namespace IntegrationNS.Application.Commands.Products
         public async Task<bool> Handle(DeleteProductNSCommand request, CancellationToken cancellationToken)
         {
             //Xóa Product
-            var product = await _productRep.FindOneAsync(x => x.ProductGroupCode == request.Product && x.PlantCode == request.Plant);
+            var product = await _productRep.FindOneAsync(x => x.ProductCode == request.Product && x.PlantCode == request.Plant);
             if (product is not null)
                 throw new ISDException(CommonResource.Msg_NotFound, $"Material {request.Product}");
 

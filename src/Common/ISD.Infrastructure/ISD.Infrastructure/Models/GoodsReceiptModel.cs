@@ -16,7 +16,7 @@ namespace ISD.Infrastructure.Models
         public Guid? PurchaseOrderDetailId { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }
-        [StringLength(10)]
+        [StringLength(50)]
         public string MaterialCode { get; set; }
         [StringLength(50)]
         public string WeightId { get; set; }
@@ -36,8 +36,7 @@ namespace ISD.Infrastructure.Models
         public decimal? QuantityWithPackaging { get; set; }
         [StringLength(50)]
         public string VehicleCode { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? QuantityWeitght { get; set; }
+        public int? QuantityWeitght { get; set; }
         public int? TruckQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? InputWeight { get; set; }

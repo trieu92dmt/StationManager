@@ -214,8 +214,10 @@ namespace MES.Application.Queries
             var product = await _prdRep.GetQuery().AsNoTracking().ToListAsync();
 
             //Query PO
-            var queryPO = await _poDetailRep.GetQuery()
+            var queryPO = await _poDetailRep.GetQuery(x => x.DeliveryCompleted != "X" &&
+                                                           x.DeletionInd != "X")
                                             .Include(x => x.PurchaseOrder)
+                                            .Where(x => x.PurchaseOrder.DeletionInd != "X")
                                             .AsNoTracking().ToListAsync();
 
 
@@ -274,7 +276,7 @@ namespace MES.Application.Queries
                 PurchaseOrderCode = x.PurchaseOrder?.PurchaseOrderCode,
                 POItem = x.POLine,
                 //Product
-                Material = x.ProductCode.ToString(),
+                Material = x.ProductCode,
                 MaterialName = product.FirstOrDefault(p => p.ProductCode == x.ProductCode)?.ProductName,
                 //Unit
                 Unit = x.Unit,

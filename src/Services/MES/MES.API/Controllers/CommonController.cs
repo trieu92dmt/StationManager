@@ -52,9 +52,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-material")]
-        public async Task<IActionResult> GetListMaterial(string keyword)
+        public async Task<IActionResult> GetListMaterial(string keyword, string plant)
         {
-            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword);
+            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách material") });
         }
         #endregion

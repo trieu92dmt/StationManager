@@ -27,7 +27,7 @@ namespace IntegrationNS.Application.Commands.StorageLocations
         {
             //Xóa Storage Location
             var storageLocation = await _storageLocationRep.FindOneAsync(x => x.StorageLocationName == request.StorageLocation);
-            if (storageLocation is not null)
+            if (storageLocation is null)
                 throw new ISDException(CommonResource.Msg_NotFound, $"Storage Location {request.StorageLocation}");
 
 

@@ -31,7 +31,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
         {
             //Xóa WorkOrder
             var workOrder = await _woRepo.FindOneAsync(x => x.WorkOrderCode == request.WorkOrderCode);
-            if (workOrder is not null)
+            if (workOrder is null)
                 throw new ISDException(CommonResource.Msg_NotFound, $"WorkOrder {request.WorkOrderCode}");
 
             _woRepo.Remove(workOrder);

@@ -164,10 +164,22 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetPOAsync(command);
 
-            return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
+            if (command.MaterialFrom != null)
             {
-                Data = response
-            });
+                return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
+                {
+                    Data = response,
+                    Message = response.Count() == 1 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
+                    IsSuccess = response.Count() == 1 ? false : true
+                });
+            }
+            else
+                return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
+                {
+                    Data = response,
+                    Message = response.Count() == 0 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
+                    IsSuccess = response.Count() == 0 ? false : true
+                });
         }
 
         /// <summary>

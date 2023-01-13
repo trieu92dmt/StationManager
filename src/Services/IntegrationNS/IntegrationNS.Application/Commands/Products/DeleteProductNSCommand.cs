@@ -26,7 +26,7 @@ namespace IntegrationNS.Application.Commands.Products
         {
             //Xóa Product
             var product = await _productRep.FindOneAsync(x => x.ProductCode == request.Product && x.PlantCode == request.Plant);
-            if (product is not null)
+            if (product is null)
                 throw new ISDException(CommonResource.Msg_NotFound, $"Material {request.Product}");
 
             _productRep.Remove(product);

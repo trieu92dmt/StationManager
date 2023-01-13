@@ -33,7 +33,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownMaterial(string keyword);
+        Task<List<CommonResponse>> GetDropdownMaterial(string keyword, string plant);
 
         /// <summary>
         /// Dropdown Purchasing Org by Plant
@@ -107,9 +107,10 @@ namespace MES.Application.Queries
         }
 
         #region
-        public Task<List<CommonResponse>> GetDropdownMaterial(string keyword)
+        public Task<List<CommonResponse>> GetDropdownMaterial(string keyword, string plant)
         {
-            var response = _prodRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCodeInt.ToString().Contains(keyword) : true)
+            var response = _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCodeInt.ToString().Contains(keyword) : true) &&
+                                                   (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true))
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new CommonResponse
                                      {
@@ -218,7 +219,10 @@ namespace MES.Application.Queries
         public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant)
         {
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
-                                                             (x.Plant == plant))
+                                                             (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             (x.ReleaseIndicator == "R") &&
+                                                             (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel )
+                                        .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
                                         .OrderBy(x => x.PurchaseOrderCode)
                                         .Select(x => new CommonResponse
                                         {

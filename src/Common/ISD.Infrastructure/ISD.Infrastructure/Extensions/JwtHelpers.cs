@@ -62,6 +62,12 @@ namespace ISD.Infrastructure.Extensions
                 UserToken.FullName = model.FullName;
                 UserToken.EmployeeCode = model.EmployeeCode;
 
+                #region Plant
+                var plant = await _context.PlantModel.FirstOrDefaultAsync(x => x.PlantCode == SaleOrg);
+                UserToken.PlantCode = plant?.PlantCode;
+                UserToken.PlantName = plant != null ? $"{plant.PlantCode} | {plant.PlantName}" : "";
+                #endregion
+
                 #region Sale Org
 
                 var saleOrg = await _context.SaleOrgModel.FirstOrDefaultAsync(x => x.SaleOrgCode == SaleOrg);

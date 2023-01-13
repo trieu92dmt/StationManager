@@ -29,6 +29,8 @@ namespace MES.Application.Commands.MES
         public decimal? Weight { get; set; }
         //Confỉm Qty
         public decimal? ConfirmQty { get; set; }
+        //Số lần cân
+        public int QuantityWeight { get; set; }
         //SL kèm bao bì
         public decimal? QuantityWithPackaging { get; set; }
         //Số phương tiện
@@ -39,7 +41,7 @@ namespace MES.Application.Commands.MES
         public string Image { get; set; }
         //Trạng thái
         public string Status { get; set; }
-        public Guid PoDetailId { get; set; }
+        public Guid? PoDetailId { get; set; }
         //Đầu cân
         public string WeightHeadCode { get; set; }
     }
@@ -81,21 +83,23 @@ namespace MES.Application.Commands.MES
                     //Mã đầu cân
                     WeightHeadCode = x.WeightHeadCode,
                     //PlantCode
-                    PlantCode = x?.PlantCode,
+                    PlantCode = x.PlantCode,
                     //Material Desc
-                    MaterialCode = x?.MaterialCode,
+                    MaterialCode = x.MaterialCode,
                     //Sloc code
-                    SlocCode = x?.SlocCode,
+                    SlocCode = x.SlocCode,
                     //Sloc Name
                     SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null,
                     //SL bao
                     BagQuantity = x.BagQuantity,
                     //Đơn trọng
-                    SingleWeight = x.SingleWeight, 
+                    SingleWeight = x.SingleWeight,
                     //Trọng lượng cân
                     Weight = x.Weight,
                     //Confirm Qty
-                    ConfirmQty = x.ConfirmQty,  
+                    ConfirmQty = x.ConfirmQty,
+                    //Số lần cân
+                    QuantityWeitght = x.QuantityWeight,
                     //Sl kèm bao bì
                     QuantityWithPackaging = x.QuantityWithPackaging,
                     //Số phương tiện

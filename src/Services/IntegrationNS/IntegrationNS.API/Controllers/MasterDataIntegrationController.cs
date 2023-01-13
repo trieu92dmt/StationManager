@@ -872,32 +872,41 @@ namespace IntegrationNS.API.Controllers
         ///             + version : 1
         ///     Body: 
         ///
-        ///
         ///             {
-        ///               "workOrderIntegrations": [
+        ///               "salesDocuments": [
         ///                 {
-        ///                   "workOrderCode": "string",
-        ///                   "productCode": "string",
-        ///                   "orderType": "string",
-        ///                   "plant": "string",
-        ///                   "storageLocation": "string",
-        ///                   "batch": "string",
-        ///                   "targetQuantity": 0,
-        ///                   "unit": "string",
-        ///                   "actualFinishDate": "2023-01-13T02:16:17.868Z",
-        ///                   "scheduledFinishDate": "2023-01-13T02:16:17.868Z",
-        ///                   "scheduledStartDate": "2023-01-13T02:16:17.868Z",
-        ///                   "deliveredQuantity": 0,
-        ///                   "salesOrder": "string",
-        ///                   "salesOrderItem": "string",
-        ///                   "orderCategory": "string",
-        ///                   "actualStartDate": "2023-01-13T02:16:17.868Z",
-        ///                   "startDate": "2023-01-13T02:16:17.868Z",
-        ///                   "confirmedYieldQuantity": 0,
-        ///                   "deletionFlag": "string",
-        ///                   "longTextExists": "string",
-        ///                   "referenceOrder": "string",
-        ///                   "systemStatus": "string"
+        ///                   "salesDocumentCode": "string",
+        ///                   "customerReference": "string",
+        ///                   "customerReferenceHeader": "string",
+        ///                   "salesDocumentType": "string",
+        ///                   "orderTypeCode": "string",
+        ///                   "soldtoPartyCode": "string",
+        ///                   "soldToPartyName": "string",
+        ///                   "material": "string",
+        ///                   "overallStatus": "string",
+        ///                   "deliveryStatus": "string",
+        ///                   "salesDocumentDetails": [
+        ///                     {
+        ///                       "salesDocumentItem": "string",
+        ///                       "orderQuantity": 0,
+        ///                       "salesUnit": "string",
+        ///                       "divisionCode": "string",
+        ///                       "salesOffice": "string",
+        ///                       "salesGroup": "string",
+        ///                       "salesOrgCode": "string",
+        ///                       "distributionChannelCode": "string",
+        ///                       "batch": "string",
+        ///                       "confirmedQuantity": 0,
+        ///                       "unit": "string",
+        ///                       "returns": "string",
+        ///                       "shippingPoint": "string",
+        ///                       "plant": "string",
+        ///                       "overallStatusItem": "string",
+        ///                       "deliveryStatusItem": "string",
+        ///                       "deliveryDate": "2023-01-13T03:18:15.877Z",
+        ///                       "goodsIssueDate": "2023-01-13T03:18:15.877Z"
+        ///                     }
+        ///                   ]
         ///                 }
         ///               ]
         ///             }

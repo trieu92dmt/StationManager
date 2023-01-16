@@ -30,7 +30,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
     public class PurchaseOrderDetailIntegration
     {
         public string PurchaseOrder { get; set; }
-        public int PurchaseOrderItem { get; set; }
+        public string PurchaseOrderItem { get; set; }
         public string Material { get; set; }
         public string StorageLocation { get; set; }
         public string Batch { get; set; }
@@ -115,7 +115,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                             {
                                 PurchaseOrderDetailId = Guid.NewGuid(),
                                 PurchaseOrderId = purchaseOrder.PurchaseOrderId,
-                                POLine = item.PurchaseOrderItem.ToString(),
+                                POLine = item.PurchaseOrderItem,
                                 ProductCode = item.Material,
                                 OrderQuantity = item.OrderQuantity,
                                 OpenQuantity = item.OpenQuantity,
@@ -172,7 +172,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         //Cập nhật detail
                         foreach (var item in poIntegration.PurchaseOrderDetails)
                         {
-                            var detailPO = await _poDetailRep.FindOneAsync(x => x.PurchaseOrderId == purchaseOrder.PurchaseOrderId && x.POLine == item.PurchaseOrderItem.ToString());
+                            var detailPO = await _poDetailRep.FindOneAsync(x => x.PurchaseOrderId == purchaseOrder.PurchaseOrderId && x.POLine == item.PurchaseOrderItem);
                             if (detailPO == null)
                             {
 
@@ -180,7 +180,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 {
                                     PurchaseOrderDetailId = Guid.NewGuid(),
                                     PurchaseOrderId = purchaseOrder.PurchaseOrderId,
-                                    POLine = item.PurchaseOrderItem.ToString(),
+                                    POLine = item.PurchaseOrderItem,
                                     ProductCode = item.Material,
                                     Batch = item.Batch,
                                     OrderQuantity = item.OrderQuantity,

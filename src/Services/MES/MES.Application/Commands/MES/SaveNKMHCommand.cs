@@ -52,14 +52,17 @@ namespace MES.Application.Commands.MES
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<ProductModel> _prdRepo;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
-                                      IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo)
+                                      IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
+                                      IRepository<ProductModel> prdRepo)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
             _poDetailRep = poDetailRep;
             _slocRepo = slocRepo;
+            _prdRepo = prdRepo;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -69,6 +72,9 @@ namespace MES.Application.Commands.MES
 
             //Danh sách nhập kho mua hàng
             var nkmh = await _nkRep.GetQuery().ToListAsync();
+
+            //Danh sách material
+            var materials = _prdRepo.GetQuery().AsNoTracking();
 
             foreach (var x in request.NKMHRequests)
             {
@@ -88,7 +94,7 @@ namespace MES.Application.Commands.MES
                     //PlantCode
                     PlantCode = x.PlantCode,
                     //Material Desc
-                    MaterialCode = x.MaterialCode,
+                    MaterialCode = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductCode,
                     //Sloc code
                     SlocCode = x.SlocCode,
                     //Sloc Name

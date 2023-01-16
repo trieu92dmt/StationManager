@@ -164,7 +164,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //NCC
                                 VendorCode = x.PurchaseOrderDetail?.PurchaseOrder?.VendorCode,
                                 //Material
-                                Material = x.PurchaseOrderDetail?.PurchaseOrder?.ProductCode,
+                                Material = x.MaterialCode,
                                 //DocumentDate
                                 DocumentDate = x.PurchaseOrderDetail?.PurchaseOrder?.DocumentDate,
                                 //Storage Location
@@ -176,7 +176,8 @@ namespace IntegrationNS.Application.Commands.NKMHs
 
                                 //Số lượng đặt hàng
                                 OrderQuantity = x.PurchaseOrderDetail?.OrderQuantity,
-                                OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity
+                                OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity,
+                                
                             }).ToList();
             return data;
         }

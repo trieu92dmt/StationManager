@@ -91,7 +91,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         purchaseOrder = new PurchaseOrderMasterModel();
                         purchaseOrder.PurchaseOrderId = Guid.NewGuid();
                         purchaseOrder.PurchaseOrderCode = poIntegration.PurchaseOrder;
-                        //purchaseOrder.PurchaseOrderCodeInt = int.Parse(poIntegration.PurchaseOrder);
+                        purchaseOrder.PurchaseOrderCodeInt = long.Parse(poIntegration.PurchaseOrder);
                         purchaseOrder.POType = poIntegration.POType;
                         purchaseOrder.Plant = poIntegration.Plant;
                         purchaseOrder.PurchasingOrg = poIntegration.PurchasingOrganization;
@@ -119,6 +119,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 ProductCode = item.Material,
                                 OrderQuantity = item.OrderQuantity,
                                 OpenQuantity = item.OpenQuantity,
+                                StorageLocation = item.StorageLocation,
                                 Unit = item.UoM,
                                 CreateTime = DateTime.Now,
                                 Actived = true,
@@ -184,7 +185,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                     Batch = item.Batch,
                                     OrderQuantity = item.OrderQuantity,
                                     OpenQuantity = item.OpenQuantity,
-
+                                    StorageLocation = item.StorageLocation,
                                     CreateTime = DateTime.Now,
                                     Actived = true,
                                     QuantityReceived = item.QuantityReceived,
@@ -208,6 +209,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 detailPO.LastEditTime = DateTime.Now;
                                 detailPO.QuantityReceived = item.QuantityReceived;
                                 detailPO.DeletionInd = item.DeletionInd;
+                                detailPO.StorageLocation = item.StorageLocation;
                                 detailPO.Deliver = item.Deliver;
                                 detailPO.VehicleCode = item.VehicleCode;
                                 detailPO.VehicleOwner = item.VehicleOwner;

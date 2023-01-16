@@ -279,7 +279,7 @@ namespace MES.Application.Queries
                 PurchaseOrderCode = x.PurchaseOrder?.PurchaseOrderCode,
                 POItem = x.POLine,
                 //Product
-                Material = x.ProductCode,
+                Material = long.Parse(x.ProductCode).ToString(),
                 MaterialName = product.FirstOrDefault(p => p.ProductCode == x.ProductCode)?.ProductName,
                 //Unit
                 Unit = x.Unit,

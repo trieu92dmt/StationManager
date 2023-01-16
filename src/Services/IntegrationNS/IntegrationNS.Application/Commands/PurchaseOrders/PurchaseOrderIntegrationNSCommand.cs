@@ -120,6 +120,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 OrderQuantity = item.OrderQuantity,
                                 OpenQuantity = item.OpenQuantity,
                                 StorageLocation = item.StorageLocation,
+                                Batch = item.Batch,
                                 Unit = item.UoM,
                                 CreateTime = DateTime.Now,
                                 Actived = true,

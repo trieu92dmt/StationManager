@@ -291,7 +291,9 @@ namespace MES.Application.Queries
                 //Số lần cân
                 //QuantityWeight = 
                 //Batch
-                Batch = x.Batch
+                Batch = x.Batch,
+                //Số phương tiện
+                VehicleCode = x.VehicleCode
 
             }).ToList();
 

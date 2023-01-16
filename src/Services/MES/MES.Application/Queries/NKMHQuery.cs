@@ -139,7 +139,7 @@ namespace MES.Application.Queries
                 PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
                 POItem = x.PurchaseOrderDetail?.POLine,
                 //Product
-                Material = long.Parse(x.PurchaseOrderDetail?.ProductCode).ToString(),
+                Material = x.PurchaseOrderDetail?.ProductCode,
                 MaterialName = x.PurchaseOrderDetail == null ? null :
                                product.FirstOrDefault(p => p.ProductCode == x.PurchaseOrderDetail.ProductCode)?.ProductName,
                 //Ngày chứng từ

@@ -6,6 +6,7 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IntegrationNS.Application.Commands.PurchaseOrders
 {
@@ -91,7 +92,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         purchaseOrder = new PurchaseOrderMasterModel();
                         purchaseOrder.PurchaseOrderId = Guid.NewGuid();
                         purchaseOrder.PurchaseOrderCode = poIntegration.PurchaseOrder;
-                        purchaseOrder.PurchaseOrderCodeInt = long.Parse(poIntegration.PurchaseOrder);
+                        purchaseOrder.PurchaseOrderCodeInt = !poIntegration.PurchaseOrder.IsNullOrEmpty() ? long.Parse(poIntegration.PurchaseOrder) : null;
                         purchaseOrder.POType = poIntegration.POType;
                         purchaseOrder.Plant = poIntegration.Plant;
                         purchaseOrder.PurchasingOrg = poIntegration.PurchasingOrganization;

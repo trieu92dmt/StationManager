@@ -290,6 +290,8 @@ namespace MES.Application.Queries
                 OpenQuantity = x.OpenQuantity,
                 //Số lần cân
                 //QuantityWeight = 
+                //Batch
+                Batch = x.Batch
 
             }).ToList();
 

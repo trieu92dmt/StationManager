@@ -18,8 +18,8 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public int? VendorFrom { get; set; }
         public int? VendorTo { get; set; }
         public string POType { get; set; }
-        public int? PurchaseOrderFrom { get; set; }
-        public int? PurchaseOrderTo { get; set; }
+        public long? PurchaseOrderFrom { get; set; }
+        public long? PurchaseOrderTo { get; set; }
         public int? MaterialFrom { get; set; }
         public int? MaterialTo { get; set; }
         public List<int?> Materials { get; set; } = new List<int?>();
@@ -46,30 +46,20 @@ namespace IntegrationNS.Application.Commands.NKMHs
             {
                 request.ToTime = request.ToTime.Value.Date.AddDays(1).AddSeconds(-1);
             }
-            else
-            {
-                request.ToTime = DateTime.Now;
-
-            }
 
             if (request.FromTime.HasValue)
             {
                 request.FromTime = request.FromTime.Value.Date;
             }
-            else
-            {
-                request.FromTime = DateTime.Now;
-
-            }
             #endregion
 
             var users = _userRep.GetQuery().AsNoTracking();
 
-            var query = await _nkmhRep.GetQuery(x => x.DocumentDate >= request.FromTime && x.DocumentDate <= request.ToTime)
+            var query = await _nkmhRep.GetQuery(x => request.FromTime.HasValue ? x.DocumentDate >= request.FromTime && x.DocumentDate <= request.ToTime : true)
                                       .Include(x => x.PurchaseOrderDetail)
                                       .ThenInclude(x => x.PurchaseOrder)
                                       .AsNoTracking()
-                                      .ToListAsync();
+                                      .ToListAsync();   
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
@@ -77,9 +67,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                          x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
             }
 
-            if (request.PurchasingOrgFrom.HasValue)
+            if (request.PurchaseOrderFrom.HasValue)
             {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                query = query.Where(x => x.PurchaseOrderDetail is null ? false :
                                          x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
                                          x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
             }
@@ -139,9 +129,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Số lần cân
                                 QuantityWeitght = x.QuantityWeitght,
                                 //Total Quantity
-                                TotalQuantity = x.PurchaseOrderDetail.OrderQuantity,
+                                TotalQuantity = x.PurchaseOrderDetail?.OrderQuantity,
                                 //Delivered Quantity
-                                DeliveredQuantity = x.PurchaseOrderDetail.QuantityReceived,
+                                DeliveredQuantity = x.PurchaseOrderDetail?.QuantityReceived,
                                 //Số xe tải
                                 TruckQuantity = x.TruckQuantity,
                                 //Số cân đầu vào

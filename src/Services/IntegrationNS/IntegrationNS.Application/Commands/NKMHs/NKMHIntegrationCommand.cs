@@ -89,9 +89,8 @@ namespace IntegrationNS.Application.Commands.NKMHs
 
             if (request.MaterialFrom.HasValue)
             {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
-                                         x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt >= request.MaterialFrom &&
-                                         x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt <= request.MaterialTo).ToList();
+                query = query.Where(x => x.MaterialCodeInt >= request.MaterialFrom &&
+                                         x.MaterialCodeInt <= request.MaterialTo).ToList();
             }
 
             if (request.PurchasingGroupFrom.HasValue)

@@ -16,6 +16,8 @@ namespace ISD.Infrastructure.Models
         public Guid? SalesDocumentId { get; set; }
         [StringLength(50)]
         public string SalesDocumentItem { get; set; }
+        [StringLength(50)]
+        public string ProductCode { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? OrderQuantity { get; set; }
         [StringLength(50)]

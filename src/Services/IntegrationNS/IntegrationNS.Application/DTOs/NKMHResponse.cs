@@ -43,5 +43,6 @@
         public string CreateBy { get; set; }
         public DateTime? LastEditTime { get; set; }
         public string LastEditBy { get; set; }
+        public DateTime? WeightDate { get; set; }
     }
 }

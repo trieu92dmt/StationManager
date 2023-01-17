@@ -25,10 +25,8 @@ namespace IntegrationNS.Application.Commands.SalesDocument
         public string CustomerReference { get; set; }
         public string CustomerReferenceHeader { get; set; }
         public string SalesDocumentType { get; set; }
-        public string OrderTypeCode { get; set; }
         public string SoldtoPartyCode { get; set; }
         public string SoldToPartyName { get; set; }
-        public string Material { get; set; }
         public string OverallStatus { get; set; }
         public string DeliveryStatus { get; set; }
 
@@ -38,6 +36,7 @@ namespace IntegrationNS.Application.Commands.SalesDocument
     public class SalesDocumentDetailIntegration
     {
         public string SalesDocumentItem { get; set; }
+        public string Material { get; set; }
         public decimal? OrderQuantity { get; set; }
         public string SalesUnit { get; set; }
         public string DivisionCode { get; set; }
@@ -96,9 +95,6 @@ namespace IntegrationNS.Application.Commands.SalesDocument
                                                     .Include(x => x.DetailSalesDocumentModel)
                                                     .FirstOrDefaultAsync();
 
-                    if (materials.FirstOrDefault(x => x.ProductCode == salesDocIntegration.Material) == null)
-                        throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
-
                     //Không có tạo mới
                     if (saleDoc is null)
                     {
@@ -109,10 +105,8 @@ namespace IntegrationNS.Application.Commands.SalesDocument
                         saleDoc.CustomerReference = salesDocIntegration.CustomerReference;
                         saleDoc.CustomerReferenceHeader = salesDocIntegration.CustomerReferenceHeader;
                         saleDoc.SalesDocumentType = salesDocIntegration.SalesDocumentType;
-                        saleDoc.OrderTypeCode = salesDocIntegration.OrderTypeCode;
                         saleDoc.SoldtoPartyCode = salesDocIntegration.SoldtoPartyCode;
                         saleDoc.SoldToPartyName = salesDocIntegration.SoldToPartyName;
-                        saleDoc.ProductCode = salesDocIntegration.Material;
                         saleDoc.OverallStatus = salesDocIntegration.OverallStatus;
                         saleDoc.DeliveryStatus = salesDocIntegration.DeliveryStatus;
 
@@ -123,6 +117,9 @@ namespace IntegrationNS.Application.Commands.SalesDocument
                         var saleDocDetails = new List<DetailSalesDocumentModel>();
                         foreach (var item in salesDocIntegration.SalesDocumentDetails)
                         {
+
+                            if (materials.FirstOrDefault(x => x.ProductCode == item.Material) == null)
+                                throw new ISDException(String.Format(CommonResource.Msg_NotFound, $"Material {item.Material}"));
 
                             saleDocDetails.Add(new DetailSalesDocumentModel
                             {
@@ -142,6 +139,7 @@ namespace IntegrationNS.Application.Commands.SalesDocument
                                 ConfirmedQuantity = item.ConfirmedQuantity,
                                 Unit = item.Unit,
                                 Rturns = item.Returns,
+                                ProductCode = item.Material,
                                 ShippingPoint = item.ShippingPoint,
                                 Plant = item.Plant,
                                 OverallStatusItem = item.OverallStatusItem,
@@ -177,10 +175,8 @@ namespace IntegrationNS.Application.Commands.SalesDocument
                         saleDoc.CustomerReference = salesDocIntegration.CustomerReference;
                         saleDoc.CustomerReferenceHeader = salesDocIntegration.CustomerReferenceHeader;
                         saleDoc.SalesDocumentType = salesDocIntegration.SalesDocumentType;
-                        saleDoc.OrderTypeCode = salesDocIntegration.OrderTypeCode;
                         saleDoc.SoldtoPartyCode = salesDocIntegration.SoldtoPartyCode;
                         saleDoc.SoldToPartyName = salesDocIntegration.SoldToPartyName;
-                        saleDoc.ProductCode = salesDocIntegration.Material;
                         saleDoc.OverallStatus = salesDocIntegration.OverallStatus;
                         saleDoc.DeliveryStatus = salesDocIntegration.DeliveryStatus;
                         saleDoc.LastEditTime = DateTime.Now;
@@ -215,6 +211,7 @@ namespace IntegrationNS.Application.Commands.SalesDocument
                                     Unit = item.Unit,
                                     Rturns = item.Returns,
                                     ShippingPoint = item.ShippingPoint,
+                                    ProductCode = item.Material,
                                     Plant = item.Plant,
                                     OverallStatusItem = item.OverallStatusItem,
                                     DeliveryStatusItem = item.DeliveryStatusItem,
@@ -224,6 +221,7 @@ namespace IntegrationNS.Application.Commands.SalesDocument
                             }
                             else
                             {
+                                detailSalesDoc.ProductCode = item.Material;
                                 detailSalesDoc.SalesDocumentItem = item.SalesDocumentItem;
                                 detailSalesDoc.OrderQuantity = item.OrderQuantity;
                                 detailSalesDoc.Batch = item.Batch;

@@ -27,13 +27,9 @@ namespace ISD.Infrastructure.Models
         [StringLength(50)]
         public string SalesDocumentType { get; set; }
         [StringLength(50)]
-        public string OrderTypeCode { get; set; }
-        [StringLength(50)]
         public string SoldtoPartyCode { get; set; }
         [StringLength(50)]
         public string SoldToPartyName { get; set; }
-        [StringLength(50)]
-        public string ProductCode { get; set; }
         [StringLength(50)]
         public string OverallStatus { get; set; }
         [StringLength(50)]

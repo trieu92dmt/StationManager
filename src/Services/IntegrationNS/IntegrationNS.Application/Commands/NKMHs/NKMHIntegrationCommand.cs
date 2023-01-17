@@ -111,9 +111,13 @@ namespace IntegrationNS.Application.Commands.NKMHs
             var data = query.AsEnumerable()
                             .Select(x => new NKMHResponse
                             {
+                                //Ngày thực hiện cân
+                                WeightDate = x.WeighDate,
+
                                 NkmhId = x.GoodsReceiptId,
                                 //ID đợt cân
                                 WeightId = x.WeightId,
+                                //Số đầu cân
                                 WeightVote = x.WeitghtVote,
                                 //Đơn trọng
                                 SingleWeight = x.SingleWeight,

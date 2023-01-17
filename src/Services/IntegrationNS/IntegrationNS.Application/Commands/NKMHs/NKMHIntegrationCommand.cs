@@ -12,16 +12,16 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public int? PurchasingOrgFrom { get; set; }
         public int? PurchasingOrgTo { get; set; }
 
-        public int? PurchasingGroupFrom { get; set; }
-        public int? PurchasingGroupTo { get; set; }
+        public long? PurchasingGroupFrom { get; set; }
+        public long? PurchasingGroupTo { get; set; }
 
         public int? VendorFrom { get; set; }
         public int? VendorTo { get; set; }
         public string POType { get; set; }
         public long? PurchaseOrderFrom { get; set; }
         public long? PurchaseOrderTo { get; set; }
-        public int? MaterialFrom { get; set; }
-        public int? MaterialTo { get; set; }
+        public long? MaterialFrom { get; set; }
+        public long? MaterialTo { get; set; }
         public List<int?> Materials { get; set; } = new List<int?>();
 
         public DateTime? FromTime { get; set; }
@@ -89,6 +89,8 @@ namespace IntegrationNS.Application.Commands.NKMHs
 
             if (request.MaterialFrom.HasValue)
             {
+                if (!request.MaterialTo.HasValue) request.MaterialTo = request.MaterialFrom;
+
                 query = query.Where(x => x.MaterialCodeInt >= request.MaterialFrom &&
                                          x.MaterialCodeInt <= request.MaterialTo).ToList();
             }

@@ -22,10 +22,16 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public long? PurchaseOrderTo { get; set; }
         public long? MaterialFrom { get; set; }
         public long? MaterialTo { get; set; }
-        public List<int?> Materials { get; set; } = new List<int?>();
 
         public DateTime? FromTime { get; set; }
         public DateTime? ToTime { get; set; }
+
+        public string WeightHead { get; set; }
+        public List<string> WieghtVotes { get; set; } = new List<string>();
+        public DateTime? WeightDateFrom { get; set; }
+        public DateTime? WeightDateTo { get; set; }
+        public bool? IsReverse { get; set; }
+
     }
     public class NKMHIntegrationCommandHandler : IRequestHandler<NKMHIntegrationCommand, List<NKMHResponse>>
     {
@@ -50,6 +56,16 @@ namespace IntegrationNS.Application.Commands.NKMHs
             if (request.FromTime.HasValue)
             {
                 request.FromTime = request.FromTime.Value.Date;
+            }
+
+            if (request.WeightDateTo.HasValue)
+            {
+                request.WeightDateTo = request.WeightDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+            }
+
+            if (request.WeightDateFrom.HasValue)
+            {
+                request.WeightDateFrom = request.WeightDateFrom.Value.Date;
             }
             #endregion
 
@@ -102,10 +118,33 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                          x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt <= request.PurchasingGroupTo).ToList();
             }
 
-            if (request.Materials.Any())
+            if (!string.IsNullOrEmpty(request.WeightHead))
             {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
-                                         request.Materials.Contains(x.PurchaseOrderDetail.PurchaseOrder.ProductCodeInt)).ToList();
+                query = query.Where(x => x.WeightHeadCode.Trim().ToLower().Contains(request.WeightHead.Trim().ToLower())).ToList();
+            }
+
+
+            if (request.WeightDateFrom.HasValue)
+            {
+                if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom;
+
+                query = query.Where(x => x.WeighDate >= request.WeightDateFrom &&
+                                         x.WeighDate <= request.WeightDateTo).ToList();
+            }
+
+            if (request.WieghtVotes.Any())
+            {
+                query = query.Where(x => request.WieghtVotes.Contains(x.WeitghtVote)).ToList();
+            }
+
+            if (request.IsReverse == true)
+            {
+                query = query.Where(x => !string.IsNullOrEmpty(x.MaterialDocument) && !string.IsNullOrEmpty(x.ReverseDocument)).ToList();
+            }
+
+            if (request.IsReverse == false)
+            {
+                query = query.Where(x => string.IsNullOrEmpty(x.MaterialDocument) && string.IsNullOrEmpty(x.ReverseDocument)).ToList();
             }
 
             var data = query.AsEnumerable()

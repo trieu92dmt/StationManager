@@ -159,5 +159,19 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sloc") });
         }
         #endregion
+
+        #region Get số phiếu cân
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-weight-vote")]
+        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetWeightVote(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

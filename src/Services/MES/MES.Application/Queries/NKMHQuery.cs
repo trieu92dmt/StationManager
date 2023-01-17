@@ -126,6 +126,26 @@ namespace MES.Application.Queries
                                                                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }
 
+
+            if (!string.IsNullOrEmpty(request.WeightHead))
+            {
+                queryNKMH = queryNKMH.Where(x => x.WeightHeadCode.Trim().ToLower().Contains(request.WeightHead.Trim().ToLower())).ToList();
+            }
+
+
+            if (request.WeightDateFrom.HasValue)
+            {
+                if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom;
+
+                queryNKMH = queryNKMH.Where(x => x.WeighDate >= request.WeightDateFrom &&
+                                         x.WeighDate <= request.WeightDateTo).ToList();
+            }
+
+            if (request.WieghtVotes.Any())
+            {
+                queryNKMH = queryNKMH.Where(x => request.WieghtVotes.Contains(x.WeitghtVote)).ToList();
+            }
+
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
 

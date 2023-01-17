@@ -77,6 +77,13 @@ namespace MES.Application.Queries
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownSloc(string keyword);
 
+
+        /// <summary>
+        /// Get số phiêu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetWeightVote(string keyword);
     }
 
     public class CommonQuery : ICommonQuery
@@ -90,10 +97,12 @@ namespace MES.Application.Queries
         private readonly IRepository<PurchaseOrderMasterModel> _poMasterRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
+        private readonly IRepository<GoodsReceiptModel> _nkmhRep;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
-                           IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo)
+                           IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo,
+                           IRepository<GoodsReceiptModel> nkmhRep)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -104,6 +113,7 @@ namespace MES.Application.Queries
             _poMasterRepo = poMasterRepo;
             _slocRepo = slocRepo;
             _scaleRepo = scaleRepo;
+            _nkmhRep = nkmhRep;
         }
 
         #region
@@ -260,5 +270,15 @@ namespace MES.Application.Queries
             return response;
         }
         #endregion
+
+        public async Task<List<CommonResponse>> GetWeightVote(string keyword)
+        {
+            return await _nkmhRep.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeitghtVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.WeitghtVote,
+                                             Value = x.WeitghtVote
+                                         }).Distinct().Take(20).ToListAsync();
+        }
     }
 }

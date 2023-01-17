@@ -44,6 +44,8 @@ namespace MES.Application.Commands.MES
         public Guid? PoDetailId { get; set; }
         //Đầu cân
         public string WeightHeadCode { get; set; }
+        //số lô
+        public string Batch { get; set; }
     }
 
     public class SaveNKMHCommandHandler : IRequestHandler<SaveNKMHCommand, bool>
@@ -86,6 +88,8 @@ namespace MES.Application.Commands.MES
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
                 {
+                    //Số lô
+                    Batch = x.Batch,
                     GoodsReceiptId = Guid.NewGuid(),
                     //POLine
                     PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,

@@ -243,6 +243,10 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Số lượng đặt hàng
                                 OrderQuantity = x.PurchaseOrderDetail?.OrderQuantity,
                                 OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity,
+                                //Mat Doc
+                                MaterialDocument = x.MaterialDocument,
+                                //Reverse Doc
+                                ReverseDocument = x.ReverseDocument,
                                 
                             }).ToList();
             return data;

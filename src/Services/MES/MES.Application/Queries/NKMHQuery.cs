@@ -185,6 +185,8 @@ namespace MES.Application.Queries
                 VehicleCode = x.VehicleCode,
                 //Số lần cân
                 QuantityWeitght = x.QuantityWeitght,
+                //Số phiếu cân
+                WeightVote = x.WeitghtVote,
                 //Total Quantity
                 TotalQuantity = x.PurchaseOrderDetail?.OrderQuantity,
                 //Open quantity
@@ -198,6 +200,9 @@ namespace MES.Application.Queries
                 //Số cân đầu vào và ra
                 InputWeight = x.InputWeight,
                 OutputWeight = x.OutputWeight,
+                //Thời gian bắt đầu cân
+                StartTime = x.StartTime,
+                EndTime = x.EndTime,    
                 //Ghi chú 
                 Description = x.Description,
                 Status = x.Status,
@@ -333,7 +338,7 @@ namespace MES.Application.Queries
             return dataPO;
         }
 
-        public async Task<decimal> GetWeighNum(string weightHeadCode)
+        public async Task<GetWeighNumResponse> GetWeighNum(string weightHeadCode)
         {
             //Lấy đầu cân
             var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == weightHeadCode);
@@ -342,7 +347,13 @@ namespace MES.Application.Queries
             //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
             var weighSs = _weighSsRepo.GetQuery(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN").FirstOrDefault();
 
-            var result = weighSs != null ? weighSs.TotalWeight.Value : 0;
+
+            var result = new GetWeighNumResponse
+            {
+                Weight = weighSs.TotalWeight,
+                WeightQuantity = weighSs.TotalNumberOfWeigh,
+                Status = weighSs.Status
+            };
 
             return result;
         }

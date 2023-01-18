@@ -8,14 +8,12 @@ namespace MES.Application.DTOs.MES.NKMH
 {
     public class GetWeighNumResponse
     {
-        //Đầu cân
-        public string WeightHeadCode { get; set; }
         //Trọng lượng cân
         public decimal? Weight { get; set; }
-        //Confirm Qty
-        public decimal? ConfirmQty { get; set; }
         //Số lần cân
-        public int WeightQuantity { get; set; }
+        public int? WeightQuantity { get; set; }
+        //Thời gian bắt đâu
+        public DateTime? StartTime { get; set; }
         //Trạng thái
         public string Status { get; set; }
     }

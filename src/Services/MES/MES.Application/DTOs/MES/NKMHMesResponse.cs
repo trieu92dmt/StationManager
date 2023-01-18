@@ -34,6 +34,7 @@
         public Guid NkmhId { get; set; }
         public string Plant { get; set; }
         public string PurchaseOrderCode { get; set; }
+        //Số phiếu cân
         public string WeightVote { get; set; }
         public string WeightId { get; set; }
         public string POType { get; set; }

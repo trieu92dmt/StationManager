@@ -55,16 +55,20 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<ProductModel> _prdRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
+        private readonly IRepository<WeighSessionModel> _weightSsRepo;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
-                                      IRepository<ProductModel> prdRepo)
+                                      IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
             _poDetailRep = poDetailRep;
             _slocRepo = slocRepo;
             _prdRepo = prdRepo;
+            _scaleRepo = scaleRepo;
+            _weightSsRepo = weightSsRepo;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -75,6 +79,9 @@ namespace MES.Application.Commands.MES
             //Danh sách nhập kho mua hàng
             var nkmh = await _nkRep.GetQuery().ToListAsync();
 
+            //Dữ liệu đợt cân
+            var weightSs = _weightSsRepo.GetQuery().Include(x => x.Scale).AsNoTracking();
+
             //Danh sách material
             var materials = _prdRepo.GetQuery().AsNoTracking();
 
@@ -84,6 +91,7 @@ namespace MES.Application.Commands.MES
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)
                                                .FirstOrDefaultAsync();
+
 
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
@@ -133,7 +141,10 @@ namespace MES.Application.Commands.MES
                     CreateBy = TokenExtensions.GetAccountId(),
                     Actived = true,
                     //Status
-                    Status = "NOT"
+                    Status = "NOT",
+                    //Start Time - End Time
+                    StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSs.FirstOrDefault(w => w.Scale.ScaleCode == x.WeightHeadCode).StartTime : DateTime.Now,
+                    EndTime = DateTime.Now,
 
                 });
             }

@@ -350,10 +350,10 @@ namespace MES.Application.Queries
 
             var result = new GetWeighNumResponse
             {
-                Weight = weighSs.TotalWeight,
-                WeightQuantity = weighSs.TotalNumberOfWeigh,
-                StartTime = weighSs.StartTime,
-                Status = weighSs.Status
+                Weight = weighSs != null ? weighSs.TotalWeight : 0,
+                WeightQuantity = weighSs != null ? weighSs.TotalNumberOfWeigh : 0,
+                StartTime = weighSs != null ? weighSs.StartTime : null,
+                Status = weighSs != null ? weighSs.Status : ""
             };
 
             return result;

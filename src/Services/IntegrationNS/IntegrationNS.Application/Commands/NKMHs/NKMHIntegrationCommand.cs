@@ -29,7 +29,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public List<string> WeightVotes { get; set; } = new List<string>();
         public DateTime? WeightDateFrom { get; set; }
         public DateTime? WeightDateTo { get; set; }
-        public bool? IsReverse { get; set; }
+        //public bool? IsReverse { get; set; }
         public string Status { get; set; }
 
     }
@@ -153,15 +153,15 @@ namespace IntegrationNS.Application.Commands.NKMHs
                 query = query.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
             }
 
-            if (request.IsReverse == true)
-            {
-                query = query.Where(x => !string.IsNullOrEmpty(x.MaterialDocument) && !string.IsNullOrEmpty(x.ReverseDocument)).ToList();
-            }
+            //if (request.IsReverse == true)
+            //{
+            //    query = query.Where(x => !string.IsNullOrEmpty(x.MaterialDocument) && !string.IsNullOrEmpty(x.ReverseDocument)).ToList();
+            //}
 
-            if (request.IsReverse == false)
-            {
-                query = query.Where(x => string.IsNullOrEmpty(x.MaterialDocument) && string.IsNullOrEmpty(x.ReverseDocument)).ToList();
-            }
+            //if (request.IsReverse == false)
+            //{
+            //    query = query.Where(x => string.IsNullOrEmpty(x.MaterialDocument) && string.IsNullOrEmpty(x.ReverseDocument)).ToList();
+            //}
 
             //Search Status
             if (!string.IsNullOrEmpty(request.Status))

@@ -9,8 +9,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
     public class NKMHIntegrationCommand : IRequest<List<NKMHResponse>>
     {
         public string Plant { get; set; }
-        public int? PurchasingOrgFrom { get; set; }
-        public int? PurchasingOrgTo { get; set; }
+        public string PurchasingOrg { get; set; }
 
         public long? PurchasingGroupFrom { get; set; }
         public long? PurchasingGroupTo { get; set; }
@@ -77,10 +76,17 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                       .AsNoTracking()
                                       .ToListAsync();   
 
+            //Search Plant
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
-                                         x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+                query = query.Where(x => x.PlantCode == request.Plant).ToList();
+            }
+
+            //Search PurchasingOrg
+            if (!string.IsNullOrEmpty(request.PurchasingOrg))
+            {
+                query = query.Where(x => x.PurchaseOrderDetail is null ? false :
+                                         x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrg).ToList();
             }
 
             if (request.PurchaseOrderFrom.HasValue)

@@ -44,10 +44,11 @@ namespace MES.Application.Queries
         private readonly IRepository<VendorModel> _vendorRep;
         private readonly IRepository<WeighSessionModel> _weighSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
+        private readonly IRepository<CatalogModel> _cataRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
                          IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
-                         IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo)
+                         IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo, IRepository<CatalogModel> cataRepo)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -57,6 +58,7 @@ namespace MES.Application.Queries
             _vendorRep = vendorRep;
             _weighSsRepo = weighSsRepo;
             _scaleRepo = scaleRepo;
+            _cataRepo = cataRepo;
         }
 
         public async Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)
@@ -148,6 +150,8 @@ namespace MES.Application.Queries
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
+            //Catalog Nhập kho mua hàng status
+            var nkmhStatus = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
             //Data NKMH
             var dataNKMH = queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
@@ -205,7 +209,7 @@ namespace MES.Application.Queries
                 EndTime = x.EndTime,    
                 //Ghi chú 
                 Description = x.Description,
-                Status = x.Status,
+                Status = nkmhStatus.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 CreateTime = x.CreateTime,
                 CreateBy = user.FirstOrDefault(a => a.AccountId == x.CreateBy)?.FullName,
                 LastEditTime = x.LastEditTime,

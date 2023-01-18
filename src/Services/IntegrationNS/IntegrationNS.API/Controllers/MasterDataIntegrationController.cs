@@ -1095,7 +1095,30 @@ namespace IntegrationNS.API.Controllers
         ///               "materialDocument": "string",
         ///             }  
         ///             
-        /// OUT PUT
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nkmHs": [
+        ///                 {
+        ///                   "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NKMH MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nkmHs": [
+        ///                 {
+        ///                   "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKMH MES
+        ///                   "batch": "",
+        ///                   "materialDocument": "",
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
         ///             {
         ///               "code": 200,
         ///               "data": true

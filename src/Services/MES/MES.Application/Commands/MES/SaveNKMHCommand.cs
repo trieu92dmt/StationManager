@@ -131,7 +131,9 @@ namespace MES.Application.Commands.MES
 
                     CreateTime = DateTime.Now,
                     CreateBy = TokenExtensions.GetAccountId(),
-                    Actived = true
+                    Actived = true,
+                    //Status
+                    Status = "NOT"
 
                 });
             }

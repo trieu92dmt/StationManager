@@ -160,7 +160,7 @@ namespace MES.Application.Queries
                 POItem = x.PurchaseOrderDetail?.POLine,
                 //Product
                 Material = x.PurchaseOrderDetail == null ? null :
-                               product.FirstOrDefault(p => p.ProductCode == x.PurchaseOrderDetail.ProductCode)?.ProductCode.ToString(),
+                               product.FirstOrDefault(p => p.ProductCode == x.PurchaseOrderDetail.ProductCode)?.ProductCodeInt.ToString(),
                 MaterialName = x.PurchaseOrderDetail == null ? null :
                                product.FirstOrDefault(p => p.ProductCode == x.PurchaseOrderDetail.ProductCode)?.ProductName,
                 //Ngày chứng từ

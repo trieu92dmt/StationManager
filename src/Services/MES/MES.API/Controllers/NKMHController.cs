@@ -3,6 +3,7 @@ using ISD.Core.Properties;
 using MediatR;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
+using MES.Application.DTOs.MES.NKMH;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -192,7 +193,7 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetWeighNum(weightHeadCode);
 
-            return Ok(new ApiSuccessResponse<decimal>
+            return Ok(new ApiSuccessResponse<GetWeighNumResponse>
             {
                 Data = response,
                 IsSuccess = true,

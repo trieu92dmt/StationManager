@@ -32,7 +32,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="weightHead"></param>
         /// <returns></returns>
-        Task<decimal> GetWeighNum(string scaleCode);
+        Task<GetWeighNumResponse> GetWeighNum(string scaleCode);
     }
     public class NKMHQuery : INKMHQuery
     {
@@ -352,6 +352,7 @@ namespace MES.Application.Queries
             {
                 Weight = weighSs.TotalWeight,
                 WeightQuantity = weighSs.TotalNumberOfWeigh,
+                StartTime = weighSs.StartTime,
                 Status = weighSs.Status
             };
 

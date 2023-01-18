@@ -26,10 +26,11 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public DateTime? ToTime { get; set; }
 
         public string WeightHead { get; set; }
-        public List<string> WieghtVotes { get; set; } = new List<string>();
+        public List<string> WeightVotes { get; set; } = new List<string>();
         public DateTime? WeightDateFrom { get; set; }
         public DateTime? WeightDateTo { get; set; }
         public bool? IsReverse { get; set; }
+        public string Status { get; set; }
 
     }
     public class NKMHIntegrationCommandHandler : IRequestHandler<NKMHIntegrationCommand, List<NKMHResponse>>
@@ -89,13 +90,15 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                          x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrg).ToList();
             }
 
-            if (request.PurchaseOrderFrom.HasValue)
+            //Search Purchasing Group
+            if (request.PurchasingGroupFrom.HasValue)
             {
-                query = query.Where(x => x.PurchaseOrderDetail is null ? false :
-                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
-                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
+                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
+                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= request.PurchasingGroupFrom &&
+                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= request.PurchasingGroupTo).ToList();
             }
 
+            //Search Vendor
             if (request.VendorFrom.HasValue)
             {
                 query = query.Where(x => x.PurchaseOrderDetail == null ? true :
@@ -103,12 +106,23 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                          x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt <= request.VendorTo).ToList();
             }
 
+            //Search PO TYPE
             if (!string.IsNullOrEmpty(request.POType))
             {
                 query = query.Where(x => x.PurchaseOrderDetail == null ? true :
                                          x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
             }
 
+
+            //Search PO
+            if (request.PurchaseOrderFrom.HasValue)
+            {
+                query = query.Where(x => x.PurchaseOrderDetail is null ? false :
+                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
+                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
+            }
+
+            //Search Material
             if (request.MaterialFrom.HasValue)
             {
                 if (!request.MaterialTo.HasValue) request.MaterialTo = request.MaterialFrom;
@@ -117,19 +131,14 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                          x.MaterialCodeInt <= request.MaterialTo).ToList();
             }
 
-            if (request.PurchasingGroupFrom.HasValue)
-            {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
-                                         x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt >= request.PurchasingGroupFrom &&
-                                         x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroupInt <= request.PurchasingGroupTo).ToList();
-            }
 
+            //Search WeightHead
             if (!string.IsNullOrEmpty(request.WeightHead))
             {
-                query = query.Where(x => x.WeightHeadCode.Trim().ToLower().Contains(request.WeightHead.Trim().ToLower())).ToList();
+                query = query.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHead.Trim().ToLower() : false).ToList();
             }
 
-
+            //Search WeightDate
             if (request.WeightDateFrom.HasValue)
             {
                 if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom;
@@ -138,9 +147,10 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                          x.WeighDate <= request.WeightDateTo).ToList();
             }
 
-            if (request.WieghtVotes.Any())
+            //Search WeightVotes
+            if (request.WeightVotes.Any())
             {
-                query = query.Where(x => request.WieghtVotes.Contains(x.WeitghtVote)).ToList();
+                query = query.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
             }
 
             if (request.IsReverse == true)
@@ -151,6 +161,12 @@ namespace IntegrationNS.Application.Commands.NKMHs
             if (request.IsReverse == false)
             {
                 query = query.Where(x => string.IsNullOrEmpty(x.MaterialDocument) && string.IsNullOrEmpty(x.ReverseDocument)).ToList();
+            }
+
+            //Search Status
+            if (!string.IsNullOrEmpty(request.Status))
+            {
+                query = query.Where(x => x.Status == request.Status).ToList();
             }
 
             var data = query.AsEnumerable()

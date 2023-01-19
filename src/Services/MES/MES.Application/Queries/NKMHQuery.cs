@@ -344,7 +344,7 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                var material = await _prdRep.FindOneAsync(x => x.ProductCode == request.MaterialFrom);
+                var material = await _prdRep.FindOneAsync(x => x.ProductCodeInt == long.Parse(request.MaterialFrom));
 
                 dataPO.Add(new PuchaseOrderNKMHResponse
                 {

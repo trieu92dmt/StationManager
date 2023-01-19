@@ -169,6 +169,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                 query = query.Where(x => x.Status == request.Status).ToList();
             }
 
+            //Lấy ra dòng không có reverseDoc
+            query = query.Where(x => x.ReverseDocument is null).ToList();
+
             var data = query.AsEnumerable()
                             .Select(x => new NKMHResponse
                             {

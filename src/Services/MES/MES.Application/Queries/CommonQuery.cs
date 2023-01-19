@@ -57,11 +57,19 @@ namespace MES.Application.Queries
         Task<List<CommonResponse>> GetDropdownPOType(string keyword);
 
         /// <summary>
-        /// Dropdown Material
+        /// Dropdown PO
         /// </summary>
         /// <param name="keyword"></param>
+        /// <param name="plant"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant);
+
+        /// <summary>
+        /// Dropdown PO Item
+        /// </summary>
+        /// <param name="poCode"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownPOItem(string poCode);
 
         /// <summary>
         /// Dropdown WeightHead
@@ -280,5 +288,21 @@ namespace MES.Application.Queries
                                              Value = x.WeitghtVote
                                          }).Distinct().Take(20).ToListAsync();
         }
+
+        #region Dropdown PoItem
+        public async Task<List<CommonResponse>> GetDropdownPOItem(string poCode)
+        {
+            var po = await _poMasterRepo.GetQuery().Include(x => x.PurchaseOrderDetailModel).FirstOrDefaultAsync(x => x.PurchaseOrderCode == poCode);
+
+            var response = po.PurchaseOrderDetailModel.OrderBy(x => x.PoLinetInt)
+                                                      .Select(x => new CommonResponse
+                                                      {
+                                                          Key = x.POLine,
+                                                          Value = x.POLine
+                                                      }).ToList();
+
+            return response;
+        }
+        #endregion
     }
 }

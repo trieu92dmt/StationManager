@@ -132,7 +132,7 @@ namespace MES.Application.Queries
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new CommonResponse
                                      {
-                                         Key = x.ProductCode,
+                                         Key = x.ProductCodeInt.ToString(),
                                          Value = $"{x.ProductCodeInt} | {x.ProductName}"
                                      }).Take(10).ToListAsync();
 

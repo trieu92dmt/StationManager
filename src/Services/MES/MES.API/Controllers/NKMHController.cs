@@ -188,28 +188,18 @@ namespace MES.API.Controllers
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        //[HttpPost("get-po")]
-        //public async Task<IActionResult> GetPOAsync([FromBody] GetNKMHCommand command)
-        //{
-        //    var response = await _query.GetPOAsync(command);
+        [HttpPost("update-nkmh")]
+        public async Task<IActionResult> UpdateNKMH([FromBody] UpdateNKMHCommand command)
+        {
+            var response = await _mediator.Send(command);
 
-        //    if (command.MaterialFrom != null)
-        //    {
-        //        return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
-        //        {
-        //            Data = response,
-        //            Message = response.Count() == 1 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
-        //            IsSuccess = response.Count() == 1 ? false : true
-        //        });
-        //    }
-        //    else
-        //        return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
-        //        {
-        //            Data = response,
-        //            Message = response.Count() == 0 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
-        //            IsSuccess = response.Count() == 0 ? false : true
-        //        });
-        //}
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nkmh")
+            });
+        }
 
         /// <summary>
         /// Lấy số cân

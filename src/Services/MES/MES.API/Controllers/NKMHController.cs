@@ -228,5 +228,24 @@ namespace MES.API.Controllers
                 Message = string.Format(CommonResource.Msg_Success, "Lấy số cân")
             });
         }
+
+        /// <summary>
+        /// Lấy dữ liệu theo po và po item
+        /// </summary>
+        /// <param name="po"></param>
+        /// <param name="poItem"></param>
+        /// <returns></returns>
+        [HttpGet("get-data-by-po-poitem")]
+        public async Task<IActionResult> GetDataByPoAndPoItem(string po, string poItem)
+        {
+            var response = await _query.GetDataByPoAndPoItem(po, poItem);
+
+            return Ok(new ApiSuccessResponse<GetDataByPoPoItemResponse>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy data")
+            });
+        }
     }
 }

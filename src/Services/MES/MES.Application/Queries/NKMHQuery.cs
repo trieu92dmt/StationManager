@@ -5,6 +5,7 @@ using ISD.Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -33,6 +34,14 @@ namespace MES.Application.Queries
         /// <param name="weightHead"></param>
         /// <returns></returns>
         Task<GetWeighNumResponse> GetWeighNum(string scaleCode);
+
+        /// <summary>
+        /// Lấy data theo po và poitem
+        /// </summary>
+        /// <param name="po"></param>
+        /// <param name="poItem"></param>
+        /// <returns></returns>
+        Task<GetDataByPoPoItemResponse> GetDataByPoAndPoItem(string po, string poItem);
     }
     public class NKMHQuery : INKMHQuery
     {
@@ -45,10 +54,12 @@ namespace MES.Application.Queries
         private readonly IRepository<WeighSessionModel> _weighSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
                          IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
-                         IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo, IRepository<CatalogModel> cataRepo)
+                         IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo, IRepository<CatalogModel> cataRepo,
+                         IRepository<StorageLocationModel> slocRepo)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -59,7 +70,9 @@ namespace MES.Application.Queries
             _weighSsRepo = weighSsRepo;
             _scaleRepo = scaleRepo;
             _cataRepo = cataRepo;
+            _slocRepo = slocRepo;
         }
+
 
         public async Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)
         {
@@ -77,6 +90,9 @@ namespace MES.Application.Queries
             #endregion
 
             var user = _userRep.GetQuery().AsNoTracking();
+
+            //Danh sách sloc
+            var slocs = _slocRepo.GetQuery(x => x.PlantCode == request.Plant).AsNoTracking();
 
             //Product
             var product = await _prdRep.GetQuery().AsNoTracking().ToListAsync();
@@ -163,14 +179,12 @@ namespace MES.Application.Queries
                 PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
                 POItem = x.PurchaseOrderDetail?.POLine,
                 //Product
-                Material = x.PurchaseOrderDetail == null ? null :
-                               product.FirstOrDefault(p => p.ProductCode == x.PurchaseOrderDetail.ProductCode)?.ProductCodeInt.ToString(),
-                MaterialName = x.PurchaseOrderDetail == null ? null :
-                               product.FirstOrDefault(p => p.ProductCode == x.PurchaseOrderDetail.ProductCode)?.ProductName,
+                Material = product.FirstOrDefault(p => p.ProductCodeInt == long.Parse(x.MaterialCode))?.ProductCodeInt.ToString(),
+                MaterialName = product.FirstOrDefault(p => p.ProductCodeInt == long.Parse(x.MaterialCode))?.ProductName,
                 //Ngày chứng từ
                 DocumentDate = x.DocumentDate,
                 //Kho
-                StorageLocation = x.PurchaseOrderDetail?.StorageLocation,
+                StorageLocation = x.PurchaseOrderDetail?.StorageLocation != null ? $"{x.PurchaseOrderDetail?.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.PurchaseOrderDetail.StorageLocation).StorageLocationName}" : "",
                 //Số lô
                 Batch = x.Batch,
                 //SL bao
@@ -363,6 +377,45 @@ namespace MES.Application.Queries
             };
 
             return result;
+        }
+
+        public async Task<GetDataByPoPoItemResponse> GetDataByPoAndPoItem(string po, string poItem)
+        {
+            //Lấy ra po
+            var poDetails = await _poDetailRep.GetQuery().Include(x => x.PurchaseOrder)
+                                              .FirstOrDefaultAsync(x => x.POLine == poItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(po));
+
+            //Danh sách product
+            var prods = _prdRep.GetQuery().AsNoTracking();
+
+            //Danh sách Vendor
+            var vendors = _vendorRep.GetQuery().AsNoTracking();
+
+            var response = new GetDataByPoPoItemResponse
+            {
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(poDetails.ProductCode)).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialName = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(poDetails.ProductCode)).ProductName,
+                //UoM
+                UOM = !poDetails.Unit.IsNullOrEmpty() ? poDetails.Unit : "",
+                //Batch
+                Batch = poDetails.Batch,
+                //Vendor Code
+                VendorCode = poDetails.PurchaseOrder.VendorCode,
+                //Vendor Name
+                VendorName = poDetails.PurchaseOrder.VendorCode != null ? vendors.FirstOrDefault(v => v.VendorCode == poDetails.PurchaseOrder.VendorCode).VendorName : "",
+                //Số phương tiện
+                VehicleCode = poDetails.VehicleCode,
+                //Total Quantity
+                TotalQuantity = poDetails.OrderQuantity,
+                //Open Quantity
+                OpenQuantity = poDetails.OpenQuantity,
+                //Delivery Quantity
+                QuantityReceived = poDetails.QuantityReceived
+            };
+
+            return response;
         }
     }
 }

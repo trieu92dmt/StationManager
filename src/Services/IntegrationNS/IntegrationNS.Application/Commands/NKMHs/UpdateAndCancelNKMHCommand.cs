@@ -70,6 +70,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     var nkmhNew = new GoodsReceiptModel
                     {
                         GoodsReceiptId = Guid.NewGuid(),
+                        PlantCode = nkmh.PlantCode,
                         PurchaseOrderDetailId = nkmh.PurchaseOrderDetailId,
                         WeightId = nkmh.WeightId,
                         WeitghtVote = nkmh.WeitghtVote,
@@ -80,6 +81,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                         ConfirmQty = nkmh.ConfirmQty,
                         QuantityWithPackaging = nkmh.QuantityWithPackaging,
                         VehicleCode = nkmh.VehicleCode,
+                        Batch = nkmh.Batch,
                         QuantityWeitght = nkmh.QuantityWeitght,
                         TruckQuantity = nkmh.TruckQuantity,
                         InputWeight = nkmh.InputWeight,

@@ -40,6 +40,8 @@ namespace MES.Application.Commands.MES
         //Hình ảnh
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Hủy đánh dấu xóa
+        public bool? isCancleDelete { get; set; }
     }
 
     public class UpdateNKMHCommandHandler : IRequestHandler<UpdateNKMHCommand, bool>
@@ -97,8 +99,11 @@ namespace MES.Application.Commands.MES
             nkmh.Description = request.Description;
             //Hình ảnh
             //Đánh dấu xóa
-            //if (request.isDelete == true)
-            //    nkmh.Status = "DEL";
+            if (request.isDelete == true)
+                nkmh.Status = "DEL";
+            //Hủy đánh dấu xóa
+            if (request.isDelete == true)
+                nkmh.Status = "NOT";
 
             return true;
         }

@@ -239,7 +239,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Storage Location
                                 StorageLocation = x.PurchaseOrderDetail?.StorageLocation,
                                 //Số lô
-                                Batch = x.PurchaseOrderDetail?.Batch,
+                                Batch = x.Batch,
                                 //Số phương tiện
                                 VehicleCode = x.VehicleCode,
 

@@ -316,6 +316,7 @@ namespace MES.Application.Queries
                 //Vendor
                 VendorCode = x.PurchaseOrder.VendorCode,
                 VendorName = vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode)?.VendorName,
+                //Total Quantity
                 OrderQuantity = x.OrderQuantity,
                 OpenQuantity = x.OpenQuantity,
                 //Số lần cân
@@ -335,7 +336,8 @@ namespace MES.Application.Queries
                 {
                     Plant = request.Plant,
                     Material = material.ProductCodeInt.ToString(),
-                    MaterialName = material?.ProductName
+                    MaterialName = material?.ProductName,
+
                 });
             }
 

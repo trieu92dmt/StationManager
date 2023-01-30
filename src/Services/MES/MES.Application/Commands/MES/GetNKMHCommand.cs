@@ -20,9 +20,11 @@
         public DateTime? DocumentDateFrom { get; set; }
         public DateTime? DocumentDateTo { get; set; }
 
+        //Search dữ liệu đã lưu
         public string WeightHead { get; set; }
         public List<string> WieghtVotes { get; set; } = new List<string>();
         public DateTime? WeightDateFrom { get; set; }
         public DateTime? WeightDateTo { get; set; }
+
     }
 }

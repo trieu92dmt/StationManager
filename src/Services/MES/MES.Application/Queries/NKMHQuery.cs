@@ -144,10 +144,10 @@ namespace MES.Application.Queries
                                                                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }
 
-
+            //Search dữ liệu đã cân
             if (!string.IsNullOrEmpty(request.WeightHead))
             {
-                queryNKMH = queryNKMH.Where(x => x.WeightHeadCode.Trim().ToLower().Contains(request.WeightHead.Trim().ToLower())).ToList();
+                queryNKMH = queryNKMH.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHead.Trim().ToLower() : false).ToList();
             }
 
 
@@ -310,6 +310,7 @@ namespace MES.Application.Queries
                                              long.Parse(x.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }
 
+            //Data vendor
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
             //Data PO

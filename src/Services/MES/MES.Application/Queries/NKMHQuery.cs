@@ -221,6 +221,8 @@ namespace MES.Application.Queries
                 //Thời gian bắt đầu cân
                 StartTime = x.StartTime,
                 EndTime = x.EndTime,    
+                //Đánh dấu xóa
+                isDelete = x.Status == "DEL" ? true : false,
                 //Ghi chú 
                 Description = x.Description,
                 Status = nkmhStatus.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
@@ -231,7 +233,7 @@ namespace MES.Application.Queries
                 ReverseDocument = x.ReverseDocument,
                 MaterialDocument = x.MaterialDocument,
                 VendorName = x.PurchaseOrderDetail == null ? null : vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrderDetail.PurchaseOrder.VendorCode)?.VendorName,
-
+               
             }).ToList();
 
             return dataNKMH;

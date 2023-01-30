@@ -76,5 +76,6 @@
         public string ReverseDocument { get; set; }
         public string Batch { get; set; }
         public string VendorName { get; set; }
+        public bool isDelete { get; set; }
     }
 }

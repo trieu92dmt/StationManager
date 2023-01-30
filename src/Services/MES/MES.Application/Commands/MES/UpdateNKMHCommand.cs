@@ -20,13 +20,11 @@ namespace MES.Application.Commands.MES
         //Purchase Order
         public string PurchaseOrderCode { get; set; }
         //PO Item
-        public string POLine { get; set; }
+        public string POItem { get; set; }
         //Material
-        public string MaterialCode { get; set; }
+        public string Material { get; set; }
         //Storage Location
         public string SlocCode { get; set; }
-        //Batch
-        public string Batch { get; set; }
         //Confirm Quantity
         public decimal? ConfirmQty { get; set; }
         //SL kèm bao bì
@@ -40,8 +38,6 @@ namespace MES.Application.Commands.MES
         //Hình ảnh
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
-        //Hủy đánh dấu xóa
-        public bool? isCancleDelete { get; set; }
     }
 
     public class UpdateNKMHCommandHandler : IRequestHandler<UpdateNKMHCommand, bool>
@@ -69,7 +65,7 @@ namespace MES.Application.Commands.MES
                 throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Nhập kho mua hàng"));
 
             //Lấy ra po detail
-            var poDetail = _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).FirstOrDefault(x => x.POLine == request.POLine && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(request.PurchaseOrderCode));
+            var poDetail = _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).FirstOrDefault(x => x.POLine == request.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(request.PurchaseOrderCode));
 
             //Lấy ra storage location
             var sloc = await _slocRepo.FindOneAsync(x => x.StorageLocationCode == request.SlocCode);
@@ -78,15 +74,13 @@ namespace MES.Application.Commands.MES
             //PODetailId
             nkmh.PurchaseOrderDetailId = poDetail.PurchaseOrderDetailId;
             //Material Code
-            nkmh.MaterialCode = request.MaterialCode;
+            nkmh.MaterialCode = request.Material;
             //Material Code Int
-            nkmh.MaterialCodeInt = long.Parse(request.MaterialCode);
+            nkmh.MaterialCodeInt = long.Parse(request.Material);
             //Storage Location
             nkmh.SlocCode = request.SlocCode;
             //Sloc Name
             nkmh.SlocName = sloc.StorageLocationName;
-            //Batch
-            nkmh.Batch = request.Batch;
             //Confirm Quantity
             nkmh.ConfirmQty = request.ConfirmQty;
             //Sl kèm bao bì
@@ -102,7 +96,7 @@ namespace MES.Application.Commands.MES
             if (request.isDelete == true)
                 nkmh.Status = "DEL";
             //Hủy đánh dấu xóa
-            if (request.isCancleDelete == true)
+            if (request.isDelete == false)
             {
                 nkmh.Status = "NOT";
             }    

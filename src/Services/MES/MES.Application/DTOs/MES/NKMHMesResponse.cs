@@ -46,6 +46,7 @@
         public DateTime? DocumentDate { get; set; }
         //POitem
         public string POItem { get; set; }
+        public string SlocCode { get; set; }
         public string StorageLocation { get; set; }
         public string VehicleCode { get; set; }
         public decimal? OpenQuantity { get; set; }

@@ -24,7 +24,7 @@ namespace MES.Application.Commands.MES
         //Material
         public string Material { get; set; }
         //Storage Location
-        public string SlocCode { get; set; }
+        public string StorageLocation { get; set; }
         //Confirm Quantity
         public decimal? ConfirmQty { get; set; }
         //SL kèm bao bì
@@ -65,20 +65,20 @@ namespace MES.Application.Commands.MES
                 throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Nhập kho mua hàng"));
 
             //Lấy ra po detail
-            var poDetail = _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).FirstOrDefault(x => x.POLine == request.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(request.PurchaseOrderCode));
+            var poDetail = _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).FirstOrDefault(x => !string.IsNullOrEmpty(request.PurchaseOrderCode) ? x.POLine == request.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(request.PurchaseOrderCode) : false);
 
             //Lấy ra storage location
-            var sloc = await _slocRepo.FindOneAsync(x => x.StorageLocationCode == request.SlocCode);
+            var sloc = await _slocRepo.FindOneAsync(x => x.StorageLocationCode == request.StorageLocation);
 
             //Cập nhật
             //PODetailId
-            nkmh.PurchaseOrderDetailId = poDetail.PurchaseOrderDetailId;
+            nkmh.PurchaseOrderDetailId = !string.IsNullOrEmpty(request.PurchaseOrderCode) ? poDetail.PurchaseOrderDetailId : null;
             //Material Code
             nkmh.MaterialCode = request.Material;
             //Material Code Int
             nkmh.MaterialCodeInt = long.Parse(request.Material);
             //Storage Location
-            nkmh.SlocCode = request.SlocCode;
+            nkmh.SlocCode = request.StorageLocation;
             //Sloc Name
             nkmh.SlocName = sloc.StorageLocationName;
             //Confirm Quantity
@@ -99,7 +99,9 @@ namespace MES.Application.Commands.MES
             if (request.isDelete == false)
             {
                 nkmh.Status = "NOT";
-            }    
+            }
+
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

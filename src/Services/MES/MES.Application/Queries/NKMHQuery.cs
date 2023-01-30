@@ -183,6 +183,8 @@ namespace MES.Application.Queries
                 MaterialName = product.FirstOrDefault(p => p.ProductCodeInt == long.Parse(x.MaterialCode))?.ProductName,
                 //Ngày chứng từ
                 DocumentDate = x.DocumentDate,
+                //Mã kho
+                SlocCode = x.PurchaseOrderDetail?.StorageLocation != null ? x.PurchaseOrderDetail?.StorageLocation : "",
                 //Kho
                 StorageLocation = x.PurchaseOrderDetail?.StorageLocation != null ? $"{x.PurchaseOrderDetail?.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.PurchaseOrderDetail.StorageLocation).StorageLocationName}" : "",
                 //Số lô
@@ -220,7 +222,7 @@ namespace MES.Application.Queries
                 OutputWeight = x.OutputWeight,
                 //Thời gian bắt đầu cân
                 StartTime = x.StartTime,
-                EndTime = x.EndTime,    
+                EndTime = x.EndTime,
                 //Đánh dấu xóa
                 isDelete = x.Status == "DEL" ? true : false,
                 //Ghi chú 
@@ -233,7 +235,7 @@ namespace MES.Application.Queries
                 ReverseDocument = x.ReverseDocument,
                 MaterialDocument = x.MaterialDocument,
                 VendorName = x.PurchaseOrderDetail == null ? null : vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrderDetail.PurchaseOrder.VendorCode)?.VendorName,
-               
+
             }).ToList();
 
             return dataNKMH;

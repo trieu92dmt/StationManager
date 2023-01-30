@@ -1068,6 +1068,87 @@ namespace IntegrationNS.API.Controllers
         }
         #endregion
 
+        //#region Tích hợp OutboundDelivery 
+        ///// <summary>
+        ///// Tích hợp OutboundDelivery
+        ///// <returns></returns>
+        ///// <remarks>
+        ///// Mẫu request
+        ///// 
+        ///// POST
+        ///// 
+        /////     Url: /api/v{version}/MasterDataIntegration/outbound-delivery
+        /////     Params: 
+        /////             + version : 1
+        /////     Body: 
+        /////
+        /////
+        /////             {
+        /////               "purchaseOrders": [
+        /////                 {
+        /////                   "plant": "string",
+        /////                   "purchasingOrganization": "string",
+        /////                   "purchasingGroup": "string",
+        /////                   "vendor": "string",
+        /////                   "poType": "string",
+        /////                   "purchaseOrder": "string",
+        /////                   "documentDate": "2023-01-13T08:21:49.947Z",
+        /////                   "releaseIndicator": "string",
+        /////                   "purchaseOrderDetails": [
+        /////                     {
+        /////                       "purchaseOrder": "string",
+        /////                       "purchaseOrderItem": "string",
+        /////                       "material": "string",
+        /////                       "storageLocation": "string",
+        /////                       "batch": "string",
+        /////                       "vehicleCode": "string",
+        /////                       "orderQuantity": 0,
+        /////                       "openQuantity": 0,
+        /////                       "uoM": "string",
+        /////                       "quantityReceived": 0,
+        /////                       "deletionInd": "string",
+        /////                       "deliver": "string",
+        /////                       "vehicleOwner": "string",
+        /////                       "transportUnit": "string",
+        /////                       "deliveryCompleted": "string",
+        /////                       "grossWeight": 0,
+        /////                       "netWeight": 0,
+        /////                       "weightUnit": "string",
+        /////                     }
+        /////                   ]
+        /////                 }
+        /////               ]
+        /////             }
+        ///// OUT PUT
+        ///// 
+        /////                {
+        /////                     "code": 200,
+        /////                     "message": "Tích hợp PurchaseOrder thành công.",
+        /////                     "data": true
+        /////                }
+        ///// </remarks>
+        //[HttpPost("outbound-delivery")]
+        //public async Task<IActionResult> OutboundDeliveryIntegration([FromBody] OutboundDeliveryIntegrationNSCommand req)
+        //{
+        //    var response = await _mediator.Send(req);
+
+        //    return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp OutboundDelivery") });
+        //}
+
+        ///// <summary>
+        ///// Xóa PurchaseOrder
+        ///// </summary>
+        ///// <param name="req"></param>
+        ///// <returns></returns>
+        //[HttpDelete("delete-purchase-order")]
+        //public async Task<IActionResult> DeletePurchaseOrderIntegrationAsync([FromQuery] DeletePurchaseOrderCommand req)
+        //{
+        //    var response = await _mediator.Send(req);
+
+        //    return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchaseOrder") });
+        //}
+        //#endregion
+
         #region Update phiếu và hủy nhập kho mua hàng
         /// <summary>Update, cancel phiếu nhập kho mua hàng</summary>
         /// <returns></returns>

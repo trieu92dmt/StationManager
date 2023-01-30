@@ -33,7 +33,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownMaterial(string keyword, string plant);
+        Task<List<Common3Response>> GetDropdownMaterial(string keyword, string plant);
 
         /// <summary>
         /// Dropdown Purchasing Org by Plant
@@ -125,15 +125,16 @@ namespace MES.Application.Queries
         }
 
         #region
-        public Task<List<CommonResponse>> GetDropdownMaterial(string keyword, string plant)
+        public Task<List<Common3Response>> GetDropdownMaterial(string keyword, string plant)
         {
             var response = _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCodeInt.ToString().Contains(keyword) : true) &&
                                                    (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true))
                                     .OrderBy(x => x.ProductCode)
-                                    .Select(x => new CommonResponse
+                                    .Select(x => new Common3Response
                                      {
                                          Key = x.ProductCodeInt.ToString(),
-                                         Value = $"{x.ProductCodeInt} | {x.ProductName}"
+                                         Value = $"{x.ProductCodeInt} | {x.ProductName}",
+                                         Name = x.ProductName
                                      }).Take(10).ToListAsync();
 
             return response;

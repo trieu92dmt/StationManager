@@ -103,7 +103,9 @@ namespace MES.Application.Commands.MES
                 nkmh.Status = "DEL";
             //Hủy đánh dấu xóa
             if (request.isCancleDelete == true)
+            {
                 nkmh.Status = "NOT";
+            }    
 
             return true;
         }

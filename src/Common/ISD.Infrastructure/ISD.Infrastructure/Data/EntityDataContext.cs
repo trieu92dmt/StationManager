@@ -101,6 +101,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<DepartmentModel> DepartmentModel { get; set; }
         public virtual DbSet<Department_Equipment_Mapping> Department_Equipment_Mapping { get; set; }
         public virtual DbSet<Department_Routing_Mapping> Department_Routing_Mapping { get; set; }
+        public virtual DbSet<DetailOutboundDeliveryModel> DetailOutboundDeliveryModel { get; set; }
         public virtual DbSet<DetailQCModel> DetailQCModel { get; set; }
         public virtual DbSet<DetailSaleOrderModel> DetailSaleOrderModel { get; set; }
         public virtual DbSet<DetailSalesDocumentModel> DetailSalesDocumentModel { get; set; }
@@ -169,6 +170,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<NotificationAccountMappingModel> NotificationAccountMappingModel { get; set; }
         public virtual DbSet<NotificationModel> NotificationModel { get; set; }
         public virtual DbSet<OrderTypeModel> OrderTypeModel { get; set; }
+        public virtual DbSet<OutboundDeliveryModel> OutboundDeliveryModel { get; set; }
         public virtual DbSet<OutputRecordModel> OutputRecordModel { get; set; }
         public virtual DbSet<POTEXT_PR_SO_Model> POTEXT_PR_SO_Model { get; set; }
         public virtual DbSet<PageModel> PageModel { get; set; }
@@ -398,7 +400,6 @@ namespace ISD.Infrastructure.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=192.168.100.233;Initial Catalog=TLG_MES;Persist Security Info=True;User ID=isd;Password=pm123@abcd");
             }
         }
@@ -1040,6 +1041,16 @@ namespace ISD.Infrastructure.Data
                     .HasConstraintName("FK_Department_Routing_Mapping_RoutingModel");
             });
 
+            modelBuilder.Entity<DetailOutboundDeliveryModel>(entity =>
+            {
+                entity.Property(e => e.DetailOutboundDeliveryId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.OutboundDelivery)
+                    .WithMany(p => p.DetailOutboundDeliveryModel)
+                    .HasForeignKey(d => d.OutboundDeliveryId)
+                    .HasConstraintName("FK_DetailOutboundDeliveryModel_OutboundDeliveryModel");
+            });
+
             modelBuilder.Entity<DetailQCModel>(entity =>
             {
                 entity.Property(e => e.DetailQCId).ValueGeneratedNever();
@@ -1658,6 +1669,11 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.OrderTypeId).ValueGeneratedNever();
 
                 entity.Property(e => e.Category).IsFixedLength();
+            });
+
+            modelBuilder.Entity<OutboundDeliveryModel>(entity =>
+            {
+                entity.Property(e => e.OutboundDeliveryId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<OutputRecordModel>(entity =>

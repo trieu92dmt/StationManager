@@ -4,6 +4,7 @@ using IntegrationNS.Application.Commands.DistributionChannels;
 using IntegrationNS.Application.Commands.Divisions;
 using IntegrationNS.Application.Commands.NKMHs;
 using IntegrationNS.Application.Commands.OrderTypes;
+using IntegrationNS.Application.Commands.OutboundDelivery;
 using IntegrationNS.Application.Commands.Plants;
 using IntegrationNS.Application.Commands.ProductGroups;
 using IntegrationNS.Application.Commands.Products;
@@ -1068,87 +1069,6 @@ namespace IntegrationNS.API.Controllers
         }
         #endregion
 
-        //#region Tích hợp OutboundDelivery 
-        ///// <summary>
-        ///// Tích hợp OutboundDelivery
-        ///// <returns></returns>
-        ///// <remarks>
-        ///// Mẫu request
-        ///// 
-        ///// POST
-        ///// 
-        /////     Url: /api/v{version}/MasterDataIntegration/outbound-delivery
-        /////     Params: 
-        /////             + version : 1
-        /////     Body: 
-        /////
-        /////
-        /////             {
-        /////               "purchaseOrders": [
-        /////                 {
-        /////                   "plant": "string",
-        /////                   "purchasingOrganization": "string",
-        /////                   "purchasingGroup": "string",
-        /////                   "vendor": "string",
-        /////                   "poType": "string",
-        /////                   "purchaseOrder": "string",
-        /////                   "documentDate": "2023-01-13T08:21:49.947Z",
-        /////                   "releaseIndicator": "string",
-        /////                   "purchaseOrderDetails": [
-        /////                     {
-        /////                       "purchaseOrder": "string",
-        /////                       "purchaseOrderItem": "string",
-        /////                       "material": "string",
-        /////                       "storageLocation": "string",
-        /////                       "batch": "string",
-        /////                       "vehicleCode": "string",
-        /////                       "orderQuantity": 0,
-        /////                       "openQuantity": 0,
-        /////                       "uoM": "string",
-        /////                       "quantityReceived": 0,
-        /////                       "deletionInd": "string",
-        /////                       "deliver": "string",
-        /////                       "vehicleOwner": "string",
-        /////                       "transportUnit": "string",
-        /////                       "deliveryCompleted": "string",
-        /////                       "grossWeight": 0,
-        /////                       "netWeight": 0,
-        /////                       "weightUnit": "string",
-        /////                     }
-        /////                   ]
-        /////                 }
-        /////               ]
-        /////             }
-        ///// OUT PUT
-        ///// 
-        /////                {
-        /////                     "code": 200,
-        /////                     "message": "Tích hợp PurchaseOrder thành công.",
-        /////                     "data": true
-        /////                }
-        ///// </remarks>
-        //[HttpPost("outbound-delivery")]
-        //public async Task<IActionResult> OutboundDeliveryIntegration([FromBody] OutboundDeliveryIntegrationNSCommand req)
-        //{
-        //    var response = await _mediator.Send(req);
-
-        //    return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp OutboundDelivery") });
-        //}
-
-        ///// <summary>
-        ///// Xóa PurchaseOrder
-        ///// </summary>
-        ///// <param name="req"></param>
-        ///// <returns></returns>
-        //[HttpDelete("delete-purchase-order")]
-        //public async Task<IActionResult> DeletePurchaseOrderIntegrationAsync([FromQuery] DeletePurchaseOrderCommand req)
-        //{
-        //    var response = await _mediator.Send(req);
-
-        //    return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa PurchaseOrder") });
-        //}
-        //#endregion
-
         #region Update phiếu và hủy nhập kho mua hàng
         /// <summary>Update, cancel phiếu nhập kho mua hàng</summary>
         /// <returns></returns>
@@ -1236,6 +1156,137 @@ namespace IntegrationNS.API.Controllers
             var response = await _nkmhQuery.GetPOAsync(poCode);
 
             return Ok(new ApiSuccessResponse<PuchaseOrderNKMHResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get detail pó") });
+        }
+        #endregion
+
+        #region Tích hợp OutboundDelivery 
+        /// <summary>
+        /// Tích hợp OutboundDelivery
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/outbound-delivery
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        ///             {
+        ///               "outboundDeliveries": [
+        ///                 {
+        ///                   "deliveryCode": "string",
+        ///                   "shippingPoint": "string",
+        ///                   "saleOrgCode": "string",
+        ///                   "deliveryType": "string",
+        ///                   "deliveryTypeDescription": "string",
+        ///                   "vehicleCode": "string",
+        ///                   "deliveryDate": "2023-01-30T13:55:05.799Z",
+        ///                   "pickingDate": "2023-01-30T13:55:05.799Z",
+        ///                   "shiptoParty": "string",
+        ///                   "shiptoPartyName": "string",
+        ///                   "soldtoParty": "string",
+        ///                   "soldtoPartyName": "string",
+        ///                   "purchasingDocType": "string",
+        ///                   "salesDocumentType": "string",
+        ///                   "distribChannelCode": "string",
+        ///                   "divisionCode": "string",
+        ///                   "supplierCode": "string",
+        ///                   "supplierName": "string",
+        ///                   "documentDate": "2023-01-30T13:55:05.799Z",
+        ///                   "actGdsMvmntDate": "2023-01-30T13:55:05.799Z",
+        ///                   "order": "string",
+        ///                   "receivingPlant": "string",
+        ///                   "reference": "string",
+        ///                   "transactionCode": "string",
+        ///                   "storageLocChange": "string",
+        ///                   "overallStatus": "string",
+        ///                   "pickConfirmation": "string",
+        ///                   "pickingStatus": "string",
+        ///                   "overallBlockStatus": "string",
+        ///                   "overallHeader": "string",
+        ///                   "allItems": "string",
+        ///                   "pickingPutawayHeader": "string",
+        ///                   "pickingPtwyAllItems": "string",
+        ///                   "deliveryHeader": "string",
+        ///                   "deliveryAllItems": "string",
+        ///                   "goodsMvtHeader": "string",
+        ///                   "goodsMvtAllItems": "string",
+        ///                   "goodsMovementSts": "string",
+        ///                   "outboundDeliveryDetails": [
+        ///                     {
+        ///                       "outboundDeliveryItem": "string",
+        ///                       "productCode": "string",
+        ///                       "plant": "string",
+        ///                       "storageLocation": "string",
+        ///                       "batch": "string",
+        ///                       "deliveryQuantity": 0,
+        ///                       "unit": "string",
+        ///                       "pickedQuantityPUoM": 0,
+        ///                       "salesUnit": "string",
+        ///                       "netWeight": 0,
+        ///                       "grossWeight": 0,
+        ///                       "weightUnit": "string",
+        ///                       "actualDeliveryQty": 0,
+        ///                       "itemDescription": "string",
+        ///                       "referenceDocument1": "string",
+        ///                       "referenceItem": "string",
+        ///                       "salesOffice": "string",
+        ///                       "salesGroup": "string",
+        ///                       "divisionCode": "string",
+        ///                       "order": "string",
+        ///                       "orderItem": "string",
+        ///                       "salesOrder": "string",
+        ///                       "salesOrderItem": "string",
+        ///                       "referenceDocument2": "string",
+        ///                       "referenceDocItem": "string",
+        ///                       "goodsMvmntControl": "string",
+        ///                       "deliveryCompleted": "string",
+        ///                       "originalQuantity": "string",
+        ///                       "itemNumberDocument": "string",
+        ///                       "overallStatus": "string",
+        ///                       "pickingStatus": "string",
+        ///                       "item": "string",
+        ///                       "pickingPutawayItem": "string",
+        ///                       "deliveryItem": "string",
+        ///                       "goodsMvtItem": "string",
+        ///                       "goodsMovementSts": "string",
+        ///                       "distributionChannel": "string"
+        ///                     }
+        ///                   ]
+        ///                 }
+        ///               ]
+        ///             }
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp PurchaseOrder thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("outbound-delivery")]
+        public async Task<IActionResult> OutboundDeliveryIntegration([FromBody] OutboundDeliveryIntegrationNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp OutboundDelivery") });
+        }
+
+        /// <summary>
+        /// Xóa OutboundDelivery
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-outbound-delivery")]
+        public async Task<IActionResult> DeleteOutboundDeliveryIntegrationAsync([FromQuery] DeleteOutboundDeliveryIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa OutboundDelivery") });
         }
         #endregion
     }

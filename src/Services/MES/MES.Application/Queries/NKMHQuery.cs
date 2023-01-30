@@ -145,9 +145,9 @@ namespace MES.Application.Queries
             }
 
             //Search dữ liệu đã cân
-            if (!string.IsNullOrEmpty(request.WeightHead))
+            if (!string.IsNullOrEmpty(request.WeightHeadCode))
             {
-                queryNKMH = queryNKMH.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHead.Trim().ToLower() : false).ToList();
+                queryNKMH = queryNKMH.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHeadCode.Trim().ToLower() : false).ToList();
             }
 
 
@@ -159,9 +159,9 @@ namespace MES.Application.Queries
                                          x.WeighDate <= request.WeightDateTo).ToList();
             }
 
-            if (request.WieghtVotes.Any())
+            if (request.WeightVotes.Any())
             {
-                queryNKMH = queryNKMH.Where(x => request.WieghtVotes.Contains(x.WeitghtVote)).ToList();
+                queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
             }
 
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();

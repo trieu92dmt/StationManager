@@ -163,6 +163,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[DetailOutboundDeliveryModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[DetailSalesDocumentModel]",
          "ObjectType": 0
       },
@@ -184,6 +188,10 @@
       },
       {
          "Name": "[DataCollection].[OrderTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[OutboundDeliveryModel]",
          "ObjectType": 0
       },
       {
@@ -1535,6 +1543,7 @@
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
    "UseFluentApiOnly": false,
    "UseHandleBars": false,

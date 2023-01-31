@@ -174,6 +174,62 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Lấy dropdown create by
+        /// <summary>
+        /// Lấy dropdown create by
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-create-by")]
+        public async Task<IActionResult> GetListCreateBy(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownCreateBy(keyword);
+            return Ok(new ApiSuccessResponse<List<Common2Response>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách người tạo") });
+        }
+        #endregion
+
+        #region Lấy dropdown SaleOrder (SaleDocumentModel)
+        /// <summary>
+        /// Lấy dropdown SaleOrder (SaleDocumentModel)
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-sale-order")]
+        public async Task<IActionResult> GetListSaleOrder(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownSaleOrder(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sale order") });
+        }
+        #endregion
+
+        #region Lấy dropdown Outbound Delivery
+        /// <summary>
+        /// Lấy dropdown Outbound Delivery
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-outbound-delivery")]
+        public async Task<IActionResult> GetListOutboundDelivery(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách outbound delivery") });
+        }
+        #endregion
+
+        #region Lấy dropdown Ship to Party
+        /// <summary>
+        /// Lấy dropdown Ship to Party
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-ship-to-party")]
+        public async Task<IActionResult> GetListShipToParty(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownShipToParty(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách ship to party") });
+        }
+        #endregion
+
         #region Get số phiếu cân
         /// <summary>
         /// Dropdown số phiếu cân

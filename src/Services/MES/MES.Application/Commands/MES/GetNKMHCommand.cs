@@ -25,6 +25,7 @@
         public List<string> WeightVotes { get; set; } = new List<string>();
         public DateTime? WeightDateFrom { get; set; }
         public DateTime? WeightDateTo { get; set; }
+        public Guid? CreateBy { get; set; }
 
     }
 }

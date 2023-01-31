@@ -84,8 +84,35 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownSloc(string keyword);
+        
+        /// <summary>
+        /// Dropdown Sale Order
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword);
 
+        /// <summary>
+        /// Dropdown Outbound Delivery
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword);
 
+        /// <summary>
+        /// Dropdown Ship To Party
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownShipToParty(string keyword);
+
+        /// <summary>
+        /// Dropdown Create By
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<Common2Response>> GetDropdownCreateBy(string keyword);
+        
         /// <summary>
         /// Get số phiêu cân
         /// </summary>
@@ -106,11 +133,16 @@ namespace MES.Application.Queries
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<GoodsReceiptModel> _nkmhRep;
+        private readonly IRepository<SalesDocumentModel> _saleDocRepo;
+        private readonly IRepository<OutboundDeliveryModel> _obDeliveryRepo;
+        private readonly IRepository<CustmdSaleModel> _custRepo;
+        private readonly IRepository<AccountModel> _accRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
                            IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo,
-                           IRepository<GoodsReceiptModel> nkmhRep)
+                           IRepository<GoodsReceiptModel> nkmhRep, IRepository<SalesDocumentModel> saleDocRepo, IRepository<OutboundDeliveryModel> obDeliveryRepo,
+                           IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -122,6 +154,10 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _scaleRepo = scaleRepo;
             _nkmhRep = nkmhRep;
+            _saleDocRepo = saleDocRepo;
+            _obDeliveryRepo = obDeliveryRepo;
+            _custRepo = custRepo;
+            _accRepo = accRepo;
         }
 
         #region
@@ -305,5 +341,57 @@ namespace MES.Application.Queries
             return response;
         }
         #endregion
+
+        #region Dropdown Sale Orrder
+        public async Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword)
+        {
+            return await _saleDocRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.SalesDocumentCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .OrderBy(x => x.SalesDocumentCode)
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.SalesDocumentCode,
+                                             Value = x.SalesDocumentCode
+                                         }).Take(10).ToListAsync();
+        }
+        #endregion
+
+        #region Dropdown Outbound Delivery
+        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword)
+        {
+            return await _obDeliveryRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .OrderBy(x => x.DeliveryCode)
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.DeliveryCode,
+                                             Value = x.DeliveryCode
+                                         }).Take(10).ToListAsync();
+        }
+
+        public async Task<List<CommonResponse>> GetDropdownShipToParty(string keyword)
+        {
+            var response = await _custRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.CustomerNumber.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
+                                                                                                x.CustomerName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .OrderBy(x => x.CustomerNumber)
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.CustomerNumber,
+                                             Value = $"{x.CustomerNumber} | {x.CustomerName}"
+                                         }).ToListAsync();
+
+            return response.DistinctBy(x => x.Key).Take(10).ToList();
+        }
+        #endregion
+
+
+        public async Task<List<Common2Response>> GetDropdownCreateBy(string keyword)
+        {
+            return await _accRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.UserName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .OrderBy(x => x.UserName)
+                                         .Select(x => new Common2Response
+                                         {
+                                             Key = x.AccountId,
+                                             Value = x.UserName
+                                         }).Take(10).ToListAsync();
+        }
     }
 }

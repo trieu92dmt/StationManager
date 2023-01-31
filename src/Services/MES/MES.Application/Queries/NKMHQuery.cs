@@ -164,6 +164,11 @@ namespace MES.Application.Queries
                 queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
             }
 
+            if (request.CreateBy.HasValue)
+            {
+                queryNKMH = queryNKMH.Where(x => x.CreateBy == request.CreateBy).ToList();
+            }    
+
             var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
 
             //Catalog Nhập kho mua hàng status

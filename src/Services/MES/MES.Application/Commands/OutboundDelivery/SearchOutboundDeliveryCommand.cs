@@ -17,8 +17,8 @@ namespace MES.Application.Commands.OutboundDelivery
         public string ShipToPartyTo { get; set; }
         public string MaterialFrom { get; set; }
         public string MaterialTo { get; set; }
-        public DateTime DocumentDateFrom { get; set; }
-        public DateTime DocumentDateTo { get; set; }
+        public DateTime? DocumentDateFrom { get; set; }
+        public DateTime? DocumentDateTo { get; set; }
 
         //Search dữ liệu đã lưu
         public string WeightHeadCode { get; set; }

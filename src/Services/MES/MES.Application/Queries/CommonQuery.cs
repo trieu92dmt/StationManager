@@ -225,8 +225,7 @@ namespace MES.Application.Queries
         #region Dropdown Purchasing Org by Plant
         public async Task<List<CommonResponse>> GetDropdownPurchasingOrgByPlant(string keyword, string plantCode)
         {
-            var response = await _purOrgRepo.GetQuery(x => (!string.IsNullOrEmpty(plantCode) ? x.PurchasingOrgCode == plantCode : true) &&
-                                                           (!string.IsNullOrEmpty(keyword) ? x.PurchasingOrgName.Contains(keyword) || x.PurchasingOrgCode.Contains(keyword) : true))
+            var response = await _purOrgRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchasingOrgName.Contains(keyword) || x.PurchasingOrgCode.Contains(keyword) : true))
                 .OrderBy(x => x.PurchasingOrgCode)
                 .Select(x => new CommonResponse
                 {

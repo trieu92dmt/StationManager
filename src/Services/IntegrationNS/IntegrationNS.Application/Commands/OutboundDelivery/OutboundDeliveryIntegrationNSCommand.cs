@@ -155,6 +155,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                         delivery = new OutboundDeliveryModel();
                         delivery.OutboundDeliveryId = Guid.NewGuid();
                         delivery.DeliveryCode = outboundDelivery.DeliveryCode;
+                        delivery.DeliveryCodeInt = long.Parse(outboundDelivery.DeliveryCode);
                         delivery.ShippingPoint = outboundDelivery.ShippingPoint;
                         delivery.SaleOrgCode = outboundDelivery.SaleOrgCode;
                         delivery.DeliveryType = outboundDelivery.DeliveryType;

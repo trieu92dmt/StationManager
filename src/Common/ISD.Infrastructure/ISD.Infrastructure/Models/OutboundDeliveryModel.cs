@@ -20,6 +20,7 @@ namespace ISD.Infrastructure.Models
         public Guid OutboundDeliveryId { get; set; }
         [StringLength(50)]
         public string DeliveryCode { get; set; }
+        public long? DeliveryCodeInt { get; set; }
         [StringLength(50)]
         public string ShippingPoint { get; set; }
         [StringLength(50)]

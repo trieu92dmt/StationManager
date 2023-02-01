@@ -1,5 +1,6 @@
 ﻿using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
+using ISD.Core.Models;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MES.Application.Commands.MES
 {
-    public class UpdateNKMHCommand : IRequest<bool>
+    public class UpdateNKMHCommand : IRequest<ApiResponse>
     {
         public List<UpdateNKMH> UpdateNKMHs { get; set; } = new List<UpdateNKMH>();
     }
@@ -42,7 +43,7 @@ namespace MES.Application.Commands.MES
         //Đầu cân
         public string WeightHeadCode { get; set; }
         //Trọng lượng cân
-        public decimal Weight { get; set; }
+        public decimal? Weight { get; set; }
         //Confirm Quantity
         public decimal? ConfirmQty { get; set; }
         //SL kèm bao bì
@@ -78,7 +79,7 @@ namespace MES.Application.Commands.MES
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
     }
-    public class UpdateNKMHCommandHandler : IRequestHandler<UpdateNKMHCommand, bool>
+    public class UpdateNKMHCommandHandler : IRequestHandler<UpdateNKMHCommand, ApiResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<GoodsReceiptModel> _nkmhRepo;
@@ -96,7 +97,7 @@ namespace MES.Application.Commands.MES
             _materialRepo = materialRepo;
         }
 
-        public async Task<bool> Handle(UpdateNKMHCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(UpdateNKMHCommand request, CancellationToken cancellationToken)
         {
             //Data nhập kho mua hàng
             var nkmhs = _nkmhRepo.GetQuery();
@@ -109,6 +110,32 @@ namespace MES.Application.Commands.MES
 
             //Data sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Check confirm quantity
+            //Lấy ra các phiếu cân cần update
+            var weightVotes = request.UpdateNKMHs.GroupBy(x => x.WeightVote, (k, v) => new { Key = k, Value = v.ToList() })
+                                                 .Select(x => new
+                                                 {
+                                                     WeightVote = x.Key,
+                                                     NKMHIds = x.Value.Select(v => v.NKMHId).ToList(),
+                                                     ConfirmQty = x.Value.Sum(x => x.ConfirmQty)
+                                                 }).ToList();
+            //Duyệt phiếu cân kiểm tra confirm quantity
+            foreach (var item in weightVotes)
+            {
+                //Tính tổng confirm quantity ban đầu
+                var sum1 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote).Sum(x => x.ConfirmQty);
+                //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
+                var sum2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.ConfirmQty);
+                //So sánh
+                if (item.ConfirmQty + sum2 > sum1)
+                    return new ApiResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Confirm Quantity vượt quá giới hạn"
+                    };
+            }
+
 
             foreach (var item in request.UpdateNKMHs)
             {
@@ -191,7 +218,11 @@ namespace MES.Application.Commands.MES
 
             await _unitOfWork.SaveChangesAsync();
 
-            return true;
+            return new ApiResponse
+            {
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nkmh")
+            };
         }
     }
 }

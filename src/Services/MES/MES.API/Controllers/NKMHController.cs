@@ -237,9 +237,9 @@ namespace MES.API.Controllers
 
             return Ok(new ApiSuccessResponse<bool>
             {
-                Data = response,
-                IsSuccess = true,
-                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nkmh")
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
             });
         }
 

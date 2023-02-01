@@ -36,8 +36,8 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
         public string DeliveryType { get; set; }    //Delivery Type
         public string DeliveryTypeDescription { get; set; }    //Delivery Type Description
         public string VehicleCode { get; set; }    //Số phương tiện
-        public DateTime DeliveryDate { get; set; }    //Delivery Date
-        public DateTime PickingDate { get; set; }    //PickingDate
+        public DateTime? DeliveryDate { get; set; }    //Delivery Date
+        public DateTime? PickingDate { get; set; }    //PickingDate
         public string ShiptoParty { get; set; }    //Ship-to Party
         public string ShiptoPartyName { get; set; }    //Ship-to Party Name
         public string SoldtoParty { get; set; }    //Sold-to Party
@@ -48,8 +48,8 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
         public string DivisionCode { get; set; }    //Division
         public string SupplierCode { get; set; }    //Supplier
         public string SupplierName { get; set; }    //Supplier Name
-        public DateTime DocumentDate { get; set; }    //Document Date
-        public DateTime ActGdsMvmntDate { get; set; }    //Act.Gds Mvmnt Date
+        public DateTime? DocumentDate { get; set; }    //Document Date
+        public DateTime? ActGdsMvmntDate { get; set; }    //Act.Gds Mvmnt Date
         public string Order { get; set; }    //Order
         public string ReceivingPlant { get; set; }    //Receiving Plant
         public string Reference { get; set; }    //Reference

@@ -102,7 +102,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
         public string ReferenceDocItem { get; set; }         //ReferenceDocItem
         public string GoodsMvmntControl { get; set; }         //Goods mvmnt control
         public string DeliveryCompleted { get; set; }         //Delivery Completed
-        public string OriginalQuantity { get; set; }         //Original Quantity of Delivery Item
+        public decimal? OriginalQuantity { get; set; }         //Original Quantity of Delivery Item
         public string ItemNumberDocument { get; set; }         //Item Number in Document
         public string OverallStatus { get; set; }         //Overall Status
         public string PickingStatus { get; set; }         //Picking Status

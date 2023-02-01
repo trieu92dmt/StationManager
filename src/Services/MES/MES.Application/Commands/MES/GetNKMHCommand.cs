@@ -26,6 +26,5 @@
         public DateTime? WeightDateFrom { get; set; }
         public DateTime? WeightDateTo { get; set; }
         public Guid? CreateBy { get; set; }
-
     }
 }

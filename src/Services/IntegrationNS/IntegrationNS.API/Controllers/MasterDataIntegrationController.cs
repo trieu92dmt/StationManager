@@ -1245,7 +1245,7 @@ namespace IntegrationNS.API.Controllers
         ///                       "referenceDocItem": "string",
         ///                       "goodsMvmntControl": "string",
         ///                       "deliveryCompleted": "string",
-        ///                       "originalQuantity": "string",
+        ///                       "originalQuantity": 0,
         ///                       "itemNumberDocument": "string",
         ///                       "overallStatus": "string",
         ///                       "pickingStatus": "string",

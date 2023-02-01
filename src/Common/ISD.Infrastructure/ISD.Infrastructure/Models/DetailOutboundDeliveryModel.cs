@@ -68,8 +68,8 @@ namespace ISD.Infrastructure.Models
         public string GoodsMvmntControl { get; set; }
         [StringLength(50)]
         public string DeliveryCompleted { get; set; }
-        [StringLength(50)]
-        public string OriginalQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OriginalQuantity { get; set; }
         [StringLength(50)]
         public string ItemNumberDocument { get; set; }
         [StringLength(50)]

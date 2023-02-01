@@ -170,7 +170,7 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetListSloc(string keyword)
         {
             var dropdownList = await _commonQuery.GetDropdownSloc(keyword);
-            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sloc") });
+            return Ok(new ApiSuccessResponse<List<Common3Response>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sloc") });
         }
         #endregion
 

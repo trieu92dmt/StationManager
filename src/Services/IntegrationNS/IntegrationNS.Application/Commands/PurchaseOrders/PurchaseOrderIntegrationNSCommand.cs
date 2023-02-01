@@ -191,6 +191,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                     OpenQuantity = item.OpenQuantity,
                                     StorageLocation = item.StorageLocation,
                                     CreateTime = DateTime.Now,
+                                    Unit = item.UoM,
                                     Actived = true,
                                     QuantityReceived = item.QuantityReceived,
                                     DeletionInd = item.DeletionInd,
@@ -214,6 +215,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                                 detailPO.QuantityReceived = item.QuantityReceived;
                                 detailPO.DeletionInd = item.DeletionInd;
                                 detailPO.StorageLocation = item.StorageLocation;
+                                detailPO.Unit = item.UoM;
                                 detailPO.Deliver = item.Deliver;
                                 detailPO.VehicleCode = item.VehicleCode;
                                 detailPO.VehicleOwner = item.VehicleOwner;

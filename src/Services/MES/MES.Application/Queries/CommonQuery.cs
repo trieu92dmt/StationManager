@@ -83,7 +83,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownSloc(string keyword);
+        Task<List<Common3Response>> GetDropdownSloc(string keyword);
         
         /// <summary>
         /// Dropdown Sale Order
@@ -301,14 +301,15 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<CommonResponse>> GetDropdownSloc(string keyword)
+        public async Task<List<Common3Response>> GetDropdownSloc(string keyword)
         {
             var response = await _slocRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.StorageLocationCode.Contains(keyword) || x.StorageLocationName.Contains(keyword) : true)
                                     .OrderBy(x => x.StorageLocationCode)
-                                    .Select(x => new CommonResponse
+                                    .Select(x => new Common3Response
                                     {
                                         Key = x.StorageLocationCode,
-                                        Value = x.StorageLocationName
+                                        Value = $"{x.StorageLocationCode} | {x.StorageLocationName}",
+                                        Name = x.StorageLocationName
                                     }).Take(10).AsNoTracking().ToListAsync();
 
             return response;

@@ -104,7 +104,7 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
@@ -114,33 +114,33 @@ namespace MES.Application.Queries
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
                 if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
                                                                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.POType))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
                 if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
-                queryNKMH = queryNKMH.Where(x => !x.PurchaseOrderDetailId.HasValue ? true : long.Parse(x?.PurchaseOrderDetail?.ProductCode) >= long.Parse(request.MaterialFrom) &&
-                                                                                            long.Parse(x?.PurchaseOrderDetail?.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.MaterialCodeInt >= long.Parse(request.MaterialFrom) &&
+                                                 x.MaterialCodeInt <= long.Parse(request.MaterialTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchasingGroupTo)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
                                                                                         int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
             }
 
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? true : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
                                                                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
             }
 
@@ -184,7 +184,7 @@ namespace MES.Application.Queries
                 PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
                 POItem = x.PurchaseOrderDetail?.POLine,
                 //Product
-                Material = product.FirstOrDefault(p => p.ProductCodeInt == long.Parse(x.MaterialCode))?.ProductCodeInt.ToString(),
+                Material = x.MaterialCodeInt.ToString(),
                 MaterialName = product.FirstOrDefault(p => p.ProductCodeInt == long.Parse(x.MaterialCode))?.ProductName,
                 //Ngày chứng từ
                 DocumentDate = x.DocumentDate,

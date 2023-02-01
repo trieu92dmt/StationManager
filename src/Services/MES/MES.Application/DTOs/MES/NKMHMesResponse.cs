@@ -71,8 +71,10 @@
         public DateTime? EndTime { get; set; }
         public DateTime? CreateTime { get; set; }
         public string CreateBy { get; set; }
+        public Guid? CreateById { get; set; }
         public DateTime? LastEditTime { get; set; }
         public string LastEditBy { get; set; }
+        public Guid? LastEditById { get; set; }
         public string MaterialDocument { get; set; }
         public string ReverseDocument { get; set; }
         public string Batch { get; set; }

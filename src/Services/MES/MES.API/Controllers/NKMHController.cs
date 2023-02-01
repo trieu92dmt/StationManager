@@ -184,10 +184,52 @@ namespace MES.API.Controllers
         }
 
         /// <summary>
-        /// Chỉnh sửa NKMH
+        /// Cập nhật nkmh
         /// </summary>
-        /// <param name="command"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/NKMH/update-nkmh
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///         {
+        ///           "updateNKMHs": [
+        ///             {
+        ///               "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",         --       nkmhId
+        ///               "plant": "string",                                        --       plant
+        ///               "purchaseOrderCode": "string",                            --       purchaseOrderCode
+        ///               "poItem": "string",                                       --       poItem
+        ///               "material": "string",                                     --       material
+        ///               "storageLocation": "string",                              --       slocCode
+        ///               "batch": "string",                                        --       batch
+        ///               "bagQuantity": 0,                                         --       bagQuantity
+        ///               "singleWeight": 0,                                        --       singleWeight
+        ///               "weightHeadCode": "string",                               --       weightHeadCode
+        ///               "weight": 0,                                              --       weight
+        ///               "confirmQty": 0,                                          --       confirmQty
+        ///               "quantityWithPackaging": 0,                               --       quantityWithPackaging
+        ///               "vehicleCode": "string",                                  --       vehicleCode
+        ///               "quantityWeight": 0,                                      --       quantityWeight
+        ///               "truckQty": 0,                                            --       truckQuantity
+        ///               "inputWeight": 0,                                         --       inputWeight
+        ///               "outputWeight": 0,                                        --       outputWeight
+        ///               "weightVote": "string",                                   --       weightVote
+        ///               "documentDate": "2023-02-01T06:34:58.267Z",               --       documentDate
+        ///               "startTime": "2023-02-01T06:34:58.267Z",                  --       startTime
+        ///               "endTime": "2023-02-01T06:34:58.267Z",                    --       endTime
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",       --       createById
+        ///               "createOn": "2023-02-01T06:34:58.267Z",                   --       createOn
+        ///               "changeBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",       --       lastEditById
+        ///               "description": "string",                                  --       description
+        ///               "isDelete": true                                          --       isDelete
+        ///             }
+        ///           ]
+        ///         }
+        /// </remarks>
         [HttpPost("update-nkmh")]
         public async Task<IActionResult> UpdateNKMH([FromBody] UpdateNKMHCommand command)
         {

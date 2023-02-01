@@ -189,9 +189,9 @@ namespace MES.Application.Queries
                 //Ngày chứng từ
                 DocumentDate = x.DocumentDate,
                 //Mã kho
-                SlocCode = x.PurchaseOrderDetail?.StorageLocation != null ? x.PurchaseOrderDetail?.StorageLocation : "",
+                SlocCode = x.SlocCode,
                 //Kho
-                StorageLocation = x.PurchaseOrderDetail?.StorageLocation != null ? $"{x.PurchaseOrderDetail?.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.PurchaseOrderDetail.StorageLocation).StorageLocationName}" : "",
+                StorageLocation = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
                 //Số lô
                 Batch = x.Batch,
                 //SL bao

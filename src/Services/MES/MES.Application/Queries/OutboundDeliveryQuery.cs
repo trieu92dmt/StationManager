@@ -75,8 +75,13 @@ namespace MES.Application.Queries
 
     //            query = query.Where(x => long.Parse(x.SalesOrder) >= long.Parse(command.SalesOrderFrom) &&
     //                                     long.Parse(x.SalesOrder) <= long.Parse(command.SalesOrderTo)).ToList();
-    //        } 
+    //        }
 
+    //        //Theo ship to party
+    //        if (command.ShipToParty.Any())
+    //        {
+
+    //        }
     //    }
     //}
 }

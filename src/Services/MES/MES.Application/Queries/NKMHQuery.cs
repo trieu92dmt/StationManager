@@ -159,7 +159,7 @@ namespace MES.Application.Queries
                                          x.WeighDate <= request.WeightDateTo).ToList();
             }
 
-            if (request.WeightVotes.Any())
+            if (!request.WeightVotes.IsNullOrEmpty())
             {
                 queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
             }

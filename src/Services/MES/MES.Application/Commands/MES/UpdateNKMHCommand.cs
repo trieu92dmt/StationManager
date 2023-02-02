@@ -177,7 +177,7 @@ namespace MES.Application.Commands.MES
                         Batch = item.Batch,
                         CreateBy = item.CreateBy,
                         CreateTime = item.CreateOn,
-                        Status = "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }
                 //Tồn tại thì update

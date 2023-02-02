@@ -1,8 +1,10 @@
 ﻿using ISD.Core.Extensions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.SeedWork.Repositories;
+using ISD.Core.Utilities;
 using ISD.Infrastructure.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -38,7 +40,7 @@ namespace MES.Application.Commands.MES
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
-        public string Image { get; set; }
+        public IFormFile Image { get; set; }
         //Trạng thái
         public string Status { get; set; }
         public Guid? PoDetailId { get; set; }
@@ -57,10 +59,12 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
+        private readonly IUtilitiesService _utilitiesService;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
-                                      IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo)
+                                      IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo,
+                                      IUtilitiesService utilitiesService)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
@@ -69,6 +73,7 @@ namespace MES.Application.Commands.MES
             _prdRepo = prdRepo;
             _scaleRepo = scaleRepo;
             _weightSsRepo = weightSsRepo;
+            _utilitiesService = utilitiesService;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -87,6 +92,7 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
+                var img = await _utilitiesService.UploadFile(x.Image, "NKMH");
 
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)
@@ -129,6 +135,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     Description = x.Description,
                     //Hình ảnh
+                    Image = img,
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân

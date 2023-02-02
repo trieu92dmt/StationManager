@@ -104,7 +104,7 @@ namespace MES.Application.Queries
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : x.PurchaseOrderDetail.PurchaseOrder.Plant.Contains(request.Plant)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PlantCode == request.Plant).ToList();
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
@@ -232,6 +232,8 @@ namespace MES.Application.Queries
                 isDelete = x.Status == "DEL" ? true : false,
                 //Ghi chú 
                 Description = x.Description,
+                //Hình ảnh
+                Image = x.Image,
                 Status = nkmhStatus.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 CreateTime = x.CreateTime,
                 CreateBy = user.FirstOrDefault(a => a.AccountId == x.CreateBy)?.FullName,

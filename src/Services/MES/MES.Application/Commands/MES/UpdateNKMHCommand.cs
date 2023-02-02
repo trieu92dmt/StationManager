@@ -3,6 +3,7 @@ using ISD.Core.Interfaces.Databases;
 using ISD.Core.Models;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
+using ISD.Core.Utilities;
 using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -90,9 +91,11 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<ProductModel> _materialRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
+        private readonly IUtilitiesService _utilitiesService;
 
         public UpdateNKMHCommandHandler(IUnitOfWork unitOfWork, IRepository<GoodsReceiptModel> nkmhRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo,
-                                        IRepository<StorageLocationModel> slocRepo, IRepository<ProductModel> materialRepo, IRepository<DimDateModel> dimDateRepo)
+                                        IRepository<StorageLocationModel> slocRepo, IRepository<ProductModel> materialRepo, IRepository<DimDateModel> dimDateRepo,
+                                        IUtilitiesService utilitiesService)
         {
             _unitOfWork = unitOfWork;
             _nkmhRepo = nkmhRepo;
@@ -100,6 +103,7 @@ namespace MES.Application.Commands.MES
             _slocRepo = slocRepo;
             _materialRepo = materialRepo;
             _dimDateRepo = dimDateRepo;
+            _utilitiesService = utilitiesService;
         }
 
         public async Task<ApiResponse> Handle(UpdateNKMHCommand request, CancellationToken cancellationToken)
@@ -166,11 +170,7 @@ namespace MES.Application.Commands.MES
                 //Lấy ra podetail
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
 
-                //Lưu ảnh
-                if (item.Image != null)
-                {
-                    
-                }
+                var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
 
                 //Chưa có thì tạo mới
                 if (nkmh == null)
@@ -195,6 +195,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
+                        Image = img,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -233,6 +234,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
+                    nkmh.Image = img;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

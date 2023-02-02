@@ -135,7 +135,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     Description = x.Description,
                     //Hình ảnh
-                    Img = string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image) : null,
+                    Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image) : null,
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân

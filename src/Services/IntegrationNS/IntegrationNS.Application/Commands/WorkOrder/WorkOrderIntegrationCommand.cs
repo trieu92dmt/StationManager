@@ -105,11 +105,13 @@ namespace IntegrationNS.Application.Commands.WorkOrder
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<WorkOrderModel> _woRepo;
+        private readonly IRepository<DetailWorkOrderModel> _detailWORepo;
 
-        public WorkOrderIntegrationCommandHandler(IUnitOfWork unitOfWork, IRepository<WorkOrderModel> woRepo)
+        public WorkOrderIntegrationCommandHandler(IUnitOfWork unitOfWork, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWORepo)
         {
             _unitOfWork = unitOfWork;
             _woRepo = woRepo;
+            _detailWORepo = detailWORepo;
         }
 
         public async Task<IntegrationNSResponse> Handle(WorkOrderIntegrationCommand request, CancellationToken cancellationToken)
@@ -132,7 +134,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
 
                     if (workorder is null)
                     {
-                        _woRepo.Add(new WorkOrderModel
+                        workorder = new WorkOrderModel
                         {
                             WorkOrderId = Guid.NewGuid(),
                             WorkOrderCode = woIntegration.WorkOrderCode,
@@ -162,42 +164,46 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                             //Common
                             CreateTime = DateTime.Now,
                             Actived = true
-                        });
+                        };
 
                         //Detail
-                        //var detailWOs = new List<DetailWorkOrderModel>();
-                        //foreach (var item in woIntegration.DetallWorkOrderIntegrations)
-                        //{
-                        //    if (materials.FirstOrDefault(x => x.ProductCode == item.Material) == null)
-                        //        throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
+                        var detailWOs = new List<DetailWorkOrderModel>();
+                        foreach (var item in woIntegration.DetallWorkOrderIntegrations)
+                        {
 
-                        //    detailPOs.Add(new PurchaseOrderDetailModel
-                        //    {
-                        //        PurchaseOrderDetailId = Guid.NewGuid(),
-                        //        PurchaseOrderId = purchaseOrder.PurchaseOrderId,
-                        //        POLine = item.PurchaseOrderItem,
-                        //        PoLinetInt = int.Parse(item.PurchaseOrderItem),
-                        //        ProductCode = item.Material,
-                        //        OrderQuantity = item.OrderQuantity,
-                        //        OpenQuantity = item.OpenQuantity,
-                        //        StorageLocation = item.StorageLocation,
-                        //        Batch = item.Batch,
-                        //        Unit = item.UoM,
-                        //        CreateTime = DateTime.Now,
-                        //        Actived = true,
-                        //        QuantityReceived = item.QuantityReceived,
-                        //        DeletionInd = item.DeletionInd,
-                        //        Deliver = item.Deliver,
-                        //        VehicleCode = item.VehicleCode,
-                        //        VehicleOwner = item.VehicleOwner,
-                        //        TransportUnit = item.TransportUnit,
-                        //        DeliveryCompleted = item.DeliveryCompleted,
-                        //        GrossWeight = item.GrossWeight,
-                        //        NetWeight = item.NetWeight,
-                        //        WeightUnit = item.WeightUnit
-                        //    });
+                            detailWOs.Add(new DetailWorkOrderModel
+                            {
+                                DetailWorkOrderId = Guid.NewGuid(),
+                                WorkOrderId = workorder.WorkOrderId,
+                                WorkOrderItem = item.WorkOrderItem,
+                                ProductCode = item.ProductCode,
+                                TotalQuantiy = item.TotalQuantiy,
+                                RoutingScrapQuantity = item.RoutingScrapQuantity,
+                                ScrapQuantity = item.ScrapQuantity,
+                                GRQuantity = item.GRQuantity,
+                                Unit = item.Unit,
+                                UnloadingPoint = item.UnloadingPoint,
+                                SerialNumber = item.SerialNumber,
+                                MRPArea = item.MRPArea,
+                                ValuationType = item.ValuationType,
+                                ValuationCategory = item.ValuationCategory,
+                                Batch = item.Batch,
+                                InternalObject = item.InternalObject,
+                                ActualStartDate = item.ActualStartDate,
+                                StartDate = item.StartDate,
+                                ConfirmedYieldQuantity = item.ConfirmedYieldQuantity,
+                                DeletionFlag = item.DeletionFlag,
+                                LongTextExists = item.LongTextExists,
+                                ReferenceOrder = item.ReferenceOrder,
+                                SystemStatus = item.SystemStatus,
+                                CreateTime = DateTime.Now,
+                                Actived = true,
 
-                        //}
+                            });
+
+                        }
+                        workorder.DetailWorkOrderModel = detailWOs;
+                        _woRepo.Add(workorder);
                     }
                     else
                     {
@@ -226,6 +232,70 @@ namespace IntegrationNS.Application.Commands.WorkOrder
 
                         //Common
                         workorder.LastEditTime = DateTime.Now;
+
+                        #region Detail
+                        //Cập nhật detail
+                        foreach (var item in woIntegration.DetallWorkOrderIntegrations)
+                        {
+                            var detailWO = await _detailWORepo.FindOneAsync(x => x.WorkOrderId == workorder.WorkOrderId && x.WorkOrderItem == item.WorkOrderItem);
+                            if (detailWO == null)
+                            {
+
+                                _detailWORepo.Add(new DetailWorkOrderModel
+                                {
+                                    DetailWorkOrderId = Guid.NewGuid(),
+                                    WorkOrderId = workorder.WorkOrderId,
+                                    WorkOrderItem = item.WorkOrderItem,
+                                    ProductCode = item.ProductCode,
+                                    TotalQuantiy = item.TotalQuantiy,
+                                    RoutingScrapQuantity = item.RoutingScrapQuantity,
+                                    ScrapQuantity = item.ScrapQuantity,
+                                    GRQuantity = item.GRQuantity,
+                                    Unit = item.Unit,
+                                    UnloadingPoint = item.UnloadingPoint,
+                                    SerialNumber = item.SerialNumber,
+                                    MRPArea = item.MRPArea,
+                                    ValuationType = item.ValuationType,
+                                    ValuationCategory = item.ValuationCategory,
+                                    Batch = item.Batch,
+                                    InternalObject = item.InternalObject,
+                                    ActualStartDate = item.ActualStartDate,
+                                    StartDate = item.StartDate,
+                                    ConfirmedYieldQuantity = item.ConfirmedYieldQuantity,
+                                    DeletionFlag = item.DeletionFlag,
+                                    LongTextExists = item.LongTextExists,
+                                    ReferenceOrder = item.ReferenceOrder,
+                                    SystemStatus = item.SystemStatus,
+                                    CreateTime = DateTime.Now,
+                                    Actived = true,
+                                });
+                            }
+                            else
+                            {
+                                detailWO.ProductCode = item.ProductCode;
+                                detailWO.TotalQuantiy = item.TotalQuantiy;
+                                detailWO.RoutingScrapQuantity = item.RoutingScrapQuantity;
+                                detailWO.ScrapQuantity = item.ScrapQuantity;
+                                detailWO.GRQuantity = item.GRQuantity;
+                                detailWO.Unit = item.Unit;
+                                detailWO.UnloadingPoint = item.UnloadingPoint;
+                                detailWO.SerialNumber = item.SerialNumber;
+                                detailWO.MRPArea = item.MRPArea;
+                                detailWO.ValuationType = item.ValuationType;
+                                detailWO.ValuationCategory = item.ValuationCategory;
+                                detailWO.Batch = item.Batch;
+                                detailWO.InternalObject = item.InternalObject;
+                                detailWO.ActualStartDate = item.ActualStartDate;
+                                detailWO.StartDate = item.StartDate;
+                                detailWO.ConfirmedYieldQuantity = item.ConfirmedYieldQuantity;
+                                detailWO.DeletionFlag = item.DeletionFlag;
+                                detailWO.LongTextExists = item.LongTextExists;
+                                detailWO.ReferenceOrder = item.ReferenceOrder;
+                                detailWO.SystemStatus = item.SystemStatus;
+                                detailWO.LastEditTime = DateTime.Now;
+                            }
+                        }
+                        #endregion
                     }
 
                     await _unitOfWork.SaveChangesAsync();

@@ -63,5 +63,9 @@ namespace ISD.Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
+
+        [ForeignKey("WorkOrderId")]
+        [InverseProperty("DetailWorkOrderModel")]
+        public virtual WorkOrderModel WorkOrder { get; set; }
     }
 }

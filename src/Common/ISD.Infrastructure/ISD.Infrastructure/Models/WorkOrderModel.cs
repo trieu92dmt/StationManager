@@ -11,6 +11,11 @@ namespace ISD.Infrastructure.Models
     [Table("WorkOrderModel", Schema = "DataCollection")]
     public partial class WorkOrderModel
     {
+        public WorkOrderModel()
+        {
+            DetailWorkOrderModel = new HashSet<DetailWorkOrderModel>();
+        }
+
         [Key]
         public Guid WorkOrderId { get; set; }
         [StringLength(50)]
@@ -62,5 +67,8 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
+
+        [InverseProperty("WorkOrder")]
+        public virtual ICollection<DetailWorkOrderModel> DetailWorkOrderModel { get; set; }
     }
 }

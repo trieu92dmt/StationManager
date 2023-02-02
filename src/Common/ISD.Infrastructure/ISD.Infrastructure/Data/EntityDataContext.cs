@@ -1098,6 +1098,11 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<DetailWorkOrderModel>(entity =>
             {
                 entity.Property(e => e.DetailWorkOrderId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.WorkOrder)
+                    .WithMany(p => p.DetailWorkOrderModel)
+                    .HasForeignKey(d => d.WorkOrderId)
+                    .HasConstraintName("FK_DetailWorkOrderModel_WorkOrderModel");
             });
 
             modelBuilder.Entity<DimDateModel>(entity =>

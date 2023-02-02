@@ -145,11 +145,11 @@ namespace MES.Application.Commands.MES
                     };
 
                 //Tính tổng SL kèm bao bì
-                var sumQtyWithPackage1 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote).Sum(x => x.ConfirmQty);
+                var sumQtyWithPackage1 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
                 //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
-                var sumQtyWithPackage2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.ConfirmQty);
+                var sumQtyWithPackage2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.QuantityWithPackaging);
                 //So sánh
-                if (item.ConfirmQty + sumQtyWithPackage2 > sumQtyWithPackage1)
+                if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
                     return new ApiResponse
                     {
                         IsSuccess = false,
@@ -167,7 +167,10 @@ namespace MES.Application.Commands.MES
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
 
                 //Lưu ảnh
-                //if (item.Image)
+                if (item.Image != null)
+                {
+                    
+                }
 
                 //Chưa có thì tạo mới
                 if (nkmh == null)

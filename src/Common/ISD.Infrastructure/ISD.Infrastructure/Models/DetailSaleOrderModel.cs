@@ -11,11 +11,6 @@ namespace ISD.Infrastructure.Models
     [Table("DetailSaleOrderModel", Schema = "MESP2")]
     public partial class DetailSaleOrderModel
     {
-        public DetailSaleOrderModel()
-        {
-            WorkOrderModel1 = new HashSet<WorkOrderModel1>();
-        }
-
         [Key]
         public Guid DetailSaleOrderId { get; set; }
         public Guid? SaleOrderHeaderId { get; set; }
@@ -55,10 +50,5 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("SaleOrderHeaderId")]
         [InverseProperty("DetailSaleOrderModel")]
         public virtual HeaderSaleOrderModel SaleOrderHeader { get; set; }
-        [ForeignKey("WorkOderId")]
-        [InverseProperty("DetailSaleOrderModel")]
-        public virtual WorkOrderModel1 WorkOder { get; set; }
-        [InverseProperty("SOLine")]
-        public virtual ICollection<WorkOrderModel1> WorkOrderModel1 { get; set; }
     }
 }

@@ -23,9 +23,5 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
-
-        [ForeignKey("WorkOrderId")]
-        [InverseProperty("ConfirmStageModel")]
-        public virtual WorkOrderModel1 WorkOrder { get; set; }
     }
 }

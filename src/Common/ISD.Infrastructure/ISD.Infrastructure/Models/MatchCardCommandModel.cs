@@ -11,11 +11,6 @@ namespace ISD.Infrastructure.Models
     [Table("MatchCardCommandModel", Schema = "MESP2")]
     public partial class MatchCardCommandModel
     {
-        public MatchCardCommandModel()
-        {
-            WorkOrderModel1 = new HashSet<WorkOrderModel1>();
-        }
-
         [Key]
         public Guid MatchCardCommandId { get; set; }
         [StringLength(50)]
@@ -43,8 +38,5 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
-
-        [InverseProperty("MatchCardCommand")]
-        public virtual ICollection<WorkOrderModel1> WorkOrderModel1 { get; set; }
     }
 }

@@ -233,7 +233,7 @@ namespace MES.Application.Queries
                 //Ghi chú 
                 Description = x.Description,
                 //Hình ảnh
-                Image = x.Image,
+                Image = x.Img != null && x.Img.Length > 0? Convert.ToBase64String(x.Img) : null,
                 Status = nkmhStatus.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 CreateTime = x.CreateTime,
                 CreateBy = user.FirstOrDefault(a => a.AccountId == x.CreateBy)?.FullName,

@@ -886,7 +886,7 @@ namespace IntegrationNS.API.Controllers
         /// 
         ///                {
         ///                     "code": 200,
-        ///                     "message": "Tích hợp Division thành công.",
+        ///                     "message": "Tích hợp WorkOrder thành công.",
         ///                     "data": true
         ///                }
         /// </remarks>

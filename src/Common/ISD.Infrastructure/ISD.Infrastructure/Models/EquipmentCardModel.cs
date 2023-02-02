@@ -14,10 +14,6 @@ namespace ISD.Infrastructure.Models
         public EquipmentCardModel()
         {
             CheckInOutModel = new HashSet<CheckInOutModel>();
-            EquipmentCard_Equiment_Mapping = new HashSet<EquipmentCard_Equiment_Mapping>();
-            EquipmentCard_LogModel = new HashSet<EquipmentCard_LogModel>();
-            EquipmentCard_WorkOrder_Mapping = new HashSet<EquipmentCard_WorkOrder_Mapping>();
-            WorkOrderCardModel = new HashSet<WorkOrderCardModel>();
         }
 
         [Key]
@@ -50,13 +46,5 @@ namespace ISD.Infrastructure.Models
 
         [InverseProperty("EquipmentCard")]
         public virtual ICollection<CheckInOutModel> CheckInOutModel { get; set; }
-        [InverseProperty("EquipmentCard")]
-        public virtual ICollection<EquipmentCard_Equiment_Mapping> EquipmentCard_Equiment_Mapping { get; set; }
-        [InverseProperty("EquipmentCard")]
-        public virtual ICollection<EquipmentCard_LogModel> EquipmentCard_LogModel { get; set; }
-        [InverseProperty("EquipmentCard")]
-        public virtual ICollection<EquipmentCard_WorkOrder_Mapping> EquipmentCard_WorkOrder_Mapping { get; set; }
-        [InverseProperty("EquipmentCard")]
-        public virtual ICollection<WorkOrderCardModel> WorkOrderCardModel { get; set; }
     }
 }

@@ -79,7 +79,7 @@ namespace MES.Application.Commands.MES
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
     }
@@ -170,7 +170,7 @@ namespace MES.Application.Commands.MES
                 //Lấy ra podetail
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
 
-                var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
+                //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
 
                 //Chưa có thì tạo mới
                 if (nkmh == null)
@@ -195,7 +195,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Image = img,
+                        Img = string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image) : null,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -234,7 +234,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Image = img;
+                    nkmh.Img = string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image) : null;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

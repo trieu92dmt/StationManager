@@ -106,6 +106,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<DetailSaleOrderModel> DetailSaleOrderModel { get; set; }
         public virtual DbSet<DetailSalesDocumentModel> DetailSalesDocumentModel { get; set; }
         public virtual DbSet<DetailStageTranferModel> DetailStageTranferModel { get; set; }
+        public virtual DbSet<DetailWorkOrderModel> DetailWorkOrderModel { get; set; }
         public virtual DbSet<DimDateModel> DimDateModel { get; set; }
         public virtual DbSet<DistributionChannelModel> DistributionChannelModel { get; set; }
         public virtual DbSet<DistrictModel> DistrictModel { get; set; }
@@ -115,10 +116,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<EmployeeRecordModel> EmployeeRecordModel { get; set; }
         public virtual DbSet<EquimenRecordModel> EquimenRecordModel { get; set; }
         public virtual DbSet<EquipmentCardModel> EquipmentCardModel { get; set; }
-        public virtual DbSet<EquipmentCard_Equiment_Mapping> EquipmentCard_Equiment_Mapping { get; set; }
-        public virtual DbSet<EquipmentCard_LogModel> EquipmentCard_LogModel { get; set; }
-        public virtual DbSet<EquipmentCard_WorkOrder_Log_Mapping> EquipmentCard_WorkOrder_Log_Mapping { get; set; }
-        public virtual DbSet<EquipmentCard_WorkOrder_Mapping> EquipmentCard_WorkOrder_Mapping { get; set; }
         public virtual DbSet<EquipmentGroupModel> EquipmentGroupModel { get; set; }
         public virtual DbSet<EquipmentModel> EquipmentModel { get; set; }
         public virtual DbSet<EquipmentStatus_Temp> EquipmentStatus_Temp { get; set; }
@@ -384,12 +381,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<WorkFlowConfigModel> WorkFlowConfigModel { get; set; }
         public virtual DbSet<WorkFlowFieldModel> WorkFlowFieldModel { get; set; }
         public virtual DbSet<WorkFlowModel> WorkFlowModel { get; set; }
-        public virtual DbSet<WorkOrderCardModel> WorkOrderCardModel { get; set; }
         public virtual DbSet<WorkOrderModel> WorkOrderModel { get; set; }
-        public virtual DbSet<WorkOrderModel1> WorkOrderModel1 { get; set; }
-        public virtual DbSet<WorkOrder_Mold_Mapping> WorkOrder_Mold_Mapping { get; set; }
-        public virtual DbSet<WorkOrder_Product_Mapping> WorkOrder_Product_Mapping { get; set; }
-        public virtual DbSet<WorkOrder_Routing_Mapping> WorkOrder_Routing_Mapping { get; set; }
         public virtual DbSet<WorkShopModel> WorkShopModel { get; set; }
         public virtual DbSet<WorkingDateModel> WorkingDateModel { get; set; }
         public virtual DbSet<WorkingTimeConfigModel> WorkingTimeConfigModel { get; set; }
@@ -782,11 +774,6 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<ConfirmStageModel>(entity =>
             {
                 entity.Property(e => e.ConfirmStageId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.WorkOrder)
-                    .WithMany(p => p.ConfirmStageModel)
-                    .HasForeignKey(d => d.WorkOrderId)
-                    .HasConstraintName("FK_ConfirmStageModel_WorkOrderModel");
             });
 
             modelBuilder.Entity<ConsumableMaterialsDeliveryModel>(entity =>
@@ -1081,11 +1068,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.DetailSaleOrderModel)
                     .HasForeignKey(d => d.SaleOrderHeaderId)
                     .HasConstraintName("FK_DetailSaleOrderModel_DetailSaleOrderModel");
-
-                entity.HasOne(d => d.WorkOder)
-                    .WithMany(p => p.DetailSaleOrderModel)
-                    .HasForeignKey(d => d.WorkOderId)
-                    .HasConstraintName("FK_DetailSaleOrderModel_WorkOrderModel");
             });
 
             modelBuilder.Entity<DetailSalesDocumentModel>(entity =>
@@ -1111,6 +1093,11 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.DetailStageTranferModel)
                     .HasForeignKey(d => d.StockId)
                     .HasConstraintName("FK_DetailStageTranferModel_StockModel");
+            });
+
+            modelBuilder.Entity<DetailWorkOrderModel>(entity =>
+            {
+                entity.Property(e => e.DetailWorkOrderId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<DimDateModel>(entity =>
@@ -1197,61 +1184,6 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<EquipmentCardModel>(entity =>
             {
                 entity.Property(e => e.EquipmentCardId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<EquipmentCard_Equiment_Mapping>(entity =>
-            {
-                entity.Property(e => e.EquipmentCardDetailId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.EquipmentCard)
-                    .WithMany(p => p.EquipmentCard_Equiment_Mapping)
-                    .HasForeignKey(d => d.EquipmentCardId)
-                    .HasConstraintName("FK_EquipmentCard_Equiment_Mapping_EquipmentCardModel");
-
-                entity.HasOne(d => d.Equipment)
-                    .WithMany(p => p.EquipmentCard_Equiment_Mapping)
-                    .HasForeignKey(d => d.EquipmentId)
-                    .HasConstraintName("FK_EquipmentCard_Equiment_Mapping_EquipmentModel");
-            });
-
-            modelBuilder.Entity<EquipmentCard_LogModel>(entity =>
-            {
-                entity.Property(e => e.EquipmentCardLogId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.EquipmentCard)
-                    .WithMany(p => p.EquipmentCard_LogModel)
-                    .HasForeignKey(d => d.EquipmentCardId)
-                    .HasConstraintName("FK_EquipmentCard_LogModel_EquipmentCardModel");
-            });
-
-            modelBuilder.Entity<EquipmentCard_WorkOrder_Log_Mapping>(entity =>
-            {
-                entity.Property(e => e.EquipmentWOLogId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.EquipmentCardLog)
-                    .WithMany(p => p.EquipmentCard_WorkOrder_Log_Mapping)
-                    .HasForeignKey(d => d.EquipmentCardLogId)
-                    .HasConstraintName("FK_EquipmentCard_WorkOrder_Log_Mapping_EquipmentCard_LogModel");
-
-                entity.HasOne(d => d.WorkOrderCar)
-                    .WithMany(p => p.EquipmentCard_WorkOrder_Log_Mapping)
-                    .HasForeignKey(d => d.WorkOrderCarId)
-                    .HasConstraintName("FK_EquipmentCard_WorkOrder_Log_Mapping_WorkOrderModel");
-            });
-
-            modelBuilder.Entity<EquipmentCard_WorkOrder_Mapping>(entity =>
-            {
-                entity.Property(e => e.EquipmentCardWOId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.EquipmentCard)
-                    .WithMany(p => p.EquipmentCard_WorkOrder_Mapping)
-                    .HasForeignKey(d => d.EquipmentCardId)
-                    .HasConstraintName("FK_EquipmentCard_WorkOrder_Mapping_EquipmentCardModel");
-
-                entity.HasOne(d => d.WorkOrderCard)
-                    .WithMany(p => p.EquipmentCard_WorkOrder_Mapping)
-                    .HasForeignKey(d => d.WorkOrderCardId)
-                    .HasConstraintName("FK_EquipmentCard_WorkOrder_Mapping_WorkOrderModel");
             });
 
             modelBuilder.Entity<EquipmentGroupModel>(entity =>
@@ -1694,16 +1626,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.OutputRecordModel)
                     .HasForeignKey(d => d.StockId)
                     .HasConstraintName("FK_OutputRecordModel_StockModel");
-
-                entity.HasOne(d => d.WorkOrderCard)
-                    .WithMany(p => p.OutputRecordModel)
-                    .HasForeignKey(d => d.WorkOrderCardId)
-                    .HasConstraintName("FK_OutputRecordModel_WorkOrderCardModel");
-
-                entity.HasOne(d => d.WorkOrder)
-                    .WithMany(p => p.OutputRecordModel)
-                    .HasForeignKey(d => d.WorkOrderId)
-                    .HasConstraintName("FK_OutputRecordModel_WorkOrderModel");
             });
 
             modelBuilder.Entity<POTEXT_PR_SO_Model>(entity =>
@@ -2767,11 +2689,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.StageTransferModelToStock)
                     .HasForeignKey(d => d.ToStockId)
                     .HasConstraintName("FK_StageTransferModel_StockModel1");
-
-                entity.HasOne(d => d.WorkOrder)
-                    .WithMany(p => p.StageTransferModel)
-                    .HasForeignKey(d => d.WorkOrderId)
-                    .HasConstraintName("FK_StageTransferModel_WorkOrderModel");
             });
 
             modelBuilder.Entity<State>(entity =>
@@ -3458,86 +3375,12 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.WorkFlowId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<WorkOrderCardModel>(entity =>
-            {
-                entity.Property(e => e.WorkOrderCardId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.EquipmentCard)
-                    .WithMany(p => p.WorkOrderCardModel)
-                    .HasForeignKey(d => d.EquipmentCardId)
-                    .HasConstraintName("FK_WorkOrderCardModel_EquipmentCardModel");
-
-                entity.HasOne(d => d.WorkOrder)
-                    .WithMany(p => p.WorkOrderCardModel)
-                    .HasForeignKey(d => d.WorkOrderId)
-                    .HasConstraintName("FK_WorkOrderCardModel_WorkOrderModel");
-            });
-
             modelBuilder.Entity<WorkOrderModel>(entity =>
             {
                 entity.HasKey(e => e.WorkOrderId)
                     .HasName("PK_WorkOrderModel_1");
 
                 entity.Property(e => e.WorkOrderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<WorkOrderModel1>(entity =>
-            {
-                entity.Property(e => e.WorkOrderId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.MatchCardCommand)
-                    .WithMany(p => p.WorkOrderModel1)
-                    .HasForeignKey(d => d.MatchCardCommandId)
-                    .HasConstraintName("FK_WorkOrderModel_MatchCardCommandModel");
-
-                entity.HasOne(d => d.SO)
-                    .WithMany(p => p.WorkOrderModel1)
-                    .HasForeignKey(d => d.SOId)
-                    .HasConstraintName("FK_WorkOrderModel_HeaderSaleOrderModel");
-
-                entity.HasOne(d => d.SOLine)
-                    .WithMany(p => p.WorkOrderModel1)
-                    .HasForeignKey(d => d.SOLineId)
-                    .HasConstraintName("FK_WorkOrderModel_DetailSaleOrderModel");
-            });
-
-            modelBuilder.Entity<WorkOrder_Mold_Mapping>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.WorkOrder_Mold_Mapping)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK_WorkOrder_Mold_Mapping_ProductModel");
-
-                entity.HasOne(d => d.WorkOrder)
-                    .WithMany(p => p.WorkOrder_Mold_Mapping)
-                    .HasForeignKey(d => d.WorkOrderId)
-                    .HasConstraintName("FK_WorkOrder_Mold_Mapping_WorkOrder_Mold_Mapping");
-            });
-
-            modelBuilder.Entity<WorkOrder_Product_Mapping>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.HasOne(d => d.WorkOrder)
-                    .WithMany(p => p.WorkOrder_Product_Mapping)
-                    .HasForeignKey(d => d.WorkOrderId)
-                    .HasConstraintName("FK_WorkOrder_Component_Mapping_WorkOrderModel");
-            });
-
-            modelBuilder.Entity<WorkOrder_Routing_Mapping>(entity =>
-            {
-                entity.HasKey(e => e.WorkOrder_Routing_Mapping_Id)
-                    .HasName("PK_WorkOrder_Routing_Mapping_1");
-
-                entity.Property(e => e.WorkOrder_Routing_Mapping_Id).ValueGeneratedNever();
-
-                entity.HasOne(d => d.WorkOrder)
-                    .WithMany(p => p.WorkOrder_Routing_Mapping)
-                    .HasForeignKey(d => d.WorkOrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WorkOrder_Routing_Mapping_WorkOrderModel");
             });
 
             modelBuilder.Entity<WorkShopModel>(entity =>

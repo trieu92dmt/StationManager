@@ -8,6 +8,7 @@ using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using NLog;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace IntegrationNS.Application.Commands.WorkOrder
 {
@@ -69,6 +71,33 @@ namespace IntegrationNS.Application.Commands.WorkOrder
         public string ReferenceOrder { get; set; }
         //Trạng thái
         public string SystemStatus { get; set; }
+
+        public List<DetallWorkOrderIntegration> DetallWorkOrderIntegrations { get; set; } = new List<DetallWorkOrderIntegration>();
+    }
+
+    public class DetallWorkOrderIntegration
+    {
+        public string WorkOrderItem { get; set; }             //Item LSX
+        public string ProductCode { get; set; }             //NVL
+        public decimal? TotalQuantiy { get; set; }             //Tổng số lượng
+        public decimal? RoutingScrapQuantity { get; set; }             //Số lượng phế liệu định tuyến
+        public decimal? ScrapQuantity { get; set; }             //Số lượng phế liệu
+        public decimal? GRQuantity { get; set; }             //??
+        public string Unit { get; set; }             //Đơn vị tính
+        public string UnloadingPoint { get; set; }             //Điểm dỡ hàng
+        public string SerialNumber { get; set; }             //Số serial
+        public DateTime? MRPArea { get; set; }             //??
+        public string ValuationType { get; set; }             //Loại định giá
+        public string ValuationCategory { get; set; }             //Danh mục định giá
+        public string Batch { get; set; }             //Số lô
+        public string InternalObject { get; set; }             //Đối tượng nội bộ
+        public DateTime? ActualStartDate { get; set; }             //Ngày bắt đầu thực tế
+        public DateTime? StartDate { get; set; }             //Ngày bắt đầu
+        public decimal? ConfirmedYieldQuantity { get; set; }             //Số lượng năng suất được xác nhận
+        public string DeletionFlag { get; set; }             //Cờ xóa
+        public string LongTextExists { get; set; }             //Văn bản dài tồn tại
+        public string ReferenceOrder { get; set; }             //
+        public string SystemStatus { get; set; }           //Trạng thái
 
     }
 
@@ -134,6 +163,41 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                             CreateTime = DateTime.Now,
                             Actived = true
                         });
+
+                        //Detail
+                        //var detailWOs = new List<DetailWorkOrderModel>();
+                        //foreach (var item in woIntegration.DetallWorkOrderIntegrations)
+                        //{
+                        //    if (materials.FirstOrDefault(x => x.ProductCode == item.Material) == null)
+                        //        throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
+
+                        //    detailPOs.Add(new PurchaseOrderDetailModel
+                        //    {
+                        //        PurchaseOrderDetailId = Guid.NewGuid(),
+                        //        PurchaseOrderId = purchaseOrder.PurchaseOrderId,
+                        //        POLine = item.PurchaseOrderItem,
+                        //        PoLinetInt = int.Parse(item.PurchaseOrderItem),
+                        //        ProductCode = item.Material,
+                        //        OrderQuantity = item.OrderQuantity,
+                        //        OpenQuantity = item.OpenQuantity,
+                        //        StorageLocation = item.StorageLocation,
+                        //        Batch = item.Batch,
+                        //        Unit = item.UoM,
+                        //        CreateTime = DateTime.Now,
+                        //        Actived = true,
+                        //        QuantityReceived = item.QuantityReceived,
+                        //        DeletionInd = item.DeletionInd,
+                        //        Deliver = item.Deliver,
+                        //        VehicleCode = item.VehicleCode,
+                        //        VehicleOwner = item.VehicleOwner,
+                        //        TransportUnit = item.TransportUnit,
+                        //        DeliveryCompleted = item.DeliveryCompleted,
+                        //        GrossWeight = item.GrossWeight,
+                        //        NetWeight = item.NetWeight,
+                        //        WeightUnit = item.WeightUnit
+                        //    });
+
+                        //}
                     }
                     else
                     {

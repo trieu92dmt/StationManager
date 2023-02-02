@@ -21,7 +21,6 @@ namespace ISD.Infrastructure.Models
             StockTransferRequestDetailModel = new HashSet<StockTransferRequestDetailModel>();
             TemplateAndGiftMemberAddressModel = new HashSet<TemplateAndGiftMemberAddressModel>();
             TransferDetailModel = new HashSet<TransferDetailModel>();
-            WorkOrder_Mold_Mapping = new HashSet<WorkOrder_Mold_Mapping>();
         }
 
         [Key]
@@ -160,7 +159,5 @@ namespace ISD.Infrastructure.Models
         public virtual ICollection<TemplateAndGiftMemberAddressModel> TemplateAndGiftMemberAddressModel { get; set; }
         [InverseProperty("Product")]
         public virtual ICollection<TransferDetailModel> TransferDetailModel { get; set; }
-        [InverseProperty("Product")]
-        public virtual ICollection<WorkOrder_Mold_Mapping> WorkOrder_Mold_Mapping { get; set; }
     }
 }

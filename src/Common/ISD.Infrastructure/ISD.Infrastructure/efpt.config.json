@@ -171,6 +171,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[DetailWorkOrderModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[DistributionChannelModel]",
          "ObjectType": 0
       },
@@ -831,22 +835,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[MESP2].[EquipmentCard_Equiment_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[EquipmentCard_LogModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[EquipmentCard_WorkOrder_Log_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[EquipmentCard_WorkOrder_Mapping]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[MESP2].[EquipmentCardModel]",
          "ObjectType": 0
       },
@@ -868,26 +856,6 @@
       },
       {
          "Name": "[MESP2].[StageTransferModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[WorkOrder_Mold_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[WorkOrder_Product_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[WorkOrder_Routing_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[WorkOrderCardModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MESP2].[WorkOrderModel]",
          "ObjectType": 0
       },
       {

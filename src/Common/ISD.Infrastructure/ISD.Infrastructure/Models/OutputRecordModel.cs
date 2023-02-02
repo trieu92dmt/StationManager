@@ -62,12 +62,6 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("StockId")]
         [InverseProperty("OutputRecordModel")]
         public virtual StockModel Stock { get; set; }
-        [ForeignKey("WorkOrderId")]
-        [InverseProperty("OutputRecordModel")]
-        public virtual WorkOrderModel1 WorkOrder { get; set; }
-        [ForeignKey("WorkOrderCardId")]
-        [InverseProperty("OutputRecordModel")]
-        public virtual WorkOrderCardModel WorkOrderCard { get; set; }
         [InverseProperty("OutputRecord")]
         public virtual ICollection<EmployeeRecordModel> EmployeeRecordModel { get; set; }
         [InverseProperty("OutputRecord")]

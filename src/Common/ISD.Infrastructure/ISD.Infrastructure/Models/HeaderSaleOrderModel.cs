@@ -14,7 +14,6 @@ namespace ISD.Infrastructure.Models
         public HeaderSaleOrderModel()
         {
             DetailSaleOrderModel = new HashSet<DetailSaleOrderModel>();
-            WorkOrderModel1 = new HashSet<WorkOrderModel1>();
         }
 
         [Key]
@@ -57,7 +56,5 @@ namespace ISD.Infrastructure.Models
 
         [InverseProperty("SaleOrderHeader")]
         public virtual ICollection<DetailSaleOrderModel> DetailSaleOrderModel { get; set; }
-        [InverseProperty("SO")]
-        public virtual ICollection<WorkOrderModel1> WorkOrderModel1 { get; set; }
     }
 }

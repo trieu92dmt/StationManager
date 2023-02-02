@@ -11,11 +11,6 @@ namespace ISD.Infrastructure.Models
     [Table("EquipmentModel", Schema = "MES")]
     public partial class EquipmentModel
     {
-        public EquipmentModel()
-        {
-            EquipmentCard_Equiment_Mapping = new HashSet<EquipmentCard_Equiment_Mapping>();
-        }
-
         [Key]
         public Guid EquipmentId { get; set; }
         public int EquipmentIntId { get; set; }
@@ -51,7 +46,5 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("WorkShopId")]
         [InverseProperty("EquipmentModel")]
         public virtual WorkShopModel WorkShop { get; set; }
-        [InverseProperty("Equipment")]
-        public virtual ICollection<EquipmentCard_Equiment_Mapping> EquipmentCard_Equiment_Mapping { get; set; }
     }
 }

@@ -40,7 +40,7 @@ namespace MES.Application.Commands.MES
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
-        public IFormFile Image { get; set; }
+        public string Image { get; set; }
         //Trạng thái
         public string Status { get; set; }
         public Guid? PoDetailId { get; set; }
@@ -92,7 +92,7 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
-                var img = await _utilitiesService.UploadFile(x.Image, "NKMH");
+                //var img = await _utilitiesService.UploadFile(x.Image, "NKMH");
 
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)
@@ -135,7 +135,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     Description = x.Description,
                     //Hình ảnh
-                    Image = img,
+                    Img = string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image) : null,
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân
@@ -152,7 +152,7 @@ namespace MES.Application.Commands.MES
                     //Start Time - End Time
                     StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSs.FirstOrDefault(w => w.Scale.ScaleCode == x.WeightHeadCode).StartTime : DateTime.Now,
                     EndTime = DateTime.Now,
-
+                    Image = x.Image
                 });
             }
 

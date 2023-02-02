@@ -7,9 +7,11 @@ using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,7 +61,6 @@ namespace MES.Application.Commands.MES
         public decimal? InputWeight { get; set; }
         //Số cân đầu ra
         public decimal? OutputWeight { get; set; }
-        //Hình ảnh
         //Số phiếu cân
         public string WeightVote { get; set; }
         //DocumentDate
@@ -77,7 +78,7 @@ namespace MES.Application.Commands.MES
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
-        //public IFormFile Image { get; set; }
+        public IFormFile Image { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
     }
@@ -88,15 +89,17 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<ProductModel> _materialRepo;
+        private readonly IRepository<DimDateModel> _dimDateRepo;
 
         public UpdateNKMHCommandHandler(IUnitOfWork unitOfWork, IRepository<GoodsReceiptModel> nkmhRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo,
-                                        IRepository<StorageLocationModel> slocRepo, IRepository<ProductModel> materialRepo)
+                                        IRepository<StorageLocationModel> slocRepo, IRepository<ProductModel> materialRepo, IRepository<DimDateModel> dimDateRepo)
         {
             _unitOfWork = unitOfWork;
             _nkmhRepo = nkmhRepo;
             _poDetailRepo = poDetailRepo;
             _slocRepo = slocRepo;
             _materialRepo = materialRepo;
+            _dimDateRepo = dimDateRepo;
         }
 
         public async Task<ApiResponse> Handle(UpdateNKMHCommand request, CancellationToken cancellationToken)
@@ -112,6 +115,9 @@ namespace MES.Application.Commands.MES
 
             //Data sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Data DimDate
+            var dimDate = _dimDateRepo.GetQuery().AsNoTracking();
 
             //Check confirm quantity
             //Lấy ra các phiếu cân cần update
@@ -159,9 +165,9 @@ namespace MES.Application.Commands.MES
 
                 //Lấy ra podetail
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
-                
+
                 //Lưu ảnh
-                //if (item.I)
+                //if (item.Image)
 
                 //Chưa có thì tạo mới
                 if (nkmh == null)
@@ -191,10 +197,11 @@ namespace MES.Application.Commands.MES
                         SlocCode = item.StorageLocation,
                         SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName,
                         DocumentDate = item.DocumentDate,
-                        DateKey = int.Parse($"{item.DocumentDate.Value.Year}{item.DocumentDate.Value.Month}{item.DocumentDate.Value.Date}"),
+                        DateKey = dimDate.FirstOrDefault(x => x.Date.Value.Date == item.DocumentDate.Value.Date && x.Date.Value.Month == item.DocumentDate.Value.Month && x.Date.Value.Year == item.DocumentDate.Value.Year).DateKey,
                         Batch = item.Batch,
                         CreateBy = item.CreateBy,
                         CreateTime = item.CreateOn,
+                        LastEditBy = item.ChangeBy,
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }

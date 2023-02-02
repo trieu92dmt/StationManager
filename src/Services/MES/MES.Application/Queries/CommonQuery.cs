@@ -296,7 +296,7 @@ namespace MES.Application.Queries
                                     {
                                         Key = x.ScaleCode,
                                         Value = x.ScaleName
-                                    }).Take(10).AsNoTracking().ToListAsync();
+                                    }).AsNoTracking().ToListAsync();
 
             return response;
         }

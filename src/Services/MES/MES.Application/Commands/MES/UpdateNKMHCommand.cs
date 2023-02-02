@@ -5,6 +5,7 @@ using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace MES.Application.Commands.MES
         //Số phương tiện
         public string VehicleCode { get; set; }
         //Số lần cân
-        public int QuantityWeight { get; set; }
+        public int? QuantityWeight { get; set; }
         //Số xe tải
         public int? TruckQty { get; set; }
         //Số cân đầu vào
@@ -76,6 +77,7 @@ namespace MES.Application.Commands.MES
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
+        //public IFormFile Image { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
     }
@@ -144,6 +146,9 @@ namespace MES.Application.Commands.MES
 
                 //Lấy ra podetail
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
+                
+                //Lưu ảnh
+                //if (item.I)
 
                 //Chưa có thì tạo mới
                 if (nkmh == null)

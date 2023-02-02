@@ -120,21 +120,34 @@ namespace MES.Application.Commands.MES
                                                  {
                                                      WeightVote = x.Key,
                                                      NKMHIds = x.Value.Select(v => v.NKMHId).ToList(),
-                                                     ConfirmQty = x.Value.Sum(x => x.ConfirmQty)
+                                                     ConfirmQty = x.Value.Sum(x => x.ConfirmQty),
+                                                     QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackaging)
                                                  }).ToList();
-            //Duyệt phiếu cân kiểm tra confirm quantity
+            //Duyệt phiếu cân kiểm tra confirm quantity và SL kèm bao bì
             foreach (var item in weightVotes)
             {
                 //Tính tổng confirm quantity ban đầu
-                var sum1 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote).Sum(x => x.ConfirmQty);
+                var sumConfirmQty1 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote).Sum(x => x.ConfirmQty);
                 //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
-                var sum2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.ConfirmQty);
+                var sumConfirmQty2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.ConfirmQty);
                 //So sánh
-                if (item.ConfirmQty + sum2 > sum1)
+                if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
                     return new ApiResponse
                     {
                         IsSuccess = false,
                         Message = "Confirm Quantity vượt quá giới hạn"
+                    };
+
+                //Tính tổng SL kèm bao bì
+                var sumQtyWithPackage1 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote).Sum(x => x.ConfirmQty);
+                //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
+                var sumQtyWithPackage2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.ConfirmQty);
+                //So sánh
+                if (item.ConfirmQty + sumQtyWithPackage2 > sumQtyWithPackage1)
+                    return new ApiResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Số lượng kèm bao bì vượt quá giới hạn"
                     };
             }
 

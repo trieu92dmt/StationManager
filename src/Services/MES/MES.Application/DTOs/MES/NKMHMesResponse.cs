@@ -23,6 +23,7 @@
         public string VehicleCode { get; set; }
         public decimal? OrderQuantity { get; set; }
         public decimal? OpenQuantity { get; set; }
+        public decimal? DeliveredQuantity { get; set; }
         public string StorageLocation { get; set; }
         public string Unit { get; set; }
         public string WeightHeadCode { get; set; }

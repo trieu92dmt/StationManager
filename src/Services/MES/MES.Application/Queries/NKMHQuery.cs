@@ -347,6 +347,7 @@ namespace MES.Application.Queries
                 //Total Quantity
                 OrderQuantity = x.OrderQuantity,
                 OpenQuantity = x.OpenQuantity,
+                DeliveredQuantity = x.QuantityReceived,
                 //Số lần cân
                 //QuantityWeight = 
                 //Batch

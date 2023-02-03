@@ -2,6 +2,7 @@
 using IntegrationNS.Application.DTOs;
 using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
+using ISD.Core.Models;
 using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
@@ -16,6 +17,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -82,52 +84,30 @@ namespace IntegrationNS.Application.Commands.WorkOrder
 
     public class DetallWorkOrderIntegration
     {
-        public string WorkOrderItem { get; set; }                  //Item LSX
-        public string ProductCode { get; set; }                  //NVL
-        public decimal? TotalQuantiy { get; set; }                  //Tổng số lượng
-        public decimal? RoutingScrapQuantity { get; set; }                  //Số lượng phế liệu định tuyến
-        public decimal? ScrapQuantity { get; set; }                  //Số lượng phế liệu
-        public decimal? GRQuantity { get; set; }                  //SL đã post giao dịch
-        public string Unit { get; set; }                  //Đơn vị tính
-        public string UnloadingPoint { get; set; }                  //Điểm dỡ hàng
-        public string Batch { get; set; }                  //Số lô
-        public DateTime? BasicFinishDate { get; set; }                  //Basic finish date
-        public DateTime? ScheduledFinishDate { get; set; }                  //Scheduled finish date
-        public string DeliveryComplete { get; set; }                  //Delivery Completed
-        public DateTime? PlanOpenDate { get; set; }                  //Plan Open Date
-        public DateTime? CommitmentDate { get; set; }                  //Commitment Date
-        public string StockType { get; set; }                  //Stock Type
-        public string KanbanIndicator { get; set; }                  //Kanban Indicator
-        public string SalesOrder { get; set; }                  //Sales Order
-        public string SOSchedule { get; set; }                  //Sales Order Schedule
-        public string SalesOrderItem { get; set; }                  //Sales Order Item
-        public string ValidFrom { get; set; }                  //Valid From
-        public string SoldToParty { get; set; }                  //Sold To Party
-        public string TypeAvailCheck { get; set; }                  //Type Avail Check
-        public string SpecStkValuation { get; set; }                  //Spec.stk valuation
-        public string Consumption { get; set; }                  //Consumption
-        public string StorageLocation { get; set; }                  //Storage Location
-        public DateTime? ActualDeliveryDate { get; set; }                  //Actual Delivery Date
-        public DateTime? PldOrderDelDate { get; set; }                  //Pld. order del. date
-        public string BaseUoM { get; set; }                  //Base Unit of Measure
-        public string Name { get; set; }                  //Name Name
-        public string ChangeIndicator { get; set; }                  //Change Indicator
-        public string PlanOrder { get; set; }                  //Plan Order
-        public string SpecialProcurement { get; set; }                  //Special Procurement
-        public string PlanningPlant { get; set; }                  //Planning Plant
-        public string BOM { get; set; }                  // BOM
-        public string SpecialStock { get; set; }                  //Special Stock
-        public DateTime? PlanStartDate { get; set; }                  //Planed Start Date
-        public string ProductionVersion { get; set; }                  //Production Version
-        public decimal? CommitedQty { get; set; }                  //Commited Qty
-        public decimal? GRProcessingTime { get; set; }                  //GRProcessing Time
-        public string GoodsRecipient { get; set; }                  //Goods Recipient
-        public string GoodsReceiptIndicator { get; set; }                  //Goods Recipient Indicator
-        public string DeletionFlag { get; set; }                  //Cờ xóa
-        public decimal? AllocatedStockQty { get; set; }                  //Allocated Stock Quantity
-        public string Customer { get; set; }                  //Customer
-        public string NumOfOriginalOrder { get; set; }                  //Number of original Order
-        public decimal? ConfirmQty { get; set; }               //Confirm Qty
+        public string WorkOrderItem { get; set; }      //Item LSX
+        public string ProductCode { get; set; }      //NVL
+        public DateTime? RequirementDate { get; set; }      //
+        public decimal? RequirementQuantiy { get; set; }      //
+        public decimal? QuantityWithdrawn { get; set; }      //
+        public string BaseUnit1 { get; set; }      //EINHEIT
+        public string BaseUnit2 { get; set; }      //MEINS
+        public string Batch { get; set; }      //Số lô
+        public string Activity { get; set; }      //
+        public string ReservationItem { get; set; }      //
+        public decimal? OpenQuantity { get; set; }      //
+        public decimal? Shortage { get; set; }      //
+        public string StorageLocation { get; set; }      //Storage Location
+        public string IconMessType { get; set; }      //
+        public string SystemStatus { get; set; }      //Trạng thái
+        public decimal? ConfirmedQty { get; set; }      //Confirm Qty
+        public decimal? QuantityFixed1 { get; set; }      //DUM_FMENG
+        public string PurchasingDoc { get; set; }      //
+        public string PurchasingDocItem { get; set; }      //
+        public string Supplier { get; set; }      //
+        public string MovementType { get; set; }      //
+        public decimal? QuantityFixed2 { get; set; }      //FMENG
+        public string FinalIssue { get; set; }                  //
+
 
     }
 
@@ -207,50 +187,28 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 WorkOrderId = workorder.WorkOrderId,
                                 WorkOrderItem = item.WorkOrderItem,
                                 ProductCode = item.ProductCode,
-                                TotalQuantiy = item.TotalQuantiy,
-                                RoutingScrapQuantity = item.RoutingScrapQuantity,
-                                ScrapQuantity = item.ScrapQuantity,
-                                GRQuantity = item.GRQuantity,
-                                Unit = item.Unit,
-                                UnloadingPoint = item.UnloadingPoint,
+                                RequirementDate = item.RequirementDate,
+                                RequirementQuantiy = item.RequirementQuantiy,
+                                QuantityWithdrawn = item.QuantityWithdrawn,
+                                BaseUnit1 = item.BaseUnit1,
+                                BaseUnit2 = item.BaseUnit2,
                                 Batch = item.Batch,
-                                BasicFinishDate = item.BasicFinishDate,
-                                ScheduledFinishDate = item.ScheduledFinishDate,
-                                DeliveryComplete = item.DeliveryComplete,
-                                PlanOpenDate = item.PlanOpenDate,
-                                CommitmentDate = item.CommitmentDate,
-                                StockType = item.StockType,
-                                KanbanIndicator = item.KanbanIndicator,
-                                SalesOrder = item.SalesOrder,
-                                SOSchedule = item.SOSchedule,
-                                SalesOrderItem = item.SalesOrderItem,
-                                ValidFrom = item.ValidFrom,
-                                SoldToParty = item.SoldToParty,
-                                TypeAvailCheck = item.TypeAvailCheck,
-                                SpecStkValuation = item.SpecStkValuation,
-                                Consumption = item.Consumption,
+                                Activity = item.Activity,
+                                ReservationItem = item.ReservationItem,
+                                OpenQuantity = item.OpenQuantity,
+                                Shortage = item.Shortage,
                                 StorageLocation = item.StorageLocation,
-                                ActualDeliveryDate = item.ActualDeliveryDate,
-                                PldOrderDelDate = item.PldOrderDelDate,
-                                BaseUoM = item.BaseUoM,
-                                Name = item.Name,
-                                ChangeIndicator = item.ChangeIndicator,
-                                PlanOrder = item.PlanOrder,
-                                SpecialProcurement = item.SpecialProcurement,
-                                PlanningPlant = item.PlanningPlant,
-                                BOM = item.BOM,
-                                SpecialStock = item.SpecialStock,
-                                PlanStartDate = item.PlanStartDate,
-                                ProductionVersion = item.ProductionVersion,
-                                CommitedQty = item.CommitedQty,
-                                GRProcessingTime = item.GRProcessingTime,
-                                GoodsRecipient = item.GoodsRecipient,
-                                GoodsReceiptIndicator = item.GoodsReceiptIndicator,
-                                DeletionFlag = item.DeletionFlag,
-                                AllocatedStockQty = item.AllocatedStockQty,
-                                Customer = item.Customer,
-                                NumOfOriginalOrder = item.NumOfOriginalOrder,
-                                ConfirmQty = item.ConfirmQty,
+                                IconMessType = item.IconMessType,
+                                SystemStatus = item.SystemStatus,
+                                ConfirmedQty = item.ConfirmedQty,
+                                QuantityFixed1 = item.QuantityFixed1,
+                                PurchasingDoc = item.PurchasingDoc,
+                                PurchasingDocItem = item.PurchasingDocItem,
+                                Supplier = item.Supplier,
+                                MovementType = item.MovementType,
+                                QuantityFixed2 = item.QuantityFixed2,
+                                FinalIssue = item.FinalIssue,
+
 
                                 CreateTime = DateTime.Now,
                                 Actived = true,
@@ -302,50 +260,27 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                     WorkOrderId = workorder.WorkOrderId,
                                     WorkOrderItem = item.WorkOrderItem,
                                     ProductCode = item.ProductCode,
-                                    TotalQuantiy = item.TotalQuantiy,
-                                    RoutingScrapQuantity = item.RoutingScrapQuantity,
-                                    ScrapQuantity = item.ScrapQuantity,
-                                    GRQuantity = item.GRQuantity,
-                                    Unit = item.Unit,
-                                    UnloadingPoint = item.UnloadingPoint,
+                                    RequirementDate = item.RequirementDate,
+                                    RequirementQuantiy = item.RequirementQuantiy,
+                                    QuantityWithdrawn = item.QuantityWithdrawn,
+                                    BaseUnit1 = item.BaseUnit1,
+                                    BaseUnit2 = item.BaseUnit2,
                                     Batch = item.Batch,
-                                    BasicFinishDate = item.BasicFinishDate,
-                                    ScheduledFinishDate = item.ScheduledFinishDate,
-                                    DeliveryComplete = item.DeliveryComplete,
-                                    PlanOpenDate = item.PlanOpenDate,
-                                    CommitmentDate = item.CommitmentDate,
-                                    StockType = item.StockType,
-                                    KanbanIndicator = item.KanbanIndicator,
-                                    SalesOrder = item.SalesOrder,
-                                    SOSchedule = item.SOSchedule,
-                                    SalesOrderItem = item.SalesOrderItem,
-                                    ValidFrom = item.ValidFrom,
-                                    SoldToParty = item.SoldToParty,
-                                    TypeAvailCheck = item.TypeAvailCheck,
-                                    SpecStkValuation = item.SpecStkValuation,
-                                    Consumption = item.Consumption,
+                                    Activity = item.Activity,
+                                    ReservationItem = item.ReservationItem,
+                                    OpenQuantity = item.OpenQuantity,
+                                    Shortage = item.Shortage,
                                     StorageLocation = item.StorageLocation,
-                                    ActualDeliveryDate = item.ActualDeliveryDate,
-                                    PldOrderDelDate = item.PldOrderDelDate,
-                                    BaseUoM = item.BaseUoM,
-                                    Name = item.Name,
-                                    ChangeIndicator = item.ChangeIndicator,
-                                    PlanOrder = item.PlanOrder,
-                                    SpecialProcurement = item.SpecialProcurement,
-                                    PlanningPlant = item.PlanningPlant,
-                                    BOM = item.BOM,
-                                    SpecialStock = item.SpecialStock,
-                                    PlanStartDate = item.PlanStartDate,
-                                    ProductionVersion = item.ProductionVersion,
-                                    CommitedQty = item.CommitedQty,
-                                    GRProcessingTime = item.GRProcessingTime,
-                                    GoodsRecipient = item.GoodsRecipient,
-                                    GoodsReceiptIndicator = item.GoodsReceiptIndicator,
-                                    DeletionFlag = item.DeletionFlag,
-                                    AllocatedStockQty = item.AllocatedStockQty,
-                                    Customer = item.Customer,
-                                    NumOfOriginalOrder = item.NumOfOriginalOrder,
-                                    ConfirmQty = item.ConfirmQty,
+                                    IconMessType = item.IconMessType,
+                                    SystemStatus = item.SystemStatus,
+                                    ConfirmedQty = item.ConfirmedQty,
+                                    QuantityFixed1 = item.QuantityFixed1,
+                                    PurchasingDoc = item.PurchasingDoc,
+                                    PurchasingDocItem = item.PurchasingDocItem,
+                                    Supplier = item.Supplier,
+                                    MovementType = item.MovementType,
+                                    QuantityFixed2 = item.QuantityFixed2,
+                                    FinalIssue = item.FinalIssue,
                                     CreateTime = DateTime.Now,
                                     Actived = true,
                                 });
@@ -353,50 +288,28 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                             else
                             {
                                 detailWO.ProductCode = item.ProductCode;
-                                detailWO.TotalQuantiy = item.TotalQuantiy;
-                                detailWO.RoutingScrapQuantity = item.RoutingScrapQuantity;
-                                detailWO.ScrapQuantity = item.ScrapQuantity;
-                                detailWO.GRQuantity = item.GRQuantity;
-                                detailWO.Unit = item.Unit;
-                                detailWO.UnloadingPoint = item.UnloadingPoint;
+                                detailWO.RequirementDate = item.RequirementDate;
+                                detailWO.RequirementQuantiy = item.RequirementQuantiy;
+                                detailWO.QuantityWithdrawn = item.QuantityWithdrawn;
+                                detailWO.BaseUnit1 = item.BaseUnit1;
+                                detailWO.BaseUnit2 = item.BaseUnit2;
                                 detailWO.Batch = item.Batch;
-                                detailWO.BasicFinishDate = item.BasicFinishDate;
-                                detailWO.ScheduledFinishDate = item.ScheduledFinishDate;
-                                detailWO.DeliveryComplete = item.DeliveryComplete;
-                                detailWO.PlanOpenDate = item.PlanOpenDate;
-                                detailWO.CommitmentDate = item.CommitmentDate;
-                                detailWO.StockType = item.StockType;
-                                detailWO.KanbanIndicator = item.KanbanIndicator;
-                                detailWO.SalesOrder = item.SalesOrder;
-                                detailWO.SOSchedule = item.SOSchedule;
-                                detailWO.SalesOrderItem = item.SalesOrderItem;
-                                detailWO.ValidFrom = item.ValidFrom;
-                                detailWO.SoldToParty = item.SoldToParty;
-                                detailWO.TypeAvailCheck = item.TypeAvailCheck;
-                                detailWO.SpecStkValuation = item.SpecStkValuation;
-                                detailWO.Consumption = item.Consumption;
+                                detailWO.Activity = item.Activity;
+                                detailWO.ReservationItem = item.ReservationItem;
+                                detailWO.OpenQuantity = item.OpenQuantity;
+                                detailWO.Shortage = item.Shortage;
                                 detailWO.StorageLocation = item.StorageLocation;
-                                detailWO.ActualDeliveryDate = item.ActualDeliveryDate;
-                                detailWO.PldOrderDelDate = item.PldOrderDelDate;
-                                detailWO.BaseUoM = item.BaseUoM;
-                                detailWO.Name = item.Name;
-                                detailWO.ChangeIndicator = item.ChangeIndicator;
-                                detailWO.PlanOrder = item.PlanOrder;
-                                detailWO.SpecialProcurement = item.SpecialProcurement;
-                                detailWO.PlanningPlant = item.PlanningPlant;
-                                detailWO.BOM = item.BOM;
-                                detailWO.SpecialStock = item.SpecialStock;
-                                detailWO.PlanStartDate = item.PlanStartDate;
-                                detailWO.ProductionVersion = item.ProductionVersion;
-                                detailWO.CommitedQty = item.CommitedQty;
-                                detailWO.GRProcessingTime = item.GRProcessingTime;
-                                detailWO.GoodsRecipient = item.GoodsRecipient;
-                                detailWO.GoodsReceiptIndicator = item.GoodsReceiptIndicator;
-                                detailWO.DeletionFlag = item.DeletionFlag;
-                                detailWO.AllocatedStockQty = item.AllocatedStockQty;
-                                detailWO.Customer = item.Customer;
-                                detailWO.NumOfOriginalOrder = item.NumOfOriginalOrder;
-                                detailWO.ConfirmQty = item.ConfirmQty;
+                                detailWO.IconMessType = item.IconMessType;
+                                detailWO.SystemStatus = item.SystemStatus;
+                                detailWO.ConfirmedQty = item.ConfirmedQty;
+                                detailWO.QuantityFixed1 = item.QuantityFixed1;
+                                detailWO.PurchasingDoc = item.PurchasingDoc;
+                                detailWO.PurchasingDocItem = item.PurchasingDocItem;
+                                detailWO.Supplier = item.Supplier;
+                                detailWO.MovementType = item.MovementType;
+                                detailWO.QuantityFixed2 = item.QuantityFixed2;
+                                detailWO.FinalIssue = item.FinalIssue;
+
 
                                 detailWO.LastEditTime = DateTime.Now;
                             }

@@ -18,96 +18,48 @@ namespace ISD.Infrastructure.Models
         public string WorkOrderItem { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? RequirementDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantiy { get; set; }
+        public decimal? RequirementQuantiy { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? RoutingScrapQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? ScrapQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? GRQuantity { get; set; }
+        public decimal? QuantityWithdrawn { get; set; }
         [StringLength(50)]
-        public string Unit { get; set; }
+        public string BaseUnit1 { get; set; }
         [StringLength(50)]
-        public string UnloadingPoint { get; set; }
+        public string BaseUnit2 { get; set; }
         [StringLength(50)]
         public string Batch { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? BasicFinishDate { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? ScheduledFinishDate { get; set; }
         [StringLength(50)]
-        public string DeliveryComplete { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? PlanOpenDate { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? CommitmentDate { get; set; }
+        public string Activity { get; set; }
         [StringLength(50)]
-        public string StockType { get; set; }
-        [StringLength(50)]
-        public string CostEstimate { get; set; }
-        [StringLength(50)]
-        public string KanbanIndicator { get; set; }
-        [StringLength(50)]
-        public string SalesOrder { get; set; }
-        [StringLength(50)]
-        public string SOSchedule { get; set; }
-        [StringLength(50)]
-        public string SalesOrderItem { get; set; }
-        [StringLength(50)]
-        public string ValidFrom { get; set; }
-        [StringLength(50)]
-        public string SoldToParty { get; set; }
-        [StringLength(50)]
-        public string TypeAvailCheck { get; set; }
-        [StringLength(50)]
-        public string SpecStkValuation { get; set; }
-        [StringLength(50)]
-        public string Consumption { get; set; }
+        public string ReservationItem { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OpenQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? Shortage { get; set; }
         [StringLength(50)]
         public string StorageLocation { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? ActualDeliveryDate { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? PldOrderDelDate { get; set; }
         [StringLength(50)]
-        public string BaseUoM { get; set; }
-        [StringLength(200)]
-        public string Name { get; set; }
+        public string IconMessType { get; set; }
         [StringLength(50)]
-        public string ChangeIndicator { get; set; }
-        [StringLength(50)]
-        public string PlanOrder { get; set; }
-        [StringLength(50)]
-        public string SpecialProcurement { get; set; }
-        [StringLength(50)]
-        public string PlanningPlant { get; set; }
-        [StringLength(50)]
-        public string BOM { get; set; }
-        [StringLength(50)]
-        public string SpecialStock { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? PlanStartDate { get; set; }
-        [StringLength(50)]
-        public string ProductionVersion { get; set; }
+        public string SystemStatus { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? CommitedQty { get; set; }
+        public decimal? ConfirmedQty { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? GRProcessingTime { get; set; }
+        public decimal? QuantityFixed1 { get; set; }
         [StringLength(50)]
-        public string GoodsRecipient { get; set; }
+        public string PurchasingDoc { get; set; }
         [StringLength(50)]
-        public string GoodsReceiptIndicator { get; set; }
+        public string PurchasingDocItem { get; set; }
         [StringLength(50)]
-        public string DeletionFlag { get; set; }
+        public string Supplier { get; set; }
+        [StringLength(50)]
+        public string MovementType { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? AllocatedStockQty { get; set; }
+        public decimal? QuantityFixed2 { get; set; }
         [StringLength(50)]
-        public string Customer { get; set; }
-        [StringLength(50)]
-        public string NumOfOriginalOrder { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? ConfirmQty { get; set; }
+        public string FinalIssue { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         public Guid? CreateBy { get; set; }

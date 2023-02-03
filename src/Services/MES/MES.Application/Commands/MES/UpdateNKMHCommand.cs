@@ -108,6 +108,12 @@ namespace MES.Application.Commands.MES
 
         public async Task<ApiResponse> Handle(UpdateNKMHCommand request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse
+            {
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nhập kho mua hàng")
+            };
+
             //Data nhập kho mua hàng
             var nkmhs = _nkmhRepo.GetQuery();
 
@@ -142,11 +148,10 @@ namespace MES.Application.Commands.MES
                 var sumConfirmQty2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.ConfirmQty);
                 //So sánh
                 if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
-                    return new ApiResponse
-                    {
-                        IsSuccess = false,
-                        Message = "Confirm Quantity vượt quá giới hạn"
-                    };
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Confirm Quantity ban đầu là {sumConfirmQty1}";
+                }
 
                 //Tính tổng SL kèm bao bì
                 var sumQtyWithPackage1 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
@@ -154,11 +159,10 @@ namespace MES.Application.Commands.MES
                 var sumQtyWithPackage2 = nkmhs.Where(x => x.WeitghtVote == item.WeightVote && !item.NKMHIds.Contains(x.GoodsReceiptId)).Sum(x => x.QuantityWithPackaging);
                 //So sánh
                 if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
-                    return new ApiResponse
-                    {
-                        IsSuccess = false,
-                        Message = "Số lượng kèm bao bì vượt quá giới hạn"
-                    };
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Vui lòng xem lại số lượng kèm bao bì";
+                }    
             }
 
 
@@ -248,11 +252,7 @@ namespace MES.Application.Commands.MES
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new ApiResponse
-            {
-                IsSuccess = true,
-                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nkmh")
-            };
+            return response;
         }
     }
 }

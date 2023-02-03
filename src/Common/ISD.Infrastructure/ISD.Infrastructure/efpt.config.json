@@ -187,6 +187,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[GoodsReturnModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[MaterialTypeModel]",
          "ObjectType": 0
       },

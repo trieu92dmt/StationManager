@@ -13,7 +13,8 @@ namespace MES.Application.Commands.OutboundDelivery
         public string SalesOrderTo { get; set; }
         public string OutboundDeliveryFrom { get; set; }
         public string OutboundDeliveryTo { get; set; }
-        public List<string> ShipToParty { get; set; } = new List<string>();
+        public string ShipToPartyFrom { get; set; }
+        public string ShipToPartyTo { get; set; }
         public string MaterialFrom { get; set; }
         public string MaterialTo { get; set; }
         public DateTime? DocumentDateFrom { get; set; }

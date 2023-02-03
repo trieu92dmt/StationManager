@@ -128,6 +128,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<FunctionModel> FunctionModel { get; set; }
         public virtual DbSet<GH_NotificationModel> GH_NotificationModel { get; set; }
         public virtual DbSet<GoodsReceiptModel> GoodsReceiptModel { get; set; }
+        public virtual DbSet<GoodsReturnModel> GoodsReturnModel { get; set; }
         public virtual DbSet<HangTagModel> HangTagModel { get; set; }
         public virtual DbSet<Hash> Hash { get; set; }
         public virtual DbSet<HeaderSaleOrderModel> HeaderSaleOrderModel { get; set; }
@@ -1265,6 +1266,11 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.GoodsReceiptModel)
                     .HasForeignKey(d => d.PurchaseOrderDetailId)
                     .HasConstraintName("FK_GoodsReceiptModel_PurchaseOrderDetailModel");
+            });
+
+            modelBuilder.Entity<GoodsReturnModel>(entity =>
+            {
+                entity.Property(e => e.GoodsReturnId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<HangTagModel>(entity =>

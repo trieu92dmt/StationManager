@@ -66,8 +66,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
         public string OrderCategory { get; set; }
         //Ngày bắt đầu thực tế
         public DateTime? ActualStartDate { get; set; }
-        //Ngày bắt đầu
-        public DateTime? StartDate { get; set; }
         //Số lượng năng suất được xác nhận
         public decimal? ConfirmedYieldQuantity { get; set; }
         //Cờ xóa
@@ -99,7 +97,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
         public DateTime? PlanOpenDate { get; set; }                  //Plan Open Date
         public DateTime? CommitmentDate { get; set; }                  //Commitment Date
         public string StockType { get; set; }                  //Stock Type
-        public string CostEstimate { get; set; }                  //Cost Estimate Number
         public string KanbanIndicator { get; set; }                  //Kanban Indicator
         public string SalesOrder { get; set; }                  //Sales Order
         public string SOSchedule { get; set; }                  //Sales Order Schedule
@@ -187,7 +184,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                             SalesOrderItem = woIntegration.SalesOrderItem,
                             OrderCategory = woIntegration.OrderCategory,
                             ActualStartDate = woIntegration.ActualStartDate,
-                            StartDate = woIntegration.StartDate,
                             ConfirmedYieldQuantity = woIntegration.ConfirmedYieldQuantity,
                             DeletionFlag = woIntegration.DeletionFlag,
                             LongTextExists = woIntegration.LongTextExists,
@@ -224,7 +220,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 PlanOpenDate = item.PlanOpenDate,
                                 CommitmentDate = item.CommitmentDate,
                                 StockType = item.StockType,
-                                CostEstimate = item.CostEstimate,
                                 KanbanIndicator = item.KanbanIndicator,
                                 SalesOrder = item.SalesOrder,
                                 SOSchedule = item.SOSchedule,
@@ -284,7 +279,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                         workorder.SalesOrderItem = woIntegration.SalesOrderItem;
                         workorder.OrderCategory = woIntegration.OrderCategory;
                         workorder.ActualStartDate = woIntegration.ActualStartDate;
-                        workorder.StartDate = woIntegration.StartDate;
                         workorder.ConfirmedYieldQuantity = woIntegration.ConfirmedYieldQuantity;
                         workorder.DeletionFlag = woIntegration.DeletionFlag;
                         workorder.LongTextExists = woIntegration.LongTextExists;
@@ -321,7 +315,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                     PlanOpenDate = item.PlanOpenDate,
                                     CommitmentDate = item.CommitmentDate,
                                     StockType = item.StockType,
-                                    CostEstimate = item.CostEstimate,
                                     KanbanIndicator = item.KanbanIndicator,
                                     SalesOrder = item.SalesOrder,
                                     SOSchedule = item.SOSchedule,
@@ -373,7 +366,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 detailWO.PlanOpenDate = item.PlanOpenDate;
                                 detailWO.CommitmentDate = item.CommitmentDate;
                                 detailWO.StockType = item.StockType;
-                                detailWO.CostEstimate = item.CostEstimate;
                                 detailWO.KanbanIndicator = item.KanbanIndicator;
                                 detailWO.SalesOrder = item.SalesOrder;
                                 detailWO.SOSchedule = item.SOSchedule;

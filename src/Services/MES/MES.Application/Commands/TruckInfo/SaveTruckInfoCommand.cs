@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using ISD.Core.Extensions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
@@ -55,7 +56,9 @@ namespace MES.Application.Commands.TruckInfo
                     PlantCode = item.PlantCode,
                     TruckNumber = item.TruckNumber,
                     Driver = item.Driver,
-                    InputWeight = item.InputWeight
+                    InputWeight = item.InputWeight,
+                    CreateTime = DateTime.Now,
+                    CreateBy = string.IsNullOrEmpty(TokenExtensions.GetUserId()) ? null : Guid.Parse(TokenExtensions.GetUserId())
                 });
             }
 

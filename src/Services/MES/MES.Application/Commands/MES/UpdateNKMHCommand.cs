@@ -195,7 +195,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Img = !string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image) : null,
+                        Img = !string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1)) : null,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -234,7 +234,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Img = !string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image) : null;
+                    nkmh.Img = !string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1)) : null;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

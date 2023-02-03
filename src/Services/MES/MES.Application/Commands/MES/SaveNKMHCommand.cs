@@ -59,12 +59,10 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
-        private readonly IUtilitiesService _utilitiesService;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
-                                      IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                      IUtilitiesService utilitiesService)
+                                      IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
@@ -73,7 +71,6 @@ namespace MES.Application.Commands.MES
             _prdRepo = prdRepo;
             _scaleRepo = scaleRepo;
             _weightSsRepo = weightSsRepo;
-            _utilitiesService = utilitiesService;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -135,7 +132,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     Description = x.Description,
                     //Hình ảnh
-                    Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image) : null,
+                    Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân

@@ -167,9 +167,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-sloc")]
-        public async Task<IActionResult> GetListSloc(string keyword)
+        public async Task<IActionResult> GetListSloc(string keyword, string plant)
         {
-            var dropdownList = await _commonQuery.GetDropdownSloc(keyword);
+            var dropdownList = await _commonQuery.GetDropdownSloc(keyword, plant);
             return Ok(new ApiSuccessResponse<List<Common3Response>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sloc") });
         }
         #endregion

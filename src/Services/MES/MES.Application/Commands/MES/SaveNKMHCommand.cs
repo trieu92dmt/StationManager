@@ -89,7 +89,6 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
-                //var img = await _utilitiesService.UploadFile(x.Image, "NKMH");
 
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)

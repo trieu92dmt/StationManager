@@ -31,31 +31,83 @@ namespace ISD.Infrastructure.Models
         [StringLength(50)]
         public string UnloadingPoint { get; set; }
         [StringLength(50)]
-        public string SerialNumber { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? MRPArea { get; set; }
-        [StringLength(50)]
-        public string ValuationType { get; set; }
-        [StringLength(50)]
-        public string ValuationCategory { get; set; }
-        [StringLength(50)]
         public string Batch { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? BasicFinishDate { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? ScheduledFinishDate { get; set; }
         [StringLength(50)]
-        public string InternalObject { get; set; }
+        public string DeliveryComplete { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? ActualStartDate { get; set; }
+        public DateTime? PlanOpenDate { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? StartDate { get; set; }
+        public DateTime? CommitmentDate { get; set; }
+        [StringLength(50)]
+        public string StockType { get; set; }
+        [StringLength(50)]
+        public string CostEstimate { get; set; }
+        [StringLength(50)]
+        public string KanbanIndicator { get; set; }
+        [StringLength(50)]
+        public string SalesOrder { get; set; }
+        [StringLength(50)]
+        public string SOSchedule { get; set; }
+        [StringLength(50)]
+        public string SalesOrderItem { get; set; }
+        [StringLength(50)]
+        public string ValidFrom { get; set; }
+        [StringLength(50)]
+        public string SoldToParty { get; set; }
+        [StringLength(50)]
+        public string TypeAvailCheck { get; set; }
+        [StringLength(50)]
+        public string SpecStkValuation { get; set; }
+        [StringLength(50)]
+        public string Consumption { get; set; }
+        [StringLength(50)]
+        public string StorageLocation { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? ActualDeliveryDate { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? PldOrderDelDate { get; set; }
+        [StringLength(50)]
+        public string BaseUoM { get; set; }
+        [StringLength(200)]
+        public string Name { get; set; }
+        [StringLength(50)]
+        public string ChangeIndicator { get; set; }
+        [StringLength(50)]
+        public string PlanOrder { get; set; }
+        [StringLength(50)]
+        public string SpecialProcurement { get; set; }
+        [StringLength(50)]
+        public string PlanningPlant { get; set; }
+        [StringLength(50)]
+        public string BOM { get; set; }
+        [StringLength(50)]
+        public string SpecialStock { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? PlanStartDate { get; set; }
+        [StringLength(50)]
+        public string ProductionVersion { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? ConfirmedYieldQuantity { get; set; }
+        public decimal? CommitedQty { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? GRProcessingTime { get; set; }
+        [StringLength(50)]
+        public string GoodsRecipient { get; set; }
+        [StringLength(50)]
+        public string GoodsReceiptIndicator { get; set; }
         [StringLength(50)]
         public string DeletionFlag { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? AllocatedStockQty { get; set; }
         [StringLength(50)]
-        public string LongTextExists { get; set; }
+        public string Customer { get; set; }
         [StringLength(50)]
-        public string ReferenceOrder { get; set; }
-        [StringLength(50)]
-        public string SystemStatus { get; set; }
+        public string NumOfOriginalOrder { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? ConfirmQty { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         public Guid? CreateBy { get; set; }

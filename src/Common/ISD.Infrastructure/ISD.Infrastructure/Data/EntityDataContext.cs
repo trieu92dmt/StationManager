@@ -343,6 +343,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<ThucThiLenhSanXuatModel> ThucThiLenhSanXuatModel { get; set; }
         public virtual DbSet<TransferDetailModel> TransferDetailModel { get; set; }
         public virtual DbSet<TransferModel> TransferModel { get; set; }
+        public virtual DbSet<TruckInfoModel> TruckInfoModel { get; set; }
         public virtual DbSet<Unfollow> Unfollow { get; set; }
         public virtual DbSet<VIEW_TonKhoTheo_SO_CongDoan> VIEW_TonKhoTheo_SO_CongDoan { get; set; }
         public virtual DbSet<VehicleInfoModel> VehicleInfoModel { get; set; }
@@ -3187,6 +3188,11 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.TransferModel)
                     .HasForeignKey(d => d.StoreId)
                     .HasConstraintName("FK_TransferModel_StoreModel");
+            });
+
+            modelBuilder.Entity<TruckInfoModel>(entity =>
+            {
+                entity.Property(e => e.TruckInfoId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Unfollow>(entity =>

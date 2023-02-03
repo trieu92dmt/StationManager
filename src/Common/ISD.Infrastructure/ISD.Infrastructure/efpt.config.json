@@ -255,6 +255,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[TruckInfoModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[VendorModel]",
          "ObjectType": 0
       },

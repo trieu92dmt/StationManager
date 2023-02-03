@@ -9,7 +9,7 @@ namespace MES.Application.DTOs.MES.TruckInfo
     public class SearchTruckInfoResponse
     {
         //ID cân xe tải
-        public Guid TruckInfoId { get; set; }
+        public string TruckInfoId { get; set; }
         //Plant
         public string PlantCode { get; set; }
         //Số xe tải

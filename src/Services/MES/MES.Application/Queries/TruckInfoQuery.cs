@@ -67,7 +67,7 @@ namespace MES.Application.Queries
                                                      (req.CreateBy != null && req.CreateBy.Any() ? req.CreateBy.Contains(x.CreateBy.Value) : true))
                                       .Select(x => new SearchTruckInfoResponse
                                       {
-                                          TruckInfoId = x.TruckInfoId,
+                                          TruckInfoId = x.TruckInfoCode,
                                           PlantCode = x.PlantCode,
                                           TruckNumber = x.TruckNumber,
                                           Driver = x.Driver,

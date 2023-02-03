@@ -14,6 +14,8 @@ namespace ISD.Infrastructure.Models
         [Key]
         public Guid TruckInfoId { get; set; }
         [StringLength(50)]
+        public string TruckInfoCode { get; set; }
+        [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(10)]
         public string TruckNumber { get; set; }

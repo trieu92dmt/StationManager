@@ -359,18 +359,18 @@ namespace MES.Application.Queries
 
             }).ToListAsync();
 
-            //if (!string.IsNullOrEmpty(request.MaterialFrom))
-            //{
-            //    var material = await _prdRep.FindOneAsync(x => x.ProductCodeInt == long.Parse(request.MaterialFrom));
+            if (!string.IsNullOrEmpty(request.MaterialFrom))
+            {
+                var material = await _prdRep.FindOneAsync(x => x.ProductCodeInt == long.Parse(request.MaterialFrom));
 
-            //    dataPO.Add(new PuchaseOrderNKMHResponse
-            //    {
-            //        Plant = request.Plant,
-            //        Material = material.ProductCodeInt.ToString(),
-            //        MaterialName = material?.ProductName,
+                dataPO.Add(new PuchaseOrderNKMHResponse
+                {
+                    Plant = request.Plant,
+                    Material = material.ProductCodeInt.ToString(),
+                    MaterialName = material?.ProductName,
 
-            //    });
-            //}
+                });
+            }
 
             return dataPO;
         }

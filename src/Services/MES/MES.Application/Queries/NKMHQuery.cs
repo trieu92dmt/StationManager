@@ -177,6 +177,7 @@ namespace MES.Application.Queries
             //Data NKMH
             var dataNKMH = queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
             {
+                //Id
                 NkmhId = x.GoodsReceiptId,
                 //Plant
                 Plant = x.PlantCode,

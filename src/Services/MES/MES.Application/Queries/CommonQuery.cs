@@ -107,6 +107,13 @@ namespace MES.Application.Queries
         Task<List<CommonResponse>> GetDropdownShipToParty(string keyword);
 
         /// <summary>
+        /// Dropdown số xe tải
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword);
+        
+        /// <summary>
         /// Dropdown Create By
         /// </summary>
         /// <param name="keyword"></param>
@@ -137,12 +144,13 @@ namespace MES.Application.Queries
         private readonly IRepository<OutboundDeliveryModel> _obDeliveryRepo;
         private readonly IRepository<CustmdSaleModel> _custRepo;
         private readonly IRepository<AccountModel> _accRepo;
+        private readonly IRepository<TruckInfoModel> _truckInfoRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
                            IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo,
                            IRepository<GoodsReceiptModel> nkmhRep, IRepository<SalesDocumentModel> saleDocRepo, IRepository<OutboundDeliveryModel> obDeliveryRepo,
-                           IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo)
+                           IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -158,6 +166,7 @@ namespace MES.Application.Queries
             _obDeliveryRepo = obDeliveryRepo;
             _custRepo = custRepo;
             _accRepo = accRepo;
+            _truckInfoRepo = truckInfoRepo;
         }
 
         #region
@@ -393,6 +402,19 @@ namespace MES.Application.Queries
                                              Key = x.AccountId,
                                              Value = x.UserName
                                          }).Take(10).ToListAsync();
+        }
+
+        public async Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword)
+        {
+            var response = await _truckInfoRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.TruckNumber.Contains(keyword))
+                                  .OrderBy(x => x.TruckNumber)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.TruckNumber,
+                                      Value = x.TruckNumber
+                                  }).AsNoTracking().ToListAsync();
+
+            return response.DistinctBy(x => x.Key).ToList();
         }
     }
 }

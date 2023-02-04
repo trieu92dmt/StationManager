@@ -3,6 +3,7 @@ using MediatR;
 using MES.Application.Commands.MES;
 using MES.Application.Commands.OutboundDelivery;
 using MES.Application.DTOs.MES;
+using MES.Application.DTOs.MES.OutboundDelivery;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,15 +25,15 @@ namespace MES.API.Controllers
             _mediator = mediator;
         }
 
-        //[HttpPost("get-outbound-delivery")]
-        //public async Task<IActionResult> GetOutboundDeliveryAsync([FromBody] SearchOutboundDeliveryCommand command)
-        //{
-        //    var response = await _query(command);
+        [HttpPost("get-outbound-delivery")]
+        public async Task<IActionResult> GetOutboundDeliveryAsync([FromBody] SearchOutboundDeliveryCommand command)
+        {
+            var response = await _query.GetOutboundDelivery(command);
 
-        //    return Ok(new ApiSuccessResponse<List<ListNKMHResponse>>
-        //    {
-        //        Data = response
-        //    });
-        //}
+            return Ok(new ApiSuccessResponse<List<OutboundDeliveryResponse>>
+            {
+                Data = response
+            });
+        }
     }
 }

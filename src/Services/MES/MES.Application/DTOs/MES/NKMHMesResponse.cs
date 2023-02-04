@@ -62,7 +62,7 @@
         public decimal? QuantityWeitght { get; set; }
         public decimal? TotalQuantity { get; set; }
         public decimal? DeliveredQuantity { get; set; }
-        public int? TruckQuantity { get; set; }
+        public string TruckQuantity { get; set; }
         public decimal? InputWeight { get; set; }
         public decimal? OutputWeight { get; set; }
         public string Description { get; set; }

@@ -230,6 +230,20 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Lấy dropdown Số xe tải
+        /// <summary>
+        /// Lấy dropdown số xe tải
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-truck-number")]
+        public async Task<IActionResult> GetListTruckNumber(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetDropdownTruckNumber(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách truck number") });
+        }
+        #endregion
+
         #region Get số phiếu cân
         /// <summary>
         /// Dropdown số phiếu cân

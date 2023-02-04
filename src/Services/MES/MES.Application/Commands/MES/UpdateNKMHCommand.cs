@@ -57,7 +57,7 @@ namespace MES.Application.Commands.MES
         //Số lần cân
         public int? QuantityWeight { get; set; }
         //Số xe tải
-        public int? TruckQty { get; set; }
+        public string TruckQty { get; set; }
         //Số cân đầu vào
         public decimal? InputWeight { get; set; }
         //Số cân đầu ra

@@ -4,6 +4,7 @@ using ISD.Core.Interfaces.Databases;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,17 +43,21 @@ namespace MES.Application.Commands.TruckInfo
 
         public async Task<bool> Handle(SaveTruckInfoCommand request, CancellationToken cancellationToken)
         {
+            //Lấy ra chuỗi năm tháng
+            var str = DateTime.Now.ToString("yyMM");
 
-            var truckInfoCount = await _truckInfoRepo.CountAsync();
+            var truckInfoCount = await _truckInfoRepo.GetQuery(x => x.TruckInfoCode.Substring(2,4) == str).CountAsync();
 
             var truckInfos = new List<TruckInfoModel>();
+
+            int index = 1;
 
             foreach(var item in request.TruckInfos)
             {
                 truckInfos.Add(new TruckInfoModel
                 {
                     TruckInfoId = Guid.NewGuid(),
-                    TruckInfoCode = $"XT{DateTime.Now.ToString("yyMM")}{1000 + truckInfoCount + 1}",
+                    TruckInfoCode = $"XT{DateTime.Now.ToString("yyMM")}{1000 + truckInfoCount + index}",
                     PlantCode = item.PlantCode,
                     TruckNumber = item.TruckNumber,
                     Driver = item.Driver,
@@ -60,6 +65,8 @@ namespace MES.Application.Commands.TruckInfo
                     CreateTime = DateTime.Now,
                     CreateBy = string.IsNullOrEmpty(TokenExtensions.GetUserId()) ? null : Guid.Parse(TokenExtensions.GetUserId())
                 });
+
+                index++;
             }
 
             _truckInfoRepo.AddRange(truckInfos);

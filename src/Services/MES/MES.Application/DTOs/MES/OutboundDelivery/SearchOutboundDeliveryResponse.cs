@@ -36,7 +36,7 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         //Units of Measure
         public string Unit { get; set; }
         //Document Date
-        public DateTime DocumentDate { get; set; }
+        public DateTime? DocumentDate { get; set; }
         //Ship to Party
         public string ShipToParty { get; set; }
     }

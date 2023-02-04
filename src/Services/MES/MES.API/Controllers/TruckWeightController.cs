@@ -53,5 +53,6 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Save data truck info") });
         }
         #endregion
+
     }
 }

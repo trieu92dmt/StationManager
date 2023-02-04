@@ -404,9 +404,10 @@ namespace MES.Application.Queries
                                          }).Take(10).ToListAsync();
         }
 
-        public async Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword, string plant)
         {
-            var response = await _truckInfoRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.TruckNumber.Contains(keyword))
+            var response = await _truckInfoRepo.GetQuery(x => (string.IsNullOrEmpty(keyword) ? true : x.TruckNumber.Contains(keyword)) &&
+                                                              x.PlantCode == plant)
                                   .OrderBy(x => x.TruckNumber)
                                   .Select(x => new CommonResponse
                                   {

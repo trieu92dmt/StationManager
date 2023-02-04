@@ -210,7 +210,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Ghi chú
                                 Description = x.Description,
                                 //Hình ảnh
-                                Image = x.Image,
+                                Image = x.Img,
                                 //Trạng thái
                                 Status = x.Status,
                                 //Thời gian bắt đầu và kết thúc

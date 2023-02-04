@@ -8,6 +8,7 @@ using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
@@ -175,6 +176,13 @@ namespace MES.Application.Commands.MES
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
 
                 //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
+                //Convert Base64 to Iformfile
+                byte[] bytes = Convert.FromBase64String(item.Image);
+                MemoryStream stream = new MemoryStream(bytes);
+
+                IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKMHId.ToString(), item.NKMHId.ToString());
+                //Save image to server
+                var imgPath = await _utilitiesService.UploadFile(file, "NKMH");
 
                 //Chưa có thì tạo mới
                 if (nkmh == null)
@@ -199,7 +207,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Img = !string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1)) : null,
+                        Img = imgPath,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -235,10 +243,12 @@ namespace MES.Application.Commands.MES
                     nkmh.VehicleCode = item.VehicleCode;
                     //Số cân đầu rea
                     nkmh.OutputWeight = item.OutputWeight;
+                    //Số xe tải
+                    nkmh.TruckQuantity = item.TruckQty;
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Img = !string.IsNullOrEmpty(item.Image) ? System.Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1)) : null;
+                    nkmh.Img = imgPath;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

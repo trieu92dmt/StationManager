@@ -46,7 +46,6 @@ namespace ISD.Infrastructure.Models
         public decimal? OutputWeight { get; set; }
         [StringLength(2000)]
         public string Description { get; set; }
-        public string Image { get; set; }
         [StringLength(50)]
         public string Status { get; set; }
         [Column(TypeName = "datetime")]
@@ -75,7 +74,8 @@ namespace ISD.Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
-        public byte[] Img { get; set; }
+        [StringLength(2000)]
+        public string Img { get; set; }
 
         [ForeignKey("PurchaseOrderDetailId")]
         [InverseProperty("GoodsReceiptModel")]

@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
 namespace MES.Application.Commands.MES
 {
@@ -61,10 +62,12 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
+        private readonly IUtilitiesService _utilitiesService;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
-                                      IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo)
+                                      IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo,
+                                      IUtilitiesService utilitiesService)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
@@ -73,6 +76,7 @@ namespace MES.Application.Commands.MES
             _prdRepo = prdRepo;
             _scaleRepo = scaleRepo;
             _weightSsRepo = weightSsRepo;
+            _utilitiesService = utilitiesService;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -96,6 +100,13 @@ namespace MES.Application.Commands.MES
                                                .Include(x => x.PurchaseOrder)
                                                .FirstOrDefaultAsync();
 
+                //Convert Base64 to Iformfile
+                byte[] bytes = Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',') +1));
+                MemoryStream stream = new MemoryStream(bytes);
+
+                IFormFile file = new FormFile(stream, 0, bytes.Length, poLine.PurchaseOrderDetailId.ToString(), $"{poLine.PurchaseOrderDetailId.ToString()}.jpg");
+                //Save image to server
+                var imgPath = await _utilitiesService.UploadFile(file, "NKMH");
 
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
@@ -135,7 +146,8 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     Description = x.Description,
                     //Hình ảnh
-                    Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
+                    //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
+                    Img = imgPath,
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân
@@ -152,7 +164,6 @@ namespace MES.Application.Commands.MES
                     //Start Time - End Time
                     StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSs.FirstOrDefault(w => w.Scale.ScaleCode == x.WeightHeadCode).StartTime : DateTime.Now,
                     EndTime = DateTime.Now,
-                    Image = x.Image
                 });
             }
 

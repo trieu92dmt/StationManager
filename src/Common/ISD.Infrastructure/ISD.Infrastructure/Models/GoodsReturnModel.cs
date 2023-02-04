@@ -24,6 +24,18 @@ namespace ISD.Infrastructure.Models
         [StringLength(50)]
         public string SOType { get; set; }
         [StringLength(50)]
+        public string SalesOrg { get; set; }
+        [StringLength(50)]
+        public string DistributionChannel { get; set; }
+        [StringLength(50)]
+        public string Division { get; set; }
+        [StringLength(50)]
+        public string SalesOrder { get; set; }
+        [StringLength(50)]
+        public string ShipToParty { get; set; }
+        [StringLength(50)]
+        public string ShipToPartyName { get; set; }
+        [StringLength(50)]
         public string MaterialCode { get; set; }
         [StringLength(50)]
         public string PurchaseOrderCode { get; set; }
@@ -94,5 +106,9 @@ namespace ISD.Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
+
+        [ForeignKey("DetailODId")]
+        [InverseProperty("GoodsReturnModel")]
+        public virtual DetailOutboundDeliveryModel DetailOD { get; set; }
     }
 }

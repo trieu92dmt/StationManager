@@ -177,7 +177,7 @@ namespace MES.Application.Queries
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new Common3Response
                                      {
-                                         Key = x.ProductCodeInt.ToString(),
+                                         Key = x.ProductCode,
                                          Value = $"{x.ProductCodeInt} | {x.ProductName}",
                                          Name = x.ProductName
                                      }).Take(10).ToListAsync();
@@ -368,7 +368,11 @@ namespace MES.Application.Queries
         #region Dropdown Outbound Delivery
         public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword)
         {
-            return await _obDeliveryRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+            //Delivery Type lấy ra
+            var deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
+
+            return await _obDeliveryRepo.GetQuery(x => (string.IsNullOrEmpty(keyword) ? true : x.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                       (deliveryType.Contains(x.DeliveryType)))
                                          .OrderBy(x => x.DeliveryCode)
                                          .Select(x => new CommonResponse
                                          {

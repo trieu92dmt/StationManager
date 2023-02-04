@@ -95,59 +95,59 @@ namespace MES.Application.Queries
             var slocs = _slocRepo.GetQuery(x => x.PlantCode == request.Plant).AsNoTracking();
 
             //Product
-            var product = await _prdRep.GetQuery().AsNoTracking().ToListAsync();
+            var product =  _prdRep.GetQuery().AsNoTracking();
 
-            var queryNKMH = await _nkmhRep.GetQuery()
+            var queryNKMH = _nkmhRep.GetQuery()
                                     .Include(x => x.PurchaseOrderDetail)
                                     .ThenInclude(x => x.PurchaseOrder)
-                                    .AsNoTracking().ToListAsync();
+                                    .AsNoTracking();
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                queryNKMH = queryNKMH.Where(x => x.PlantCode == request.Plant).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PlantCode == request.Plant);
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchasingOrgTo)) request.PurchasingOrgTo = request.PurchasingOrgFrom;
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom);
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
                 if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
-                                                                                        long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo)).ToList();
+                                                                                        long.Parse(x.PurchaseOrderDetail.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo));
             }
 
             if (!string.IsNullOrEmpty(request.POType))
             {
-                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
+                queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType));
             }
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
                 if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
                 queryNKMH = queryNKMH.Where(x => x.MaterialCodeInt >= long.Parse(request.MaterialFrom) &&
-                                                 x.MaterialCodeInt <= long.Parse(request.MaterialTo)).ToList();
+                                                 x.MaterialCodeInt <= long.Parse(request.MaterialTo));
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchasingGroupTo)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
-                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
+                                                                                        int.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo));
             }
 
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail == null ? false : long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
-                                                                                        long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
+                                                                                        long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo));
             }
 
             //Search dữ liệu đã cân
             if (!string.IsNullOrEmpty(request.WeightHeadCode))
             {
-                queryNKMH = queryNKMH.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHeadCode.Trim().ToLower() : false).ToList();
+                queryNKMH = queryNKMH.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHeadCode.Trim().ToLower() : false);
             }
 
 
@@ -156,37 +156,37 @@ namespace MES.Application.Queries
                 if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom;
 
                 queryNKMH = queryNKMH.Where(x => x.WeighDate >= request.WeightDateFrom &&
-                                         x.WeighDate <= request.WeightDateTo).ToList();
+                                         x.WeighDate <= request.WeightDateTo);
             }
 
             if (!request.WeightVotes.IsNullOrEmpty())
             {
-                queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
+                queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote));
             }
 
             if (request.CreateBy.HasValue)
             {
-                queryNKMH = queryNKMH.Where(x => x.CreateBy == request.CreateBy).ToList();
+                queryNKMH = queryNKMH.Where(x => x.CreateBy == request.CreateBy);
             }    
 
-            var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
+            var vendor = _vendorRep.GetQuery().AsNoTracking();
 
             //Catalog Nhập kho mua hàng status
             var nkmhStatus = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
             //Data NKMH
-            var dataNKMH = queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
+            var dataNKMH = await queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
             {
                 //Id
                 NkmhId = x.GoodsReceiptId,
                 //Plant
                 Plant = x.PlantCode,
                 //PO và POLine
-                PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
-                POItem = x.PurchaseOrderDetail?.POLine,
+                PurchaseOrderCode = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode : "",
+                POItem = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.POLine : "",
                 //Product
                 Material = x.MaterialCodeInt.ToString(),
-                MaterialName = product.FirstOrDefault(p => p.ProductCodeInt == long.Parse(x.MaterialCode))?.ProductName,
+                MaterialName = product.FirstOrDefault(p => p.ProductCodeInt == x.MaterialCodeInt).ProductName,
                 //Ngày chứng từ
                 DocumentDate = x.DocumentDate,
                 //Mã kho
@@ -214,13 +214,13 @@ namespace MES.Application.Queries
                 //Số phiếu cân
                 WeightVote = x.WeitghtVote,
                 //Total Quantity
-                TotalQuantity = x.PurchaseOrderDetail?.OrderQuantity,
+                TotalQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.OrderQuantity : 0,
                 //Open quantity
-                OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity,
+                OpenQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.OpenQuantity : 0,
                 //Delivery Quantity
-                DeliveredQuantity = x.PurchaseOrderDetail?.QuantityReceived,
+                DeliveredQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.QuantityReceived : 0,
                 //Unit
-                Unit = x.PurchaseOrderDetail?.Unit,
+                Unit = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.Unit : "",
                 //Số xe tải
                 TruckQuantity = x.TruckQuantity,
                 //Số cân đầu vào và ra
@@ -237,16 +237,16 @@ namespace MES.Application.Queries
                 Image = x.Img != null && x.Img.Length > 0? Convert.ToBase64String(x.Img) : null,
                 Status = nkmhStatus.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 CreateTime = x.CreateTime,
-                CreateBy = user.FirstOrDefault(a => a.AccountId == x.CreateBy)?.FullName,
+                CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",
                 CreateById = x.CreateBy,
                 LastEditTime = x.LastEditTime,
-                LastEditBy = user.FirstOrDefault(a => a.AccountId == x.LastEditBy)?.FullName,
+                LastEditBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 LastEditById = x.LastEditBy,
                 ReverseDocument = x.ReverseDocument,
                 MaterialDocument = x.MaterialDocument,
-                VendorName = x.PurchaseOrderDetail == null ? null : vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrderDetail.PurchaseOrder.VendorCode)?.VendorName,
+                VendorName = x.PurchaseOrderDetailId.HasValue ? "" : vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrderDetail.PurchaseOrder.VendorCode).VendorName,
 
-            }).ToList();
+            }).ToListAsync();
 
             return dataNKMH;
         }
@@ -269,82 +269,83 @@ namespace MES.Application.Queries
             var user = _userRep.GetQuery().AsNoTracking();
 
             //Product
-            var product = await _prdRep.GetQuery().AsNoTracking().ToListAsync();
+            var product = _prdRep.GetQuery().AsNoTracking();
 
             //Dữ liệu đợt cân
             //var weightSs = await _weighSsRepo.GetQuery().AsNoTracking().ToListAsync();
 
             //Query PO
-            var queryPO = await _poDetailRep.GetQuery(x => x.DeliveryCompleted != "X" &&
-                                                           x.DeletionInd != "X")
+            var queryPO = _poDetailRep.GetQuery()
                                             .Include(x => x.PurchaseOrder)
-                                            .Where(x => x.PurchaseOrder.DeletionInd != "X")
-                                            .AsNoTracking().ToListAsync();
+                                            .Where(x => x.DeliveryCompleted != "X" &&
+                                                        x.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.DeletionInd != "X")
+                                            .AsNoTracking();
 
 
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant == request.Plant).ToList();
+                queryPO = queryPO.Where(x => x.PurchaseOrder.Plant == request.Plant);
             }
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchasingOrgTo)) request.PurchasingOrgTo = request.PurchasingOrgFrom;
-                queryPO = queryPO.Where(x => x.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom).ToList();
+                queryPO = queryPO.Where(x => x.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom);
             }
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
                 if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
-                queryPO = queryPO.Where(x => !x.PurchaseOrder.VendorCode.IsNullOrEmpty() && 
+                queryPO = queryPO.Where(x => !x.PurchaseOrder.VendorCode.IsNullOrEmpty() &&
                                              long.Parse(x.PurchaseOrder.VendorCode) >= long.Parse(request.VendorFrom) &&
-                                             long.Parse(x.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo)).ToList();
-            }   
+                                             long.Parse(x.PurchaseOrder.VendorCode) <= long.Parse(request.VendorTo));
+            }
 
             if (!string.IsNullOrEmpty(request.POType))
             {
-                queryPO = queryPO.Where(x => x.PurchaseOrder.POType.Contains(request.POType)).ToList();
+                queryPO = queryPO.Where(x => x.PurchaseOrder.POType.Contains(request.POType));
             }
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
                 if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
-                queryPO = queryPO.Where(x => long.Parse(x.ProductCode) >= long.Parse(request.MaterialFrom) &&
-                                             long.Parse(x.ProductCode) <= long.Parse(request.MaterialTo)).ToList();
+                queryPO = queryPO.Where(x => x.ProductCode.CompareTo(request.MaterialFrom) >= 0 &&
+                                             x.ProductCode.CompareTo(request.MaterialTo) <= 0);
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchasingGroupTo)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
                 queryPO = queryPO.Where(x => int.Parse(x.PurchaseOrder.PurchasingGroup) >= int.Parse(request.PurchasingGroupFrom) &&
-                                             int.Parse(x.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo)).ToList();
+                                             int.Parse(x.PurchaseOrder.PurchasingGroup) <= int.Parse(request.PurchasingGroupTo));
             }
 
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
                 if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryPO = queryPO.Where(x => long.Parse(x.PurchaseOrder.PurchaseOrderCode) >= long.Parse(request.PurchaseOrderFrom) &&
-                                             long.Parse(x.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo)).ToList();
+                                             long.Parse(x.PurchaseOrder.PurchaseOrderCode) <= long.Parse(request.PurchaseOrderTo));
             }
 
             //Data vendor
-            var vendor = await _vendorRep.GetQuery().AsNoTracking().ToListAsync();
+            var vendor = _vendorRep.GetQuery().AsNoTracking();
 
             //Data PO
-            var dataPO = queryPO.Select(x => new PuchaseOrderNKMHResponse
+            var dataPO = await queryPO.Select(x => new PuchaseOrderNKMHResponse
             {
                 PoDetailId = x.PurchaseOrderDetailId,
                 StorageLocation = x.StorageLocation,
                 //Plant
-                Plant = x.PurchaseOrder?.Plant,
+                Plant = x.PurchaseOrder.Plant,
                 //PO và POLine
-                PurchaseOrderCode = x.PurchaseOrder?.PurchaseOrderCode,
+                PurchaseOrderCode = x.PurchaseOrder.PurchaseOrderCode,
                 POItem = x.POLine,
                 //Product
                 Material = long.Parse(x.ProductCode).ToString(),
-                MaterialName = product.FirstOrDefault(p => p.ProductCode == x.ProductCode)?.ProductName,
+                MaterialName = string.IsNullOrEmpty(x.ProductCode) ? product.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName : "",
                 //Unit
                 Unit = x.Unit,
                 //Vendor
                 VendorCode = x.PurchaseOrder.VendorCode,
-                VendorName = vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode)?.VendorName,
+                VendorName = string.IsNullOrEmpty(x.PurchaseOrder.VendorCode) ? vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode).VendorName : "",
                 //Total Quantity
                 OrderQuantity = x.OrderQuantity,
                 OpenQuantity = x.OpenQuantity,
@@ -356,20 +357,20 @@ namespace MES.Application.Queries
                 //Số phương tiện
                 VehicleCode = x.VehicleCode
 
-            }).ToList();
+            }).ToListAsync();
 
-            if (!string.IsNullOrEmpty(request.MaterialFrom))
-            {
-                var material = await _prdRep.FindOneAsync(x => x.ProductCodeInt == long.Parse(request.MaterialFrom));
+            //if (!string.IsNullOrEmpty(request.MaterialFrom))
+            //{
+            //    var material = await _prdRep.FindOneAsync(x => x.ProductCodeInt == long.Parse(request.MaterialFrom));
 
-                dataPO.Add(new PuchaseOrderNKMHResponse
-                {
-                    Plant = request.Plant,
-                    Material = material.ProductCodeInt.ToString(),
-                    MaterialName = material?.ProductName,
+            //    dataPO.Add(new PuchaseOrderNKMHResponse
+            //    {
+            //        Plant = request.Plant,
+            //        Material = material.ProductCodeInt.ToString(),
+            //        MaterialName = material?.ProductName,
 
-                });
-            }
+            //    });
+            //}
 
             return dataPO;
         }

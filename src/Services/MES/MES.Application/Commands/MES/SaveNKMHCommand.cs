@@ -110,7 +110,7 @@ namespace MES.Application.Commands.MES
                     //PlantCode
                     PlantCode = x.PlantCode,
                     //Material Desc
-                    MaterialCode = x.MaterialCode,
+                    MaterialCode = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductCode,
                     MaterialCodeInt = long.Parse(x.MaterialCode),
                     //Sloc code
                     SlocCode = x.SlocCode,

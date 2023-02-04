@@ -1272,6 +1272,11 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<GoodsReturnModel>(entity =>
             {
                 entity.Property(e => e.GoodsReturnId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailOD)
+                    .WithMany(p => p.GoodsReturnModel)
+                    .HasForeignKey(d => d.DetailODId)
+                    .HasConstraintName("FK_GoodsReturnModel_DetailOutboundDeliveryModel");
             });
 
             modelBuilder.Entity<HangTagModel>(entity =>

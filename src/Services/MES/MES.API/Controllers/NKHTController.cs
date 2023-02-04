@@ -25,12 +25,33 @@ namespace MES.API.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Bảng 1
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPost("get-outbound-delivery")]
         public async Task<IActionResult> GetOutboundDeliveryAsync([FromBody] SearchOutboundDeliveryCommand command)
         {
             var response = await _query.GetOutboundDelivery(command);
 
             return Ok(new ApiSuccessResponse<List<OutboundDeliveryResponse>>
+            {
+                Data = response
+            });
+        }
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu nhập kho hàng trả)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-goods-return")]
+        public async Task<IActionResult> GetGoodsReturnAsync([FromBody] SearchOutboundDeliveryCommand command)
+        {
+            var response = await _query.GetGoodsReturn(command);
+
+            return Ok(new ApiSuccessResponse<List<GoodsReturnResponse>>
             {
                 Data = response
             });

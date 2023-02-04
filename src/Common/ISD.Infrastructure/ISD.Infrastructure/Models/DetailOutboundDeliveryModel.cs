@@ -11,6 +11,11 @@ namespace ISD.Infrastructure.Models
     [Table("DetailOutboundDeliveryModel", Schema = "DataCollection")]
     public partial class DetailOutboundDeliveryModel
     {
+        public DetailOutboundDeliveryModel()
+        {
+            GoodsReturnModel = new HashSet<GoodsReturnModel>();
+        }
+
         [Key]
         public Guid DetailOutboundDeliveryId { get; set; }
         public Guid? OutboundDeliveryId { get; set; }
@@ -92,5 +97,7 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("OutboundDeliveryId")]
         [InverseProperty("DetailOutboundDeliveryModel")]
         public virtual OutboundDeliveryModel OutboundDelivery { get; set; }
+        [InverseProperty("DetailOD")]
+        public virtual ICollection<GoodsReturnModel> GoodsReturnModel { get; set; }
     }
 }

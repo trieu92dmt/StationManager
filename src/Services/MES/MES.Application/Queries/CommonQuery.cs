@@ -111,7 +111,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword);
+        Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword, string plant);
         
         /// <summary>
         /// Dropdown Create By

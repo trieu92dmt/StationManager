@@ -237,9 +237,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-truck-number")]
-        public async Task<IActionResult> GetListTruckNumber(string keyword)
+        public async Task<IActionResult> GetListTruckNumber(string keyword, string plant)
         {
-            var dropdownList = await _commonQuery.GetDropdownTruckNumber(keyword);
+            var dropdownList = await _commonQuery.GetDropdownTruckNumber(keyword, plant);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách truck number") });
         }
         #endregion

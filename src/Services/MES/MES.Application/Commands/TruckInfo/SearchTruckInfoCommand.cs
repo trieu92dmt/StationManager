@@ -17,6 +17,6 @@ namespace MES.Application.Commands.TruckInfo
         public DateTime? RecordTimeFrom { get; set; }
         public DateTime? RecordTimeTo { get; set; }
         //Create by
-        public List<Guid> CreateBy { get; set; } = new List<Guid>();
+        public Guid? CreateBy { get; set; }
     }
 }

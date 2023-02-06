@@ -100,6 +100,8 @@ namespace MES.Application.Commands.MES
             //Danh sách material
             var materials = _prdRepo.GetQuery().AsNoTracking();
 
+            int index = 1;
+
             foreach (var x in request.NKMHRequests)
             {
 
@@ -168,7 +170,7 @@ namespace MES.Application.Commands.MES
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân
-                    WeitghtVote = $"N{1000000 + nkmh.Count() + 1}",
+                    WeitghtVote = $"N{1000000 + nkmh.Count() + index}",
 
                     //Common
                     DateKey = int.Parse(DateTime.Now.ToString(DateTimeFormat.DateKey)),
@@ -182,6 +184,8 @@ namespace MES.Application.Commands.MES
                     StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSs.FirstOrDefault(w => w.Scale.ScaleCode == x.WeightHeadCode).StartTime : DateTime.Now,
                     EndTime = DateTime.Now,
                 });
+
+                index++;
             }
 
             await _unitOfWork.SaveChangesAsync();

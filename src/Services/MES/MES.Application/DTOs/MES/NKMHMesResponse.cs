@@ -62,6 +62,7 @@
         public decimal? QuantityWeitght { get; set; }
         public decimal? TotalQuantity { get; set; }
         public decimal? DeliveredQuantity { get; set; }
+        public Guid? TruckInfoId { get; set; }
         public string TruckQuantity { get; set; }
         public decimal? InputWeight { get; set; }
         public decimal? OutputWeight { get; set; }

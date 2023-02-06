@@ -1,8 +1,11 @@
 ﻿
+using ISD.Core.Exceptions;
 using ISD.Core.Interfaces.Databases;
+using ISD.Core.Properties;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +35,14 @@ namespace MES.Application.Commands.TruckInfo
     //        _truckInfoRepo = truckInfoRepo;
     //    }
 
-    //    public async Task<bool> Handle(UpdateTruckInfoCommand request, CancellationToken cancellationToken)
-    //    {
-    //        //Check tồn tại
-    //        var truckInfo = await _truckInfoRepo.FindOneAsync(x => x.TruckInfoId == request.TruckInfoId);
-    //    }
+    //    //public async Task<bool> Handle(UpdateTruckInfoCommand request, CancellationToken cancellationToken)
+    //    //{
+    //    //    //Check tồn tại
+    //    //    var truckInfo = await _truckInfoRepo.FindOneAsync(x => x.TruckInfoId == request.TruckInfoId);
+    //    //    if (truckInfo == null)
+    //    //        throw new ISDException(CommonResource.Msg_NotFound, "Thông tin cân xe tải");
+
+
+    //    //}
     //}
 }

@@ -221,6 +221,8 @@ namespace MES.Application.Queries
                 DeliveredQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.QuantityReceived : 0,
                 //Unit
                 Unit = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.Unit : "",
+                //Id sô xe tải
+                TruckInfoId = x.TruckInfoId,    
                 //Số xe tải
                 TruckQuantity = x.TruckQuantity,
                 //Số cân đầu vào và ra

@@ -39,6 +39,8 @@ namespace MES.Application.Commands.MES
         public decimal? QuantityWithPackaging { get; set; }
         //Số phương tiện
         public string VehicleCode { get; set; }
+        //Id cân xe tải
+        public Guid? TruckInfoId { get; set; }
         //Số xe tải
         public string TruckQuantity { get; set; }
         //Ghi chú
@@ -147,6 +149,8 @@ namespace MES.Application.Commands.MES
                     QuantityWithPackaging = x.QuantityWithPackaging,
                     //Số phương tiện
                     VehicleCode = x.VehicleCode,
+                    //Id cân xe tải
+                    TruckInfoId = x.TruckInfoId,    
                     //Số xe tải 
                     TruckQuantity = x.TruckQuantity,
                     //Ghi chú

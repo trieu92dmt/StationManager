@@ -57,6 +57,8 @@ namespace MES.Application.Commands.MES
         public string VehicleCode { get; set; }
         //Số lần cân
         public int? QuantityWeight { get; set; }
+        //Id cân xe tải
+        public Guid? TruckInfoId { get; set; }
         //Số xe tải
         public string TruckQty { get; set; }
         //Số cân đầu vào
@@ -209,6 +211,7 @@ namespace MES.Application.Commands.MES
                         QuantityWithPackaging = item.QuantityWithPackaging,
                         VehicleCode = item.VehicleCode,
                         QuantityWeitght = item.QuantityWeight,
+                        TruckInfoId = item.TruckInfoId,
                         TruckQuantity = item.TruckQty,
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
@@ -249,6 +252,8 @@ namespace MES.Application.Commands.MES
                     nkmh.VehicleCode = item.VehicleCode;
                     //Số cân đầu rea
                     nkmh.OutputWeight = item.OutputWeight;
+                    //Id cân xe tải
+                    nkmh.TruckInfoId = item.TruckInfoId;
                     //Số xe tải
                     nkmh.TruckQuantity = item.TruckQty;
                     //Ghi chú

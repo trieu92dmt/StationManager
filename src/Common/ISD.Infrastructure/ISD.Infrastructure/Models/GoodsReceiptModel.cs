@@ -38,6 +38,7 @@ namespace ISD.Infrastructure.Models
         [StringLength(50)]
         public string VehicleCode { get; set; }
         public int? QuantityWeitght { get; set; }
+        public Guid? TruckInfoId { get; set; }
         [StringLength(50)]
         public string TruckQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

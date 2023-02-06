@@ -13,7 +13,6 @@ namespace ISD.Infrastructure.Models
     {
         [Key]
         public Guid GoodsReceiptId { get; set; }
-        public int? OrderIndex { get; set; }
         public Guid? PurchaseOrderDetailId { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }

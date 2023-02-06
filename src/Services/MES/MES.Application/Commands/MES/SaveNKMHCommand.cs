@@ -94,7 +94,7 @@ namespace MES.Application.Commands.MES
             //Danh sách nhập kho mua hàng
             var nkmh = await _nkRep.GetQuery().ToListAsync();
             //Last index dùng để tạo số phiếu cân tự sinh
-            var lastIndex = nkmh.LastOrDefault();
+            var lastIndex = nkmh.OrderBy(x => x.OrderIndex).LastOrDefault();
 
             //Dữ liệu đợt cân
             var weightSs = _weightSsRepo.GetQuery().Include(x => x.Scale).AsNoTracking();
@@ -173,7 +173,7 @@ namespace MES.Application.Commands.MES
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân
                     WeitghtVote = $"N{1000000 + lastIndex.OrderIndex + index}",
-
+                    OrderIndex = lastIndex.OrderIndex + index,
                     //Common
                     DateKey = int.Parse(DateTime.Now.ToString(DateTimeFormat.DateKey)),
 

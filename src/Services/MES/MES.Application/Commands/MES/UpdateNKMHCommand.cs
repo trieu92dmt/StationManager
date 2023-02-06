@@ -176,13 +176,19 @@ namespace MES.Application.Commands.MES
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
 
                 //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
-                //Convert Base64 to Iformfile
-                byte[] bytes = Convert.FromBase64String(item.Image);
-                MemoryStream stream = new MemoryStream(bytes);
 
-                IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKMHId.ToString(), item.NKMHId.ToString());
-                //Save image to server
-                var imgPath = await _utilitiesService.UploadFile(file, "NKMH");
+                var imgPath = "";
+                //Convert Base64 to Iformfile
+                if (string.IsNullOrEmpty(item.Image))
+                {
+                    byte[] bytes = Convert.FromBase64String(item.Image);
+                    MemoryStream stream = new MemoryStream(bytes);
+
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKMHId.ToString(), item.NKMHId.ToString());
+                    //Save image to server
+                    imgPath = await _utilitiesService.UploadFile(file, "NKMH");
+                }
+                
 
                 //Chưa có thì tạo mới
                 if (nkmh == null)
@@ -207,7 +213,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Img = imgPath,
+                        Img = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -248,7 +254,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Img = imgPath;
+                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? null : imgPath;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

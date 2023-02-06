@@ -20,6 +20,13 @@ namespace MES.Application.Queries
         /// <param name="req"></param>
         /// <returns></returns>
         Task<List<SearchTruckInfoResponse>> SearchTruckInfo(SearchTruckInfoCommand req);
+
+        /// <summary>
+        /// Lấy số cân xe tải
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<decimal> GetInputWeight(Guid id);
     }
 
     public class TruckInfoQuery : ITruckInfoQuery
@@ -31,6 +38,13 @@ namespace MES.Application.Queries
         {
             _truckInfoRepo = truckInfoRepo;
             _accRepo = accRepo;
+        }
+
+        public async Task<decimal> GetInputWeight(Guid id)
+        {
+            var truckInfo = await _truckInfoRepo.FindOneAsync(x => x.TruckInfoId == id);
+
+            return truckInfo.InputWeight.HasValue ? truckInfo.InputWeight.Value : 0;
         }
 
         public async Task<List<SearchTruckInfoResponse>> SearchTruckInfo(SearchTruckInfoCommand req)

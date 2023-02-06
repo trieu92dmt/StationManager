@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.Net.WebSockets;
 
 namespace MES.Application.Commands.MES
 {
@@ -100,13 +101,18 @@ namespace MES.Application.Commands.MES
                                                .Include(x => x.PurchaseOrder)
                                                .FirstOrDefaultAsync();
 
-                //Convert Base64 to Iformfile
-                byte[] bytes = Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',') +1));
-                MemoryStream stream = new MemoryStream(bytes);
+                var imgPath = "";
+                if (string.IsNullOrEmpty(x.Image))
+                {
+                    //Convert Base64 to Iformfile
+                    byte[] bytes = Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',') + 1));
+                    MemoryStream stream = new MemoryStream(bytes);
 
-                IFormFile file = new FormFile(stream, 0, bytes.Length, poLine.PurchaseOrderDetailId.ToString(), $"{poLine.PurchaseOrderDetailId.ToString()}.jpg");
-                //Save image to server
-                var imgPath = await _utilitiesService.UploadFile(file, "NKMH");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, poLine.PurchaseOrderDetailId.ToString(), $"{poLine.PurchaseOrderDetailId.ToString()}.jpg");
+                    //Save image to server
+                    imgPath = await _utilitiesService.UploadFile(file, "NKMH");
+                }
+                
 
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
@@ -147,7 +153,7 @@ namespace MES.Application.Commands.MES
                     Description = x.Description,
                     //Hình ảnh
                     //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
-                    Img = imgPath,
+                    Img = string.IsNullOrEmpty(imgPath) ? "" : imgPath,
                     //Trạng thái
                     DocumentDate = DateTime.Now,
                     //Số phiếu cân

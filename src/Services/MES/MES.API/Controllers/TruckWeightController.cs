@@ -54,5 +54,19 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Lấy số cân đầu vào 
+        /// <summary>
+        /// Get input weight
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpGet("get-input-weight")]
+        public async Task<IActionResult> GetInputWeightAsync(Guid id)
+        {
+            var response = await _truckInfoQuery.GetInputWeight(id);
+
+            return Ok(new ApiSuccessResponse<decimal> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get input weight") });
+        }
+        #endregion
     }
 }

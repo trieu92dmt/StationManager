@@ -111,7 +111,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword, string plant);
+        Task<List<Common2Response>> GetDropdownTruckNumber(string keyword, string plant);
         
         /// <summary>
         /// Dropdown Create By
@@ -408,14 +408,15 @@ namespace MES.Application.Queries
                                          }).Take(10).ToListAsync();
         }
 
-        public async Task<List<CommonResponse>> GetDropdownTruckNumber(string keyword, string plant)
+        public async Task<List<Common2Response>> GetDropdownTruckNumber(string keyword, string plant)
         {
             var response = await _truckInfoRepo.GetQuery(x => (string.IsNullOrEmpty(keyword) ? true : x.TruckNumber.Contains(keyword)) &&
-                                                              x.PlantCode == plant)
-                                  .OrderBy(x => x.TruckNumber)
-                                  .Select(x => new CommonResponse
+                                                              x.PlantCode == plant &&
+                                                              x.CreateTime == DateTime.Now)
+                                  .OrderBy(x => x.TruckNumber).ThenByDescending(x => x.CreateTime)
+                                  .Select(x => new Common2Response
                                   {
-                                      Key = x.TruckNumber,
+                                      Key = x.TruckInfoId,
                                       Value = x.TruckNumber
                                   }).AsNoTracking().ToListAsync();
 

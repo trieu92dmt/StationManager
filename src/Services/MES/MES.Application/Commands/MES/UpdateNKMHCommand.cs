@@ -211,7 +211,7 @@ namespace MES.Application.Commands.MES
                         QuantityWithPackaging = item.QuantityWithPackaging,
                         VehicleCode = item.VehicleCode,
                         QuantityWeitght = item.QuantityWeight,
-                        TruckInfoId = item.TruckInfoId,
+                        TruckInfoId = item.TruckInfoId.HasValue ? item.TruckInfoId : null,
                         TruckQuantity = item.TruckQty,
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
@@ -253,7 +253,7 @@ namespace MES.Application.Commands.MES
                     //Số cân đầu rea
                     nkmh.OutputWeight = item.OutputWeight;
                     //Id cân xe tải
-                    nkmh.TruckInfoId = item.TruckInfoId;
+                    nkmh.TruckInfoId = item.TruckInfoId.HasValue ? item.TruckInfoId : null;
                     //Số xe tải
                     nkmh.TruckQuantity = item.TruckQty;
                     //Ghi chú

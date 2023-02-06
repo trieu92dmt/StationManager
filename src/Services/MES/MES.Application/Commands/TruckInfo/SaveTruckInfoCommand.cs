@@ -62,6 +62,7 @@ namespace MES.Application.Commands.TruckInfo
                     TruckNumber = item.TruckNumber,
                     Driver = item.Driver,
                     InputWeight = item.InputWeight,
+                    Actived = true,
                     CreateTime = DateTime.Now,
                     CreateBy = string.IsNullOrEmpty(TokenExtensions.GetUserId()) ? null : Guid.Parse(TokenExtensions.GetUserId())
                 });

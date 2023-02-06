@@ -150,7 +150,7 @@ namespace MES.Application.Commands.MES
                     //Số phương tiện
                     VehicleCode = x.VehicleCode,
                     //Id cân xe tải
-                    TruckInfoId = x.TruckInfoId,    
+                    TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,    
                     //Số xe tải 
                     TruckQuantity = x.TruckQuantity,
                     //Ghi chú

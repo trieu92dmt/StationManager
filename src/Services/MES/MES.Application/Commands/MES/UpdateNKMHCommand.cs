@@ -183,7 +183,7 @@ namespace MES.Application.Commands.MES
                 //Convert Base64 to Iformfile
                 if (!string.IsNullOrEmpty(item.Image))
                 {
-                    byte[] bytes = Convert.FromBase64String(item.Image);
+                    byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
                     IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKMHId.ToString(), item.NKMHId.ToString());

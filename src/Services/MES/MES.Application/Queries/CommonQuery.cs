@@ -412,7 +412,9 @@ namespace MES.Application.Queries
         {
             var response = await _truckInfoRepo.GetQuery(x => (string.IsNullOrEmpty(keyword) ? true : x.TruckNumber.Contains(keyword)) &&
                                                               x.PlantCode == plant &&
-                                                              x.CreateTime == DateTime.Now)
+                                                              (x.CreateTime.HasValue ? x.CreateTime.Value.Date == DateTime.Now.Date &&
+                                                                                       x.CreateTime.Value.Month == DateTime.Now.Month &&
+                                                                                       x.CreateTime.Value.Year == DateTime.Now.Year: false))
                                   .OrderBy(x => x.TruckNumber).ThenByDescending(x => x.CreateTime)
                                   .Select(x => new Common2Response
                                   {

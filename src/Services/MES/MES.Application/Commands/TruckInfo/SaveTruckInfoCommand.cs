@@ -22,13 +22,15 @@ namespace MES.Application.Commands.TruckInfo
     public class SaveTruckInfo
     {
         //Mã plant
-        [Required]
+        [Required(ErrorMessage = "Mã nhà máy không được để trống")]
         public string PlantCode { get; set; }
         //Số xe tải
+        [Required(ErrorMessage = "Số xe tải không được để trống")]
         public string TruckNumber { get; set; }
         //Tài xế xe tải
         public string Driver { get; set; }
         //Số cân đầu vào
+        [Required(ErrorMessage = "Số cân đầu vào không được để trống")]
         public decimal? InputWeight { get; set; }
     }
 

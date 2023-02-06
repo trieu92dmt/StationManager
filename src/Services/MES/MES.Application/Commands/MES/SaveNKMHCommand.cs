@@ -43,6 +43,10 @@ namespace MES.Application.Commands.MES
         public Guid? TruckInfoId { get; set; }
         //Số xe tải
         public string TruckQuantity { get; set; }
+        //Số cân đầu vào
+        public decimal? InputWeight { get; set; }
+        //Số cân đầu ra
+        public decimal? OutputWeight { get; set; }
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
@@ -153,6 +157,9 @@ namespace MES.Application.Commands.MES
                     TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,    
                     //Số xe tải 
                     TruckQuantity = x.TruckQuantity,
+                    //Số cân đầu vào
+                    InputWeight = x.InputWeight,
+                    OutputWeight = x.OutputWeight,
                     //Ghi chú
                     Description = x.Description,
                     //Hình ảnh

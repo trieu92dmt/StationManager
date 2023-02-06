@@ -13,14 +13,11 @@ namespace ISD.Core.Attributes
 
             var msgData = actionContext.ModelState
                     .Where(ms => ms.Value.Errors.Any())
-                    .Select(m => new
-                    {
-                        key = m.Key,
-                        value = m.Value.Errors.FirstOrDefault().ErrorMessage
-                    })
-                    .ToList();
+                    .Select(m => m.Value.Errors.FirstOrDefault().ErrorMessage
+                    )
+                    .FirstOrDefault();
 
-            responseObj.Message = JsonConvert.SerializeObject(msgData);
+            responseObj.Message = msgData;
 
             var responseContext = new BadRequestObjectResult(responseObj)
             {

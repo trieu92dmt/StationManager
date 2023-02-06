@@ -55,11 +55,12 @@ namespace MES.Application.Queries
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<TruckInfoModel> _truckInfoRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
                          IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
                          IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo, IRepository<CatalogModel> cataRepo,
-                         IRepository<StorageLocationModel> slocRepo)
+                         IRepository<StorageLocationModel> slocRepo, IRepository<TruckInfoModel> truckInfoRepo)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -71,6 +72,7 @@ namespace MES.Application.Queries
             _scaleRepo = scaleRepo;
             _cataRepo = cataRepo;
             _slocRepo = slocRepo;
+            _truckInfoRepo = truckInfoRepo;
         }
 
 
@@ -93,6 +95,9 @@ namespace MES.Application.Queries
 
             //Danh sách sloc
             var slocs = _slocRepo.GetQuery(x => x.PlantCode == request.Plant).AsNoTracking();
+
+            //Danh sách dữ liệu cân xe tải
+            var truckInfo = _truckInfoRepo.GetQuery().AsNoTracking();
 
             //Product
             var product =  _prdRep.GetQuery().AsNoTracking();

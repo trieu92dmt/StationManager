@@ -79,6 +79,7 @@ namespace MES.Application.Queries
                                                      (req.RecordTimeFrom.HasValue ? x.CreateTime >= req.RecordTimeFrom && x.CreateTime <= req.RecordTimeTo : true) &&
                                                      //Lọc theo create by
                                                      (req.CreateBy.HasValue ? x.CreateBy == req.CreateBy : true))
+                                      .OrderByDescending(x => x.CreateTime)
                                       .Select(x => new SearchTruckInfoResponse
                                       {
                                           TruckInfoId = x.TruckInfoCode,

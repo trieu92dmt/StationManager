@@ -308,7 +308,8 @@ namespace MES.Application.Queries
                                             .Include(x => x.PurchaseOrder)
                                             .Where(x => x.DeliveryCompleted != "X" &&
                                                         x.DeletionInd != "X" &&
-                                                        x.PurchaseOrder.DeletionInd != "X")
+                                                        x.PurchaseOrder.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.ReleaseIndicator == "R")
                                             .AsNoTracking();
 
 
@@ -353,6 +354,16 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryPO = queryPO.Where(x => x.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderFrom) >=0 &&
                                              x.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderTo) <=0);
+            }
+            //Lọc document date
+            if (request.DocumentDateFrom.HasValue)
+            {
+                if (!request.DocumentDateTo.HasValue)
+                {
+                    request.DocumentDateTo = request.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
+                }
+                queryPO = queryPO.Where(x => x.PurchaseOrder.DocumentDate >= request.DocumentDateFrom &&
+                                                 x.PurchaseOrder.DocumentDate <= request.DocumentDateTo);
             }
 
             //Data vendor

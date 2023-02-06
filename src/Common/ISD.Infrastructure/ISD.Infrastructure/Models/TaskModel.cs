@@ -15,7 +15,6 @@ namespace ISD.Infrastructure.Models
         public TaskModel()
         {
             Task_File_Mapping = new HashSet<Task_File_Mapping>();
-            ThucThiLenhSanXuatModel = new HashSet<ThucThiLenhSanXuatModel>();
         }
 
         [Key]
@@ -188,7 +187,5 @@ namespace ISD.Infrastructure.Models
 
         [InverseProperty("Task")]
         public virtual ICollection<Task_File_Mapping> Task_File_Mapping { get; set; }
-        [InverseProperty("ParentTask")]
-        public virtual ICollection<ThucThiLenhSanXuatModel> ThucThiLenhSanXuatModel { get; set; }
     }
 }

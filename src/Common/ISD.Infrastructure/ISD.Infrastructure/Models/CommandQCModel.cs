@@ -54,9 +54,6 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("ProductId")]
         [InverseProperty("CommandQCModel")]
         public virtual ProductModel1 Product { get; set; }
-        [ForeignKey("StepId")]
-        [InverseProperty("CommandQCModel")]
-        public virtual RoutingModel Step { get; set; }
         [InverseProperty("CommandQC")]
         public virtual ICollection<DetailQCModel> DetailQCModel { get; set; }
     }

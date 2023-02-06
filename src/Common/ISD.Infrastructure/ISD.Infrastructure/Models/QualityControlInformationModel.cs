@@ -11,11 +11,6 @@ namespace ISD.Infrastructure.Models
     [Table("QualityControlInformationModel", Schema = "tMasterData")]
     public partial class QualityControlInformationModel
     {
-        public QualityControlInformationModel()
-        {
-            WorkCenterCode = new HashSet<WorkCenterModel>();
-        }
-
         [Key]
         public Guid Id { get; set; }
         public int Code { get; set; }
@@ -31,9 +26,5 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
-
-        [ForeignKey("QualityControlInformationId")]
-        [InverseProperty("QualityControlInformation")]
-        public virtual ICollection<WorkCenterModel> WorkCenterCode { get; set; }
     }
 }

@@ -20,8 +20,5 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("DepartmentId")]
         [InverseProperty("Department_Routing_Mapping")]
         public virtual DepartmentModel Department { get; set; }
-        [ForeignKey("StepId")]
-        [InverseProperty("Department_Routing_Mapping")]
-        public virtual RoutingModel Step { get; set; }
     }
 }

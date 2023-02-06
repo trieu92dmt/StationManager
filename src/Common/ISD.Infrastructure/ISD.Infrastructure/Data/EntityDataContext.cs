@@ -34,9 +34,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<ApplicationConfig> ApplicationConfig { get; set; }
         public virtual DbSet<ApplicationLog> ApplicationLog { get; set; }
         public virtual DbSet<AppointmentModel> AppointmentModel { get; set; }
-        public virtual DbSet<AssignmentModel> AssignmentModel { get; set; }
-        public virtual DbSet<Assignment_ProductionOrderModel> Assignment_ProductionOrderModel { get; set; }
-        public virtual DbSet<Assignment_StepModel> Assignment_StepModel { get; set; }
         public virtual DbSet<AutoConditionModel> AutoConditionModel { get; set; }
         public virtual DbSet<BC01Model> BC01Model { get; set; }
         public virtual DbSet<BC03Model> BC03Model { get; set; }
@@ -45,10 +42,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<BC16Model> BC16Model { get; set; }
         public virtual DbSet<BC18Model> BC18Model { get; set; }
         public virtual DbSet<BC19Model> BC19Model { get; set; }
-        public virtual DbSet<BOMDetailModel> BOMDetailModel { get; set; }
-        public virtual DbSet<BOMHeaderModel> BOMHeaderModel { get; set; }
-        public virtual DbSet<BOM_Header_InventorModel> BOM_Header_InventorModel { get; set; }
-        public virtual DbSet<BOM_Item_InventorModel> BOM_Item_InventorModel { get; set; }
         public virtual DbSet<BangTinModel> BangTinModel { get; set; }
         public virtual DbSet<BannerModel> BannerModel { get; set; }
         public virtual DbSet<BookingModel> BookingModel { get; set; }
@@ -72,8 +65,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<CompanyModel> CompanyModel { get; set; }
         public virtual DbSet<ConfigurationModel> ConfigurationModel { get; set; }
         public virtual DbSet<ConfirmStageModel> ConfirmStageModel { get; set; }
-        public virtual DbSet<ConsumableMaterialsDeliveryModel> ConsumableMaterialsDeliveryModel { get; set; }
-        public virtual DbSet<ContConfigModel> ContConfigModel { get; set; }
         public virtual DbSet<ContRegisterModel> ContRegisterModel { get; set; }
         public virtual DbSet<ContRegisterSO60Model> ContRegisterSO60Model { get; set; }
         public virtual DbSet<ContactDetailModel> ContactDetailModel { get; set; }
@@ -94,8 +85,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<CustomerTastes_ProductGroupModel> CustomerTastes_ProductGroupModel { get; set; }
         public virtual DbSet<CustomerTastes_WoodGrainModel> CustomerTastes_WoodGrainModel { get; set; }
         public virtual DbSet<DatatableConfig> DatatableConfig { get; set; }
-        public virtual DbSet<DateClosedHistoryModel> DateClosedHistoryModel { get; set; }
-        public virtual DbSet<DateClosedModel> DateClosedModel { get; set; }
         public virtual DbSet<DeliveryDetailModel> DeliveryDetailModel { get; set; }
         public virtual DbSet<DeliveryModel> DeliveryModel { get; set; }
         public virtual DbSet<DepartmentModel> DepartmentModel { get; set; }
@@ -103,6 +92,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<Department_Routing_Mapping> Department_Routing_Mapping { get; set; }
         public virtual DbSet<DetailOutboundDeliveryModel> DetailOutboundDeliveryModel { get; set; }
         public virtual DbSet<DetailQCModel> DetailQCModel { get; set; }
+        public virtual DbSet<DetailReservationModel> DetailReservationModel { get; set; }
         public virtual DbSet<DetailSaleOrderModel> DetailSaleOrderModel { get; set; }
         public virtual DbSet<DetailSalesDocumentModel> DetailSalesDocumentModel { get; set; }
         public virtual DbSet<DetailStageTranferModel> DetailStageTranferModel { get; set; }
@@ -116,8 +106,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<EmployeeRecordModel> EmployeeRecordModel { get; set; }
         public virtual DbSet<EquimenRecordModel> EquimenRecordModel { get; set; }
         public virtual DbSet<EquipmentCardModel> EquipmentCardModel { get; set; }
-        public virtual DbSet<EquipmentGroupModel> EquipmentGroupModel { get; set; }
-        public virtual DbSet<EquipmentModel> EquipmentModel { get; set; }
         public virtual DbSet<EquipmentStatus_Temp> EquipmentStatus_Temp { get; set; }
         public virtual DbSet<ErrorListModel> ErrorListModel { get; set; }
         public virtual DbSet<ExcelLogModel> ExcelLogModel { get; set; }
@@ -129,7 +117,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<GH_NotificationModel> GH_NotificationModel { get; set; }
         public virtual DbSet<GoodsReceiptModel> GoodsReceiptModel { get; set; }
         public virtual DbSet<GoodsReturnModel> GoodsReturnModel { get; set; }
-        public virtual DbSet<HangTagModel> HangTagModel { get; set; }
         public virtual DbSet<Hash> Hash { get; set; }
         public virtual DbSet<HeaderSaleOrderModel> HeaderSaleOrderModel { get; set; }
         public virtual DbSet<HistoryModel> HistoryModel { get; set; }
@@ -146,22 +133,17 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<Log_BC18Model> Log_BC18Model { get; set; }
         public virtual DbSet<MachineChainModel> MachineChainModel { get; set; }
         public virtual DbSet<MailServerProviderModel> MailServerProviderModel { get; set; }
-        public virtual DbSet<MarmModel> MarmModel { get; set; }
         public virtual DbSet<MatchCardCommandModel> MatchCardCommandModel { get; set; }
-        public virtual DbSet<MaterialGroupModel> MaterialGroupModel { get; set; }
         public virtual DbSet<MaterialModel> MaterialModel { get; set; }
         public virtual DbSet<MaterialTypeModel> MaterialTypeModel { get; set; }
-        public virtual DbSet<MaterialTypeModel1> MaterialTypeModel1 { get; set; }
         public virtual DbSet<MemberOfExternalProfileTargetGroupModel> MemberOfExternalProfileTargetGroupModel { get; set; }
         public virtual DbSet<MemberOfTargetGroupModel> MemberOfTargetGroupModel { get; set; }
         public virtual DbSet<MenuModel> MenuModel { get; set; }
         public virtual DbSet<MesSyncLogModel> MesSyncLogModel { get; set; }
-        public virtual DbSet<MigoModel> MigoModel { get; set; }
         public virtual DbSet<MobileScreenModel> MobileScreenModel { get; set; }
         public virtual DbSet<MobileScreenPermissionModel> MobileScreenPermissionModel { get; set; }
         public virtual DbSet<ModuleModel> ModuleModel { get; set; }
         public virtual DbSet<MoldRecordModel> MoldRecordModel { get; set; }
-        public virtual DbSet<NFCCheckInOutModel> NFCCheckInOutModel { get; set; }
         public virtual DbSet<NewsCategoryModel> NewsCategoryModel { get; set; }
         public virtual DbSet<NewsModel> NewsModel { get; set; }
         public virtual DbSet<News_Company_Mapping> News_Company_Mapping { get; set; }
@@ -170,7 +152,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<OrderTypeModel> OrderTypeModel { get; set; }
         public virtual DbSet<OutboundDeliveryModel> OutboundDeliveryModel { get; set; }
         public virtual DbSet<OutputRecordModel> OutputRecordModel { get; set; }
-        public virtual DbSet<POTEXT_PR_SO_Model> POTEXT_PR_SO_Model { get; set; }
         public virtual DbSet<PageModel> PageModel { get; set; }
         public virtual DbSet<PagePermissionModel> PagePermissionModel { get; set; }
         public virtual DbSet<Page_Module_Mapping> Page_Module_Mapping { get; set; }
@@ -182,7 +163,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<PersonInChargeModel> PersonInChargeModel { get; set; }
         public virtual DbSet<PhysicsWorkShopModel> PhysicsWorkShopModel { get; set; }
         public virtual DbSet<PlantModel> PlantModel { get; set; }
-        public virtual DbSet<PlantRoutingConfigModel> PlantRoutingConfigModel { get; set; }
         public virtual DbSet<PlateFeeDetailModel> PlateFeeDetailModel { get; set; }
         public virtual DbSet<PlateFeeModel> PlateFeeModel { get; set; }
         public virtual DbSet<PrintMoldModel> PrintMoldModel { get; set; }
@@ -190,18 +170,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<ProductHierarchyModel> ProductHierarchyModel { get; set; }
         public virtual DbSet<ProductModel> ProductModel { get; set; }
         public virtual DbSet<ProductModel1> ProductModel1 { get; set; }
-        public virtual DbSet<ProductVersionModel> ProductVersionModel { get; set; }
         public virtual DbSet<ProductWarrantyModel> ProductWarrantyModel { get; set; }
-        public virtual DbSet<Product_Routing_Mapping> Product_Routing_Mapping { get; set; }
-        public virtual DbSet<Product_Routing_Mapping_Deleted> Product_Routing_Mapping_Deleted { get; set; }
-        public virtual DbSet<Product_Routing_Mold_Mapping> Product_Routing_Mold_Mapping { get; set; }
-        public virtual DbSet<Product_Routing_Mold_Mapping_Deleted> Product_Routing_Mold_Mapping_Deleted { get; set; }
-        public virtual DbSet<ProductionComponent80Model> ProductionComponent80Model { get; set; }
-        public virtual DbSet<ProductionComponentModel> ProductionComponentModel { get; set; }
-        public virtual DbSet<ProductionOperation80Model> ProductionOperation80Model { get; set; }
-        public virtual DbSet<ProductionOperationModel> ProductionOperationModel { get; set; }
-        public virtual DbSet<ProductionOrder80Model> ProductionOrder80Model { get; set; }
-        public virtual DbSet<ProductionOrderModel> ProductionOrderModel { get; set; }
         public virtual DbSet<ProfileBAttributeModel> ProfileBAttributeModel { get; set; }
         public virtual DbSet<ProfileCAttributeModel> ProfileCAttributeModel { get; set; }
         public virtual DbSet<ProfileCareerModel> ProfileCareerModel { get; set; }
@@ -233,18 +202,9 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<ProvinceModel> ProvinceModel { get; set; }
         public virtual DbSet<PurchaseOrderDetailModel> PurchaseOrderDetailModel { get; set; }
         public virtual DbSet<PurchaseOrderMasterModel> PurchaseOrderMasterModel { get; set; }
-        public virtual DbSet<PurchaseOrderModel> PurchaseOrderModel { get; set; }
-        public virtual DbSet<PurchaseRequisitionModel> PurchaseRequisitionModel { get; set; }
         public virtual DbSet<PurchasingGroupModel> PurchasingGroupModel { get; set; }
         public virtual DbSet<PurchasingOrgModel> PurchasingOrgModel { get; set; }
-        public virtual DbSet<QualityControlDetailModel> QualityControlDetailModel { get; set; }
         public virtual DbSet<QualityControlInformationModel> QualityControlInformationModel { get; set; }
-        public virtual DbSet<QualityControlModel> QualityControlModel { get; set; }
-        public virtual DbSet<QualityControl_Error_File_Mapping> QualityControl_Error_File_Mapping { get; set; }
-        public virtual DbSet<QualityControl_Error_Mapping> QualityControl_Error_Mapping { get; set; }
-        public virtual DbSet<QualityControl_FileAttachment_Mapping> QualityControl_FileAttachment_Mapping { get; set; }
-        public virtual DbSet<QualityControl_QCInformation_File_Mapping> QualityControl_QCInformation_File_Mapping { get; set; }
-        public virtual DbSet<QualityControl_QCInformation_Mapping> QualityControl_QCInformation_Mapping { get; set; }
         public virtual DbSet<QuestionBankModel> QuestionBankModel { get; set; }
         public virtual DbSet<RatingModel> RatingModel { get; set; }
         public virtual DbSet<RefreshToken> RefreshToken { get; set; }
@@ -256,25 +216,9 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<RoleInChargeDeletedModel> RoleInChargeDeletedModel { get; set; }
         public virtual DbSet<RoleInChargeModel> RoleInChargeModel { get; set; }
         public virtual DbSet<RolesModel> RolesModel { get; set; }
-        public virtual DbSet<RoutingInventorModel> RoutingInventorModel { get; set; }
-        public virtual DbSet<RoutingModel> RoutingModel { get; set; }
-        public virtual DbSet<RoutingSapModel> RoutingSapModel { get; set; }
         public virtual DbSet<Routing_Equipment_Mapping> Routing_Equipment_Mapping { get; set; }
         public virtual DbSet<SMSModel> SMSModel { get; set; }
-        public virtual DbSet<SO100ScheduleLineModel> SO100ScheduleLineModel { get; set; }
-        public virtual DbSet<SO100TextModel> SO100TextModel { get; set; }
-        public virtual DbSet<SO80ScheduleLineModel> SO80ScheduleLineModel { get; set; }
-        public virtual DbSet<SO80TextModel> SO80TextModel { get; set; }
-        public virtual DbSet<SOTEXT_PR_Model> SOTEXT_PR_Model { get; set; }
-        public virtual DbSet<SOTextHeader100Model> SOTextHeader100Model { get; set; }
-        public virtual DbSet<SOTextHeader80Model> SOTextHeader80Model { get; set; }
-        public virtual DbSet<SOTextItem100Model> SOTextItem100Model { get; set; }
-        public virtual DbSet<SOTextItem80Model> SOTextItem80Model { get; set; }
         public virtual DbSet<SaleOrderDetailModel> SaleOrderDetailModel { get; set; }
-        public virtual DbSet<SaleOrderHeader100Model> SaleOrderHeader100Model { get; set; }
-        public virtual DbSet<SaleOrderHeader80Model> SaleOrderHeader80Model { get; set; }
-        public virtual DbSet<SaleOrderItem100Model> SaleOrderItem100Model { get; set; }
-        public virtual DbSet<SaleOrderItem80Model> SaleOrderItem80Model { get; set; }
         public virtual DbSet<SaleOrderMasterModel> SaleOrderMasterModel { get; set; }
         public virtual DbSet<SaleOrgModel> SaleOrgModel { get; set; }
         public virtual DbSet<SaleProcessModel> SaleProcessModel { get; set; }
@@ -340,7 +284,6 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<TemplateAndGiftMemberModel> TemplateAndGiftMemberModel { get; set; }
         public virtual DbSet<TemplateAndGiftTargetGroupModel> TemplateAndGiftTargetGroupModel { get; set; }
         public virtual DbSet<TestTargetModel> TestTargetModel { get; set; }
-        public virtual DbSet<ThucThiLenhSanXuatModel> ThucThiLenhSanXuatModel { get; set; }
         public virtual DbSet<TransferDetailModel> TransferDetailModel { get; set; }
         public virtual DbSet<TransferModel> TransferModel { get; set; }
         public virtual DbSet<TruckInfoModel> TruckInfoModel { get; set; }
@@ -373,18 +316,13 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<WardModel> WardModel { get; set; }
         public virtual DbSet<WarehouseModel> WarehouseModel { get; set; }
         public virtual DbSet<WarrantyModel> WarrantyModel { get; set; }
-        public virtual DbSet<WeighModel> WeighModel { get; set; }
         public virtual DbSet<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
         public virtual DbSet<WeighSessionModel> WeighSessionModel { get; set; }
-        public virtual DbSet<WeighingSessionDetailModel> WeighingSessionDetailModel { get; set; }
-        public virtual DbSet<WeighingSessionModel> WeighingSessionModel { get; set; }
-        public virtual DbSet<WorkCenterModel> WorkCenterModel { get; set; }
         public virtual DbSet<WorkFlowCategoryModel> WorkFlowCategoryModel { get; set; }
         public virtual DbSet<WorkFlowConfigModel> WorkFlowConfigModel { get; set; }
         public virtual DbSet<WorkFlowFieldModel> WorkFlowFieldModel { get; set; }
         public virtual DbSet<WorkFlowModel> WorkFlowModel { get; set; }
         public virtual DbSet<WorkOrderModel> WorkOrderModel { get; set; }
-        public virtual DbSet<WorkShopModel> WorkShopModel { get; set; }
         public virtual DbSet<WorkingDateModel> WorkingDateModel { get; set; }
         public virtual DbSet<WorkingTimeConfigModel> WorkingTimeConfigModel { get; set; }
         public virtual DbSet<WorkingTimeDetailModel> WorkingTimeDetailModel { get; set; }
@@ -528,21 +466,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.AppointmentId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<AssignmentModel>(entity =>
-            {
-                entity.Property(e => e.AssignmentId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<Assignment_ProductionOrderModel>(entity =>
-            {
-                entity.Property(e => e.AssignmentProductionOrderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<Assignment_StepModel>(entity =>
-            {
-                entity.Property(e => e.AssignmentStepId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<AutoConditionModel>(entity =>
             {
                 entity.Property(e => e.AutoConditionId).ValueGeneratedNever();
@@ -581,35 +504,6 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<BC19Model>(entity =>
             {
                 entity.Property(e => e.BC19Id).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<BOMDetailModel>(entity =>
-            {
-                entity.HasKey(e => e.BomDetailId)
-                    .HasName("PK_BomDetailModel");
-
-                entity.Property(e => e.BomDetailId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<BOMHeaderModel>(entity =>
-            {
-                entity.HasKey(e => e.BomHeaderId)
-                    .HasName("PK_BomHeaderModel");
-
-                entity.Property(e => e.BomHeaderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<BOM_Header_InventorModel>(entity =>
-            {
-                entity.Property(e => e.BOMHeaderInventorId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<BOM_Item_InventorModel>(entity =>
-            {
-                entity.HasKey(e => e.BOMItemInventorId)
-                    .HasName("PK_MES.BOM_Item_InventorModel");
-
-                entity.Property(e => e.BOMItemInventorId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<BangTinModel>(entity =>
@@ -739,11 +633,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.CommandQCModel)
                     .HasForeignKey(d => d.ProductId)
                     .HasConstraintName("FK_CommandQCModel_ProductModel");
-
-                entity.HasOne(d => d.Step)
-                    .WithMany(p => p.CommandQCModel)
-                    .HasForeignKey(d => d.StepId)
-                    .HasConstraintName("FK_CommandQCModel_RoutingModel");
             });
 
             modelBuilder.Entity<Comment_File_Mapping>(entity =>
@@ -776,16 +665,6 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<ConfirmStageModel>(entity =>
             {
                 entity.Property(e => e.ConfirmStageId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ConsumableMaterialsDeliveryModel>(entity =>
-            {
-                entity.Property(e => e.ConsumableMaterialsDeliveryId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ContConfigModel>(entity =>
-            {
-                entity.Property(e => e.ContConfigId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ContRegisterModel>(entity =>
@@ -936,16 +815,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.ConfigId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<DateClosedHistoryModel>(entity =>
-            {
-                entity.Property(e => e.DateClosedId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<DateClosedModel>(entity =>
-            {
-                entity.Property(e => e.DateClosedId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<DeliveryDetailModel>(entity =>
             {
                 entity.Property(e => e.DeliveryDetailId).ValueGeneratedNever();
@@ -1022,12 +891,6 @@ namespace ISD.Infrastructure.Data
                     .HasForeignKey(d => d.DepartmentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Department_Routing_Mapping_DepartmentModel");
-
-                entity.HasOne(d => d.Step)
-                    .WithMany(p => p.Department_Routing_Mapping)
-                    .HasForeignKey(d => d.StepId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Department_Routing_Mapping_RoutingModel");
             });
 
             modelBuilder.Entity<DetailOutboundDeliveryModel>(entity =>
@@ -1060,6 +923,16 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.DetailQCModel)
                     .HasForeignKey(d => d.TestTargetId)
                     .HasConstraintName("FK_DetailQCModel_TestTargetModel");
+            });
+
+            modelBuilder.Entity<DetailReservationModel>(entity =>
+            {
+                entity.Property(e => e.DetailReservationId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Reservation)
+                    .WithMany(p => p.DetailReservationModel)
+                    .HasForeignKey(d => d.ReservationId)
+                    .HasConstraintName("FK_DetailReservationModel_ReservationModel");
             });
 
             modelBuilder.Entity<DetailSaleOrderModel>(entity =>
@@ -1193,23 +1066,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.EquipmentCardId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<EquipmentGroupModel>(entity =>
-            {
-                entity.Property(e => e.EquipmentGroupId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<EquipmentModel>(entity =>
-            {
-                entity.Property(e => e.EquipmentId).ValueGeneratedNever();
-
-                entity.Property(e => e.EquipmentIntId).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.WorkShop)
-                    .WithMany(p => p.EquipmentModel)
-                    .HasForeignKey(d => d.WorkShopId)
-                    .HasConstraintName("FK_EquipmentModel_WorkShopModel");
-            });
-
             modelBuilder.Entity<EquipmentStatus_Temp>(entity =>
             {
                 entity.Property(e => e.id).ValueGeneratedNever();
@@ -1277,11 +1133,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.GoodsReturnModel)
                     .HasForeignKey(d => d.DetailODId)
                     .HasConstraintName("FK_GoodsReturnModel_DetailOutboundDeliveryModel");
-            });
-
-            modelBuilder.Entity<HangTagModel>(entity =>
-            {
-                entity.Property(e => e.HangTagId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Hash>(entity =>
@@ -1407,22 +1258,9 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<MarmModel>(entity =>
-            {
-                entity.Property(e => e.MarnId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<MatchCardCommandModel>(entity =>
             {
                 entity.Property(e => e.MatchCardCommandId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<MaterialGroupModel>(entity =>
-            {
-                entity.HasKey(e => e.MaterialGroupId)
-                    .HasName("PK_MaterialGroup");
-
-                entity.Property(e => e.MaterialGroupId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<MaterialModel>(entity =>
@@ -1460,14 +1298,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.MaterialTypeId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<MaterialTypeModel1>(entity =>
-            {
-                entity.HasKey(e => e.MaterialTypeId)
-                    .HasName("PK_MaterialType");
-
-                entity.Property(e => e.MaterialTypeId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<MemberOfExternalProfileTargetGroupModel>(entity =>
             {
                 entity.Property(e => e.ExternalProfileTargetGroupId).ValueGeneratedNever();
@@ -1498,11 +1328,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.MenuModel)
                     .HasForeignKey(d => d.ModuleId)
                     .HasConstraintName("FK_MenuModel_ModuleModel");
-            });
-
-            modelBuilder.Entity<MigoModel>(entity =>
-            {
-                entity.Property(e => e.MigoId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<MobileScreenModel>(entity =>
@@ -1566,11 +1391,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.MoldRecordModel)
                     .HasForeignKey(d => d.OutputRecordId)
                     .HasConstraintName("FK_MoldRecordModel_OutputRecordModel");
-            });
-
-            modelBuilder.Entity<NFCCheckInOutModel>(entity =>
-            {
-                entity.Property(e => e.CheckInId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<NewsCategoryModel>(entity =>
@@ -1643,11 +1463,6 @@ namespace ISD.Infrastructure.Data
                     .WithMany(p => p.OutputRecordModel)
                     .HasForeignKey(d => d.StockId)
                     .HasConstraintName("FK_OutputRecordModel_StockModel");
-            });
-
-            modelBuilder.Entity<POTEXT_PR_SO_Model>(entity =>
-            {
-                entity.Property(e => e.POTEXTId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<PageModel>(entity =>
@@ -1829,11 +1644,6 @@ namespace ISD.Infrastructure.Data
                     .HasConstraintName("FK_ProductModel_CategoryModel2");
             });
 
-            modelBuilder.Entity<ProductVersionModel>(entity =>
-            {
-                entity.Property(e => e.ProductVersionId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<ProductWarrantyModel>(entity =>
             {
                 entity.Property(e => e.ProductWarrantyId).ValueGeneratedNever();
@@ -1857,62 +1667,6 @@ namespace ISD.Infrastructure.Data
                     .HasForeignKey(d => d.WarrantyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductWarrantyModel_WarrantyModel");
-            });
-
-            modelBuilder.Entity<Product_Routing_Mapping>(entity =>
-            {
-                entity.Property(e => e.Product_Routing_MappingId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<Product_Routing_Mapping_Deleted>(entity =>
-            {
-                entity.Property(e => e.Product_Routing_MappingId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<Product_Routing_Mold_Mapping>(entity =>
-            {
-                entity.Property(e => e.Product_Routing_Mold_MappingId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product_Routing_Mapping)
-                    .WithMany(p => p.Product_Routing_Mold_Mapping)
-                    .HasForeignKey(d => d.Product_Routing_MappingId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Product_Routing_Mold_Mapping_Product_Routing_Mapping");
-            });
-
-            modelBuilder.Entity<Product_Routing_Mold_Mapping_Deleted>(entity =>
-            {
-                entity.Property(e => e.Product_Routing_Mold_MappingId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ProductionComponent80Model>(entity =>
-            {
-                entity.Property(e => e.ProductComponentId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ProductionComponentModel>(entity =>
-            {
-                entity.Property(e => e.ProductComponentId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ProductionOperation80Model>(entity =>
-            {
-                entity.Property(e => e.ProductOperationId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ProductionOperationModel>(entity =>
-            {
-                entity.Property(e => e.ProductOperationId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ProductionOrder80Model>(entity =>
-            {
-                entity.Property(e => e.ProductionOrderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ProductionOrderModel>(entity =>
-            {
-                entity.Property(e => e.ProductionOrderId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ProfileBAttributeModel>(entity =>
@@ -2173,16 +1927,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.PurchaseOrderId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<PurchaseOrderModel>(entity =>
-            {
-                entity.Property(e => e.PurchaseOrderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<PurchaseRequisitionModel>(entity =>
-            {
-                entity.Property(e => e.PurchaseRequisitionId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<PurchasingGroupModel>(entity =>
             {
                 entity.Property(e => e.PurchasingGroupId).ValueGeneratedNever();
@@ -2193,83 +1937,11 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.PurchasingOrgId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<QualityControlDetailModel>(entity =>
-            {
-                entity.Property(e => e.QualityControlDetailId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<QualityControlInformationModel>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Code).ValueGeneratedOnAdd();
-
-                entity.HasMany(d => d.WorkCenterCode)
-                    .WithMany(p => p.QualityControlInformation)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "QualityControlInformation_WorkCenter_Mapping",
-                        l => l.HasOne<WorkCenterModel>().WithMany().HasForeignKey("WorkCenterCode").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_QualityControlInformation_WorkCenter_Mapping_WorkCenterModel"),
-                        r => r.HasOne<QualityControlInformationModel>().WithMany().HasForeignKey("QualityControlInformationId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_QualityControlInformation_WorkCenter_Mapping_QualityControlInformation_WorkCenter_Mapping1"),
-                        j =>
-                        {
-                            j.HasKey("QualityControlInformationId", "WorkCenterCode");
-
-                            j.ToTable("QualityControlInformation_WorkCenter_Mapping", "MES");
-
-                            j.IndexerProperty<string>("WorkCenterCode").HasMaxLength(50);
-                        });
-            });
-
-            modelBuilder.Entity<QualityControlModel>(entity =>
-            {
-                entity.HasKey(e => e.QualityControlId)
-                    .HasName("PK_QualityControlModel_1");
-
-                entity.Property(e => e.QualityControlId).ValueGeneratedNever();
-
-                entity.Property(e => e.Environmental).IsFixedLength();
-
-                entity.Property(e => e.QualityControlCode).ValueGeneratedOnAdd();
-            });
-
-            modelBuilder.Entity<QualityControl_Error_File_Mapping>(entity =>
-            {
-                entity.HasKey(e => new { e.FileAttachmentId, e.QuanlityControl_Error_Id });
-            });
-
-            modelBuilder.Entity<QualityControl_Error_Mapping>(entity =>
-            {
-                entity.HasKey(e => e.QuanlityControl_Error_Id)
-                    .HasName("PK_QuanlityControl_Error_Mapping");
-
-                entity.Property(e => e.QuanlityControl_Error_Id).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<QualityControl_FileAttachment_Mapping>(entity =>
-            {
-                entity.HasKey(e => new { e.FileAttachmentId, e.QualityControlId });
-
-                entity.HasOne(d => d.FileAttachment)
-                    .WithMany(p => p.QualityControl_FileAttachment_Mapping)
-                    .HasForeignKey(d => d.FileAttachmentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_QualityControl_FileAttachment_Mapping_FileAttachmentModel");
-
-                entity.HasOne(d => d.QualityControl)
-                    .WithMany(p => p.QualityControl_FileAttachment_Mapping)
-                    .HasForeignKey(d => d.QualityControlId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_QualityControl_FileAttachment_Mapping_QualityControlModel");
-            });
-
-            modelBuilder.Entity<QualityControl_QCInformation_File_Mapping>(entity =>
-            {
-                entity.HasKey(e => new { e.FileAttachmentId, e.QualityControl_QCInformation_Id });
-            });
-
-            modelBuilder.Entity<QualityControl_QCInformation_Mapping>(entity =>
-            {
-                entity.Property(e => e.QualityControl_QCInformation_Id).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<QuestionBankModel>(entity =>
@@ -2326,6 +1998,9 @@ namespace ISD.Infrastructure.Data
 
             modelBuilder.Entity<ReservationModel>(entity =>
             {
+                entity.HasKey(e => e.ReservationId)
+                    .HasName("PK_ReservationModel_1");
+
                 entity.Property(e => e.ReservationId).ValueGeneratedNever();
             });
 
@@ -2358,21 +2033,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.RolesId).HasDefaultValueSql("(newsequentialid())");
             });
 
-            modelBuilder.Entity<RoutingInventorModel>(entity =>
-            {
-                entity.Property(e => e.RoutingInventorId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<RoutingModel>(entity =>
-            {
-                entity.Property(e => e.StepId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<RoutingSapModel>(entity =>
-            {
-                entity.Property(e => e.RoutingSapId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<Routing_Equipment_Mapping>(entity =>
             {
                 entity.Property(e => e.Routing_Equipment_MappingId).ValueGeneratedNever();
@@ -2381,51 +2041,6 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<SMSModel>(entity =>
             {
                 entity.Property(e => e.SMSId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SO100ScheduleLineModel>(entity =>
-            {
-                entity.Property(e => e.SO100ScheduleLineId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SO100TextModel>(entity =>
-            {
-                entity.Property(e => e.SO100TextId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SO80ScheduleLineModel>(entity =>
-            {
-                entity.Property(e => e.SO80ScheduleLineId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SO80TextModel>(entity =>
-            {
-                entity.Property(e => e.SO80TextId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SOTEXT_PR_Model>(entity =>
-            {
-                entity.HasKey(e => new { e.WERKS, e.BANFN, e.BNFPO, e.ZMES_VBELN, e.MATNR });
-            });
-
-            modelBuilder.Entity<SOTextHeader100Model>(entity =>
-            {
-                entity.Property(e => e.SOTextHeader100Id).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SOTextHeader80Model>(entity =>
-            {
-                entity.Property(e => e.SOTextHeader80Id).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SOTextItem100Model>(entity =>
-            {
-                entity.Property(e => e.SOTextItem100Id).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SOTextItem80Model>(entity =>
-            {
-                entity.Property(e => e.SOTextItem80Id).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<SaleOrderDetailModel>(entity =>
@@ -2440,32 +2055,6 @@ namespace ISD.Infrastructure.Data
                     .HasForeignKey(d => d.SaleOrderMasterId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_SaleOrderDetailModel_SaleOrderMasterModel");
-            });
-
-            modelBuilder.Entity<SaleOrderHeader100Model>(entity =>
-            {
-                entity.Property(e => e.SO100HeaderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SaleOrderHeader80Model>(entity =>
-            {
-                entity.HasKey(e => e.SOHeaderId)
-                    .HasName("PK_SaleOrderHeaderModel");
-
-                entity.Property(e => e.SOHeaderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SaleOrderItem100Model>(entity =>
-            {
-                entity.Property(e => e.SO100ItemId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SaleOrderItem80Model>(entity =>
-            {
-                entity.HasKey(e => e.SOItemId)
-                    .HasName("PK_SaleOrderItemModel");
-
-                entity.Property(e => e.SOItemId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<SaleOrderMasterModel>(entity =>
@@ -2765,11 +2354,6 @@ namespace ISD.Infrastructure.Data
                     .HasName("PK_StockRecevingDetailModel");
 
                 entity.Property(e => e.StockReceivingDetailId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.CustomerReferenceNavigation)
-                    .WithMany(p => p.StockReceivingDetailModel)
-                    .HasForeignKey(d => d.CustomerReference)
-                    .HasConstraintName("FK_StockReceivingDetailModel_ThucThiLenhSanXuatModel");
 
                 entity.HasOne(d => d.DateKeyNavigation)
                     .WithMany(p => p.StockReceivingDetailModel)
@@ -3133,24 +2717,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.TestTargetId).ValueGeneratedNever();
 
                 entity.Property(e => e.TargetCode).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.Step)
-                    .WithMany(p => p.TestTargetModel)
-                    .HasForeignKey(d => d.StepId)
-                    .HasConstraintName("FK_RoutingModel_TestTargetModel");
-            });
-
-            modelBuilder.Entity<ThucThiLenhSanXuatModel>(entity =>
-            {
-                entity.HasKey(e => e.TaskId)
-                    .HasName("PK_ThucThiLenhSanXuat");
-
-                entity.Property(e => e.TaskId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.ParentTask)
-                    .WithMany(p => p.ThucThiLenhSanXuatModel)
-                    .HasForeignKey(d => d.ParentTaskId)
-                    .HasConstraintName("FK_ThucThiLenhSanXuatModel_TaskModel");
             });
 
             modelBuilder.Entity<TransferDetailModel>(entity =>
@@ -3348,11 +2914,6 @@ namespace ISD.Infrastructure.Data
                 entity.Property(e => e.WarrantyId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<WeighModel>(entity =>
-            {
-                entity.Property(e => e.WeighId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<WeighSessionDetailModel>(entity =>
             {
                 entity.Property(e => e.WeighSessionDetailID).ValueGeneratedNever();
@@ -3375,18 +2936,6 @@ namespace ISD.Infrastructure.Data
                     .HasConstraintName("FK_WeighSessionModel_ScaleModel");
             });
 
-            modelBuilder.Entity<WeighingSessionDetailModel>(entity =>
-            {
-                entity.Property(e => e.WeighingSessionDetailId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<WeighingSessionModel>(entity =>
-            {
-                entity.Property(e => e.WeighingSessionId).ValueGeneratedNever();
-
-                entity.Property(e => e.Active).IsFixedLength();
-            });
-
             modelBuilder.Entity<WorkFlowConfigModel>(entity =>
             {
                 entity.HasKey(e => new { e.WorkFlowId, e.FieldCode });
@@ -3403,14 +2952,6 @@ namespace ISD.Infrastructure.Data
                     .HasName("PK_WorkOrderModel_1");
 
                 entity.Property(e => e.WorkOrderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<WorkShopModel>(entity =>
-            {
-                entity.HasKey(e => e.WorkShopId)
-                    .HasName("PK_WorkShop");
-
-                entity.Property(e => e.WorkShopId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<WorkingDateModel>(entity =>

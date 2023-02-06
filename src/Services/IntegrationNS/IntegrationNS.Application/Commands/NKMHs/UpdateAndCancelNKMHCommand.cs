@@ -88,7 +88,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                         Description = nkmh.Description,
                         MaterialCode = nkmh.MaterialCode,
                         MaterialCodeInt = nkmh.MaterialCodeInt,
-                        Image = nkmh.Image,
+                        Img = nkmh.Img,
                         Status = nkmh.Status,
                         StartTime = nkmh.StartTime,
                         EndTime = nkmh.EndTime,

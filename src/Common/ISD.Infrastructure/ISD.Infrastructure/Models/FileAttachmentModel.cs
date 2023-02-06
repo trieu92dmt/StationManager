@@ -15,7 +15,6 @@ namespace ISD.Infrastructure.Models
         {
             Comment_File_Mapping = new HashSet<Comment_File_Mapping>();
             Profile_File_Mapping = new HashSet<Profile_File_Mapping>();
-            QualityControl_FileAttachment_Mapping = new HashSet<QualityControl_FileAttachment_Mapping>();
             Task_File_Mapping = new HashSet<Task_File_Mapping>();
         }
 
@@ -50,8 +49,6 @@ namespace ISD.Infrastructure.Models
         public virtual ICollection<Comment_File_Mapping> Comment_File_Mapping { get; set; }
         [InverseProperty("FileAttachment")]
         public virtual ICollection<Profile_File_Mapping> Profile_File_Mapping { get; set; }
-        [InverseProperty("FileAttachment")]
-        public virtual ICollection<QualityControl_FileAttachment_Mapping> QualityControl_FileAttachment_Mapping { get; set; }
         [InverseProperty("FileAttachment")]
         public virtual ICollection<Task_File_Mapping> Task_File_Mapping { get; set; }
     }

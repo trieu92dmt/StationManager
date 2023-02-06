@@ -96,7 +96,7 @@ namespace IntegrationNS.Application.Queries
                 //Ghi chú
                 Description = nkmh.Description,
                 //Hình ảnh
-                Image = nkmh.Image,
+                Image = nkmh.Img,
                 //Trạng thái
                 Status = nkmh.Status,
                 //Thời gian bắt đầu và kết thúc

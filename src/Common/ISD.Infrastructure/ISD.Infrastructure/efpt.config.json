@@ -167,6 +167,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[DetailReservationModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[DetailSalesDocumentModel]",
          "ObjectType": 0
       },
@@ -228,6 +232,10 @@
       },
       {
          "Name": "[DataCollection].[PurchasingOrgModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ReservationModel]",
          "ObjectType": 0
       },
       {
@@ -548,266 +556,6 @@
       },
       {
          "Name": "[Marketing].[Unfollow]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[Assignment_ProductionOrderModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[Assignment_StepModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[AssignmentModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[BOM_Header_InventorModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[BOM_Item_InventorModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[BOMDetailModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[BOMHeaderModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ConsumableMaterialsDeliveryModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ContConfigModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[DateClosedHistoryModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[DateClosedModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[EquipmentGroupModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[EquipmentModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[HangTagModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[MarmModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[MaterialGroupModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[MaterialTypeModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[MigoModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[NFCCheckInOutModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[PlantRoutingConfigModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[POTEXT_PR_SO_Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[Product_Routing_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[Product_Routing_Mapping_Deleted]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[Product_Routing_Mold_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[Product_Routing_Mold_Mapping_Deleted]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ProductionComponent80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ProductionComponentModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ProductionOperation80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ProductionOperationModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ProductionOrder80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ProductionOrderModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ProductVersionModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[PurchaseOrderModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[PurchaseRequisitionModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControl_Error_File_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControl_Error_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControl_FileAttachment_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControl_QCInformation_File_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControl_QCInformation_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControlDetailModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControlInformation_WorkCenter_Mapping]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[QualityControlModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ReservationModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[RoutingInventorModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[RoutingModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[RoutingSapModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SaleOrderHeader100Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SaleOrderHeader80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SaleOrderItem100Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SaleOrderItem80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SO100ScheduleLineModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SO100TextModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SO80ScheduleLineModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SO80TextModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SOTEXT_PR_Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SOTextHeader100Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SOTextHeader80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SOTextItem100Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SOTextItem80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[ThucThiLenhSanXuatModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[WeighingSessionDetailModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[WeighingSessionModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[WeighModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[WorkCenterModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[WorkShopModel]",
          "ObjectType": 0
       },
       {

@@ -54,9 +54,6 @@ namespace ISD.Infrastructure.Models
         public string ConfirmWorkCenter { get; set; }
         public Guid? ConfirmBy { get; set; }
 
-        [ForeignKey("CustomerReference")]
-        [InverseProperty("StockReceivingDetailModel")]
-        public virtual ThucThiLenhSanXuatModel CustomerReferenceNavigation { get; set; }
         [ForeignKey("DateKey")]
         [InverseProperty("StockReceivingDetailModel")]
         public virtual DimDateModel DateKeyNavigation { get; set; }

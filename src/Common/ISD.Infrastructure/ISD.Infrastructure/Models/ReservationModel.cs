@@ -8,80 +8,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ISD.Infrastructure.Models
 {
-    [Table("ReservationModel", Schema = "MES")]
+    [Table("ReservationModel", Schema = "DataCollection")]
     public partial class ReservationModel
     {
+        public ReservationModel()
+        {
+            DetailReservationModel = new HashSet<DetailReservationModel>();
+        }
+
         [Key]
         public Guid ReservationId { get; set; }
         [StringLength(50)]
-        public string RSNUM { get; set; }
-        [StringLength(10)]
-        public string RSPOS { get; set; }
-        [StringLength(10)]
-        public string BDART { get; set; }
-        [StringLength(10)]
-        public string RSSTA { get; set; }
-        [StringLength(10)]
-        public string XLOEK { get; set; }
-        [StringLength(10)]
-        public string XWAOK { get; set; }
-        [StringLength(10)]
-        public string KZEAR { get; set; }
-        [StringLength(100)]
-        public string MATNR { get; set; }
-        [StringLength(10)]
-        public string WERKS { get; set; }
-        [StringLength(10)]
-        public string LGORT { get; set; }
+        public string ReservationCode { get; set; }
         [StringLength(50)]
-        public string CHARG { get; set; }
-        [StringLength(10)]
-        public string SOBKZ { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? BDTER { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? BDMNG { get; set; }
-        [StringLength(10)]
-        public string MEINS { get; set; }
-        [StringLength(10)]
-        public string SHKZG { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? ERFMG { get; set; }
-        [StringLength(10)]
-        public string ERFME { get; set; }
+        public string RequiremenType { get; set; }
         [StringLength(50)]
-        public string PLNUM { get; set; }
+        public string Status { get; set; }
         [StringLength(50)]
-        public string BANFN { get; set; }
-        [StringLength(10)]
-        public string BNFPO { get; set; }
+        public string FinalIssue { get; set; }
         [StringLength(50)]
-        public string AUFNR { get; set; }
+        public string Plant { get; set; }
         [StringLength(50)]
-        public string KDAUF { get; set; }
-        [StringLength(10)]
-        public string KDPOS { get; set; }
-        [StringLength(10)]
-        public string KDEIN { get; set; }
-        [StringLength(10)]
-        public string BWART { get; set; }
+        public string Sloc { get; set; }
         [StringLength(50)]
-        public string SAKNR { get; set; }
-        [StringLength(10)]
-        public string UMWRK { get; set; }
-        [StringLength(10)]
-        public string UMLGO { get; set; }
-        [StringLength(10)]
-        public string POSTP { get; set; }
-        [StringLength(10)]
-        public string POSNR { get; set; }
-        [StringLength(10)]
-        public string STLNR { get; set; }
-        [StringLength(10)]
-        public string STLKN { get; set; }
+        public string ReceivingPlant { get; set; }
+        [StringLength(50)]
+        public string ReceivingSloc { get; set; }
+        [StringLength(50)]
+        public string UnloadingPoint { get; set; }
+        [StringLength(50)]
+        public string Supplier { get; set; }
+        [StringLength(50)]
+        public string Customer { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
+        public Guid? CreateBy { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
+        public Guid? LastEditBy { get; set; }
+        public bool? Actived { get; set; }
+
+        [InverseProperty("Reservation")]
+        public virtual ICollection<DetailReservationModel> DetailReservationModel { get; set; }
     }
 }

@@ -35,9 +35,6 @@ namespace ISD.Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
 
-        [ForeignKey("StepId")]
-        [InverseProperty("TestTargetModel")]
-        public virtual RoutingModel Step { get; set; }
         [InverseProperty("TestTarget")]
         public virtual ICollection<DetailQCModel> DetailQCModel { get; set; }
     }

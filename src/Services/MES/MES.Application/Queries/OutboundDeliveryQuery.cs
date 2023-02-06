@@ -133,7 +133,7 @@ namespace MES.Application.Queries
             {
                 if (!command.DocumentDateTo.HasValue)
                 {
-                    command.DocumentDateTo = command.DocumentDateFrom;
+                    command.DocumentDateTo = command.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
                 }    
                 query = query.Where(x => x.OutboundDelivery.DocumentDate >= command.DocumentDateFrom &&
                                          x.OutboundDelivery.DocumentDate <= command.DocumentDateTo);

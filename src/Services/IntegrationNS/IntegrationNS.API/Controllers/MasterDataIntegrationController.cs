@@ -11,6 +11,7 @@ using IntegrationNS.Application.Commands.Products;
 using IntegrationNS.Application.Commands.PurchaseOrders;
 using IntegrationNS.Application.Commands.PurchasingGroups;
 using IntegrationNS.Application.Commands.PurchasingOrganizations;
+using IntegrationNS.Application.Commands.Reservation;
 using IntegrationNS.Application.Commands.SalesDocument;
 using IntegrationNS.Application.Commands.SalesOrgs;
 using IntegrationNS.Application.Commands.ShippingPoint;
@@ -1313,6 +1314,52 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa OutboundDelivery") });
+        }
+        #endregion
+
+        #region Tích hợp Reservation
+        /// <summary>
+        /// Tích hợp Reservation
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/outbound-delivery
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp PurchaseOrder thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("reservation")]
+        public async Task<IActionResult> ReservationIntegration([FromBody] ReservationIntegrationNSCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Reservation") });
+        }
+
+        /// <summary>
+        /// Xóa Reservation
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-reservation")]
+        public async Task<IActionResult> DeleteReservationIntegrationAsync([FromQuery] DeleteReservationIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Reservation") });
         }
         #endregion
     }

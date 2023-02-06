@@ -104,7 +104,7 @@ namespace MES.Application.Commands.MES
                                                .FirstOrDefaultAsync();
 
                 var imgPath = "";
-                if (string.IsNullOrEmpty(x.Image))
+                if (!string.IsNullOrEmpty(x.Image))
                 {
                     //Convert Base64 to Iformfile
                     byte[] bytes = Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',') + 1));

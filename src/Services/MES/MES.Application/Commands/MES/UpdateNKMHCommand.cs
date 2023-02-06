@@ -181,7 +181,7 @@ namespace MES.Application.Commands.MES
 
                 var imgPath = "";
                 //Convert Base64 to Iformfile
-                if (string.IsNullOrEmpty(item.Image))
+                if (!string.IsNullOrEmpty(item.Image))
                 {
                     byte[] bytes = Convert.FromBase64String(item.Image);
                     MemoryStream stream = new MemoryStream(bytes);

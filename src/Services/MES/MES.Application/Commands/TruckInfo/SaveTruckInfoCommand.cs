@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace MES.Application.Commands.TruckInfo
     public class SaveTruckInfo
     {
         //Mã plant
+        [Required]
         public string PlantCode { get; set; }
         //Số xe tải
         public string TruckNumber { get; set; }

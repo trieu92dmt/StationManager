@@ -186,6 +186,16 @@ namespace MES.Application.Queries
             {
                 command.DocumentDateTo = command.DocumentDateTo.Value.Date.AddDays(1).AddSeconds(-1);
             }
+
+            //Ngày cân
+            if (command.WeightDateFrom.HasValue)
+            {
+                command.WeightDateFrom = command.WeightDateFrom.Value.Date;
+            }
+            if (command.WeightDateTo.HasValue)
+            {
+                command.WeightDateTo = command.WeightDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+            }
             #endregion
 
             var user = _userRepo.GetQuery().AsNoTracking();
@@ -250,7 +260,7 @@ namespace MES.Application.Queries
             {
                 if (!command.DocumentDateTo.HasValue)
                 {
-                    command.DocumentDateTo = command.DocumentDateFrom;
+                    command.DocumentDateTo = command.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
                 }
                 query = query.Where(x => x.DocumentDate >= command.DocumentDateFrom &&
                                          x.DocumentDate <= command.DocumentDateTo);
@@ -265,7 +275,7 @@ namespace MES.Application.Queries
             //Check Ngày thực hiện cân
             if (command.WeightDateFrom.HasValue)
             {
-                if (!command.WeightDateTo.HasValue) command.WeightDateTo = command.WeightDateFrom;
+                if (!command.WeightDateTo.HasValue) command.WeightDateTo = command.WeightDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
                 query = query.Where(x => x.CreateTime >= command.WeightDateFrom &&
                                          x.CreateTime <= command.WeightDateTo);
             }

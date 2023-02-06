@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MES.Application.Queries
 {
@@ -89,6 +90,16 @@ namespace MES.Application.Queries
             {
                 request.DocumentDateTo = request.DocumentDateTo.Value.Date.AddDays(1).AddSeconds(-1);
             }
+
+            //Ngày phát lệnh
+            if (request.WeightDateFrom.HasValue)
+            {
+                request.WeightDateFrom = request.WeightDateFrom.Value.Date;
+            }
+            if (request.WeightDateTo.HasValue)
+            {
+                request.WeightDateTo = request.WeightDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+            }
             #endregion
 
             var user = _userRep.GetQuery().AsNoTracking();
@@ -149,6 +160,17 @@ namespace MES.Application.Queries
                                                                                     x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderFrom) <= 0 : false);
             }
 
+            //Lọc document date
+            if (request.DocumentDateFrom.HasValue)
+            {
+                if (!request.DocumentDateTo.HasValue)
+                {
+                    request.DocumentDateTo = request.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
+                }
+                queryNKMH = queryNKMH.Where(x => x.DocumentDate >= request.DocumentDateFrom &&
+                                                 x.DocumentDate <= request.DocumentDateTo);
+            }
+
             //Search dữ liệu đã cân
             if (!string.IsNullOrEmpty(request.WeightHeadCode))
             {
@@ -158,7 +180,7 @@ namespace MES.Application.Queries
 
             if (request.WeightDateFrom.HasValue)
             {
-                if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom;
+                if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
 
                 queryNKMH = queryNKMH.Where(x => x.WeighDate >= request.WeightDateFrom &&
                                          x.WeighDate <= request.WeightDateTo);

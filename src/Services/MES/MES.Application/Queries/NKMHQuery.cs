@@ -365,7 +365,7 @@ namespace MES.Application.Queries
                 //Số phương tiện
                 VehicleCode = x.VehicleCode
 
-            }).ToListAsync();
+            }).OrderBy(x => x.PurchaseOrderCode).ThenBy(x => x.POItem).ToListAsync();
 
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {

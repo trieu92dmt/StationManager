@@ -11,6 +11,8 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
     {
         //Plant
         public string Plant { get; set; }
+        //Plant name
+        public string PlantName { get; set; }
         //Ship-to party name
         public string ShipToPartyName { get; set; }
         //Outbound Delivery
@@ -41,6 +43,8 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         public DateTime? DocumentDate { get; set; }
         //Ship to Party
         public string ShipToParty { get; set; }
+        //Detail outbound delivery id
+        public Guid DetailODId { get; set; }
     }
 
     //Bảng 2

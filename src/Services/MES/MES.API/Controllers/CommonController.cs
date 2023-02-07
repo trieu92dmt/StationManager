@@ -156,7 +156,7 @@ namespace MES.API.Controllers
 
             //Query những thằng chưa được chọn
             var dropdownList = await _commonQuery.GetDropdownWeightHeadByPlant(keyword, plantCode);
-            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
+            return Ok(new ApiSuccessResponse<List<CommonResponse<bool>>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
         }
         #endregion
 

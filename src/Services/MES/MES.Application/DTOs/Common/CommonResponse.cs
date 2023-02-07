@@ -19,4 +19,11 @@
         public string Value { get; set; }
         public string Name { get; set; }
     }
+
+    public class CommonResponse<T>
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public T Data { get; set; }
+    }
 }

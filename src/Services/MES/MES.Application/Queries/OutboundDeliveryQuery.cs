@@ -3,6 +3,7 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 using MES.Application.Commands.OutboundDelivery;
+using MES.Application.DTOs.MES.NKMH;
 using MES.Application.DTOs.MES.OutboundDelivery;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +32,14 @@ namespace MES.Application.Queries
         /// <param name="command"></param>
         /// <returns></returns>
         Task<List<GoodsReturnResponse>> GetGoodsReturn(SearchOutboundDeliveryCommand command);
+
+        /// <summary>
+        /// Lấy data theo od và oditem 
+        /// </summary>
+        /// <param name="ODCode"></param>
+        /// <param name="ODItem"></param>
+        /// <returns></returns>
+        Task<GetDataByODODItemResponse> GetDataByODODItem(string ODCode, string ODItem);
     }
 
     public class OutboundDeliveryQuery : IOutboundDeliveryQuery
@@ -40,9 +50,10 @@ namespace MES.Application.Queries
         private readonly IRepository<GoodsReturnModel> _nkhtRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<PlantModel> _plantRepo;
 
         public OutboundDeliveryQuery(IRepository<DetailOutboundDeliveryModel> detailODRepo, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo,
-                                     IRepository<GoodsReturnModel> nkhtRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
+                                     IRepository<GoodsReturnModel> nkhtRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<PlantModel> plantRepo)
         {
             _detailODRepo = detailODRepo;
             _prdRepo = prdRepo;
@@ -50,6 +61,7 @@ namespace MES.Application.Queries
             _nkhtRepo = nkhtRepo;
             _cataRepo = cataRepo;
             _userRepo = userRepo;
+            _plantRepo = plantRepo;
         }
 
         public async Task<List<OutboundDeliveryResponse>> GetOutboundDelivery(SearchOutboundDeliveryCommand command)
@@ -81,6 +93,9 @@ namespace MES.Application.Queries
 
             //Sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Plant
+            var plants = _plantRepo.GetQuery().AsNoTracking();
 
             //Lọc điều kiện
             //Theo plant
@@ -143,8 +158,10 @@ namespace MES.Application.Queries
             var data = await query.Select(x => new OutboundDeliveryResponse
             {
                 Plant = x.Plant,
+                PlantName = plants.FirstOrDefault(p => p.PlantCode == x.Plant).PlantName,
                 ShipToParty = x.OutboundDelivery.ShiptoParty,
                 ShipToPartyName = x.OutboundDelivery.ShiptoPartyName,
+                DetailODId = x.DetailOutboundDeliveryId,
                 OutboundDelivery = long.Parse(x.OutboundDelivery.DeliveryCode).ToString(),
                 OutboundDeliveryItem = x.OutboundDeliveryItem,
                 Material = long.Parse(x.ProductCode).ToString(),
@@ -153,8 +170,8 @@ namespace MES.Application.Queries
                 SlocDesc = slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName,
                 Batch = x.Batch,
                 VehicleCode = x.OutboundDelivery.VehicleCode,
-                TotalQty = x.DeliveryQuantity,
-                DeliveryQty = x.PickedQuantityPUoM,
+                TotalQty = x.DeliveryQuantity.HasValue ? x.DeliveryQuantity : 0,
+                DeliveryQty = x.PickedQuantityPUoM.HasValue ? x.PickedQuantityPUoM : 0,
                 OpenQty = x.DeliveryQuantity.HasValue && x.PickedQuantityPUoM.HasValue ? x.DeliveryQuantity - x.PickedQuantityPUoM : 0,
                 Unit = x.Unit,
                 DocumentDate = x.OutboundDelivery.DocumentDate,
@@ -340,6 +357,38 @@ namespace MES.Application.Queries
 
             return data;
 
+        }
+
+        public async Task<GetDataByODODItemResponse> GetDataByODODItem(string ODCode, string ODItem)
+        {
+            //Lấy ra od
+            var odDetails = await _detailODRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                              .FirstOrDefaultAsync(x => x.OutboundDeliveryItem == ODItem && x.OutboundDelivery.DeliveryCodeInt == long.Parse(ODCode));
+
+            //Danh sách product
+            var prods = _prdRepo.GetQuery().AsNoTracking();
+
+            var response = new GetDataByODODItemResponse
+            {
+                //Ship to party
+                ShipToPartyName = odDetails.OutboundDelivery.ShiptoPartyName,
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialName = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductName,
+                //Batch
+                Batch = odDetails.Batch,
+                //Số phương tiện
+                VehicleCode = odDetails.OutboundDelivery.VehicleCode,
+                //Total Quantity
+                TotalQty = odDetails.DeliveryQuantity.HasValue ? odDetails.DeliveryQuantity : 0,
+                //Delivered Quantity
+                DeliveryQty = odDetails.PickedQuantityPUoM.HasValue ? odDetails.PickedQuantityPUoM : 0,
+                //Open Quantity
+                OpenQty = 0
+            };
+
+            return response;
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using ISD.Core.Models;
+using ISD.Core.Properties;
 using MediatR;
 using MES.Application.Commands.MES;
 using MES.Application.Commands.OutboundDelivery;
 using MES.Application.DTOs.MES;
+using MES.Application.DTOs.MES.NKMH;
 using MES.Application.DTOs.MES.OutboundDelivery;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
@@ -71,6 +73,25 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<bool>
             {
                 Data = response
+            });
+        }
+
+        /// <summary>
+        /// Lấy dữ liệu theo od và od item
+        /// </summary>
+        /// <param name="od"></param>
+        /// <param name="odItem"></param>
+        /// <returns></returns>
+        [HttpGet("get-data-by-po-poitem")]
+        public async Task<IActionResult> GetDataByODAndODItem(string od, string odItem)
+        {
+            var response = await _query.GetDataByODODItem(od, odItem);
+
+            return Ok(new ApiSuccessResponse<GetDataByODODItemResponse>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy data")
             });
         }
     }

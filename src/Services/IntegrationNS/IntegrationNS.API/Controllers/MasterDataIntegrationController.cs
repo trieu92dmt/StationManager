@@ -1327,11 +1327,59 @@ namespace IntegrationNS.API.Controllers
         /// 
         /// POST
         /// 
-        ///     Url: /api/v{version}/MasterDataIntegration/outbound-delivery
+        ///     Url: /api/v{version}/MasterDataIntegration/reservation
         ///     Params: 
         ///             + version : 1
         ///     Body: 
         ///
+        ///         {
+        ///           "reservationIntegrations": [
+        ///             {
+        ///               "reservationCode": "string",
+        ///               "requiremenType": "string",
+        ///               "status": "string",
+        ///               "finalIssue": "string",
+        ///               "plant": "string",
+        ///               "sloc": "string",
+        ///               "receivingPlant": "string",
+        ///               "receivingSloc": "string",
+        ///               "unloadingPoint": "string",
+        ///               "supplier": "string",
+        ///               "customer": "string",
+        ///               "detailReservationIntegrations": [
+        ///                 {
+        ///                   "reservationItem": "string",
+        ///                   "itemDeleted": "string",
+        ///                   "movementAllowed": "string",
+        ///                   "missingPart": "string",
+        ///                   "material": "string",
+        ///                   "batch": "string",
+        ///                   "specialStock": "string",
+        ///                   "requirementsDate": "2023-02-07T02:05:08.882Z",
+        ///                   "requirementQty": 0,
+        ///                   "baseUnit": "string",
+        ///                   "qtyIsFixed": 0,
+        ///                   "qtyWithdrawn": 0,
+        ///                   "qtyInUnitOfEntry": 0,
+        ///                   "unitOfEntry": "string",
+        ///                   "plannedOrder": "string",
+        ///                   "purchaseRequisition": "string",
+        ///                   "itemOfRequisition": "string",
+        ///                   "order": "string",
+        ///                   "peggedRequirement": "string",
+        ///                   "salesOrder": "string",
+        ///                   "salesOrderItem": "string",
+        ///                   "movementType": "string",
+        ///                   "purchasingDoc": "string",
+        ///                   "item": "string",
+        ///                   "materialOrigin": "string",
+        ///                   "materialGr": "string",
+        ///                   "receivingBatch": "string"
+        ///                 }
+        ///               ]
+        ///             }
+        ///           ]
+        ///         }
         ///
         /// OUT PUT
         /// 

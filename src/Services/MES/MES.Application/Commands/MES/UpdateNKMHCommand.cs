@@ -180,14 +180,14 @@ namespace MES.Application.Commands.MES
 
                 //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
 
-                var imgPath = "";
+                var imgPath = string.Empty;
                 //Convert Base64 to Iformfile
                 if (!string.IsNullOrEmpty(item.NewImage))
                 {
                     byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKMHId.ToString(), item.NKMHId.ToString());
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKMHId.ToString(), $"{item.NKMHId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKMH");
                 }

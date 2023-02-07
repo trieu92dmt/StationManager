@@ -127,9 +127,9 @@ namespace MES.Application.Commands.MES
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
                 {
+                    GoodsReceiptId = Guid.NewGuid(),
                     //Số lô
                     Batch = x.Batch,
-                    GoodsReceiptId = Guid.NewGuid(),
                     //POLine
                     PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
                     //Mã đầu cân
@@ -182,7 +182,7 @@ namespace MES.Application.Commands.MES
                     //Status
                     Status = "NOT",
                     //Start Time - End Time
-                    StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSs.FirstOrDefault(w => w.Scale.ScaleCode == x.WeightHeadCode).StartTime : DateTime.Now,
+                    StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSs.FirstOrDefault(w => w.Scale.ScaleCode == x.WeightHeadCode)?.StartTime : DateTime.Now,
                     EndTime = DateTime.Now,
                 });
 

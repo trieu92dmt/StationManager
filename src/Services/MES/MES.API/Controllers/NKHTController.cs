@@ -77,6 +77,24 @@ namespace MES.API.Controllers
         }
 
         /// <summary>
+        /// Update dữ liệu nkht
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-goods-return")]
+        public async Task<IActionResult> UpdateGoodsReturnAsync([FromBody] UpdateGoodsReturnCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+
+        /// <summary>
         /// Lấy dữ liệu theo od và od item
         /// </summary>
         /// <param name="od"></param>

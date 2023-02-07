@@ -217,7 +217,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Img = string.IsNullOrEmpty(imgPath) ? item.Image : imgPath,
+                        Img = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -260,7 +260,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? item.Image : imgPath;
+                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? nkmh.Img : imgPath;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

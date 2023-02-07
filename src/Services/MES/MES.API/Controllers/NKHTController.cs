@@ -56,5 +56,22 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+
+
+        /// <summary>
+        /// Save dữ liệu nkht
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-goods-return")]
+        public async Task<IActionResult> SaveGoodsReturnAsync([FromBody] SaveGoodsReturnCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response
+            });
+        }
     }
 }

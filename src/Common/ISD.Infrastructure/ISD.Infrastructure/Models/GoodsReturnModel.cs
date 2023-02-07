@@ -54,7 +54,7 @@ namespace ISD.Infrastructure.Models
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? NetWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? CrossWeight { get; set; }
+        public decimal? GrossWeight { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DocumentDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -88,7 +88,8 @@ namespace ISD.Infrastructure.Models
         public string ReverseDocument { get; set; }
         [StringLength(50)]
         public string Description { get; set; }
-        public byte[] Image { get; set; }
+        [StringLength(2000)]
+        public string Image { get; set; }
         [StringLength(50)]
         public string Status { get; set; }
         public Guid? TruckInfoId { get; set; }

@@ -390,13 +390,13 @@ namespace MES.Application.Queries
 
         public async Task<List<CommonResponse>> GetDropdownShipToParty(string keyword)
         {
-            var response = await _custRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.CustomerNumber.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
-                                                                                                x.CustomerName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
-                                         .OrderBy(x => x.CustomerNumber)
+            var response = await _obDeliveryRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.ShiptoParty.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
+                                                                                                x.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .OrderBy(x => x.ShiptoParty)
                                          .Select(x => new CommonResponse
                                          {
-                                             Key = x.CustomerNumber,
-                                             Value = $"{x.CustomerNumber} | {x.CustomerName}"
+                                             Key = x.ShiptoParty,
+                                             Value = $"{x.ShiptoParty} | {x.ShiptoPartyName}"
                                          }).ToListAsync();
 
             return response.DistinctBy(x => x.Key).Take(10).ToList();

@@ -33,6 +33,8 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         public decimal? TotalQty { get; set; }
         //Delivered Quantity
         public decimal? DeliveryQty { get; set; }
+        //Open Quantity
+        public decimal? OpenQty { get; set; }
         //Units of Measure
         public string Unit { get; set; }
         //Document Date

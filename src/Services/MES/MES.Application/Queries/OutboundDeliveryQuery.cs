@@ -139,7 +139,7 @@ namespace MES.Application.Queries
                                          x.OutboundDelivery.DocumentDate <= command.DocumentDateTo);
             }
 
-            //Data NKMH
+            //Data NKHT
             var data = await query.Select(x => new OutboundDeliveryResponse
             {
                 Plant = x.Plant,
@@ -155,6 +155,7 @@ namespace MES.Application.Queries
                 VehicleCode = x.OutboundDelivery.VehicleCode,
                 TotalQty = x.DeliveryQuantity,
                 DeliveryQty = x.PickedQuantityPUoM,
+                OpenQty = x.DeliveryQuantity.HasValue && x.PickedQuantityPUoM.HasValue ? x.DeliveryQuantity - x.PickedQuantityPUoM : 0,
                 Unit = x.Unit,
                 DocumentDate = x.OutboundDelivery.DocumentDate,
                 
@@ -165,7 +166,7 @@ namespace MES.Application.Queries
                 data.Add(new OutboundDeliveryResponse
                 {
                     Plant = command.PlantCode,
-                    Material = command.MaterialFrom,
+                    Material = long.Parse(command.MaterialFrom).ToString(),
                     MaterialDesc = prods.FirstOrDefault(x => x.ProductCode == command.MaterialFrom).ProductName,
                 });
             }
@@ -321,7 +322,7 @@ namespace MES.Application.Queries
                 OpenQty = x.OpenQuantity,
                 UOM = x.UOM,
                 Description = x.Description,
-                Image = x.Image != null && x.Image.Length > 0 ? System.Convert.ToBase64String(x.Image) : "",
+                Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 WeightVote = x.WeightVote,
                 StartTime = x.StartTime,

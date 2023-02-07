@@ -134,6 +134,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<MachineChainModel> MachineChainModel { get; set; }
         public virtual DbSet<MailServerProviderModel> MailServerProviderModel { get; set; }
         public virtual DbSet<MatchCardCommandModel> MatchCardCommandModel { get; set; }
+        public virtual DbSet<MaterialDocumentModel> MaterialDocumentModel { get; set; }
         public virtual DbSet<MaterialModel> MaterialModel { get; set; }
         public virtual DbSet<MaterialTypeModel> MaterialTypeModel { get; set; }
         public virtual DbSet<MemberOfExternalProfileTargetGroupModel> MemberOfExternalProfileTargetGroupModel { get; set; }
@@ -1261,6 +1262,11 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<MatchCardCommandModel>(entity =>
             {
                 entity.Property(e => e.MatchCardCommandId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<MaterialDocumentModel>(entity =>
+            {
+                entity.Property(e => e.MaterialDocId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<MaterialModel>(entity =>

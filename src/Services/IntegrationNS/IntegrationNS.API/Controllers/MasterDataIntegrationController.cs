@@ -2,6 +2,7 @@
 using IntegrationNS.Application.Commands.Customers;
 using IntegrationNS.Application.Commands.DistributionChannels;
 using IntegrationNS.Application.Commands.Divisions;
+using IntegrationNS.Application.Commands.MaterialDocument;
 using IntegrationNS.Application.Commands.NKMHs;
 using IntegrationNS.Application.Commands.OrderTypes;
 using IntegrationNS.Application.Commands.OutboundDelivery;
@@ -1408,6 +1409,114 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa Reservation") });
+        }
+        #endregion
+
+        #region Tích hợp Material Doc
+        /// <summary>
+        /// Tích hợp Material Doc
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/material-document
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///         {
+        ///           "materialDocs": [
+        ///             {
+        ///               "materialDocCode": "string",
+        ///               "materialDocItem": "string",
+        ///               "identification": "string",
+        ///               "parentLineID": "string",
+        ///               "hierarchyLevel": "string",
+        ///               "originalLineItem": "string",
+        ///               "movementType": "string",
+        ///               "itemAutoCreated": "string",
+        ///               "materialCode": "string",
+        ///               "plantCode": "string",
+        ///               "storageLocation": "string",
+        ///               "batch": "string",
+        ///               "stockType": "string",
+        ///               "batchRestricted": "string",
+        ///               "specialStock": "string",
+        ///               "supplier": "string",
+        ///               "customer": "string",
+        ///               "salesOrder": "string",
+        ///               "salesOrderItem": "string",
+        ///               "salesOrderSchedule": "string",
+        ///               "debitCredit": "string",
+        ///               "quantity": 0,
+        ///               "baseUOM": "string",
+        ///               "qtyUnitOfEntry": 0,
+        ///               "unitOfEntry": "string",
+        ///               "qtyOPU": 0,
+        ///               "opUnit": "string",
+        ///               "purchaseOrder": "string",
+        ///               "item": "string",
+        ///               "referenceDocItem": "string",
+        ///               "materialDocYear": "string",
+        ///               "materialDoc2": "string",
+        ///               "materialDocItem2": "string",
+        ///               "deliveryCompleted": "string",
+        ///               "text": "string",
+        ///               "reservation": "string",
+        ///               "itemReservation": "string",
+        ///               "finalIssue": "string",
+        ///               "receivingMaterial": "string",
+        ///               "receivingPlant": "string",
+        ///               "receivingSloc": "string",
+        ///               "receivingBatch": "string",
+        ///               "movementIndicator": "string",
+        ///               "receiptIndicator": "string",
+        ///               "qtyOrderUnit": 0,
+        ///               "orderUnit": "string",
+        ///               "supplier2": "string",
+        ///               "salesOrder2": "string",
+        ///               "salesOrderItem2": "string",
+        ///               "postingDate": "2023-02-07T05:03:06.473Z",
+        ///               "entryDateTime": "2023-02-07T05:03:06.473Z",
+        ///               "reference": "string",
+        ///               "transactionCode": "string",
+        ///               "delivery": "string",
+        ///               "item2": "string",
+        ///               "completedIndicator": "string"
+        ///             }
+        ///           ]
+        ///         }
+        ///
+        /// OUT PUT
+        /// 
+        ///                {
+        ///                     "code": 200,
+        ///                     "message": "Tích hợp PurchaseOrder thành công.",
+        ///                     "data": true
+        ///                }
+        /// </remarks>
+        [HttpPost("material-document")]
+        public async Task<IActionResult> MaterialDocIntegration([FromBody] MaterialDocumentIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IntegrationNSResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Tích hợp Material Document") });
+        }
+
+        /// <summary>
+        /// Xóa material document
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpDelete("delete-material-document")]
+        public async Task<IActionResult> DeleteMaterialDocIntegrationAsync([FromQuery] DeleteMaterialDocumentIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa material document") });
         }
         #endregion
     }

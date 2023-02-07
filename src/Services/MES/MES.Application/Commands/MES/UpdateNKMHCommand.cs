@@ -83,6 +83,7 @@ namespace MES.Application.Commands.MES
         public string Description { get; set; }
         //Hình ảnh
         public string Image { get; set; }
+        public string NewImage { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
     }
@@ -181,9 +182,9 @@ namespace MES.Application.Commands.MES
 
                 var imgPath = "";
                 //Convert Base64 to Iformfile
-                if (!string.IsNullOrEmpty(item.Image))
+                if (!string.IsNullOrEmpty(item.NewImage))
                 {
-                    byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
+                    byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
                     IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKMHId.ToString(), item.NKMHId.ToString());
@@ -216,7 +217,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Img = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Img = string.IsNullOrEmpty(imgPath) ? item.Image : imgPath,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -259,7 +260,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? null : imgPath;
+                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? item.Image : imgPath;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

@@ -100,6 +100,13 @@ namespace MES.Application.Queries
         Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword);
 
         /// <summary>
+        /// Dropdown Outbound Delivery Item
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownOutboundDeliveryItem(string keyword, string odCode);
+
+        /// <summary>
         /// Dropdown Ship To Party
         /// </summary>
         /// <param name="keyword"></param>
@@ -423,6 +430,20 @@ namespace MES.Application.Queries
                                   }).AsNoTracking().ToListAsync();
 
             return response.DistinctBy(x => x.Key).ToList();
+        }
+
+        public async Task<List<CommonResponse>> GetDropdownOutboundDeliveryItem(string keyword, string odCode)
+        {
+            var od = await _obDeliveryRepo.GetQuery().Include(x => x.DetailOutboundDeliveryModel).FirstOrDefaultAsync(x => x.DeliveryCode == odCode);
+
+            var response = od.DetailOutboundDeliveryModel.OrderBy(x => x.OutboundDeliveryItem)
+                                                      .Select(x => new CommonResponse
+                                                      {
+                                                          Key = x.OutboundDeliveryItem,
+                                                          Value = x.OutboundDeliveryItem
+                                                      }).ToList();
+
+            return response;
         }
     }
 }

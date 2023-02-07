@@ -216,6 +216,20 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Lấy dropdown Outbound Delivery Item theo od
+        /// <summary>
+        /// Lấy dropdown Outbound Delivery Item theo od
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-od-item")]
+        public async Task<IActionResult> GetListODItem(string keyword, string odCode)
+        {
+            var dropdownList = await _commonQuery.GetDropdownOutboundDeliveryItem(keyword, odCode);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách outbound delivery item") });
+        }
+        #endregion
+
         #region Lấy dropdown Ship to Party
         /// <summary>
         /// Lấy dropdown Ship to Party

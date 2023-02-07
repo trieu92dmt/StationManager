@@ -33,11 +33,13 @@ namespace MES.Application.Queries
     {
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
         private readonly IRepository<AccountModel> _accRepo;
+        private readonly IRepository<GoodsReceiptModel> _nkmhRepo;
 
-        public TruckInfoQuery(IRepository<TruckInfoModel> truckInfoRepo, IRepository<AccountModel> accRepo)
+        public TruckInfoQuery(IRepository<TruckInfoModel> truckInfoRepo, IRepository<AccountModel> accRepo, IRepository<GoodsReceiptModel> nkmhRepo)
         {
             _truckInfoRepo = truckInfoRepo;
             _accRepo = accRepo;
+            _nkmhRepo = nkmhRepo;
         }
 
         public async Task<decimal> GetInputWeight(Guid id)
@@ -69,6 +71,9 @@ namespace MES.Application.Queries
             //Data account
             var accs = _accRepo.GetQuery().AsNoTracking();
 
+            //Lấy query data nkmh
+            var nkmhs = _nkmhRepo.GetQuery().AsNoTracking();
+
             //Lọc data thông tin xe tải
             var data = await _truckInfoRepo.GetQuery(x => //Lọc theo plant
                                                      x.PlantCode == req.Plant &&
@@ -89,7 +94,8 @@ namespace MES.Application.Queries
                                           InputWeight = x.InputWeight,
                                           RecordTime = x.CreateTime,
                                           CreateById = x.CreateBy,
-                                          CreateBy = accs.FirstOrDefault(a => a.AccountId == x.CreateBy).UserName
+                                          CreateBy = accs.FirstOrDefault(a => a.AccountId == x.CreateBy).UserName,
+                                          isEdit = nkmhs.FirstOrDefault(n => n.TruckInfoId == x.TruckInfoId && n.MaterialDocument != null) != null ? false : true
                                       }).ToListAsync();
 
 

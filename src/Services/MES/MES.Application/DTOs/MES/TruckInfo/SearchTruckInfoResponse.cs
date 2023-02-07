@@ -23,5 +23,7 @@ namespace MES.Application.DTOs.MES.TruckInfo
         //Create by
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }
+        //Cho phép chỉnh sửa
+        public bool isEdit { get; set; }
     }
 }

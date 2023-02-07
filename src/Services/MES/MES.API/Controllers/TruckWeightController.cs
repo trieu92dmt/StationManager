@@ -54,6 +54,22 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Update Data thông tin xe tải
+        /// <summary>
+        /// Update Data thông tin xe tải
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-truck-weight-info")]
+        public async Task<IActionResult> UpdateTruckWeightInfoAsync([FromBody] UpdateTruckInfoCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Update data truck info") });
+        }
+        #endregion
+
+
         #region Lấy số cân đầu vào 
         /// <summary>
         /// Get input weight

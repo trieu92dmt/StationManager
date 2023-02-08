@@ -9,12 +9,13 @@
 - SQL server 2017
 
 # This project contains:
+- CQRS Pattern 
 - SwaggerUI
 - EntityFramework
 - AutoMapper
-- Generic repository
+- Generic repository pattern
 - Serilog with request logging and easily configurable sinks
-- .Net Dependency Injection
+- .Net Dependency Injection (Auto)
 - Identity server
 - MediatR
 

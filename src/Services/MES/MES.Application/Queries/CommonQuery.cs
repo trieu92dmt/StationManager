@@ -133,6 +133,20 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetWeightVote(string keyword);
+
+        /// <summary>
+        /// Get OrderType
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<Common2Response>> GetOrderType(string plant, string keyword);
+
+        /// <summary>
+        /// Get WorkOrder
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<Common2Response>> GetWorkOrder(string plant, string orderType, string keyword);
     }
 
     public class CommonQuery : ICommonQuery
@@ -152,12 +166,15 @@ namespace MES.Application.Queries
         private readonly IRepository<CustmdSaleModel> _custRepo;
         private readonly IRepository<AccountModel> _accRepo;
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
+        private readonly IRepository<OrderTypeModel> _oTypeRep;
+        private readonly IRepository<WorkOrderModel> _workOrderRep;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
                            IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo,
                            IRepository<GoodsReceiptModel> nkmhRep, IRepository<SalesDocumentModel> saleDocRepo, IRepository<OutboundDeliveryModel> obDeliveryRepo,
-                           IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo)
+                           IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
+                           IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -174,9 +191,11 @@ namespace MES.Application.Queries
             _custRepo = custRepo;
             _accRepo = accRepo;
             _truckInfoRepo = truckInfoRepo;
+            _oTypeRep = oTypeRep;
+            _workOrderRep = workOrderRep;
         }
 
-        #region
+        #region Get DropdownMaterial
         public Task<List<Common3Response>> GetDropdownMaterial(string keyword, string plant)
         {
             var response = _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCodeInt.ToString().Contains(keyword) : true) &&
@@ -334,6 +353,7 @@ namespace MES.Application.Queries
         }
         #endregion
 
+        #region GetWeightVote
         public async Task<List<CommonResponse>> GetWeightVote(string keyword)
         {
             return await _nkmhRep.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeitghtVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
@@ -343,6 +363,7 @@ namespace MES.Application.Queries
                                              Value = x.WeitghtVote
                                          }).Distinct().Take(20).ToListAsync();
         }
+        #endregion
 
         #region Dropdown PoItem
         public async Task<List<CommonResponse>> GetDropdownPOItem(string poCode)
@@ -404,7 +425,7 @@ namespace MES.Application.Queries
         }
         #endregion
 
-
+        #region GetDropdownCreateBy
         public async Task<List<Common2Response>> GetDropdownCreateBy(string keyword)
         {
             return await _accRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.UserName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
@@ -415,7 +436,9 @@ namespace MES.Application.Queries
                                              Value = x.UserName
                                          }).Take(10).ToListAsync();
         }
+        #endregion
 
+        #region GetDropdownTruckNumber
         public async Task<List<Common2Response>> GetDropdownTruckNumber(string keyword, string plant)
         {
             var response = await _truckInfoRepo.GetQuery(x => (string.IsNullOrEmpty(keyword) ? true : x.TruckNumber.Contains(keyword)) &&
@@ -432,7 +455,9 @@ namespace MES.Application.Queries
 
             return response.DistinctBy(x => x.Key).ToList();
         }
+        #endregion
 
+        #region GetDropdownOutboundDeliveryItem
         public async Task<List<CommonResponse>> GetDropdownOutboundDeliveryItem(string keyword, string odCode)
         {
             var od = await _obDeliveryRepo.GetQuery().Include(x => x.DetailOutboundDeliveryModel).FirstOrDefaultAsync(x => x.DeliveryCode == odCode);
@@ -446,5 +471,49 @@ namespace MES.Application.Queries
 
             return response;
         }
+        #endregion
+
+        #region Get OrderType
+        /// <summary>
+        /// GetOrderType
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        public async Task<List<Common2Response>> GetOrderType(string plant, string keyword)
+        {
+            var result = await _oTypeRep.GetQuery(x => x.Plant == plant && 
+                                                    (!string.IsNullOrEmpty(keyword) ? x.OrderTypeCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
+                                  .OrderBy(x => x.OrderTypeCode)
+                                  .Select(x => new Common2Response
+                                  {
+                                      Key = x.OrderTypeId,
+                                      Value = $"{x.OrderTypeCode} | {x.ShortText}"
+                                  }).Take(20).ToListAsync();
+
+            return result;
+        }
+        #endregion
+
+        #region Get WorkOrder
+        /// <summary>
+        /// Get WorkOrder
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        public async Task<List<Common2Response>> GetWorkOrder(string plant, string orderType, string keyword)
+        {
+            var result = await _workOrderRep.GetQuery(x => x.Plant == plant &&
+                                                           (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
+                                                           (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
+                                  .OrderBy(x => x.WorkOrderCode)
+                                  .Select(x => new Common2Response
+                                  {
+                                      Key = x.WorkOrderId,
+                                      Value = x.WorkOrderCode
+                                  }).Take(20).ToListAsync();
+
+            return result;
+        }
+        #endregion
     }
 }

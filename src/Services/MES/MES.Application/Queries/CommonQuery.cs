@@ -503,6 +503,8 @@ namespace MES.Application.Queries
         public async Task<List<Common2Response>> GetWorkOrder(string plant, string orderType, string keyword)
         {
             var result = await _workOrderRep.GetQuery(x => x.Plant == plant &&
+                                                           (!x.SystemStatus.StartsWith("REL CNF")) &&
+                                                           (!x.SystemStatus.StartsWith("TECO")) &&
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
                                                            (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
                                   .OrderBy(x => x.WorkOrderCode)

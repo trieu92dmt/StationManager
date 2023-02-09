@@ -14,6 +14,7 @@ namespace ISD.Infrastructure.Models
         public WorkOrderModel()
         {
             DetailWorkOrderModel = new HashSet<DetailWorkOrderModel>();
+            ReceiptFromProductionModel = new HashSet<ReceiptFromProductionModel>();
         }
 
         [Key]
@@ -70,5 +71,7 @@ namespace ISD.Infrastructure.Models
 
         [InverseProperty("WorkOrder")]
         public virtual ICollection<DetailWorkOrderModel> DetailWorkOrderModel { get; set; }
+        [InverseProperty("WorkOrder")]
+        public virtual ICollection<ReceiptFromProductionModel> ReceiptFromProductionModel { get; set; }
     }
 }

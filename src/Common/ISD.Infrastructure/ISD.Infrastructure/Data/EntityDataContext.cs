@@ -208,6 +208,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<QualityControlInformationModel> QualityControlInformationModel { get; set; }
         public virtual DbSet<QuestionBankModel> QuestionBankModel { get; set; }
         public virtual DbSet<RatingModel> RatingModel { get; set; }
+        public virtual DbSet<ReceiptFromProductionModel> ReceiptFromProductionModel { get; set; }
         public virtual DbSet<RefreshToken> RefreshToken { get; set; }
         public virtual DbSet<RegisterReceiveNewsModel> RegisterReceiveNewsModel { get; set; }
         public virtual DbSet<RemindTaskModel> RemindTaskModel { get; set; }
@@ -1980,6 +1981,16 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<RatingModel>(entity =>
             {
                 entity.Property(e => e.RatingId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<ReceiptFromProductionModel>(entity =>
+            {
+                entity.Property(e => e.RcFromProductiontId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.WorkOrder)
+                    .WithMany(p => p.ReceiptFromProductionModel)
+                    .HasForeignKey(d => d.WorkOrderId)
+                    .HasConstraintName("FK_ReceiptFromProductionModel_WorkOrderModel");
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>

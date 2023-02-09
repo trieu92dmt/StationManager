@@ -33,10 +33,8 @@ namespace MES.Application.Commands.ReceiptFromProduction
         //Dữ liệu đã lưu
         //Đầu cân
         public string WeightHeadCode { get; set; }
-        //Số phiếu cân from
-        public string WeightVoteFrom { get; set; }
-        //Sô phiếu cân to
-        public string WeightVoteTo { get; set; }
+        //Số phiếu cân 
+        public List<string> WeightVotes { get; set; } = new List<string>();
         //Ngày thực hiện cân from
         public DateTime? WeightDateFrom { get; set; }
         //Ngày thực hiện cân to

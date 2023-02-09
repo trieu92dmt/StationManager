@@ -1,6 +1,8 @@
 ﻿using ISD.Core.Models;
+using ISD.Core.Properties;
 using MediatR;
 using MES.Application.Commands.MES;
+using MES.Application.Commands.OutboundDelivery;
 using MES.Application.Commands.ReceiptFromProduction;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKTPSX;
@@ -84,7 +86,7 @@ namespace MES.API.Controllers
         ///           "pagesCount": null
         ///         }
         ///</remarks>
-[HttpPost("get-workorder")]
+        [HttpPost("get-workorder")]
         public async Task<IActionResult> GetWorkOrderAsync([FromBody] SearchNKTPSXCommand command)
         {
            var response = await _query.GetWO(command);
@@ -94,5 +96,38 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu nhập kho TP SX)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-nktpsx")]
+        public async Task<IActionResult> GetNKTPSXAsync([FromBody] SearchNKTPSXCommand command)
+        {
+            var response = await _query.GetNKTPSX(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchNKTPSXResponse>>
+            {
+                Data = response
+            });
+        }
+        /// <summary>
+        /// Save dữ liệu nktpsx
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-nktpsx")]
+        public async Task<IActionResult> SaveGoodsReturnAsync([FromBody] SaveNKTPSXCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu nhập kho thành phẩm sản xuất")
+            });
+        }
+
     }
 }

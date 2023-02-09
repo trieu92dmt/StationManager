@@ -72,7 +72,8 @@ namespace MES.API.Controllers
 
             return Ok(new ApiSuccessResponse<bool>
             {
-                Data = response
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu nhập kho hàng trả")
             });
         }
 

@@ -29,7 +29,7 @@ namespace MES.Application.DTOs.MES.NKTPSX
         //Đầu cân
         public string WeightHeadCode { get; set; }
         //Trọng lượng cân
-        public string Weight { get; set; }
+        public decimal? Weight { get; set; }
         //Confirm Quantity
         public decimal? ConfirmQuantity { get; set; }
         //SL kèm bao bì
@@ -57,14 +57,20 @@ namespace MES.Application.DTOs.MES.NKTPSX
         //Thời gian kết thúc
         public DateTime? EndTime { get; set; }
         //Create by
-        public Guid? CreateBy { get; set; }
+        public Guid? CreateById { get; set; }
+        public string CreateBy { get; set; }
         //Crete On
         public DateTime? CreateOn { get; set; }
         //Change by
-        public Guid? ChangeBy { get; set; }
+        public Guid? ChangeById { get; set; }
+        public string ChangeBy { get; set; }
         //Material Doc
         public string MaterialDoc { get; set; }
         //Reverse Doc
         public string ReverseDoc { get; set; }
+        //Đánh dấu xóa
+        public bool? isDelete { get; set; }
+        //Có thể chỉnh sửa
+        public bool? isEdit { get; set; }
     }
 }

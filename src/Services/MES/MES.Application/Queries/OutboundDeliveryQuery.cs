@@ -172,11 +172,16 @@ namespace MES.Application.Queries
                 VehicleCode = x.OutboundDelivery.VehicleCode,
                 TotalQty = x.DeliveryQuantity.HasValue ? x.DeliveryQuantity : 0,
                 DeliveryQty = x.PickedQuantityPUoM.HasValue ? x.PickedQuantityPUoM : 0,
-                OpenQty = x.DeliveryQuantity.HasValue && x.PickedQuantityPUoM.HasValue ? x.DeliveryQuantity - x.PickedQuantityPUoM : 0,
                 Unit = x.Unit,
                 DocumentDate = x.OutboundDelivery.DocumentDate,
                 
             }).ToListAsync();
+
+            //Tính open quantity
+            foreach (var item in data)
+            {
+                item.OpenQty = item.TotalQty - item.DeliveryQty;
+            }
 
             if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
             {
@@ -317,8 +322,8 @@ namespace MES.Application.Queries
             {
                 GoodsReturnId = x.GoodsReturnId,
                 Plant = x.PlantCode,
-                ShipToParty = x.ShipToParty,
-                ShipToPartyName = x.ShipToPartyName,
+                ShipToParty = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoParty : "",
+                ShipToPartyName = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoPartyName : "",
                 OutboundDelivery = x.DetailODId.HasValue ? long.Parse(x.DetailOD.OutboundDelivery.DeliveryCode).ToString() : "",
                 OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : "",
                 Material = x.MaterialCode,
@@ -334,9 +339,8 @@ namespace MES.Application.Queries
                 QtyWithPackage = x.QuantityWithPackaging,
                 VehicleCode = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.VehicleCode : "",
                 QtyWeight = x.QuantityWeitght,
-                TotalQty = x.TotalQuantity,
-                DeliveryQty = x.DeliveredQuantity,
-                OpenQty = x.OpenQuantity,
+                TotalQty = x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity : 0,
+                DeliveryQty = x.DetailODId.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
                 UOM = x.UOM,
                 Description = x.Description,
                 Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
@@ -355,6 +359,12 @@ namespace MES.Application.Queries
 
             }).ToListAsync();
 
+            //Tính open quantity
+            foreach (var item in data)
+            {
+                item.OpenQty = item.TotalQty - item.DeliveryQty;
+            }
+
             return data;
 
         }
@@ -367,6 +377,10 @@ namespace MES.Application.Queries
 
             //Danh sách product
             var prods = _prdRepo.GetQuery().AsNoTracking();
+
+            var totalQuantity = odDetails.DeliveryQuantity.HasValue ? odDetails.DeliveryQuantity : 0;
+            var deliveryQuantity = odDetails.PickedQuantityPUoM.HasValue ? odDetails.PickedQuantityPUoM : 0;
+            var openQuantity = totalQuantity - deliveryQuantity;
 
             var response = new GetDataByODODItemResponse
             {
@@ -385,7 +399,7 @@ namespace MES.Application.Queries
                 //Delivered Quantity
                 DeliveryQty = odDetails.PickedQuantityPUoM.HasValue ? odDetails.PickedQuantityPUoM : 0,
                 //Open Quantity
-                OpenQty = 0
+                OpenQty = openQuantity
             };
 
             return response;

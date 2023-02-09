@@ -248,6 +248,12 @@ namespace MES.Application.Queries
                 isEdit = x.Status == "DEL" || x.MaterialDocument != null || x.MaterialDocument != "" ? false : true
             }).ToListAsync();
 
+            //Tính open quantity
+            foreach (var item in data)
+            {
+                item.OpenQuantity = item.TotalQuantity - item.DeliveryQuantity;
+            }
+
             return data;
         }
 
@@ -363,6 +369,12 @@ namespace MES.Application.Queries
                 //Sales order item
                 SaleOrderItem = x.SalesOrderItem ?? ""
             }).ToListAsync();
+
+            //Tính open quantity
+            foreach (var item in data)
+            {
+                item.OpenQuantity = item.TotalQuantity - item.DeliveryQuantity;
+            }
 
             //Thêm dòng trống nếu search theo material
             if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)

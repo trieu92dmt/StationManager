@@ -24,6 +24,8 @@ namespace MES.Application.DTOs.MES.NKTPSX
         public decimal? TotalQuantity { get; set; }
         //Delivery Quantity
         public decimal? DeliveryQuantity { get; set; }
+        //Open Total Quantity
+        public decimal? OpenQuantity { get; set; }
         //UoM
         public string Unit { get; set; }
         //Order Type

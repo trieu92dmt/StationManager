@@ -32,6 +32,13 @@ namespace MES.Application.Queries
         /// <param name="command"></param>
         /// <returns></returns>
         Task<List<SearchNKTPSXResponse>> GetNKTPSX(SearchNKTPSXCommand command);
+
+        /// <summary>
+        /// Lấy data theo wo
+        /// </summary>
+        /// <param name="workorder"></param>
+        /// <returns></returns>
+        Task<GetDataByWoResponse> GetDataByWo(string workorder);
     }
 
     public class NKTPSXQuery : INKTPSXQuery
@@ -58,7 +65,6 @@ namespace MES.Application.Queries
             _cataRepo = cataRepo;
             _userRepo = userRepo;
         }
-
         public async Task<List<SearchNKTPSXResponse>> GetNKTPSX(SearchNKTPSXCommand command)
         {
             #region Format Day
@@ -182,7 +188,7 @@ namespace MES.Application.Queries
             var user = _userRepo.GetQuery().AsNoTracking();
 
             //Get data
-            var data = await query.OrderByDescending(x => x.CreateTime).Select(x => new SearchNKTPSXResponse
+            var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNKTPSXResponse
             {
                 //ID NKTPSX
                 NKTPSXId = x.RcFromProductiontId,
@@ -389,5 +395,37 @@ namespace MES.Application.Queries
 
             return data;
         }
+
+        public async Task<GetDataByWoResponse> GetDataByWo(string workorder)
+        {
+            //Lấy ra wo
+            var wo = await _woRepo.GetQuery().FirstOrDefaultAsync(x => x.WorkOrderCode == workorder);
+
+            //Danh sách product
+            var prods = _prodRepo.GetQuery().AsNoTracking();
+
+            var totalQuantity = wo.TargetQuantity.HasValue ? wo.TargetQuantity : 0;
+            var deliveryQuantity = wo.DeliveredQuantity.HasValue ? wo.DeliveredQuantity : 0;
+            var openQuantity = totalQuantity - deliveryQuantity;
+
+            var response = new GetDataByWoResponse
+            {
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(wo.ProductCode)).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialName = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(wo.ProductCode)).ProductName,
+                //Batch
+                Batch = wo.Batch,
+                //Total Quantity
+                TotalQty = totalQuantity,
+                //Delivered Quantity
+                DeliveryQty = deliveryQuantity,
+                //Open Quantity
+                OpenQty = openQuantity
+            };
+
+            return response;
+        }
+
     }
 }

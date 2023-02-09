@@ -149,6 +149,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                         {
                             WorkOrderId = Guid.NewGuid(),
                             WorkOrderCode = woIntegration.WorkOrderCode,
+                            WorkOrderCodeInt = long.Parse(woIntegration.WorkOrderCode),
                             ProductCode = woIntegration.ProductCode,
                             OrderTypeCode = woIntegration.OrderType,
                             Plant = woIntegration.Plant,
@@ -221,7 +222,6 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                     }
                     else
                     {
-                        workorder.WorkOrderCode = woIntegration.WorkOrderCode;
                         workorder.ProductCode = woIntegration.ProductCode;
                         workorder.OrderTypeCode = woIntegration.OrderType;
                         workorder.Plant = woIntegration.Plant;

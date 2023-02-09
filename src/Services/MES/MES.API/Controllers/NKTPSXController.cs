@@ -2,10 +2,12 @@
 using ISD.Core.Properties;
 using MediatR;
 using MES.Application.Commands.MES;
+using MES.Application.Commands.NKTPSX;
 using MES.Application.Commands.OutboundDelivery;
 using MES.Application.Commands.ReceiptFromProduction;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKTPSX;
+using MES.Application.DTOs.MES.OutboundDelivery;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -129,5 +131,40 @@ namespace MES.API.Controllers
             });
         }
 
+        /// <summary>
+        /// Update dữ liệu nktpsx
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-nktpsx")]
+        public async Task<IActionResult> UpdateNKTPSXAsync([FromBody] UpdateNKTPSXCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+
+        /// <summary>
+        /// Lấy dữ liệu theo wo
+        /// </summary>
+        /// <param name="workorder"></param>
+        /// <returns></returns>
+        [HttpGet("get-data-by-wo")]
+        public async Task<IActionResult> GetDataWo(string workorder)
+        {
+            var response = await _query.GetDataByWo(workorder);
+
+            return Ok(new ApiSuccessResponse<GetDataByWoResponse>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy data")
+            });
+        }
     }
 }

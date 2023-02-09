@@ -125,7 +125,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
                 //Lấy ra workorder
-                var wo = wos.FirstOrDefault(d => d.WorkOrderCode == item.WorkOrder);
+                var wo = wos.FirstOrDefault(d => d.WorkOrderCodeInt == long.Parse(item.WorkOrder));
 
 
                 _nktpsxRepo.Add(new ReceiptFromProductionModel

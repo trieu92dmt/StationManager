@@ -21,6 +21,7 @@ namespace ISD.Infrastructure.Models
         public Guid WorkOrderId { get; set; }
         [StringLength(50)]
         public string WorkOrderCode { get; set; }
+        public long? WorkOrderCodeInt { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
         [StringLength(50)]

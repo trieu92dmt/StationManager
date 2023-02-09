@@ -100,7 +100,7 @@ namespace MES.Application.Commands.OutboundDelivery
             //Danh sách nhập kho mua hàng
             var nkhts = await _nkhtRepo.GetQuery().ToListAsync();
             //Last index dùng để tạo số phiếu cân tự sinh
-            var lastIndex = nkhts.Any() ? nkhts.OrderBy(x => x.WeightVote).LastOrDefault().WeightVote : "1000000";
+            var lastIndex = nkhts.Count() > 0 ? nkhts.OrderBy(x => x.WeightVote).LastOrDefault().WeightVote.Substring(1) : "1000000";
 
             //Query od
             var detailODs = _detailODRepo.GetQuery().Include(x => x.OutboundDelivery).AsNoTracking();
@@ -140,7 +140,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //3 WeightHeadCode
                     WeightHeadCode = item.WeightHeadCode,   
                     //4 WeightVote
-                    WeightVote = $"N{long.Parse(lastIndex.Substring(1)) + index}",
+                    WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //5   DetailODId
                     DetailODId = !string.IsNullOrEmpty(item.ODCode) ?
                                  detailOb.DetailOutboundDeliveryId : null,

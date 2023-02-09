@@ -94,7 +94,7 @@ namespace MES.Application.Commands.MES
             //Danh sách nhập kho mua hàng
             var nkmh = await _nkRep.GetQuery().ToListAsync();
             //Last index dùng để tạo số phiếu cân tự sinh
-            var lastIndex = nkmh.OrderBy(x => x.WeitghtVote).LastOrDefault();
+            var lastIndex = nkmh.Count >0 ? nkmh.OrderBy(x => x.WeitghtVote).LastOrDefault().WeitghtVote.Substring(1) : "1000000";
 
             //Dữ liệu đợt cân
             var weightSs = _weightSsRepo.GetQuery().Include(x => x.Scale).AsNoTracking();
@@ -172,7 +172,7 @@ namespace MES.Application.Commands.MES
                     //document date = document date po
                     DocumentDate = x.PoDetailId.HasValue ? poLine.PurchaseOrder.DocumentDate : null,
                     //Số phiếu cân
-                    WeitghtVote = $"N{ long.Parse(lastIndex.WeitghtVote.Substring(1)) + index}",
+                    WeitghtVote = $"N{long.Parse(lastIndex) + index}",
                     //Common
                     DateKey = int.Parse(DateTime.Now.ToString(DateTimeFormat.DateKey)),
 

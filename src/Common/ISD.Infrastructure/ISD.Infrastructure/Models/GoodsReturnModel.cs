@@ -59,6 +59,8 @@ namespace ISD.Infrastructure.Models
         public DateTime? DocumentDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? QuantityWithPackaging { get; set; }
+        [StringLength(50)]
+        public string Batch { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? StartTime { get; set; }
         [Column(TypeName = "datetime")]

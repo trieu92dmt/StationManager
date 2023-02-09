@@ -3,6 +3,7 @@ using IntegrationNS.Application.Commands.Customers;
 using IntegrationNS.Application.Commands.DistributionChannels;
 using IntegrationNS.Application.Commands.Divisions;
 using IntegrationNS.Application.Commands.MaterialDocument;
+using IntegrationNS.Application.Commands.NKHTs;
 using IntegrationNS.Application.Commands.NKMHs;
 using IntegrationNS.Application.Commands.OrderTypes;
 using IntegrationNS.Application.Commands.OutboundDelivery;
@@ -35,11 +36,13 @@ namespace IntegrationNS.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly INKMHQuery _nkmhQuery;
+        private readonly IOutboundDeliveryQuery _outboundDeliveryQuery;
 
-        public MasterDataIntegrationController(IMediator mediator, INKMHQuery nkmhQuery)
+        public MasterDataIntegrationController(IMediator mediator, INKMHQuery nkmhQuery, IOutboundDeliveryQuery outboundDeliveryQuery)
         {
             _mediator = mediator;
             _nkmhQuery = nkmhQuery;
+            _outboundDeliveryQuery = outboundDeliveryQuery;
         }
 
         #region Tích hợp Order Type
@@ -1315,6 +1318,124 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa OutboundDelivery") });
+        }
+        #endregion
+
+        #region Tích hợp NKHT
+        /// <summary>Get data NKHT</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nkmh
+        ///     Params: 
+        ///             + version : 1
+        ///             {
+        ///               "plantCode": "string",
+        ///               "salesOrderFrom": "string",
+        ///               "salesOrderTo": "string",
+        ///               "outboundDeliveryFrom": "string",
+        ///               "outboundDeliveryTo": "string",
+        ///               "shipToPartyFrom": "string",
+        ///               "shipToPartyTo": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "documentDateFrom": "2023-02-09T05:41:01.054Z",
+        ///               "documentDateTo": "2023-02-09T05:41:01.054Z",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-09T05:41:01.054Z",
+        ///               "weightDateTo": "2023-02-09T05:41:01.054Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ///             }
+        ///     Body: 
+        ///
+        ///
+        /// OUT PUT
+        /// 
+        /// 
+        /// 
+        /// </remarks>
+        [HttpPost("nkht")]
+        public async Task<IActionResult> NKHTIntegration([FromBody] NKHTIntegrationCommand req)
+        {
+            var response = await _outboundDeliveryQuery.GetGoodsReturn(req);
+
+            return Ok(new ApiSuccessResponse<IList<GoodsReturnResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKMH") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy nhập kho hàng trả
+        /// <summary>Update, cancel phiếu nhập kho hàng trả</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/update-nkht
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKHT MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKHT MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nkmHs": [
+        ///                 {
+        ///                   "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NKHT MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nkmHs": [
+        ///                 {
+        ///                   "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKHT MES
+        ///                   "batch": "",
+        ///                   "materialDocument": "",
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nkht")]
+        public async Task<IActionResult> UpdateOrCancelNKHTAsync([FromBody] UpdateAndCancelNKHTCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NKHT") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NKHT")
+            });
         }
         #endregion
 

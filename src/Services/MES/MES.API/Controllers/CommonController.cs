@@ -3,6 +3,7 @@ using ISD.Core.Properties;
 using MES.Application.DTOs.Common;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
+using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
 
 namespace MES.API.Controllers
 {
@@ -269,6 +270,34 @@ namespace MES.API.Controllers
         {
             var dropdownList = await _commonQuery.GetWeightVote(keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
+
+        #region Dropdown OrderType
+        /// <summary>
+        /// Get order type
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-order-type")]
+        public async Task<IActionResult> GetOrderTypeAsync([Required]string plant, string keyword)
+        {
+            var dropdownList = await _commonQuery.GetOrderType(plant, keyword);
+            return Ok(new ApiSuccessResponse<List<Common2Response>> { Data = dropdownList });
+        }
+        #endregion
+
+        #region Dropdown WorkOrder
+        /// <summary>
+        /// Get Work Order
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-work-order")]
+        public async Task<IActionResult> GetWorkOrderAsync(string plant, string orderType, string keyword)
+        {
+            var dropdownList = await _commonQuery.GetWorkOrder(plant, orderType, keyword);
+            return Ok(new ApiSuccessResponse<List<Common2Response>> { Data = dropdownList });
         }
         #endregion
     }

@@ -139,7 +139,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<Common2Response>> GetOrderType(string plant, string keyword);
+        Task<List<CommonResponse>> GetOrderType(string plant, string keyword);
 
         /// <summary>
         /// Get WorkOrder
@@ -479,14 +479,14 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        public async Task<List<Common2Response>> GetOrderType(string plant, string keyword)
+        public async Task<List<CommonResponse>> GetOrderType(string plant, string keyword)
         {
             var result = await _oTypeRep.GetQuery(x => x.Plant == plant && 
                                                     (!string.IsNullOrEmpty(keyword) ? x.OrderTypeCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
                                   .OrderBy(x => x.OrderTypeCode)
-                                  .Select(x => new Common2Response
+                                  .Select(x => new CommonResponse
                                   {
-                                      Key = x.OrderTypeId,
+                                      Key = x.OrderTypeCode,
                                       Value = $"{x.OrderTypeCode} | {x.ShortText}"
                                   }).Take(20).ToListAsync();
 

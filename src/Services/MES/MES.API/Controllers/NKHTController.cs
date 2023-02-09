@@ -100,7 +100,7 @@ namespace MES.API.Controllers
         /// <param name="od"></param>
         /// <param name="odItem"></param>
         /// <returns></returns>
-        [HttpGet("get-data-by-po-poitem")]
+        [HttpGet("get-data-by-od-oditem")]
         public async Task<IActionResult> GetDataByODAndODItem(string od, string odItem)
         {
             var response = await _query.GetDataByODODItem(od, odItem);

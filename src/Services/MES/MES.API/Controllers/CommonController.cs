@@ -283,7 +283,7 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetOrderTypeAsync([Required]string plant, string keyword)
         {
             var dropdownList = await _commonQuery.GetOrderType(plant, keyword);
-            return Ok(new ApiSuccessResponse<List<Common2Response>> { Data = dropdownList });
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
 

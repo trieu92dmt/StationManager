@@ -151,30 +151,30 @@ namespace MES.Application.Queries
             var data = await query.OrderByDescending(x => x.WorkOrderCode).Select(x => new SearchWOResponse
             {
                 //Plant
-                Plant = x.Plant,
+                Plant = x.Plant ?? "",
                 //Production Order
-                WorkOrder = long.Parse(x.WorkOrderCode).ToString(),
+                WorkOrder = long.Parse(x.WorkOrderCode).ToString() ?? "",
                 //Material
-                Material = long.Parse(x.ProductCode).ToString(),
+                Material = long.Parse(x.ProductCode).ToString() ?? "",
                 //Material Desc
-                MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == x.ProductCode).ProductName,
+                MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == x.ProductCode).ProductName ?? "",
                 //Storage Location
-                Sloc = x.StorageLocation,
+                Sloc = x.StorageLocation ?? "",
                 //Batch
-                Batch = x.Batch,
+                Batch = x.Batch ?? "",
                 //Total Quantity
-                TotalQuantity = x.TargetQuantity,
+                TotalQuantity = x.TargetQuantity ?? 0,
                 //Delivery Quantity
-                DeliveryQuantity = x.DeliveredQuantity,
+                DeliveryQuantity = x.DeliveredQuantity ?? 0,
                 //UoM
-                Unit = x.Unit,
+                Unit = x.Unit ?? "",
                 //Order Type
                 OrderType = !string.IsNullOrEmpty(x.OrderTypeCode) ? 
                             $"{x.OrderTypeCode} | {orderTypes.FirstOrDefault(o => o.OrderTypeCode == x.OrderTypeCode).ShortText}" : "",
                 //Sales Order
-                SalesOrder =x.SalesOrder,
+                SalesOrder =x.SalesOrder ?? "",
                 //Sales order item
-                SaleOrderItem = x.SalesOrderItem
+                SaleOrderItem = x.SalesOrderItem ?? ""
             }).ToListAsync();
 
             return data;

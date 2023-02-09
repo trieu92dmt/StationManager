@@ -1329,7 +1329,7 @@ namespace IntegrationNS.API.Controllers
         /// 
         /// POST
         /// 
-        ///     Url: /api/v{version}/MasterDataIntegration/nkmh
+        ///     Url: /api/v{version}/MasterDataIntegration/nkht
         ///     Params: 
         ///             + version : 1
         ///             {
@@ -1357,7 +1357,56 @@ namespace IntegrationNS.API.Controllers
         ///
         /// OUT PUT
         /// 
-        /// 
+        ///     {
+        ///       "code": 200,
+        ///       "data": [
+        ///         {
+        ///           "goodsReturnId": "a8506037-18eb-4024-b08e-57709fc3d6e0",
+        ///           "plant": "A100",
+        ///           "shipToParty": "",
+        ///           "shipToPartyName": "",
+        ///           "outboundDelivery": "",
+        ///           "outboundDeliveryItem": "",
+        ///           "material": "000000002200000005",
+        ///           "materialDesc": "Gạo xô MN Đài Thơm 5% tấm, C, Đ",
+        ///           "sloc": "A123",
+        ///           "slocName": "A123 | ÐT.K gạo MN",
+        ///           "batch": "",
+        ///           "bagQuantity": 0,
+        ///           "singleWeight": 0,
+        ///           "weightHeadCode": "NHAP01",
+        ///           "weight": 0,
+        ///           "confỉmQty": 0,
+        ///           "qtyWithPackage": 0,
+        ///           "vehicleCode": "",
+        ///           "qtyWeight": 0,
+        ///           "totalQty": 0,
+        ///           "deliveryQty": 0,
+        ///           "openQty": 0,
+        ///           "uom": null,
+        ///           "description": "",
+        ///           "image": "",
+        ///           "status": "Chưa tạo giao dịch",
+        ///           "weightVote": "N1000002",
+        ///           "startTime": "2023-01-10T07:00:00",
+        ///           "endTime": "2023-02-09T13:19:20.293",
+        ///           "documentDate": null,
+        ///           "createById": "00000000-0000-0000-0000-000000000000",
+        ///           "createBy": null,
+        ///           "createOn": null,
+        ///           "changeById": null,
+        ///           "changeBy": "",
+        ///           "matDoc": null,
+        ///           "reverseDoc": null,
+        ///           "isDelete": false
+        ///         }
+        ///       ],
+        ///       "message": "\"Get data NKHT\" thành công.",
+        ///       "isSuccess": true,
+        ///       "resultsCount": null,
+        ///       "recordsTotal": null,
+        ///       "pagesCount": null
+        ///     }
         /// 
         /// </remarks>
         [HttpPost("nkht")]
@@ -1365,7 +1414,7 @@ namespace IntegrationNS.API.Controllers
         {
             var response = await _outboundDeliveryQuery.GetGoodsReturn(req);
 
-            return Ok(new ApiSuccessResponse<IList<GoodsReturnResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKMH") });
+            return Ok(new ApiSuccessResponse<IList<GoodsReturnResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKHT") });
         }
         #endregion
 

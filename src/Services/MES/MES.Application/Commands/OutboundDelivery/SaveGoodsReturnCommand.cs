@@ -171,14 +171,6 @@ namespace MES.Application.Commands.OutboundDelivery
                              detailOb.OutboundDelivery.ShiptoPartyName : null,
                     //16  SlocCode
                     SlocCode = item.SlocCode,
-                    //17  Total Quantity
-                    TotalQuantity = !string.IsNullOrEmpty(item.ODCode) ?
-                                 detailOb.DeliveryQuantity : null,
-                    //18  DeliveredQuantity
-                    DeliveredQuantity = !string.IsNullOrEmpty(item.ODCode) ?
-                                 detailOb.PickedQuantityPUoM : null,
-                    //19  Open Quantity
-                    OpenQuantity = 0,
                     //20  ConfirmQty
                     ConfirmQty = item.ConfirmQty,
                     //21  UOM

@@ -48,14 +48,14 @@ namespace MES.Application.Commands.OutboundDelivery
         public decimal? QuantityWithPackaging { get; set; }
         //Số phương tiện
         public string VehicleCode { get; set; }
-        //Id cân xe tải
-        public Guid? TruckInfoId { get; set; }
-        //Số xe tải
-        public string TruckQuantity { get; set; }
-        //Số cân đầu vào
-        public decimal? InputWeight { get; set; }
-        //Số cân đầu ra
-        public decimal? OutputWeight { get; set; }
+        ////Id cân xe tải
+        //public Guid? TruckInfoId { get; set; }
+        ////Số xe tải
+        //public string TruckQuantity { get; set; }
+        ////Số cân đầu vào
+        //public decimal? InputWeight { get; set; }
+        ////Số cân đầu ra
+        //public decimal? OutputWeight { get; set; }
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
@@ -202,20 +202,20 @@ namespace MES.Application.Commands.OutboundDelivery
                     SingleWeight = item.SingleWeight,
                     //32  VehicleCode
                     VehicleCode = item.VehicleCode,
-                    //33  InputWeight
-                    InputWeight = item.InputWeight,
-                    //34  OutputWeight
-                    OutputWeight = item.OutputWeight,
+                    ////33  InputWeight
+                    //InputWeight = item.InputWeight,
+                    ////34  OutputWeight
+                    //OutputWeight = item.OutputWeight,
                     //40  Description
                     Description = item.Description,
                     //41  Image
                     Image = !string.IsNullOrEmpty(imgPath) ? imgPath : null,
                     //42  Status
                     Status = "NOT",
-                    //43  TruckInfoId
-                    TruckInfoId = item.TruckInfoId,
-                    //44  TruckNumber
-                    TruckNumber = item.TruckQuantity,
+                    ////43  TruckInfoId
+                    //TruckInfoId = item.TruckInfoId,
+                    ////44  TruckNumber
+                    //TruckNumber = item.TruckQuantity,
                     //48  CreateTime
                     CreateTime = DateTime.Now,
                     //49  CreateBy

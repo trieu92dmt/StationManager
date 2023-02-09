@@ -1448,7 +1448,7 @@ namespace IntegrationNS.API.Controllers
         ///             -- Hủy phiếu
         ///             {
         ///               "isCancel": true,
-        ///               "nkmHs": [
+        ///               "nkhTs": [
         ///                 {
         ///                   "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NKHT MES
         ///                   "reverseDocument": ""
@@ -1459,7 +1459,7 @@ namespace IntegrationNS.API.Controllers
         ///              -- Cập nhật phiếu
         ///             {
         ///               "isCancel": false,
-        ///               "nkmHs": [
+        ///               "nkhTs": [
         ///                 {
         ///                   "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKHT MES
         ///                   "batch": "",

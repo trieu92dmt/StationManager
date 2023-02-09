@@ -75,10 +75,11 @@ namespace MES.Application.Commands.OutboundDelivery
         private readonly IRepository<DetailOutboundDeliveryModel> _detailODRepo;
         private readonly IRepository<OutboundDeliveryModel> _obRepo;
         private readonly IUtilitiesService _utilitiesService;
+        private readonly IRepository<ProductModel> _prodRepo;
 
         public SaveGoodsReturnCommandHandler(IUnitOfWork unitOfWork, IRepository<GoodsReturnModel> nkhtRepo, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, IRepository<DetailOutboundDeliveryModel> detailODRepo,
-                                             IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService)
+                                             IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService, IRepository<ProductModel> prodRepo)
         {
             _unitOfWork = unitOfWork;
             _nkhtRepo = nkhtRepo;
@@ -87,6 +88,7 @@ namespace MES.Application.Commands.OutboundDelivery
             _detailODRepo = detailODRepo;
             _obRepo = obRepo;
             _utilitiesService = utilitiesService;
+            _prodRepo = prodRepo;
         }
 
         public async Task<bool> Handle(SaveGoodsReturnCommand request, CancellationToken cancellationToken)
@@ -96,6 +98,9 @@ namespace MES.Application.Commands.OutboundDelivery
 
             //Get query cân
             var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+
+            //Products
+            var prods = _prodRepo.GetQuery().AsNoTracking();
 
             //Danh sách nhập kho mua hàng
             var nkhts = await _nkhtRepo.GetQuery().ToListAsync();
@@ -130,15 +135,16 @@ namespace MES.Application.Commands.OutboundDelivery
                 var detailOb = !string.IsNullOrEmpty(item.ODCode) ?
                                detailODs.FirstOrDefault(d => d.OutboundDelivery.DeliveryCodeInt == long.Parse(item.ODCode) && d.OutboundDeliveryItem == item.ODItem) : null;
 
+
                 _nkhtRepo.Add(new GoodsReturnModel
                 {
                     //1 GoodsReturnId
                     GoodsReturnId = GoodsReturnId,
                     //2 WeightSession Id
-                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ? 
+                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                       weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN").WeighSessionID : null,
                     //3 WeightHeadCode
-                    WeightHeadCode = item.WeightHeadCode,   
+                    WeightHeadCode = item.WeightHeadCode,
                     //4 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //5   DetailODId
@@ -162,7 +168,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     SalesOrder = !string.IsNullOrEmpty(item.ODCode) ?
                                  detailOb.SalesOrder : null,
                     //12  MaterialCode
-                    MaterialCode = item.MaterialCode,
+                    MaterialCode =  prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode)).ProductCode,
                     //14  ShipToParty
                     ShipToParty = !string.IsNullOrEmpty(item.ODCode) ?
                              detailOb.OutboundDelivery.ShiptoParty : null,

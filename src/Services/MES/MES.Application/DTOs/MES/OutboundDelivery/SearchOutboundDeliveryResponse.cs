@@ -112,7 +112,7 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }
         //Create On
-        public string CreateOn { get; set; }
+        public DateTime? CreateOn { get; set; }
         //Chamge By
         public Guid? ChangeById { get; set; }
         public string ChangeBy { get; set; }
@@ -122,5 +122,7 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         public string ReverseDoc { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Có thể chỉnh sửa
+        public bool isEdit { get; set; }
     }    
 }

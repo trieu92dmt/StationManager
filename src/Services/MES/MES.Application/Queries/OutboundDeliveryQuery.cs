@@ -154,6 +154,7 @@ namespace MES.Application.Queries
                                          x.OutboundDelivery.DocumentDate <= command.DocumentDateTo);
             }
 
+
             //Data NKHT
             var data = await query.Select(x => new OutboundDeliveryResponse
             {
@@ -165,7 +166,7 @@ namespace MES.Application.Queries
                 OutboundDelivery = long.Parse(x.OutboundDelivery.DeliveryCode).ToString(),
                 OutboundDeliveryItem = x.OutboundDeliveryItem,
                 Material = long.Parse(x.ProductCode).ToString(),
-                MaterialDesc = x.ItemDescription,
+                MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
                 Sloc = x.StorageLocation,
                 SlocDesc = slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName,
                 Batch = x.Batch,
@@ -324,9 +325,9 @@ namespace MES.Application.Queries
                 Plant = x.PlantCode,
                 ShipToParty = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoParty : "",
                 ShipToPartyName = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoPartyName : "",
-                OutboundDelivery = x.DetailODId.HasValue ? long.Parse(x.DetailOD.OutboundDelivery.DeliveryCode).ToString() : "",
-                OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : "",
-                Material = x.MaterialCode,
+                OutboundDelivery = x.DetailODId.HasValue ? long.Parse(x.DetailOD.OutboundDelivery.DeliveryCode).ToString() : null,
+                OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : null,
+                Material = long.Parse(x.MaterialCode).ToString(),
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
                 Sloc = x.SlocCode,
                 SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName}",
@@ -351,11 +352,13 @@ namespace MES.Application.Queries
                 DocumentDate = x.DocumentDate,
                 CreateById = x.CreateBy,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",
+                CreateOn = x.CreateTime,
                 ChangeById = x.LastEditBy,
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 MatDoc = x.MaterialDocument,
                 ReverseDoc = x.ReverseDocument,
-                isDelete = x.Status == "DEL" ? true : false
+                isDelete = x.Status == "DEL" ? true : false,
+                isEdit = x.Status == "DEL" || x.MaterialDocument != null || x.MaterialDocument != "" ? false : true 
 
             }).ToListAsync();
 

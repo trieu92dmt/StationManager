@@ -5,6 +5,7 @@ using IntegrationNS.Application.Commands.Divisions;
 using IntegrationNS.Application.Commands.MaterialDocument;
 using IntegrationNS.Application.Commands.NKHTs;
 using IntegrationNS.Application.Commands.NKMHs;
+using IntegrationNS.Application.Commands.NKTPSXs;
 using IntegrationNS.Application.Commands.OrderTypes;
 using IntegrationNS.Application.Commands.OutboundDelivery;
 using IntegrationNS.Application.Commands.Plants;
@@ -37,12 +38,15 @@ namespace IntegrationNS.API.Controllers
         private readonly IMediator _mediator;
         private readonly INKMHQuery _nkmhQuery;
         private readonly IOutboundDeliveryQuery _outboundDeliveryQuery;
+        private readonly INKTPSXQuery _nKTPSXQuery;
 
-        public MasterDataIntegrationController(IMediator mediator, INKMHQuery nkmhQuery, IOutboundDeliveryQuery outboundDeliveryQuery)
+        public MasterDataIntegrationController(IMediator mediator, INKMHQuery nkmhQuery, IOutboundDeliveryQuery outboundDeliveryQuery,
+                                               INKTPSXQuery nKTPSXQuery)
         {
             _mediator = mediator;
             _nkmhQuery = nkmhQuery;
             _outboundDeliveryQuery = outboundDeliveryQuery;
+            _nKTPSXQuery = nKTPSXQuery;
         }
 
         #region Tích hợp Order Type
@@ -941,6 +945,105 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa WorkOrder") });
+        }
+        #endregion
+
+        #region Tích hợp NKTPSX
+        /// <summary>Get data NKTPSX</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nktpsx
+        ///     Params: 
+        ///             + version : 1
+        ///             
+        /// 
+        /// Body: 
+        ///
+        ///
+        /// OUT PUT
+        /// 
+        /// 
+        /// </remarks>
+        [HttpPost("nktpsx")]
+        public async Task<IActionResult> NKTPSXIntegration([FromBody] NKTPSXIntegrationCommand req)
+        {
+            var response = await _nKTPSXQuery.GetNKTPSX(req);
+
+            return Ok(new ApiSuccessResponse<IList<NKTPSXResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKTPSX") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy nhập kho tp sản xuất
+        /// <summary>Update, cancel phiếu nhập kho tp sản xuất</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/update-nktpsx
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nktpsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKTPSX MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nktpsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKTPSX MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nktpsXs": [
+        ///                 {
+        ///                   "nktpsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NKTPSX MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nktpsXs": [
+        ///                 {
+        ///                   "nktpsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKTPSX MES
+        ///                   "batch": "",
+        ///                   "materialDocument": "",
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nktpsx")]
+        public async Task<IActionResult> UpdateOrCancelNKTPSXAsync([FromBody] UpdateAndCancelNKTPSXCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NKTPSX") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NKTPSX")
+            });
         }
         #endregion
 

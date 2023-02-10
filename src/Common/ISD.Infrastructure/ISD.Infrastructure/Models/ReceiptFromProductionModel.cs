@@ -21,6 +21,8 @@ namespace ISD.Infrastructure.Models
         public Guid? WeightId { get; set; }
         [StringLength(50)]
         public string WeightVote { get; set; }
+        [StringLength(50)]
+        public string Batch { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? BagQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

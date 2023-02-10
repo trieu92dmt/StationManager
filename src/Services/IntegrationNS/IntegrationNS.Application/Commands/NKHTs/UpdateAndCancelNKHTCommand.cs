@@ -32,11 +32,14 @@ namespace IntegrationNS.Application.Commands.NKHTs
     {
         private readonly IRepository<GoodsReturnModel> _nkhtRep;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<DetailOutboundDeliveryModel> _obDetailRepo;
 
-        public UpdateAndCancelNKHTCommandHandler(IRepository<GoodsReturnModel> nkhtRep, IUnitOfWork unitOfWork)
+        public UpdateAndCancelNKHTCommandHandler(IRepository<GoodsReturnModel> nkhtRep, IUnitOfWork unitOfWork,
+                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo)
         {
             _nkhtRep = nkhtRep;
             _unitOfWork = unitOfWork;
+            _obDetailRepo = obDetailRepo;
         }
 
         /// <summary>

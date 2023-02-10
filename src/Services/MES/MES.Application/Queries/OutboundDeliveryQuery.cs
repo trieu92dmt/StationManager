@@ -3,6 +3,7 @@ using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MediatR;
 using MES.Application.Commands.OutboundDelivery;
+using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKMH;
 using MES.Application.DTOs.MES.OutboundDelivery;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,8 @@ namespace MES.Application.Queries
         /// <param name="ODItem"></param>
         /// <returns></returns>
         Task<GetDataByODODItemResponse> GetDataByODODItem(string ODCode, string ODItem);
+
+        Task<List<CommonResponse>> GetDropDownWeightVote(string keyword);
     }
 
     public class OutboundDeliveryQuery : IOutboundDeliveryQuery
@@ -406,6 +409,16 @@ namespace MES.Application.Queries
             };
 
             return response;
+        }
+
+        public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
+        {
+            return await _nkhtRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.WeightVote,
+                                             Value = x.WeightVote
+                                         }).Distinct().Take(20).ToListAsync();
         }
     }
 }

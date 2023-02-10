@@ -150,7 +150,7 @@ namespace MES.Application.Commands.NKTPSX
                 var nktpsx = await nktpsxs.FirstOrDefaultAsync(x => x.RcFromProductiontId == item.NKTPSXId);
 
                 //Lấy ra workorder
-                var wo = wos.FirstOrDefault(x => x.WorkOrderCodeInt == long.Parse(item.WorkOrder));
+                var wo = !!string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
 
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile

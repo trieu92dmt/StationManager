@@ -3,6 +3,7 @@ using ISD.Core.Properties;
 using MediatR;
 using MES.Application.Commands.MES;
 using MES.Application.Commands.OutboundDelivery;
+using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
 using MES.Application.DTOs.MES.OutboundDelivery;
@@ -113,5 +114,19 @@ namespace MES.API.Controllers
                 Message = string.Format(CommonResource.Msg_Success, "Lấy data")
             });
         }
+
+        #region Get số phiếu cân
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-weight-vote")]
+        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
+        {
+            var dropdownList = await _query.GetDropDownWeightVote(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

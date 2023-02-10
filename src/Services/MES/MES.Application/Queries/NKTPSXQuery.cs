@@ -3,6 +3,7 @@ using ISD.Core.Interfaces.Databases;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Infrastructure.Models;
 using MES.Application.Commands.ReceiptFromProduction;
+using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKTPSX;
 using MES.Application.DTOs.MES.OutboundDelivery;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,8 @@ namespace MES.Application.Queries
         /// <param name="workorder"></param>
         /// <returns></returns>
         Task<GetDataByWoResponse> GetDataByWo(string workorder);
+
+        Task<List<CommonResponse>> GetDropDownWeightVote(string keyword);
     }
 
     public class NKTPSXQuery : INKTPSXQuery
@@ -48,12 +51,12 @@ namespace MES.Application.Queries
         private readonly IRepository<ReceiptFromProductionModel> _rfProdRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<OrderTypeModel> _orderTypeRepo;
-        private readonly IRepository<ReceiptFromProductionModel> _nkhtRepo;
+        private readonly IRepository<ReceiptFromProductionModel> _nktpsxRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
 
         public NKTPSXQuery(IUnitOfWork unitOfWork, IRepository<WorkOrderModel> woRepo, IRepository<ReceiptFromProductionModel> rfProdRepo,
-                           IRepository<ProductModel> prodRepo, IRepository<OrderTypeModel> orderTypeRepo, IRepository<ReceiptFromProductionModel> nkhtRepo,
+                           IRepository<ProductModel> prodRepo, IRepository<OrderTypeModel> orderTypeRepo, IRepository<ReceiptFromProductionModel> nktpsxRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
         {
             _unitOfWork = unitOfWork;
@@ -61,7 +64,7 @@ namespace MES.Application.Queries
             _rfProdRepo = rfProdRepo;
             _prodRepo = prodRepo;
             _orderTypeRepo = orderTypeRepo;
-            _nkhtRepo = nkhtRepo;
+            _nktpsxRepo = nktpsxRepo;
             _cataRepo = cataRepo;
             _userRepo = userRepo;
         }
@@ -91,7 +94,7 @@ namespace MES.Application.Queries
             #endregion
 
             //Tạo query
-            var query = _nkhtRepo.GetQuery()
+            var query = _nktpsxRepo.GetQuery()
                                .Include(x => x.WorkOrder)
                                .AsNoTracking();
 
@@ -427,5 +430,14 @@ namespace MES.Application.Queries
             return response;
         }
 
+        public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
+        {
+            return await _nktpsxRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.WeightVote,
+                                             Value = x.WeightVote
+                                         }).Distinct().Take(20).ToListAsync();
+        }
     }
 }

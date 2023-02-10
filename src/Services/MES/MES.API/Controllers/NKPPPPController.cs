@@ -122,6 +122,23 @@ namespace MES.API.Controllers
             });
         }
 
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu nhập kho PP PP)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-nkpppp")]
+        public async Task<IActionResult> GetNKPPPPAsync([FromBody] SearchNKPPPPCommand command)
+        {
+            var response = await _query.GetNKPPPP(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchNKPPPPResponse>>
+            {
+                Data = response
+            });
+        }
+
         /// <summary>
         /// Update dữ liệu nkpppp
         /// </summary>
@@ -137,23 +154,6 @@ namespace MES.API.Controllers
                 Data = response.IsSuccess,
                 IsSuccess = response.IsSuccess,
                 Message = response.Message
-            });
-        }
-
-
-        /// <summary>
-        /// Bảng 2 (Dữ liệu nhập kho PP PP)
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        [HttpPost("get-nkpppp")]
-        public async Task<IActionResult> GetNKPPPPAsync([FromBody] SearchNKPPPPCommand command)
-        {
-            var response = await _query.GetNKPPPP(command);
-
-            return Ok(new ApiSuccessResponse<List<SearchNKPPPPResponse>>
-            {
-                Data = response
             });
         }
 

@@ -202,7 +202,7 @@ namespace MES.Application.Queries
                 //Material
                 Material = x.MaterialCode ?? "",
                 //Material Desc
-                MaterialDesc = string.IsNullOrEmpty(x.MaterialCode) ? materials.FirstOrDefault(m => m.ProductCode == x.MaterialCode).ProductName : "",
+                MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? materials.FirstOrDefault(m => m.ProductCode == x.MaterialCode).ProductName : "",
                 //Stor.Loc
                 Sloc = x.SlocCode ?? "",
                 //Batch

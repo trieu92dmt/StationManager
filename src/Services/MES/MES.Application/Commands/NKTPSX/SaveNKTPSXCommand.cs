@@ -124,6 +124,9 @@ namespace MES.Application.Commands.OutboundDelivery
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
+                //Lấy product
+                var material = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode) && x.PlantCode == item.Plant).ProductCode;
+
                 //Lấy ra workorder
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(d => d.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
 
@@ -136,7 +139,8 @@ namespace MES.Application.Commands.OutboundDelivery
                     //3 PlantCode
                     PlantCode = item.Plant,
                     //4   MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode) && x.PlantCode == item.Plant).ProductCode,
+                    MaterialCode = material,
+                    MaterialCodeInt = long.Parse(material),
                     //5   WeightId
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,

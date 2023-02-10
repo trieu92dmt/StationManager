@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MES.Application.Commands.NKPPPP
 {
-    internal class SaveNKPPPPCommand
+    public class SaveNKPPPPCommand
     {
     }
 }

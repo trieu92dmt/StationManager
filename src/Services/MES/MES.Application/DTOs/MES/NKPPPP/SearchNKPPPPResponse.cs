@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace MES.Application.DTOs.MES.NKPPPP
 {
-    public class SearchWOResponse
+    public class GetDataInputResponse
     {
+        public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }
         //Production Order
-        public string WorkOrderFrom { get; set; }
-        public string WorkOrderTo { get; set; }
-        //Material
+        public string WorkOrder { get; set; }
         public string Material { get; set; }
         //Material Desc
         public string MaterialDesc { get; set; }

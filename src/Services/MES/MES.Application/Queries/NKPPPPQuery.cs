@@ -19,7 +19,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name = "command" ></param>
         /// <returns ></returns>
-        //Task <List<SearchWOResponse>> GetInputData(SearchNKPPPPCommand command);
+        Task <List<GetDataInputResponse>> GetInputData(SearchNKPPPPCommand command);
 
         /// <summary>
         /// Lấy data nktpsx
@@ -35,12 +35,17 @@ namespace MES.Application.Queries
         private readonly IRepository<ScrapFromProductionModel> _nkppppRepo;
         private readonly IRepository<WorkOrderModel> _woRepo;
         private readonly IRepository<DetailWorkOrderModel> _detailWoRepo;
+        private readonly IRepository<ProductModel> _prdRepo;
+        private readonly IRepository<OrderTypeModel> _orderTypeRepo;
 
-        public KPPPPQuery(IRepository<ScrapFromProductionModel> nkppppRepo, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWoRepo)
+        public KPPPPQuery(IRepository<ScrapFromProductionModel> nkppppRepo, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWoRepo,
+                          IRepository<ProductModel> prdRepo, IRepository<OrderTypeModel> orderTypeRepo)
         {
             _nkppppRepo = nkppppRepo;
             _woRepo = woRepo;
             _detailWoRepo = detailWoRepo;
+            _prdRepo = prdRepo;
+            _orderTypeRepo = orderTypeRepo;
         }
 
 
@@ -55,141 +60,152 @@ namespace MES.Application.Queries
                                          }).Distinct().Take(20).ToListAsync();
         }
 
-        //public Task<List<SearchWOResponse>> GetInputData(SearchNKPPPPCommand command)
-        //{
-        //    #region Format Day
+        public async Task<List<GetDataInputResponse>> GetInputData(SearchNKPPPPCommand command)
+        {
+            #region Format Day
 
-        //    //Scheduled Start
-        //    if (command.ScheduledStartFrom.HasValue)
-        //    {
-        //        command.ScheduledStartFrom = command.ScheduledStartFrom.Value.Date;
-        //    }
-        //    if (command.ScheduledStartTo.HasValue)
-        //    {
-        //        command.ScheduledStartTo = command.ScheduledStartTo.Value.Date.AddDays(1).AddSeconds(-1);
-        //    }
-        //    #endregion
+            //Scheduled Start
+            if (command.ScheduledStartFrom.HasValue)
+            {
+                command.ScheduledStartFrom = command.ScheduledStartFrom.Value.Date;
+            }
+            if (command.ScheduledStartTo.HasValue)
+            {
+                command.ScheduledStartTo = command.ScheduledStartTo.Value.Date.AddDays(1).AddSeconds(-1);
+            }
+            #endregion
 
-        //    //Tạo query
-        //    var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL"))
-        //                             .Include(x => x.WorkOrder)
-        //                             .AsNoTracking();
+            //Tạo query
+            var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL"))
+                                     .Include(x => x.WorkOrder)
+                                     .AsNoTracking();
 
-        //    //Lọc điều kiện
-        //    //Theo plant
-        //    if (!string.IsNullOrEmpty(command.Plant))
-        //    {
-        //        query = query.Where(x => x.WorkOrder.Plant == command.Plant);
-        //    }
+            //Lọc điều kiện
+            //Theo plant
+            if (!string.IsNullOrEmpty(command.Plant))
+            {
+                query = query.Where(x => x.WorkOrder.Plant == command.Plant);
+            }
 
-        //    //Theo Material
-        //    if (!string.IsNullOrEmpty(command.Material))
-        //    {
-        //        query = query.Where(x => x.WorkOrder.ProductCode == command.Material);
-        //    }
+            //Theo Material
+            if (!string.IsNullOrEmpty(command.Material))
+            {
+                query = query.Where(x => x.WorkOrder.ProductCode == command.Material);
+            }
 
-        //    //Theo Component
-        //    if (!string.IsNullOrEmpty(command.ComponentFrom))
-        //    {
-        //        //Nếu không có To thì search 1
-        //        if (string.IsNullOrEmpty(command.ComponentFrom))
-        //            command.ComponentTo = command.ComponentFrom;
-        //        query = query.Where(x => x.ProductCode.CompareTo(command.ComponentFrom) >= 0 &&
-        //                                 x.ProductCode.CompareTo(command.ComponentTo) <= 0);
-        //    }
+            //Theo Component
+            if (!string.IsNullOrEmpty(command.ComponentFrom))
+            {
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(command.ComponentFrom))
+                    command.ComponentTo = command.ComponentFrom;
+                query = query.Where(x => x.ProductCode.CompareTo(command.ComponentFrom) >= 0 &&
+                                         x.ProductCode.CompareTo(command.ComponentTo) <= 0);
+            }
 
-        //    //Theo Order Type
-        //    if (!string.IsNullOrEmpty(command.OrderType))
-        //    {
-        //        query = query.Where(x => x.OrderTypeCode == command.OrderType);
-        //    }
+            //Theo lệnh sản xuát
+            if (!string.IsNullOrEmpty(command.WorkorderFrom))
+            {
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(command.WorkorderTo))
+                    command.WorkorderTo = command.WorkorderFrom;
+                query = query.Where(x => x.WorkOrder.WorkOrderCode.CompareTo(command.WorkorderFrom) >= 0 &&
+                                         x.WorkOrder.WorkOrderCode.CompareTo(command.WorkorderTo) <= 0);
+            }
 
-        //    //Theo lệnh sản xuát
-        //    if (!string.IsNullOrEmpty(command.WorkorderFrom))
-        //    {
-        //        //Nếu không có To thì search 1
-        //        if (string.IsNullOrEmpty(command.WorkorderTo))
-        //            command.WorkorderTo = command.WorkorderFrom;
-        //        query = query.Where(x => x.CompareTo(command.WorkOrderFrom) >= 0 &&
-        //                                 x.WorkOrderCode.CompareTo(command.WorkOrderTo) <= 0);
-        //    }
+            //Theo Order Type
+            if (!string.IsNullOrEmpty(command.OrderTypeFrom))
+            {
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(command.OrderTypeFrom))
+                    command.SalesOrderTo = command.OrderTypeTo;
+                query = query.Where(x => x.WorkOrder.OrderTypeCode.CompareTo(command.OrderTypeFrom) >= 0 &&
+                                         x.WorkOrder.OrderTypeCode.CompareTo(command.OrderTypeTo) <= 0);
+            }
 
-        //    //Theo sale order
-        //    if (!string.IsNullOrEmpty(command.SaleOrderFrom))
-        //    {
+            //Theo sale order
+            if (!string.IsNullOrEmpty(command.SalesOrderFrom))
+            {
 
-        //        //Nếu không có To thì search 1
-        //        if (string.IsNullOrEmpty(command.SaleOrderTo))
-        //            command.SaleOrderTo = command.SaleOrderFrom;
-        //        query = query.Where(x => x.SalesOrder.CompareTo(command.SaleOrderFrom) >= 0 &&
-        //                                 x.SalesOrder.CompareTo(command.SaleOrderTo) <= 0);
-        //    }
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(command.SalesOrderTo))
+                    command.SalesOrderTo = command.SalesOrderFrom;
+                query = query.Where(x => x.WorkOrder.SalesOrder.CompareTo(command.SalesOrderFrom) >= 0 &&
+                                         x.WorkOrder.SalesOrder.CompareTo(command.SalesOrderTo) <= 0);
+            }
 
 
-        //    //Theo Scheduled Start
-        //    if (command.ScheduledStartFrom.HasValue)
-        //    {
-        //        //Nếu không có To thì search 1
-        //        if (!command.ScheduledStartTo.HasValue)
-        //            command.ScheduledStartTo = command.ScheduledStartFrom.Value.Date.AddDays(1).AddSeconds(-1);
-        //        query = query.Where(x => x.ScheduledStartDate >= command.ScheduledStartFrom &&
-        //                                 x.ScheduledStartDate <= command.ScheduledStartTo);
-        //    }
+            //Theo Scheduled Start
+            if (command.ScheduledStartFrom.HasValue)
+            {
+                //Nếu không có To thì search 1
+                if (!command.ScheduledStartTo.HasValue)
+                    command.ScheduledStartTo = command.ScheduledStartFrom.Value.Date.AddDays(1).AddSeconds(-1);
+                query = query.Where(x => x.WorkOrder.ScheduledStartDate >= command.ScheduledStartFrom &&
+                                         x.WorkOrder.ScheduledStartDate <= command.ScheduledStartTo);
+            }
 
-        //    //Get query data material
-        //    var materials = _prodRepo.GetQuery().AsNoTracking();
+            //Get query data material
+            var materials = _prdRepo.GetQuery().AsNoTracking();
 
-        //    //Get query data order type
-        //    var orderTypes = _orderTypeRepo.GetQuery().AsNoTracking();
+            //Get query data order type
+            var orderTypes = _orderTypeRepo.GetQuery().AsNoTracking();
 
-        //    //Get data
-        //    var data = await query.OrderByDescending(x => x.WorkOrderCode).Select(x => new SearchWOResponse
-        //    {
-        //        //Plant
-        //        Plant = x.Plant ?? "",
-        //        //Production Order
-        //        WorkOrder = long.Parse(x.WorkOrderCode).ToString() ?? "",
-        //        //Material
-        //        Material = long.Parse(x.ProductCode).ToString() ?? "",
-        //        //Material Desc
-        //        MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == x.ProductCode).ProductName ?? "",
-        //        //Storage Location
-        //        Sloc = x.StorageLocation ?? "",
-        //        //Batch
-        //        Batch = x.Batch ?? "",
-        //        //Total Quantity
-        //        TotalQuantity = x.TargetQuantity ?? 0,
-        //        //Delivery Quantity
-        //        DeliveryQuantity = x.DeliveredQuantity ?? 0,
-        //        //UoM
-        //        Unit = x.Unit ?? "",
-        //        //Order Type
-        //        OrderType = !string.IsNullOrEmpty(x.OrderTypeCode) ?
-        //                    $"{x.OrderTypeCode} | {orderTypes.FirstOrDefault(o => o.OrderTypeCode == x.OrderTypeCode).ShortText}" : "",
-        //        //Sales Order
-        //        SalesOrder = x.SalesOrder ?? "",
-        //        //Sales order item
-        //        SaleOrderItem = x.SalesOrderItem ?? ""
-        //    }).ToListAsync();
+            //Get data
+            var data = await query.Select(x => new GetDataInputResponse
+            {
+                //Plant
+                Plant = x.WorkOrder.Plant ?? "",
+                //Production Order
+                WorkOrder = long.Parse(x.WorkOrder.WorkOrderCode).ToString() ?? "",
+                //Material
+                Material = long.Parse(x.WorkOrder.ProductCode).ToString() ?? "",
+                //Material Desc
+                MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == x.WorkOrder.ProductCode).ProductName ?? "",
+                //Component
+                Component = long.Parse(x.ProductCode).ToString() ?? "",
+                //Component Desc
+                ComponentDesc = materials.FirstOrDefault(m => m.ProductCode == x.ProductCode).ProductName ?? "",
+                //Order Type
+                OrderType = !string.IsNullOrEmpty(x.WorkOrder.OrderTypeCode) ?
+                            $"{x.WorkOrder.OrderTypeCode} | {orderTypes.FirstOrDefault(o => o.OrderTypeCode == x.WorkOrder.OrderTypeCode).ShortText}" : "",
+                //Sales Order
+                SalesOrder = x.WorkOrder.SalesOrder ?? "",
+                //Storage Location
+                Sloc = x.StorageLocation ?? "",
+                //Batch
+                Batch = x.Batch ?? "",
+                //UoM
+                Unit = x.WorkOrder.Unit ?? "",
+                //Schedule Start Time
+                ScheduleStartTime = x.WorkOrder.ScheduledStartDate ?? null,
+                //Schedule Finish Time
+                ScheduleFinishTime = x.WorkOrder.ScheduledFinishDate ?? null,
+                //Requirement Qty
+                RequirementQty = x.RequirementQuantiy ?? 0,
+                //Withdraw Qty
+                WithdrawQty = x.QuantityWithdrawn ?? 0
+            }).ToListAsync();
 
-        //    //Tính open quantity
-        //    foreach (var item in data)
-        //    {
-        //        item.OpenQuantity = item.TotalQuantity - item.DeliveryQuantity;
-        //    }
+            var index = 1;
+            foreach (var item in data)
+            {
+                item.IndexKey = index;
+                index++;
+            }
 
-        //    //Thêm dòng trống nếu search theo material
-        //    if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
-        //    {
-        //        data.Add(new SearchWOResponse
-        //        {
-        //            Plant = command.Plant,
-        //            Material = long.Parse(command.MaterialFrom).ToString(),
-        //            MaterialDesc = materials.FirstOrDefault(x => x.ProductCode == command.MaterialFrom).ProductName,
-        //        });
-        //    }
+            //Thêm dòng trống nếu search theo material
+            if (!string.IsNullOrEmpty(command.ComponentFrom) && command.ComponentFrom == command.ComponentTo)
+            {
+                data.Add(new GetDataInputResponse
+                {
+                    Plant = command.Plant,
+                    Component = long.Parse(command.ComponentFrom).ToString(),
+                    ComponentDesc = materials.FirstOrDefault(x => x.ProductCode == command.ComponentFrom).ProductName,
+                });
+            }
 
-        //    return data;
-        //}
+            return data;
+        }
     }
 }

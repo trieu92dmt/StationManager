@@ -127,7 +127,6 @@ namespace MES.Application.Commands.OutboundDelivery
                 //Lấy ra workorder
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(d => d.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
 
-
                 _nktpsxRepo.Add(new ReceiptFromProductionModel
                 {
                     //1 RcFromProductiontId
@@ -137,7 +136,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //3 PlantCode
                     PlantCode = item.Plant,
                     //4   MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode)).ProductCode,
+                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode) && x.PlantCode == item.Plant).ProductCode,
                     //5   WeightId
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,

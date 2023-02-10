@@ -230,6 +230,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<SalesOfficeModel> SalesOfficeModel { get; set; }
         public virtual DbSet<ScaleModel> ScaleModel { get; set; }
         public virtual DbSet<Schema> Schema { get; set; }
+        public virtual DbSet<ScrapFromProductionModel> ScrapFromProductionModel { get; set; }
         public virtual DbSet<SearchResultDetailTemplateModel> SearchResultDetailTemplateModel { get; set; }
         public virtual DbSet<SearchResultTemplateModel> SearchResultTemplateModel { get; set; }
         public virtual DbSet<SearchTemplateModel> SearchTemplateModel { get; set; }
@@ -2144,6 +2145,16 @@ namespace ISD.Infrastructure.Data
                     .HasName("PK_HangFire_Schema");
 
                 entity.Property(e => e.Version).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<ScrapFromProductionModel>(entity =>
+            {
+                entity.Property(e => e.ScFromProductiontId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.WorkOrder)
+                    .WithMany(p => p.ScrapFromProductionModel)
+                    .HasForeignKey(d => d.WorkOrderId)
+                    .HasConstraintName("FK_ScrapFromProductionModel_WorkOrderModel");
             });
 
             modelBuilder.Entity<SearchResultDetailTemplateModel>(entity =>

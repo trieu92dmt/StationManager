@@ -263,6 +263,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[ScrapFromProductionModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[ShippingPointModel]",
          "ObjectType": 0
       },

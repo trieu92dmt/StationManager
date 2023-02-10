@@ -339,7 +339,7 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight,
                 WeightHeadCode = x.WeightHeadCode,
                 Weight = x.Weight,
-                ConfỉmQty = x.ConfirmQty,
+                ConfirmQty = x.ConfirmQty,
                 QtyWithPackage = x.QuantityWithPackaging,
                 VehicleCode = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.VehicleCode : "",
                 QtyWeight = x.QuantityWeitght,

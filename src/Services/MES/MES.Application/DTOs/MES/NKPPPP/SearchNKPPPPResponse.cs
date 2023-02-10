@@ -11,7 +11,8 @@ namespace MES.Application.DTOs.MES.NKPPPP
         //Plant
         public string Plant { get; set; }
         //Production Order
-        public string WorkOrder { get; set; }
+        public string WorkOrderFrom { get; set; }
+        public string WorkOrderTo { get; set; }
         //Material
         public string Material { get; set; }
         //Material Desc

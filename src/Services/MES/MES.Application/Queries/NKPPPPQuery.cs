@@ -85,7 +85,7 @@ namespace MES.Application.Queries
         //    //Theo Material
         //    if (!string.IsNullOrEmpty(command.Material))
         //    {
-        //        query = query.Where(x => x.ProductCode == command.Material);
+        //        query = query.Where(x => x.WorkOrder.ProductCode == command.Material);
         //    }
 
         //    //Theo Component
@@ -94,7 +94,7 @@ namespace MES.Application.Queries
         //        //Nếu không có To thì search 1
         //        if (string.IsNullOrEmpty(command.ComponentFrom))
         //            command.ComponentTo = command.ComponentFrom;
-        //        query = query.Where(x => x.DetailWorkOrderModel.ProductCode.CompareTo(command.ComponentFrom) >= 0 &&
+        //        query = query.Where(x => x.ProductCode.CompareTo(command.ComponentFrom) >= 0 &&
         //                                 x.ProductCode.CompareTo(command.ComponentTo) <= 0);
         //    }
 
@@ -105,12 +105,12 @@ namespace MES.Application.Queries
         //    }
 
         //    //Theo lệnh sản xuát
-        //    if (!string.IsNullOrEmpty(command.WorkOrderFrom))
+        //    if (!string.IsNullOrEmpty(command.WorkorderFrom))
         //    {
         //        //Nếu không có To thì search 1
-        //        if (string.IsNullOrEmpty(command.WorkOrderTo))
-        //            command.WorkOrderTo = command.WorkOrderFrom;
-        //        query = query.Where(x => x.WorkOrderCode.CompareTo(command.WorkOrderFrom) >= 0 &&
+        //        if (string.IsNullOrEmpty(command.WorkorderTo))
+        //            command.WorkorderTo = command.WorkorderFrom;
+        //        query = query.Where(x => x.CompareTo(command.WorkOrderFrom) >= 0 &&
         //                                 x.WorkOrderCode.CompareTo(command.WorkOrderTo) <= 0);
         //    }
 

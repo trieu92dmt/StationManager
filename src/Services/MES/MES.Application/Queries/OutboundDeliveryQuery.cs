@@ -381,6 +381,9 @@ namespace MES.Application.Queries
             var odDetails = await _detailODRepo.GetQuery().Include(x => x.OutboundDelivery)
                                               .FirstOrDefaultAsync(x => x.OutboundDeliveryItem == ODItem && x.OutboundDelivery.DeliveryCodeInt == long.Parse(ODCode));
 
+            if (odDetails == null)
+                return null;
+
             //Danh sách product
             var prods = _prdRepo.GetQuery().AsNoTracking();
 

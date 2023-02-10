@@ -244,6 +244,7 @@ namespace MES.Application.Queries
                     Plant = command.Plant,
                     Component = long.Parse(command.ComponentFrom).ToString(),
                     ComponentDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.ComponentFrom)).ProductName,
+                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.ComponentFrom)).Unit
                 });
             }
 

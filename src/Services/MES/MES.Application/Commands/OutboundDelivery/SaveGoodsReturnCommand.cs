@@ -169,6 +169,7 @@ namespace MES.Application.Commands.OutboundDelivery
                                  detailOb.SalesOrder : null,
                     //12  MaterialCode
                     MaterialCode =  prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode)).ProductCode,
+                    MaterialCodeInt = long.Parse(item.MaterialCode),
                     //14  ShipToParty
                     ShipToParty = !string.IsNullOrEmpty(item.ODCode) ?
                              detailOb.OutboundDelivery.ShiptoParty : null,

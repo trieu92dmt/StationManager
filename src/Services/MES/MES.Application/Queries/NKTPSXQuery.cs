@@ -393,6 +393,7 @@ namespace MES.Application.Queries
                     Plant = command.Plant,
                     Material = long.Parse(command.MaterialFrom).ToString(),
                     MaterialDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
+                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
                 });
             }
 

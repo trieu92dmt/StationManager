@@ -409,7 +409,7 @@ namespace MES.Application.Queries
                     Plant = request.Plant,
                     Material = material.ProductCodeInt.ToString(),
                     MaterialName = material?.ProductName,
-
+                    Unit = material?.Unit
                 });
             }
 

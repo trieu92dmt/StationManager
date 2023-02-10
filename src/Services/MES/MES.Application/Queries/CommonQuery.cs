@@ -153,7 +153,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<Common2Response>> GetWorkOrder(string plant, string orderType, string keyword);
+        Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string keyword);
     }
 
     public class CommonQuery : ICommonQuery
@@ -507,7 +507,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        public async Task<List<Common2Response>> GetWorkOrder(string plant, string orderType, string keyword)
+        public async Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string keyword)
         {
             var result = await _workOrderRep.GetQuery(x => x.Plant == plant &&
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
@@ -516,10 +516,10 @@ namespace MES.Application.Queries
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
                                                            (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
                                   .OrderBy(x => x.WorkOrderCode)
-                                  .Select(x => new Common2Response
+                                  .Select(x => new CommonResponse
                                   {
-                                      Key = x.WorkOrderId,
-                                      Value = x.WorkOrderCode
+                                      Key = x.WorkOrderCode,
+                                      Value = x.WorkOrderCodeInt.ToString()
                                   }).Take(20).ToListAsync();
 
             return result;

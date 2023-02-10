@@ -311,7 +311,7 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetWorkOrderAsync(string plant, string orderType, string keyword)
         {
             var dropdownList = await _commonQuery.GetWorkOrder(plant, orderType, keyword);
-            return Ok(new ApiSuccessResponse<List<Common2Response>> { Data = dropdownList });
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
     }

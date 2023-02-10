@@ -207,6 +207,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                 OutboundDeliveryId = delivery.OutboundDeliveryId,
                                 OutboundDeliveryItem = item.OutboundDeliveryItem,
                                 ProductCode = item.ProductCode,
+                                ProductCodeInt = long.Parse(item.ProductCode),
                                 Plant = item.Plant,
                                 StorageLocation = item.StorageLocation,
                                 Batch = item.Batch,
@@ -310,6 +311,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                     OutboundDeliveryId = delivery.OutboundDeliveryId,
                                     OutboundDeliveryItem = item.OutboundDeliveryItem,
                                     ProductCode = item.ProductCode,
+                                    ProductCodeInt = long.Parse(item.ProductCode),
                                     Plant = item.Plant,
                                     StorageLocation = item.StorageLocation,
                                     Batch = item.Batch,
@@ -350,6 +352,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                             else
                             {
                                 detailDelivery.ProductCode = item.ProductCode;
+                                detailDelivery.ProductCodeInt = long.Parse(item.ProductCode);
                                 detailDelivery.Plant = item.Plant;
                                 detailDelivery.StorageLocation = item.StorageLocation;
                                 detailDelivery.Batch = item.Batch;

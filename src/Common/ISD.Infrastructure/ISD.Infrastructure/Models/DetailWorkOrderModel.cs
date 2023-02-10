@@ -11,6 +11,11 @@ namespace ISD.Infrastructure.Models
     [Table("DetailWorkOrderModel", Schema = "DataCollection")]
     public partial class DetailWorkOrderModel
     {
+        public DetailWorkOrderModel()
+        {
+            ScrapFromProductionModel = new HashSet<ScrapFromProductionModel>();
+        }
+
         [Key]
         public Guid DetailWorkOrderId { get; set; }
         public Guid? WorkOrderId { get; set; }
@@ -18,6 +23,7 @@ namespace ISD.Infrastructure.Models
         public string WorkOrderItem { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
+        public long? ProductCodeInt { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? RequirementDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -71,5 +77,7 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("WorkOrderId")]
         [InverseProperty("DetailWorkOrderModel")]
         public virtual WorkOrderModel WorkOrder { get; set; }
+        [InverseProperty("DetailWorkOrder")]
+        public virtual ICollection<ScrapFromProductionModel> ScrapFromProductionModel { get; set; }
     }
 }

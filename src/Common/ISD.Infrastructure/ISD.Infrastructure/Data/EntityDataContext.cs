@@ -2151,9 +2151,9 @@ namespace ISD.Infrastructure.Data
             {
                 entity.Property(e => e.ScFromProductiontId).ValueGeneratedNever();
 
-                entity.HasOne(d => d.WorkOrder)
+                entity.HasOne(d => d.DetailWorkOrder)
                     .WithMany(p => p.ScrapFromProductionModel)
-                    .HasForeignKey(d => d.WorkOrderId)
+                    .HasForeignKey(d => d.DetailWorkOrderId)
                     .HasConstraintName("FK_ScrapFromProductionModel_WorkOrderModel");
             });
 

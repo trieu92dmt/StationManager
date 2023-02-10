@@ -23,6 +23,7 @@ namespace ISD.Infrastructure.Models
         public string OutboundDeliveryItem { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
+        public long? ProductCodeInt { get; set; }
         [StringLength(50)]
         public string Plant { get; set; }
         [StringLength(50)]

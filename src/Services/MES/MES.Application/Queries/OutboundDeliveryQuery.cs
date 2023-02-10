@@ -142,8 +142,8 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.MaterialTo))
                     command.MaterialTo = command.MaterialFrom;
 
-                query = query.Where(x => x.ProductCode.CompareTo(command.MaterialFrom) >= 0 &&
-                                         x.ProductCode.CompareTo(command.MaterialTo) <= 0);
+                query = query.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.ProductCodeInt >= long.Parse(command.MaterialTo));
             }
 
             //Theo document date
@@ -278,8 +278,8 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.MaterialTo))
                     command.MaterialTo = command.MaterialFrom;
 
-                query = query.Where(x => x.MaterialCode.CompareTo(command.MaterialFrom) >= 0 &&
-                                         x.MaterialCode.CompareTo(command.MaterialTo) <= 0);
+                query = query.Where(x => x.MaterialCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.MaterialCodeInt >= long.Parse(command.MaterialTo));
             }
 
             //Theo document date

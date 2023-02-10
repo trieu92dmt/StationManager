@@ -1,6 +1,8 @@
 ﻿using ISD.Core.Models;
+using ISD.Core.Properties;
 using MediatR;
 using MES.Application.Commands.NKPPPP;
+using MES.Application.Commands.OutboundDelivery;
 using MES.Application.Commands.ReceiptFromProduction;
 using MES.Application.DTOs.MES.NKPPPP;
 using MES.Application.Queries;
@@ -99,5 +101,23 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+
+        /// <summary>
+        /// Save dữ liệu ntpppp
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-nkpppp")]
+        public async Task<IActionResult> SaveNKPPPPAsync([FromBody] SaveNKPPPPCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu nhập kho phụ phẩm phế phẩm")
+            });
+        }
+
     }
 }

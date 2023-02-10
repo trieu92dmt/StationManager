@@ -338,8 +338,8 @@ namespace MES.Application.Queries
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
                 if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
-                queryPO = queryPO.Where(x => x.ProductCode.CompareTo(request.MaterialFrom) >= 0 &&
-                                             x.ProductCode.CompareTo(request.MaterialTo) <= 0);
+                queryPO = queryPO.Where(x => x.ProductCodeInt >= long.Parse(request.MaterialFrom) &&
+                                         x.ProductCodeInt >= long.Parse(request.MaterialTo));
             }
 
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))

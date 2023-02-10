@@ -22,12 +22,19 @@ namespace MES.Application.Queries
         Task <List<GetDataInputResponse>> GetInputData(SearchNKPPPPCommand command);
 
         /// <summary>
-        /// Lấy data nktpsx
+        /// Lấy data nkpppp
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        //Task<List<SearchNKTPSXResponse>> GetNKTPSX(SearchNKTPSXCommand command);
+        Task<List<SearchNKPPPPResponse>> GetNKPPPP(SearchNKPPPPCommand command);
         Task<List<CommonResponse>> GetDropDownWeightVote(string keyword);
+
+        /// <summary>
+        /// Lấy data theo wo
+        /// </summary>
+        /// <param name="workorder"></param>
+        /// <returns></returns>
+        Task<GetDataByWoResponse> GetDataByWo(string workorder);
     }
 
     public class KPPPPQuery : INKPPPPQuery
@@ -48,7 +55,10 @@ namespace MES.Application.Queries
             _orderTypeRepo = orderTypeRepo;
         }
 
-
+        public Task<GetDataByWoResponse> GetDataByWo(string workorder)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
         {
@@ -206,6 +216,11 @@ namespace MES.Application.Queries
             }
 
             return data;
+        }
+
+        public Task<List<SearchNKPPPPResponse>> GetNKPPPP(SearchNKPPPPCommand command)
+        {
+            throw new NotImplementedException();
         }
     }
 }

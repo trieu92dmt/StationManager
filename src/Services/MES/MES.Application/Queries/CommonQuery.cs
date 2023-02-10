@@ -203,7 +203,7 @@ namespace MES.Application.Queries
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new Common3Response
                                      {
-                                         Key = x.ProductCode,
+                                         Key = long.Parse(x.ProductCode).ToString(),
                                          Value = $"{x.ProductCodeInt} | {x.ProductName}",
                                          Name = x.ProductName
                                      }).Take(10).ToListAsync();
@@ -505,6 +505,7 @@ namespace MES.Application.Queries
             var result = await _workOrderRep.GetQuery(x => x.Plant == plant &&
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
                                                            (!x.SystemStatus.StartsWith("TECO")) &&
+                                                           (x.DeletionFlag != "X") &&
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
                                                            (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
                                   .OrderBy(x => x.WorkOrderCode)

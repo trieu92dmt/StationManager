@@ -13,7 +13,7 @@ namespace ISD.Infrastructure.Models
     {
         [Key]
         public Guid ScFromProductiontId { get; set; }
-        public Guid? WorkOrderId { get; set; }
+        public Guid? DetailWorkOrderId { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]
@@ -63,8 +63,8 @@ namespace ISD.Infrastructure.Models
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
 
-        [ForeignKey("WorkOrderId")]
+        [ForeignKey("DetailWorkOrderId")]
         [InverseProperty("ScrapFromProductionModel")]
-        public virtual WorkOrderModel WorkOrder { get; set; }
+        public virtual DetailWorkOrderModel DetailWorkOrder { get; set; }
     }
 }

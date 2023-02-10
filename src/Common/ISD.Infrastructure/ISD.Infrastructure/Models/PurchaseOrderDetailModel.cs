@@ -24,6 +24,7 @@ namespace ISD.Infrastructure.Models
         public int? PoLinetInt { get; set; }
         [StringLength(50)]
         public string ProductCode { get; set; }
+        public long? ProductCodeInt { get; set; }
         [StringLength(50)]
         public string StorageLocation { get; set; }
         [StringLength(50)]

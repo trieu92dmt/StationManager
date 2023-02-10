@@ -151,6 +151,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                             WorkOrderCode = woIntegration.WorkOrderCode,
                             WorkOrderCodeInt = long.Parse(woIntegration.WorkOrderCode),
                             ProductCode = woIntegration.ProductCode,
+                            ProductCodeInt = long.Parse(woIntegration.ProductCode),
                             OrderTypeCode = woIntegration.OrderType,
                             Plant = woIntegration.Plant,
                             StorageLocation = woIntegration.StorageLocation,
@@ -188,6 +189,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 WorkOrderId = workorder.WorkOrderId,
                                 WorkOrderItem = item.WorkOrderItem,
                                 ProductCode = item.ProductCode,
+                                ProductCodeInt = long.Parse(item.ProductCode),
                                 RequirementDate = item.RequirementDate,
                                 RequirementQuantiy = item.RequirementQuantiy,
                                 QuantityWithdrawn = item.QuantityWithdrawn,
@@ -223,6 +225,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                     else
                     {
                         workorder.ProductCode = woIntegration.ProductCode;
+                        workorder.ProductCodeInt = long.Parse(woIntegration.ProductCode);
                         workorder.OrderTypeCode = woIntegration.OrderType;
                         workorder.Plant = woIntegration.Plant;
                         workorder.StorageLocation = woIntegration.StorageLocation;
@@ -260,6 +263,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                     WorkOrderId = workorder.WorkOrderId,
                                     WorkOrderItem = item.WorkOrderItem,
                                     ProductCode = item.ProductCode,
+                                    ProductCodeInt = long.Parse(item.ProductCode),
                                     RequirementDate = item.RequirementDate,
                                     RequirementQuantiy = item.RequirementQuantiy,
                                     QuantityWithdrawn = item.QuantityWithdrawn,
@@ -288,6 +292,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                             else
                             {
                                 detailWO.ProductCode = item.ProductCode;
+                                detailWO.ProductCodeInt = long.Parse(item.ProductCode);
                                 detailWO.RequirementDate = item.RequirementDate;
                                 detailWO.RequirementQuantiy = item.RequirementQuantiy;
                                 detailWO.QuantityWithdrawn = item.QuantityWithdrawn;

@@ -37,10 +37,17 @@ namespace ISD.Infrastructure.Models
         public string ShipToPartyName { get; set; }
         [StringLength(50)]
         public string MaterialCode { get; set; }
+        public long? MaterialCodeInt { get; set; }
         [StringLength(50)]
         public string PurchaseOrderCode { get; set; }
         [StringLength(50)]
         public string SlocCode { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? TotalQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? DeliveredQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OpenQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }
         [StringLength(50)]

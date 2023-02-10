@@ -200,7 +200,7 @@ namespace MES.Application.Queries
                 //Production Order
                 WorkOrder = x.WorkOrderId.HasValue ? x.WorkOrder.WorkOrderCodeInt.ToString() : "",
                 //Material
-                Material = x.MaterialCode ?? "",
+                Material = x.MaterialCodeInt.ToString() ?? "",
                 //Material Desc
                 MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? materials.FirstOrDefault(m => m.ProductCode == x.MaterialCode).ProductName : "",
                 //Stor.Loc

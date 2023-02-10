@@ -138,8 +138,8 @@ namespace MES.Application.Queries
                 //Nếu không có To thì search 1
                 if (string.IsNullOrEmpty(command.MaterialTo))
                     command.MaterialTo = command.MaterialFrom;
-                query = query.Where(x => x.MaterialCode.CompareTo(command.MaterialFrom) >= 0 &&
-                                         x.MaterialCode.CompareTo(command.MaterialTo) <= 0);
+                query = query.Where(x => x.MaterialCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.MaterialCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo Scheduled Start
@@ -330,7 +330,7 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.MaterialTo))
                     command.MaterialTo = command.MaterialFrom;
                 query = query.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
-                                         x.ProductCodeInt >= long.Parse(command.MaterialTo));
+                                         x.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo Scheduled Start

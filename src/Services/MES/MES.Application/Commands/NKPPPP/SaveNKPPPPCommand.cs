@@ -137,7 +137,8 @@ namespace MES.Application.Commands.NKPPPP
                     //3 PlantCode
                     PlantCode = item.Plant,
                     //4   MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component) && x.PlantCode == item.Plant).ProductCode,
+                    ComponentCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component) && x.PlantCode == item.Plant).ProductCode,
+                    ComponentCodeInt = long.Parse(item.Component),
                     //5   WeightId
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,

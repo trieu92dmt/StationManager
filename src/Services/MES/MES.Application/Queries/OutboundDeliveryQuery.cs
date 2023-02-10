@@ -143,7 +143,7 @@ namespace MES.Application.Queries
                     command.MaterialTo = command.MaterialFrom;
 
                 query = query.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
-                                         x.ProductCodeInt >= long.Parse(command.MaterialTo));
+                                         x.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo document date
@@ -279,7 +279,7 @@ namespace MES.Application.Queries
                     command.MaterialTo = command.MaterialFrom;
 
                 query = query.Where(x => x.MaterialCodeInt >= long.Parse(command.MaterialFrom) &&
-                                         x.MaterialCodeInt >= long.Parse(command.MaterialTo));
+                                         x.MaterialCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo document date

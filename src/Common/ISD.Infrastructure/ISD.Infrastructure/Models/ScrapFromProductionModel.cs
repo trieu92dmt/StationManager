@@ -17,7 +17,8 @@ namespace ISD.Infrastructure.Models
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]
-        public string MaterialCode { get; set; }
+        public string ComponentCode { get; set; }
+        public long? ComponentCodeInt { get; set; }
         public Guid? WeightId { get; set; }
         [StringLength(50)]
         public string WeightVote { get; set; }

@@ -402,7 +402,7 @@ namespace MES.Application.Queries
         public async Task<GetDataByWoResponse> GetDataByWo(string workorder)
         {
             //Lấy ra wo
-            var wo = await _woRepo.GetQuery().FirstOrDefaultAsync(x => x.WorkOrderCode == workorder);
+            var wo = await _woRepo.GetQuery().FirstOrDefaultAsync(x => x.WorkOrderCodeInt == long.Parse(workorder));
 
             //Danh sách product
             var prods = _prodRepo.GetQuery().AsNoTracking();

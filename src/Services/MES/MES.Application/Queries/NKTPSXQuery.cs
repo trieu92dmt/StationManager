@@ -198,7 +198,7 @@ namespace MES.Application.Queries
                 //Plant
                 Plant = x.PlantCode ?? "",
                 //Production Order
-                WorkOrder = x.WorkOrderId.HasValue ? x.WorkOrder.WorkOrderCode : "",
+                WorkOrder = x.WorkOrderId.HasValue ? x.WorkOrder.WorkOrderCodeInt.ToString() : "",
                 //Material
                 Material = x.MaterialCode ?? "",
                 //Material Desc
@@ -232,7 +232,7 @@ namespace MES.Application.Queries
                 //Ghi chú
                 Description = x.Description ?? "",
                 //Hình ảnh
-                Image = x.Image ?? "",
+                Image = string.IsNullOrEmpty(x.Image) ? "" : $"https://itp-mes.isdcorp.vn/{x.Image}",
                 //Status
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //Số phiếu cân
@@ -392,7 +392,7 @@ namespace MES.Application.Queries
                 {
                     Plant = command.Plant,
                     Material = long.Parse(command.MaterialFrom).ToString(),
-                    MaterialDesc = materials.FirstOrDefault(x => x.ProductCode == command.MaterialFrom).ProductName,
+                    MaterialDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
                 });
             }
 

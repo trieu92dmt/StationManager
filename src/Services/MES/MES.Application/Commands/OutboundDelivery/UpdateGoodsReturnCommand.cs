@@ -200,6 +200,7 @@ namespace MES.Application.Commands.OutboundDelivery
                         DetailODId = !string.IsNullOrEmpty(item.ODCode) ? detailOD.DetailOutboundDeliveryId : null,
                         PlantCode = item.Plant,
                         MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
+                        MaterialCodeInt = long.Parse(item.Material),
                         WeightVote = item.WeightVote,
                         BagQuantity = item.BagQuantity,
                         SingleWeight = item.SingleWeight,
@@ -234,7 +235,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //Material Code
                     nkht.MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode;
                     //Material Code Int
-                    //nkmh.MaterialCodeInt = long.Parse(item.Material);
+                    nkht.MaterialCodeInt = long.Parse(item.Material);
                     //Storage Location
                     nkht.SlocCode = item.StorageLocation;
                     //Sloc Name

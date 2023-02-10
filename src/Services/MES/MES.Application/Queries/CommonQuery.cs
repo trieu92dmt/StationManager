@@ -36,6 +36,13 @@ namespace MES.Application.Queries
         Task<List<Common3Response>> GetDropdownMaterial(string keyword, string plant);
 
         /// <summary>
+        /// Dropdown Component by wo
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownComponent(string workorder);
+
+        /// <summary>
         /// Dropdown Purchasing Org by Plant
         /// </summary>
         /// <param name="plantCode"></param>
@@ -516,6 +523,22 @@ namespace MES.Application.Queries
                                   }).Take(20).ToListAsync();
 
             return result;
+        }
+
+        public async Task<List<CommonResponse>> GetDropdownComponent(string workorder)
+        {
+            var wo = await _workOrderRep.GetQuery().Include(x => x.DetailWorkOrderModel).FirstOrDefaultAsync(x => x.WorkOrderCode == workorder);
+
+            var productQuery = _prodRepo.GetQuery().AsNoTracking();
+            
+            var response = wo.DetailWorkOrderModel.OrderBy(x => x.WorkOrderItem)
+                                                      .Select(x => new CommonResponse
+                                                      {
+                                                          Key = x.ProductCodeInt.ToString(),
+                                                          Value = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
+                                                      }).ToList();
+
+            return response;
         }
         #endregion
     }

@@ -34,6 +34,10 @@ namespace MES.Application.Commands.NKTPSX
         public string StorageLocation { get; set; }
         //Batch
         public string Batch { get; set; }
+        //SL bao
+        public int? BagQuantity { get; set; }
+        //Đơn trọng
+        public decimal? SingleWeight { get; set; }
         //Confirm Quantity
         public decimal? ConfirmQty { get; set; }
         //SL kèm bao bì
@@ -150,7 +154,7 @@ namespace MES.Application.Commands.NKTPSX
                 var nktpsx = await nktpsxs.FirstOrDefaultAsync(x => x.RcFromProductiontId == item.NKTPSXId);
 
                 //Lấy ra workorder
-                var wo = !!string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
+                var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
 
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile
@@ -174,12 +178,16 @@ namespace MES.Application.Commands.NKTPSX
                         WorkOrderId = wo != null ? wo.WorkOrderId : null,
                         PlantCode = item.Plant,
                         MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
+                        MaterialCodeInt = long.Parse(item.Material),
                         WeightVote = item.WeightVote,
                         WeightHeadCode = item.WeightHeadCode,
                         Weight = item.Weight,
                         ConfirmQty = item.ConfirmQty,
                         QuantityWithPackaging = item.QuantityWithPackaging,
                         QuantityWeitght = item.QuantityWeight,
+                        Batch = item.Batch,
+                        BagQuantity= item.BagQuantity,
+                        SingleWeight = item.SingleWeight,
                         Description = item.Description,
                         Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                         StartTime = item.StartTime,
@@ -197,11 +205,17 @@ namespace MES.Application.Commands.NKTPSX
                     //Material Code
                     nktpsx.MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode;
                     //Material Code Int
-                    //nkmh.MaterialCodeInt = long.Parse(item.Material);
+                    nktpsx.MaterialCodeInt = long.Parse(item.Material);
                     //Storage Location
                     nktpsx.SlocCode = item.StorageLocation;
                     //Sloc Name
                     nktpsx.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName;
+                    //Số lượng bao
+                    nktpsx.BagQuantity = item.BagQuantity;
+                    //Đơn trọng
+                    nktpsx.SingleWeight = item.SingleWeight;
+                    //Batch
+                    nktpsx.Batch = item.Batch;
                     //Confirm Quantity
                     nktpsx.ConfirmQty = item.ConfirmQty;
                     //Sl kèm bao bì

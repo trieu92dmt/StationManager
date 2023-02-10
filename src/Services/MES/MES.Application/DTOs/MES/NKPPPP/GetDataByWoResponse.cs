@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MES.Application.DTOs.MES.NKPPPP
 {
-    public class GetDataByWoResponse
+    public class GetDataByWoAndComponentResponse
     {
         //Material
         public string Material { get; set; }
@@ -18,5 +18,9 @@ namespace MES.Application.DTOs.MES.NKPPPP
         public decimal? RequiremenQty { get; set; }
         //Số lượng nhập đã thu hồi
         public decimal? WithdrawnQty { get; set; }
+        //Scheduled Start Date
+        public DateTime? ScheduledStartDate { get; set; }
+        //Scheduled Finish Date
+        public DateTime? ScheduledFinishDate { get; set; }
     }
 }

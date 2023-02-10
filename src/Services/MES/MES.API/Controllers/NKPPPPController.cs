@@ -2,9 +2,12 @@
 using ISD.Core.Properties;
 using MediatR;
 using MES.Application.Commands.NKPPPP;
+using MES.Application.Commands.NKTPSX;
 using MES.Application.Commands.OutboundDelivery;
 using MES.Application.Commands.ReceiptFromProduction;
+using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKPPPP;
+using MES.Application.DTOs.MES.NKTPSX;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -119,5 +122,71 @@ namespace MES.API.Controllers
             });
         }
 
+        /// <summary>
+        /// Update dữ liệu nkpppp
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-nkpppp")]
+        public async Task<IActionResult> UpdateNKPPPPAsync([FromBody] UpdateNKPPPPCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu nhập kho PP PP)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-nkpppp")]
+        public async Task<IActionResult> GetNKPPPPAsync([FromBody] SearchNKPPPPCommand command)
+        {
+            var response = await _query.GetNKPPPP(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchNKPPPPResponse>>
+            {
+                Data = response
+            });
+        }
+
+        /// <summary>
+        /// Lấy dữ liệu theo wo và nvl
+        /// </summary>
+        /// <param name="workorder"></param>
+        /// <returns></returns>
+        [HttpGet("get-data-by-wo-and-component")]
+        public async Task<IActionResult> GetDataByWoAndComponent(string workorder, string component)
+        {
+            var response = await _query.GetDataByWoAndComponent(workorder, component);
+
+            return Ok(new ApiSuccessResponse<GetDataByWoAndComponentResponse>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy data")
+            });
+        }
+
+        #region Get số phiếu cân
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-weight-vote")]
+        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
+        {
+            var dropdownList = await _query.GetDropDownWeightVote(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

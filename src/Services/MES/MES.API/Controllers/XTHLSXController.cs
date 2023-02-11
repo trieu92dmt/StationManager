@@ -1,13 +1,9 @@
 ﻿using ISD.Core.Models;
 using ISD.Core.Properties;
 using MediatR;
-using MES.Application.Commands.NKPPPP;
-using MES.Application.Commands.NKTPSX;
-using MES.Application.Commands.OutboundDelivery;
-using MES.Application.Commands.ReceiptFromProduction;
+using MES.Application.Commands.XTHLSX;
 using MES.Application.DTOs.Common;
-using MES.Application.DTOs.MES.NKPPPP;
-using MES.Application.DTOs.MES.NKTPSX;
+using MES.Application.DTOs.MES.XTHLSX;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +13,12 @@ namespace MES.API.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
     [ApiController]
-    public class NKPPPPController : ControllerBase
+    public class XTHLSXController : ControllerBase
     {
-        private readonly INKPPPPQuery _query;
+        private readonly IXTHLSXQuery _query;
         private readonly IMediator _mediator;
 
-        public NKPPPPController(INKPPPPQuery query, IMediator mediator)
+        public XTHLSXController(IXTHLSXQuery query, IMediator mediator)
         {
             _query = query;
             _mediator = mediator;
@@ -95,7 +91,7 @@ namespace MES.API.Controllers
         ///         }
         ///</remarks>
         [HttpPost("get-data-input")]
-        public async Task<IActionResult> GetDataInputAsync([FromBody] SearchNKPPPPCommand command)
+        public async Task<IActionResult> GetDataInputAsync([FromBody] SearchXTHLSXCommand command)
         {
             var response = await _query.GetInputData(command);
 
@@ -111,41 +107,41 @@ namespace MES.API.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("save-nkpppp")]
-        public async Task<IActionResult> SaveNKPPPPAsync([FromBody] SaveNKPPPPCommand command)
+        public async Task<IActionResult> SaveNKPPPPAsync([FromBody] SaveXTHLSXCommand command)
         {
             var response = await _mediator.Send(command);
 
             return Ok(new ApiSuccessResponse<bool>
             {
                 Data = response,
-                Message = string.Format(CommonResource.Msg_Success, "Lưu nhập kho phụ phẩm phế phẩm")
+                Message = string.Format(CommonResource.Msg_Success, "Lưu xuất tiêu hao theo lệnh sản xuất")
             });
         }
 
 
         /// <summary>
-        /// Bảng 2 (Dữ liệu nhập kho PP PP)
+        /// Bảng 2 (Dữ liệu xuất tiêu hao theo lsx)
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPost("get-nkpppp")]
-        public async Task<IActionResult> GetNKPPPPAsync([FromBody] SearchNKPPPPCommand command)
+        [HttpPost("get-xthlsx")]
+        public async Task<IActionResult> GetXTHLSXAsync([FromBody] SearchXTHLSXCommand command)
         {
-            var response = await _query.GetNKPPPP(command);
+            var response = await _query.GetXTHLSX(command);
 
-            return Ok(new ApiSuccessResponse<List<SearchNKPPPPResponse>>
+            return Ok(new ApiSuccessResponse<List<SearchXTHLSXResponse>>
             {
                 Data = response
             });
         }
 
         /// <summary>
-        /// Update dữ liệu nkpppp
+        /// Update dữ liệu xthlsx
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPost("update-nkpppp")]
-        public async Task<IActionResult> UpdateNKPPPPAsync([FromBody] UpdateNKPPPPCommand command)
+        [HttpPost("update-xthlsx")]
+        public async Task<IActionResult> UpdateNKPPPPAsync([FromBody] UpdateXTHLSXCommand command)
         {
             var response = await _mediator.Send(command);
 

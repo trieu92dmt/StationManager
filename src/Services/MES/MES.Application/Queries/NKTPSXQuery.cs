@@ -385,18 +385,6 @@ namespace MES.Application.Queries
                 item.OpenQuantity = item.TotalQuantity - item.DeliveryQuantity;
             }
 
-            //Thêm dòng trống nếu search theo material
-            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
-            {
-                data.Add(new SearchWOResponse
-                {
-                    Plant = command.Plant,
-                    Material = long.Parse(command.MaterialFrom).ToString(),
-                    MaterialDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
-                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
-                });
-            }
-
             return data;
         }
 

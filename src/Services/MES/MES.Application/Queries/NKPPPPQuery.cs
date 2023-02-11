@@ -236,18 +236,6 @@ namespace MES.Application.Queries
                 index++;
             }
 
-            //Thêm dòng trống nếu search theo material
-            if (!string.IsNullOrEmpty(command.ComponentFrom) && command.ComponentFrom == command.ComponentTo)
-            {
-                data.Add(new GetDataInputResponse
-                {
-                    Plant = command.Plant,
-                    Component = long.Parse(command.ComponentFrom).ToString(),
-                    ComponentDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.ComponentFrom)).ProductName,
-                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.ComponentFrom)).Unit
-                });
-            }
-
             return data;
         }
 

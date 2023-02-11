@@ -20,6 +20,7 @@ namespace MES.Application.DTOs.MES.NKTPSX
         public string MaterialDesc { get; set; }
         //Stor.Loc
         public string Sloc { get; set; }
+        public string SlocName { get; set; }
         //Batch
         public string Batch { get; set; }
         //SL bao

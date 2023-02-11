@@ -30,6 +30,7 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public DateTime? ScheduleFinishTime { get; set; }
         //Storage Location
         public string Sloc { get; set; }
+        public string SlocName { get; set; }
         //Batch
         public string Batch { get; set; }
         //Requirement Qty
@@ -57,6 +58,7 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public string ComponentDesc { get; set; }
         //Stor.Loc
         public string Sloc { get; set; }
+        public string SlocName { get; set; }
         //Batch
         public string Batch { get; set; }
         //SL bao

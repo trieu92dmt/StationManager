@@ -194,6 +194,7 @@ namespace MES.Application.Commands.NKPPPP
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
+                        SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName,
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }

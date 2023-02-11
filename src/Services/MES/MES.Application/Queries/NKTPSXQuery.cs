@@ -54,10 +54,11 @@ namespace MES.Application.Queries
         private readonly IRepository<ReceiptFromProductionModel> _nktpsxRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
 
         public NKTPSXQuery(IUnitOfWork unitOfWork, IRepository<WorkOrderModel> woRepo, IRepository<ReceiptFromProductionModel> rfProdRepo,
                            IRepository<ProductModel> prodRepo, IRepository<OrderTypeModel> orderTypeRepo, IRepository<ReceiptFromProductionModel> nktpsxRepo,
-                           IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
+                           IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<StorageLocationModel> slocRepo)
         {
             _unitOfWork = unitOfWork;
             _woRepo = woRepo;
@@ -67,6 +68,7 @@ namespace MES.Application.Queries
             _nktpsxRepo = nktpsxRepo;
             _cataRepo = cataRepo;
             _userRepo = userRepo;
+            _slocRepo = slocRepo;
         }
         public async Task<List<SearchNKTPSXResponse>> GetNKTPSX(SearchNKTPSXCommand command)
         {
@@ -205,6 +207,7 @@ namespace MES.Application.Queries
                 MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? materials.FirstOrDefault(m => m.ProductCode == x.MaterialCode).ProductName : "",
                 //Stor.Loc
                 Sloc = x.SlocCode ?? "",
+                SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
                 //Batch
                 Batch = x.WorkOrderId.HasValue ? x.WorkOrder.Batch : "",
                 //SL bao
@@ -349,6 +352,8 @@ namespace MES.Application.Queries
             //Get query data order type
             var orderTypes = _orderTypeRepo.GetQuery().AsNoTracking();
 
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
+
             //Get data
             var data = await query.OrderByDescending(x => x.WorkOrderCode).Select(x => new SearchWOResponse
             {
@@ -362,6 +367,7 @@ namespace MES.Application.Queries
                 MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == x.ProductCode).ProductName ?? "",
                 //Storage Location
                 Sloc = x.StorageLocation ?? "",
+                SlocName = string.IsNullOrEmpty(x.StorageLocation) ? "" : $"{x.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName}",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Total Quantity

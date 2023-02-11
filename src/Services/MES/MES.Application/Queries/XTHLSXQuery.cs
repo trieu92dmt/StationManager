@@ -47,8 +47,11 @@ namespace MES.Application.Queries
         private readonly IRepository<OrderTypeModel> _orderTypeRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
+
         public XTHLSXQuery(IRepository<ScrapFromProductionModel> xthlsxRepo, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWoRepo,
-                          IRepository<ProductModel> prdRepo, IRepository<OrderTypeModel> orderTypeRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
+                          IRepository<ProductModel> prdRepo, IRepository<OrderTypeModel> orderTypeRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo,
+                          IRepository<StorageLocationModel> slocRepo)
         {
             _xthlsxRepo = xthlsxRepo;
             _woRepo = woRepo;
@@ -57,6 +60,7 @@ namespace MES.Application.Queries
             _orderTypeRepo = orderTypeRepo;
             _cataRepo = cataRepo;
             _userRepo = userRepo;
+            _slocRepo = slocRepo;
         }
 
         public async Task<GetDataByWoAndComponentResponse> GetDataByWoAndComponent(string workorder, string component)
@@ -191,6 +195,8 @@ namespace MES.Application.Queries
             //Get query data order type
             var orderTypes = _orderTypeRepo.GetQuery().AsNoTracking();
 
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
+
             //Get data
             var data = await query.Select(x => new GetDataInputResponse
             {
@@ -213,6 +219,7 @@ namespace MES.Application.Queries
                 SalesOrder = x.WorkOrder.SalesOrder ?? "",
                 //Storage Location
                 Sloc = x.StorageLocation ?? "",
+                SlocName = string.IsNullOrEmpty(x.StorageLocation) ? "" : $"{x.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName}",
                 //Batch
                 Batch = x.Batch ?? "",
                 //UoM
@@ -401,6 +408,7 @@ namespace MES.Application.Queries
                 ComponentDesc = !string.IsNullOrEmpty(x.ComponentCode) ? materials.FirstOrDefault(m => m.ProductCode == x.ComponentCode).ProductName : "",
                 //13 Stor.Loc
                 Sloc = x.SlocCode ?? "",
+                SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
                 //14 Batch
                 Batch = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.Batch : "",
                 //15 SL bao

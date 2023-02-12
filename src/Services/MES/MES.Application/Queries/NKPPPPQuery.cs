@@ -123,7 +123,7 @@ namespace MES.Application.Queries
 
             //Tạo query
             var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL"))
-                                     .Include(x => x.WorkOrder)
+                                     .Include(x => x.WorkOrder).Where(x => x.RequirementQuantiy < 0)
                                      .AsNoTracking();
 
             //Lọc điều kiện

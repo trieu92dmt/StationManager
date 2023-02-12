@@ -143,7 +143,7 @@ namespace MES.Application.Commands.XTHLSX
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //6 WeightVote
-                    WeightVote = $"N{long.Parse(lastIndex) + index}",
+                    WeightVote = $"X{long.Parse(lastIndex) + index}",
                     //7   BagQuantity
                     BagQuantity = item.BagQuantity,
                     //8   SingleWeight

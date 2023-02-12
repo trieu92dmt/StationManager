@@ -181,6 +181,8 @@ namespace MES.Application.Commands.XTHLSX
                     Actived = true
 
                 });
+
+                index++;
             }
 
             await _unitOfWork.SaveChangesAsync();

@@ -231,6 +231,8 @@ namespace MES.Application.Commands.OutboundDelivery
                     Actived = true
 
                 });
+
+                index++;
             }
 
             await _unitOfWork.SaveChangesAsync();

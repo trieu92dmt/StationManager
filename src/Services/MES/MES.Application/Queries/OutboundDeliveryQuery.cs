@@ -345,7 +345,7 @@ namespace MES.Application.Queries
                 VehicleCode = x.VehicleCode,
                 QtyWeight = x.QuantityWeitght,
                 TotalQty = x.DetailODId.HasValue && x.DetailOD.DeliveryQuantity.HasValue ? x.DetailOD.DeliveryQuantity : 0,
-                DeliveryQty = x.DetailODId.HasValue && x.DetailOD.DeliveryQuantity.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
+                DeliveryQty = x.DetailODId.HasValue && x.DetailOD.PickedQuantityPUoM.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
                 UOM = x.UOM,
                 Description = x.Description,
                 Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",

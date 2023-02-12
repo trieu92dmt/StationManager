@@ -194,7 +194,7 @@ namespace MES.Application.Commands.NKPPPP
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
-                        SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName,
+                        SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation)?.StorageLocationName,
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }
@@ -211,7 +211,7 @@ namespace MES.Application.Commands.NKPPPP
                     //Storage Location
                     nkpppp.SlocCode = item.StorageLocation;
                     //Sloc Name
-                    nkpppp.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName;
+                    nkpppp.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation)?.StorageLocationName;
                     //Batch
                     nkpppp.Batch = item.Batch;
                     //Sl bao

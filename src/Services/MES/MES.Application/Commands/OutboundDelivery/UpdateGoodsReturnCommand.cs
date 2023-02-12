@@ -170,6 +170,15 @@ namespace MES.Application.Commands.OutboundDelivery
 
             foreach (var item in request.UpdateGoodsReturns)
             {
+                //Check trường hợp nhập od nhưng không có od item
+                if (!string.IsNullOrEmpty(item.ODCode) && string.IsNullOrEmpty(item.ODItem))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Vui lòng nhập Outbound Delivery Item";
+
+                    return response;
+                }
+
                 //Check tồn tại nkmh
                 var nkht = await nkhts.FirstOrDefaultAsync(x => x.GoodsReturnId == item.NKHTId);
 

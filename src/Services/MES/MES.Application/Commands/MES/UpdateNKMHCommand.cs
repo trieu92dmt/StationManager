@@ -172,6 +172,16 @@ namespace MES.Application.Commands.MES
 
             foreach (var item in request.UpdateNKMHs)
             {
+                //Check trường hợp nhập po nhưng không có po item
+                if (!string.IsNullOrEmpty(item.PurchaseOrderCode) && string.IsNullOrEmpty(item.POItem))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Vui lòng nhập PO Item";
+
+                    return response;
+                }
+
+
                 //Check tồn tại nkmh
                 var nkmh = await nkmhs.FirstOrDefaultAsync(x => x.GoodsReceiptId == item.NKMHId);
 

@@ -145,6 +145,7 @@ namespace IntegrationNS.Application.Commands.Reservation
                                 MovementAllowed = detail.MovementAllowed,
                                 MissingPart = detail.MissingPart,
                                 Material = detail.Material,
+                                MaterialCodeInt = long.Parse(detail.Material),
                                 Batch = detail.Batch,
                                 SpecialStock = detail.SpecialStock,
                                 RequirementsDate = detail.RequirementsDate,
@@ -229,6 +230,7 @@ namespace IntegrationNS.Application.Commands.Reservation
                                     MovementAllowed = detail.MovementAllowed,
                                     MissingPart = detail.MissingPart,
                                     Material = detail.Material,
+                                    MaterialCodeInt = long.Parse(detail.Material),
                                     Batch = detail.Batch,
                                     SpecialStock = detail.SpecialStock,
                                     RequirementsDate = detail.RequirementsDate,
@@ -261,6 +263,7 @@ namespace IntegrationNS.Application.Commands.Reservation
                                 detailReservation.MovementAllowed = detail.MovementAllowed;
                                 detailReservation.MissingPart = detail.MissingPart;
                                 detailReservation.Material = detail.Material;
+                                detailReservation.MaterialCodeInt = long.Parse(detail.Material);
                                 detailReservation.Batch = detail.Batch;
                                 detailReservation.SpecialStock = detail.SpecialStock;
                                 detailReservation.RequirementsDate = detail.RequirementsDate;

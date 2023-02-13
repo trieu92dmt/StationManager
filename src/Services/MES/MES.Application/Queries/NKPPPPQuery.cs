@@ -124,6 +124,7 @@ namespace MES.Application.Queries
             //Tạo query
             var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL"))
                                      .Include(x => x.WorkOrder)
+                                     .Where(x => x.RequirementQuantiy <= 0)
                                      .AsNoTracking();
 
             //Lọc điều kiện
@@ -133,21 +134,20 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.WorkOrder.Plant == command.Plant);
             }
 
-            //Theo Material
-            if (!string.IsNullOrEmpty(command.Material))
+            //Theo Component
+            if (!string.IsNullOrEmpty(command.Component))
             {
-                query = query.Where(x => x.WorkOrder.ProductCode == command.Material);
+                query = query.Where(x => x.ProductCode == command.Component);
             }
 
-            //Theo Component
-            if (!string.IsNullOrEmpty(command.ComponentFrom))
+            //Theo Material
+            if (!string.IsNullOrEmpty(command.MaterialFrom))
             {
                 //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.ComponentFrom))
-                    command.ComponentTo = command.ComponentFrom;
-                query = query.Where(x => x.ProductCode.CompareTo(command.ComponentFrom) >= 0 &&
-                                         x.ProductCode.CompareTo(command.ComponentTo) <= 0 &&
-                                         x.RequirementQuantiy <= 0);
+                if (string.IsNullOrEmpty(command.MaterialTo))
+                    command.MaterialTo = command.MaterialFrom;
+                query = query.Where(x => x.ProductCode.CompareTo(command.MaterialFrom) >= 0 &&
+                                         x.ProductCode.CompareTo(command.MaterialTo) <= 0);
             }
 
             //Theo lệnh sản xuát
@@ -276,6 +276,7 @@ namespace MES.Application.Queries
             //Tạo query
             var query = _nkppppRepo.GetQuery()
                                .Include(x => x.DetailWorkOrder).ThenInclude(x => x.WorkOrder)
+                               .Where(x => x.DetailWorkOrder.RequirementQuantiy <= 0)
                                .AsNoTracking();
 
             //Lọc điều kiện
@@ -285,20 +286,20 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.PlantCode == command.Plant);
             }
 
-            //Theo Material
-            if (!string.IsNullOrEmpty(command.Material))
+            //Theo Component
+            if (!string.IsNullOrEmpty(command.Component))
             {
-                query = query.Where(x => x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ProductCodeInt == long.Parse(command.Material) :false);
+                query = query.Where(x => x.ComponentCode == command.Component);
             }
 
-            //Theo Component
-            if (!string.IsNullOrEmpty(command.ComponentFrom))
+            //Theo Material
+            if (!string.IsNullOrEmpty(command.MaterialFrom))
             {
                 //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.ComponentFrom))
-                    command.ComponentTo = command.ComponentFrom;
-                query = query.Where(x => x.ComponentCodeInt >= long.Parse(command.ComponentFrom) &&
-                                         x.ComponentCodeInt <= long.Parse(command.ComponentTo));
+                if (string.IsNullOrEmpty(command.MaterialTo))
+                    command.MaterialTo = command.MaterialFrom;
+                query = query.Where(x => x.DetailWorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.DetailWorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo lệnh sản xuát

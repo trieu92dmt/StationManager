@@ -29,6 +29,7 @@ namespace ISD.Infrastructure.Models
         public string MissingPart { get; set; }
         [StringLength(50)]
         public string Material { get; set; }
+        public long? MaterialCodeInt { get; set; }
         [StringLength(50)]
         public string Batch { get; set; }
         [StringLength(50)]

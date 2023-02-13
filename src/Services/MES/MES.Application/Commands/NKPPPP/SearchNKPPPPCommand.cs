@@ -11,10 +11,10 @@ namespace MES.Application.Commands.NKPPPP
         //Plant
         public string Plant { get; set; }
         //Material
-        public string Material { get; set; }
+        public string MaterialFrom { get; set; }
+        public string MaterialTo { get; set; }
         //Component
-        public string ComponentFrom { get; set; }
-        public string ComponentTo { get; set; }
+        public string Component { get; set; }
         //Production Order
         public string WorkorderFrom { get; set; }
         public string WorkorderTo { get; set; }

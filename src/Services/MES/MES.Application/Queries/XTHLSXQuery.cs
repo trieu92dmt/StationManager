@@ -28,6 +28,12 @@ namespace MES.Application.Queries
         /// <param name="command"></param>
         /// <returns></returns>
         Task<List<SearchXTHLSXResponse>> GetXTHLSX(SearchXTHLSXCommand command);
+
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
         Task<List<CommonResponse>> GetDropDownWeightVote(string keyword);
 
         /// <summary>
@@ -122,6 +128,7 @@ namespace MES.Application.Queries
             //Tạo query
             var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL"))
                                      .Include(x => x.WorkOrder)
+                                     .Where(x => x.RequirementQuantiy > 0)
                                      .AsNoTracking();
 
             //Lọc điều kiện
@@ -144,8 +151,7 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.ComponentFrom))
                     command.ComponentTo = command.ComponentFrom;
                 query = query.Where(x => x.ProductCode.CompareTo(command.ComponentFrom) >= 0 &&
-                                         x.ProductCode.CompareTo(command.ComponentTo) <= 0 &&
-                                         x.RequirementQuantiy > 0);
+                                         x.ProductCode.CompareTo(command.ComponentTo) <= 0);
             }
 
             //Theo lệnh sản xuát
@@ -285,6 +291,7 @@ namespace MES.Application.Queries
             //Tạo query
             var query = _xthlsxRepo.GetQuery()
                                .Include(x => x.DetailWorkOrder).ThenInclude(x => x.WorkOrder)
+                               .Where(x => x.DetailWorkOrder.RequirementQuantiy > 0)
                                .AsNoTracking();
 
             //Lọc điều kiện

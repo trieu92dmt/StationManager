@@ -229,9 +229,9 @@ namespace MES.Application.Queries
                 //Schedule Finish Time
                 ScheduleFinishTime = x.WorkOrder.ScheduledFinishDate ?? null,
                 //Requirement Qty
-                RequirementQty = x.RequirementQuantiy ?? 0,
+                RequirementQty = x.RequirementQuantiy.HasValue ? Math.Abs(x.RequirementQuantiy.Value) : 0,
                 //Withdraw Qty
-                WithdrawQty = x.QuantityWithdrawn ?? 0
+                WithdrawQty = x.QuantityWithdrawn.HasValue ? Math.Abs(x.QuantityWithdrawn.Value) : 0
             }).ToListAsync();
 
             var index = 1;
@@ -411,9 +411,9 @@ namespace MES.Application.Queries
                 //21 Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
                 //22 Số lượng yêu cầu
-                RequirementQty = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.RequirementQuantiy : 0,
+                RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy.Value) : 0,
                 //23 Số lượng đã nhập thu hồi
-                WithdrawnQty = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.QuantityWithdrawn : 0,
+                WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn.Value) : 0,
                 //24 UOM
                 Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : "",
                 //25 Ghi chú

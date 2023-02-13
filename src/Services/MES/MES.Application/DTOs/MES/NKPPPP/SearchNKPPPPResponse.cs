@@ -38,7 +38,7 @@ namespace MES.Application.DTOs.MES.NKPPPP
         //Withdrawn Qty
         public decimal? WithdrawQty { get; set; }
         //Total Qty
-        public decimal? OpenQty => Math.Abs(RequirementQty.Value) - Math.Abs(WithdrawQty.Value);
+        public decimal? OpenQty => RequirementQty - WithdrawQty;
         //UoM
         public string Unit { get; set; }
     }
@@ -81,7 +81,7 @@ namespace MES.Application.DTOs.MES.NKPPPP
         public decimal? RequirementQty { get; set; }
         //Số lượng đã nhập thu hồi
         public decimal? WithdrawnQty { get; set; }
-        public decimal? OpenQty => Math.Abs(RequirementQty.Value) - Math.Abs(WithdrawnQty.Value);
+        public decimal? OpenQty => RequirementQty - WithdrawnQty;
         //UOM
         public string Unit { get; set; }
         //Ghi chú

@@ -138,20 +138,20 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.WorkOrder.Plant == command.Plant);
             }
 
-            //Theo Material
-            if (!string.IsNullOrEmpty(command.Material))
+            //Theo Component
+            if (!string.IsNullOrEmpty(command.Component))
             {
-                query = query.Where(x => x.WorkOrder.ProductCode == command.Material);
+                query = query.Where(x => x.ProductCodeInt == long.Parse(command.Component));
             }
 
             //Theo Component
-            if (!string.IsNullOrEmpty(command.ComponentFrom))
+            if (!string.IsNullOrEmpty(command.MaterialFrom))
             {
                 //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.ComponentFrom))
-                    command.ComponentTo = command.ComponentFrom;
-                query = query.Where(x => x.ProductCode.CompareTo(command.ComponentFrom) >= 0 &&
-                                         x.ProductCode.CompareTo(command.ComponentTo) <= 0);
+                if (string.IsNullOrEmpty(command.MaterialFrom))
+                    command.MaterialTo = command.MaterialFrom;
+                query = query.Where(x => x.WorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.WorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo lệnh sản xuát
@@ -165,13 +165,9 @@ namespace MES.Application.Queries
             }
 
             //Theo Order Type
-            if (!string.IsNullOrEmpty(command.OrderTypeFrom))
+            if (!string.IsNullOrEmpty(command.OrderType))
             {
-                //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.OrderTypeFrom))
-                    command.SalesOrderTo = command.OrderTypeTo;
-                query = query.Where(x => x.WorkOrder.OrderTypeCode.CompareTo(command.OrderTypeFrom) >= 0 &&
-                                         x.WorkOrder.OrderTypeCode.CompareTo(command.OrderTypeTo) <= 0);
+                query = query.Where(x => x.WorkOrder.OrderTypeCode == command.OrderType);
             }
 
             //Theo sale order
@@ -248,15 +244,15 @@ namespace MES.Application.Queries
                 index++;
             }
 
-            //Thêm dòng trống nếu search theo material
-            if (!string.IsNullOrEmpty(command.ComponentFrom) && command.ComponentFrom == command.ComponentTo)
+            //Thêm dòng trống nếu search theo component
+            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
             {
                 data.Add(new GetDataInputResponse
                 {
                     Plant = command.Plant,
-                    Component = long.Parse(command.ComponentFrom).ToString(),
-                    ComponentDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.ComponentFrom)).ProductName,
-                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.ComponentFrom)).Unit
+                    Component = long.Parse(command.MaterialFrom).ToString(),
+                    ComponentDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
+                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
                 });
             }
 
@@ -301,20 +297,20 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.PlantCode == command.Plant);
             }
 
-            //Theo Material
-            if (!string.IsNullOrEmpty(command.Material))
+            //Theo Component
+            if (!string.IsNullOrEmpty(command.Component))
             {
-                query = query.Where(x => x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ProductCodeInt == long.Parse(command.Material) : false);
+                query = query.Where(x => x.ComponentCodeInt == long.Parse(command.Component));
             }
 
-            //Theo Component
-            if (!string.IsNullOrEmpty(command.ComponentFrom))
+            //Theo Material
+            if (!string.IsNullOrEmpty(command.MaterialFrom))
             {
                 //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.ComponentFrom))
-                    command.ComponentTo = command.ComponentFrom;
-                query = query.Where(x => x.ComponentCodeInt >= long.Parse(command.ComponentFrom) &&
-                                         x.ComponentCodeInt <= long.Parse(command.ComponentTo));
+                if (string.IsNullOrEmpty(command.MaterialTo))
+                    command.MaterialTo = command.MaterialFrom;
+                query = query.Where(x => x.DetailWorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.DetailWorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo lệnh sản xuát
@@ -328,13 +324,9 @@ namespace MES.Application.Queries
             }
 
             //Theo Order Type
-            if (!string.IsNullOrEmpty(command.OrderTypeFrom))
+            if (!string.IsNullOrEmpty(command.OrderType))
             {
-                //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.OrderTypeFrom))
-                    command.SalesOrderTo = command.OrderTypeTo;
-                query = query.Where(x => x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.OrderTypeCode.CompareTo(command.OrderTypeFrom) >= 0 &&
-                                                                        x.DetailWorkOrder.WorkOrder.OrderTypeCode.CompareTo(command.OrderTypeTo) <= 0 : false);
+                query = query.Where(x => x.DetailWorkOrder.WorkOrder.OrderTypeCode == command.OrderType);
             }
 
             //Theo sale order

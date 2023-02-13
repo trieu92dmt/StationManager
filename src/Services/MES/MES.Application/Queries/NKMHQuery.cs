@@ -247,7 +247,7 @@ namespace MES.Application.Queries
                 //Delivery Quantity
                 DeliveredQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.QuantityReceived : 0,
                 //Unit
-                Unit = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.Unit : "",
+                Unit = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.Unit : product.FirstOrDefault(p => p.ProductCode == x.MaterialCode).Unit,
                 //Id sô xe tải
                 TruckInfoId = x.TruckInfoId,    
                 //Số xe tải

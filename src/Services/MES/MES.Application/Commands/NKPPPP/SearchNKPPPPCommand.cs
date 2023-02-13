@@ -22,8 +22,7 @@ namespace MES.Application.Commands.NKPPPP
         public string SalesOrderFrom { get; set; }
         public string SalesOrderTo { get; set; }
         //Order Type
-        public string OrderTypeFrom { get; set; }
-        public string OrderTypeTo { get; set; }
+        public string OrderType { get; set; }
         //Scheduled Start from
         public DateTime? ScheduledStartFrom { get; set; }
         //Scheduled Start to

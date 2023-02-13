@@ -11,10 +11,10 @@ namespace MES.Application.Commands.XTHLSX
         //Plant
         public string Plant { get; set; }
         //Material
-        public string Material { get; set; }
+        public string MaterialFrom { get; set; }
+        public string MaterialTo { get; set; }
         //Component
-        public string ComponentFrom { get; set; }
-        public string ComponentTo { get; set; }
+        public string Component { get; set; }
         //Production Order
         public string WorkorderFrom { get; set; }
         public string WorkorderTo { get; set; }
@@ -22,8 +22,7 @@ namespace MES.Application.Commands.XTHLSX
         public string SalesOrderFrom { get; set; }
         public string SalesOrderTo { get; set; }
         //Order Type
-        public string OrderTypeFrom { get; set; }
-        public string OrderTypeTo { get; set; }
+        public string OrderType { get; set; }
         //Scheduled Start from
         public DateTime? ScheduledStartFrom { get; set; }
         //Scheduled Start to

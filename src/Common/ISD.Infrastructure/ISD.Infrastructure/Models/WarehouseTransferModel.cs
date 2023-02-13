@@ -46,6 +46,9 @@ namespace ISD.Infrastructure.Models
         public string MovementType { get; set; }
         [StringLength(10)]
         public string StockType { get; set; }
+        public Guid? TruckInfoId { get; set; }
+        [StringLength(50)]
+        public string TruckNumber { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? TotalQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -73,6 +76,10 @@ namespace ISD.Infrastructure.Models
         public int? QuantityWeitght { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? InputWeight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OutputWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? GoodsWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

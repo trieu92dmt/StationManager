@@ -552,7 +552,7 @@ namespace MES.Application.Queries
 
         public async Task<List<CommonResponse>> GetReservation(string keyword)
         {
-            return await _rsRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true)
+            return await _rsRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true))
                                 .Select(x => new CommonResponse
                                 {
                                     Key = x.ReservationCode,

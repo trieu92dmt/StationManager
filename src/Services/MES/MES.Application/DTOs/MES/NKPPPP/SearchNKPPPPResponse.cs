@@ -37,6 +37,8 @@ namespace MES.Application.DTOs.MES.NKPPPP
         public decimal? RequirementQty { get; set; }
         //Withdrawn Qty
         public decimal? WithdrawQty { get; set; }
+        //Total Qty
+        public decimal? TotalQuantity => RequirementQty + WithdrawQty;
         //UoM
         public string Unit { get; set; }
     }

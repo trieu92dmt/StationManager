@@ -21,11 +21,13 @@ namespace MES.Application.DTOs.MES.XCK
         //MaterialDesc
         public string MaterialDesc { get; set; }
         //MVT
-        public string MVT { get; set; }
-        //Stor.Sloc
         public string MovementType { get; set; }
+        //Stor.Sloc
+        public string Sloc { get; set; }
+        public string SlocName { get; set; }
         //Receiving Stor.Sloc
         public string ReceivingSloc { get; set; }
+        public string ReceivingSlocName { get; set; }
         //Batch
         public string Batch { get; set; }
         //Sl bao
@@ -43,7 +45,7 @@ namespace MES.Application.DTOs.MES.XCK
         //Số phương tiện
         public string VehicleCode { get; set; }
         //Số lần cân
-        public int QuantityWeight { get; set; }
+        public int? QuantityWeight { get; set; }
         //Total Quantity
         public decimal? TotalQty { get; set; }
         //Delivered Quantity
@@ -71,11 +73,13 @@ namespace MES.Application.DTOs.MES.XCK
         //Thời gian kết thúc
         public DateTime? EndTime { get; set; }
         //Create by
-        public Guid? CreateBy { get; set; }
+        public Guid? CreateById { get; set; }
+        public string CreateBy { get; set; }
         //Create on
         public DateTime? CreateOn { get; set; }
         //Change by
-        public Guid? ChangeBy { get; set; }
+        public Guid? ChangeById { get; set; }
+        public string ChangeBy { get; set; }
         //Material doc
         public string MatDoc { get; set; }
         //Reverse doc

@@ -34,13 +34,13 @@
 # Environment Configuration
 #Development
 - Authentication Api: https://tlg-auth-api.isdcorp.vn/swagger/index.html
-Folder: D:\WebData\tlg-auth-api.isdcorp.vn
+- Folder: D:\WebData\tlg-auth-api.isdcorp.vn
 - MES Api: https://tlg-mes-api.isdcorp.vn/swagger/index.html
-Folder: D:\WebData\tlg-mes-api.isdcorp.vn
+- Folder: D:\WebData\tlg-mes-api.isdcorp.vn
 - Masterdata Api: https://tlg-masterdata-api.isdcorp.vn/swagger/index.html
-Folder: Chưa tạo
+- Folder: Chưa tạo
 - Integration Netsuite Api: https://tlg-api.isdcorp.vn/swagger/index.html
-Folder: D:\WebData\tlg-auth-api.isdcorp.vn
+- Folder: D:\WebData\tlg-auth-api.isdcorp.vn
 
 - Database:
 	+ ip = 192.168.100.233

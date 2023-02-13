@@ -148,7 +148,7 @@ namespace MES.Application.Queries
             if (!string.IsNullOrEmpty(command.MaterialFrom))
             {
                 //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.MaterialFrom))
+                if (string.IsNullOrEmpty(command.MaterialTo))
                     command.MaterialTo = command.MaterialFrom;
                 query = query.Where(x => x.WorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
                                          x.WorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));

@@ -314,5 +314,19 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
+
+        #region Dropdown Reservation
+        /// <summary>
+        /// Get Reservation
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-reservation")]
+        public async Task<IActionResult> GetReservationAsync(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetReservation(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

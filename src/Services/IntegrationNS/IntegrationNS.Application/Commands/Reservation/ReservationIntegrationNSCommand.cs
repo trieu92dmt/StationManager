@@ -114,6 +114,7 @@ namespace IntegrationNS.Application.Commands.Reservation
                         reservation = new ReservationModel();
                         reservation.ReservationId = Guid.NewGuid();
                         reservation.ReservationCode = item.ReservationCode;
+                        reservation.ReservationCodeInt = long.Parse(item.ReservationCode);
                         reservation.RequiremenType = item.RequiremenType;
                         reservation.Status = item.Status;
                         reservation.FinalIssue = item.FinalIssue;

@@ -20,6 +20,7 @@ namespace ISD.Infrastructure.Models
         public Guid ReservationId { get; set; }
         [StringLength(50)]
         public string ReservationCode { get; set; }
+        public long? ReservationCodeInt { get; set; }
         [StringLength(50)]
         public string RequiremenType { get; set; }
         [StringLength(50)]

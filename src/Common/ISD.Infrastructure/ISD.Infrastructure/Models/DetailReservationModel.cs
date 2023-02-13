@@ -11,6 +11,11 @@ namespace ISD.Infrastructure.Models
     [Table("DetailReservationModel", Schema = "DataCollection")]
     public partial class DetailReservationModel
     {
+        public DetailReservationModel()
+        {
+            WarehouseTransferModel = new HashSet<WarehouseTransferModel>();
+        }
+
         [Key]
         public Guid DetailReservationId { get; set; }
         public Guid? ReservationId { get; set; }
@@ -79,5 +84,7 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("ReservationId")]
         [InverseProperty("DetailReservationModel")]
         public virtual ReservationModel Reservation { get; set; }
+        [InverseProperty("DetailReservation")]
+        public virtual ICollection<WarehouseTransferModel> WarehouseTransferModel { get; set; }
     }
 }

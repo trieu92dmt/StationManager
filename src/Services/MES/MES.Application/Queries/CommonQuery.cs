@@ -154,8 +154,15 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string keyword);
-    }
 
+        /// <summary>
+        /// Get Reservation
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetReservation(string keyword);
+    }
+    
     public class CommonQuery : ICommonQuery
     {
         private readonly IRepository<PlantModel> _plantRepo;
@@ -175,13 +182,14 @@ namespace MES.Application.Queries
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
         private readonly IRepository<OrderTypeModel> _oTypeRep;
         private readonly IRepository<WorkOrderModel> _workOrderRep;
+        private readonly IRepository<ReservationModel> _rsRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
                            IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo,
                            IRepository<GoodsReceiptModel> nkmhRep, IRepository<SalesDocumentModel> saleDocRepo, IRepository<OutboundDeliveryModel> obDeliveryRepo,
                            IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
-                           IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep)
+                           IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -200,6 +208,7 @@ namespace MES.Application.Queries
             _truckInfoRepo = truckInfoRepo;
             _oTypeRep = oTypeRep;
             _workOrderRep = workOrderRep;
+            _rsRepo = rsRepo;
         }
 
         #region Get DropdownMaterial
@@ -539,6 +548,16 @@ namespace MES.Application.Queries
                                                       }).ToList();
 
             return response;
+        }
+
+        public async Task<List<CommonResponse>> GetReservation(string keyword)
+        {
+            return await _rsRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true)
+                                .Select(x => new CommonResponse
+                                {
+                                    Key = x.ReservationCode,
+                                    Value = x.ReservationCodeInt.ToString()
+                                }).AsNoTracking().ToListAsync();
         }
         #endregion
     }

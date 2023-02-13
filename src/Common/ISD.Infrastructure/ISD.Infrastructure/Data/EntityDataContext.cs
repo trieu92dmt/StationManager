@@ -318,6 +318,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<View_Task_GTB> View_Task_GTB { get; set; }
         public virtual DbSet<WardModel> WardModel { get; set; }
         public virtual DbSet<WarehouseModel> WarehouseModel { get; set; }
+        public virtual DbSet<WarehouseTransferModel> WarehouseTransferModel { get; set; }
         public virtual DbSet<WarrantyModel> WarrantyModel { get; set; }
         public virtual DbSet<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
         public virtual DbSet<WeighSessionModel> WeighSessionModel { get; set; }
@@ -2935,6 +2936,16 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<WarehouseModel>(entity =>
             {
                 entity.Property(e => e.WarehouseId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<WarehouseTransferModel>(entity =>
+            {
+                entity.Property(e => e.WarehouseTransferId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailReservation)
+                    .WithMany(p => p.WarehouseTransferModel)
+                    .HasForeignKey(d => d.DetailReservationId)
+                    .HasConstraintName("FK_WarehouseTransferModel_DetailReservationModel");
             });
 
             modelBuilder.Entity<WarrantyModel>(entity =>

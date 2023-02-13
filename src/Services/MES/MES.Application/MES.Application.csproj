@@ -13,4 +13,8 @@
 	<ItemGroup>
     <ProjectReference Include="..\..\..\Common\ISD.Infrastructure\ISD.Infrastructure\ISD.Infrastructure.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="DTOs\MES\XNVLGC\" />
+	</ItemGroup>
 </Project>

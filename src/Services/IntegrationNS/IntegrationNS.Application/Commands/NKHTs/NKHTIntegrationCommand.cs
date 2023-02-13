@@ -28,5 +28,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public DateTime? WeightDateTo { get; set; }
         public Guid? CreateBy { get; set; }
 
+
+        public string Status { get; set; }
     }
 }

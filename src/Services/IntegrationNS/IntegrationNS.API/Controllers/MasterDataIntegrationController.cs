@@ -1453,7 +1453,8 @@ namespace IntegrationNS.API.Controllers
         ///               ],
         ///               "weightDateFrom": "2023-02-09T05:41:01.054Z",
         ///               "weightDateTo": "2023-02-09T05:41:01.054Z",
-        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
         ///             }
         ///     Body: 
         ///
@@ -1479,7 +1480,7 @@ namespace IntegrationNS.API.Controllers
         ///           "singleWeight": 0,
         ///           "weightHeadCode": "NHAP01",
         ///           "weight": 0,
-        ///           "confỉmQty": 0,
+        ///           "confirmQty": 0,
         ///           "qtyWithPackage": 0,
         ///           "vehicleCode": "",
         ///           "qtyWeight": 0,

@@ -123,7 +123,7 @@ namespace MES.Application.Commands.NKPPPP
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
                 //Lấy ra component
-                var detailWo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Material) && string.IsNullOrEmpty(item.Component) ?
+                var detailWo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Material) && !string.IsNullOrEmpty(item.Component) ?
                                     detailWos.FirstOrDefault(d => d.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) &&
                                                              d.WorkOrder.ProductCodeInt == long.Parse(item.Material) &&
                                                              d.ProductCodeInt == long.Parse(item.Component)) : null;

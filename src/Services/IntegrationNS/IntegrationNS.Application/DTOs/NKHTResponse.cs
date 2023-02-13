@@ -37,7 +37,7 @@ namespace IntegrationNS.Application.DTOs
         //Trọng lượng cân
         public decimal? Weight { get; set; }
         //Confirm Quantity
-        public decimal? ConfỉmQty { get; set; }
+        public decimal? ConfirmQty { get; set; }
         //SL kèm bao bì
         public decimal? QtyWithPackage { get; set; }
         //Số phương tiện

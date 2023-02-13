@@ -167,6 +167,12 @@ namespace IntegrationNS.Application.Queries
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
 
+            //Search Status
+            if (!string.IsNullOrEmpty(command.Status))
+            {
+                query = query.Where(x => x.Status == command.Status);
+            }
+
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
@@ -187,7 +193,7 @@ namespace IntegrationNS.Application.Queries
                 SingleWeight = x.SingleWeight,
                 WeightHeadCode = x.WeightHeadCode,
                 Weight = x.Weight,
-                ConfỉmQty = x.ConfirmQty,
+                ConfirmQty = x.ConfirmQty,
                 QtyWithPackage = x.QuantityWithPackaging,
                 VehicleCode = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.VehicleCode : "",
                 QtyWeight = x.QuantityWeitght,

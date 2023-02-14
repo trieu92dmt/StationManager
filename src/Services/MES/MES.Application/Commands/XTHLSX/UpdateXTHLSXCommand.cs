@@ -228,9 +228,11 @@ namespace MES.Application.Commands.XTHLSX
                     xthlsx.Image = string.IsNullOrEmpty(imgPath) ? xthlsx.Image : imgPath;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
+                    {
                         xthlsx.Status = "DEL";
+                    }    
                     //Hủy đánh dấu xóa
-                    if (item.isDelete == false)
+                    else// if (item.isDelete == false)
                     {
                         xthlsx.Status = "NOT";
                     }

@@ -544,14 +544,13 @@ namespace MES.Application.Queries
 
             if (wo != null)
             {
-                response = wo.DetailWorkOrderModel.OrderBy(x => x.WorkOrderItem)
-                                                      .Select(x => new CommonResponse
-                                                      {
-                                                          Key = x.ProductCodeInt.ToString(),
-                                                          Value = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
-                                                      }).ToList();
+                return wo.DetailWorkOrderModel
+                    .Select(x => new CommonResponse
+                    {
+                        Key = x.ProductCode.ToString(),
+                        Value = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
+                    }).OrderBy(x => x.Key).DistinctBy(x => x.Key).ToList();
             }
-
             return response;
         }
 

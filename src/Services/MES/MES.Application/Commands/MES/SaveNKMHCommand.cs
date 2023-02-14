@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.ComponentModel.DataAnnotations;
 using System.Net.WebSockets;
 
 namespace MES.Application.Commands.MES

@@ -308,8 +308,8 @@ namespace MES.Application.Queries
                 //Nếu không có To thì search 1
                 if (string.IsNullOrEmpty(command.MaterialTo))
                     command.MaterialTo = command.MaterialFrom;
-                query = query.Where(x => x.DetailWorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
-                                         x.DetailWorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));
+                query = query.Where(x => x.DetailWorkOrder.WorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.DetailWorkOrder.WorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo lệnh sản xuát

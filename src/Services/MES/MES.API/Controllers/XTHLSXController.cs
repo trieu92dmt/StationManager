@@ -106,7 +106,7 @@ namespace MES.API.Controllers
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPost("save-nkpppp")]
+        [HttpPost("save-xthlsx")]
         public async Task<IActionResult> SaveNKPPPPAsync([FromBody] SaveXTHLSXCommand command)
         {
             var response = await _mediator.Send(command);

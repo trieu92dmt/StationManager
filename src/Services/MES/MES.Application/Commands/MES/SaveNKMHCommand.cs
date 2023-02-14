@@ -1,4 +1,5 @@
-﻿using ISD.Core.Extensions;
+﻿using ISD.Core.Exceptions;
+using ISD.Core.Extensions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Core.Utilities;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Net.WebSockets;
 
@@ -108,7 +110,26 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
-                //Check confirm quantity
+                //Check điều kiện lưu
+                #region Check điều kiện lưu
+
+                if (!x.ConfirmQty.HasValue || x.ConfirmQty <= 0)
+                {
+                    throw new ISDException("Confirm Quantity phải lớn hơn 0");
+                }
+
+                if (string.IsNullOrEmpty(x.WeightHeadCode))
+                {
+                    if (!x.BagQuantity.HasValue || x.BagQuantity <= 0)
+                    {
+                        throw new ISDException("Số lượng bao phải lớn hơn 0");
+                    }    
+                    if (!x.SingleWeight.HasValue || x.SingleWeight <=0)
+                    {
+                        throw new ISDException("Đơn trọng phải lớn hơn 0");
+                    }   
+                }
+                #endregion
 
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)

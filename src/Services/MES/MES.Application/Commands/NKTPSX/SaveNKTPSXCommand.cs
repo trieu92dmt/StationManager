@@ -1,4 +1,5 @@
-﻿using ISD.Core.Extensions;
+﻿using ISD.Core.Exceptions;
+using ISD.Core.Extensions;
 using ISD.Core.Interfaces.Databases;
 using ISD.Core.SeedWork.Repositories;
 using ISD.Core.Utilities;
@@ -107,6 +108,27 @@ namespace MES.Application.Commands.OutboundDelivery
             var index = 1;
             foreach (var item in request.SaveNKTPSXs)
             {
+                //Check điều kiện lưu
+                #region Check điều kiện lưu
+
+                if (!item.ConfirmQty.HasValue || item.ConfirmQty <= 0)
+                {
+                    throw new ISDException("Confirm Quantity phải lớn hơn 0");
+                }
+
+                if (string.IsNullOrEmpty(item.WeightHeadCode))
+                {
+                    if (!item.BagQuantity.HasValue || item.BagQuantity <= 0)
+                    {
+                        throw new ISDException("Số lượng bao phải lớn hơn 0");
+                    }
+                    if (!item.SingleWeight.HasValue || item.SingleWeight <= 0)
+                    {
+                        throw new ISDException("Đơn trọng phải lớn hơn 0");
+                    }
+                }
+                #endregion
+
                 var RcFromProductiontId = Guid.NewGuid();
 
                 var imgPath = "";

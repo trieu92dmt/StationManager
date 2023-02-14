@@ -28,6 +28,8 @@ namespace IntegrationNS.Application.DTOs
         public string SlocName { get; set; }
         //Batch
         public string Batch { get; set; }
+        //Sales Order
+        public string SalesOrder { get; set; }
         //SL bao
         public decimal? BagQuantity { get; set; }
         //Đơn trọng

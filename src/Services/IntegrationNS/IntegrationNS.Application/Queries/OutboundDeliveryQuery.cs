@@ -189,6 +189,7 @@ namespace IntegrationNS.Application.Queries
                 Sloc = x.SlocCode,
                 SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName}",
                 Batch = x.DetailODId.HasValue ? x.DetailOD.Batch : "",
+                SalesOrder = x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument1 : "",
                 BagQuantity = x.BagQuantity,
                 SingleWeight = x.SingleWeight,
                 WeightHeadCode = x.WeightHeadCode,

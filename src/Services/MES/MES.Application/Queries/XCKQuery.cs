@@ -407,7 +407,7 @@ namespace MES.Application.Queries
                 //Đánh dấu xóa
                 isDelete = x.Status == "DEL" ? true : false,
                 //Được chỉnh sửa
-                isEdit = x.Status == "DEL" || (x.MaterialDocument != null || x.MaterialDocument != "") ? false : true
+                isEdit = x.Status == "DEL" || (x.MaterialDocument != null && x.MaterialDocument != "") ? false : true
             }).ToListAsync();
 
             //Tính open quantity

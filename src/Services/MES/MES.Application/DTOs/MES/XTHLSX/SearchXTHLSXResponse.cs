@@ -37,6 +37,8 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public decimal? RequirementQty { get; set; }
         //Withdrawn Qty
         public decimal? WithdrawQty { get; set; }
+        //OpenQty
+        public decimal? OpenQty => RequirementQty.Value - WithdrawQty.Value;
         //UoM
         public string Unit { get; set; }
     }
@@ -79,6 +81,8 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public decimal? RequirementQty { get; set; }
         //Số lượng đã nhập thu hồi
         public decimal? WithdrawnQty { get; set; }
+        //OpenQty
+        public decimal? OpenQty => RequirementQty.Value - WithdrawnQty.Value;
         //UOM
         public string Unit { get; set; }
         //Ghi chú

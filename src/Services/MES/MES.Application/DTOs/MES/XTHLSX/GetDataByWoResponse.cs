@@ -18,6 +18,8 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public decimal? RequiremenQty { get; set; }
         //Số lượng nhập đã thu hồi
         public decimal? WithdrawnQty { get; set; }
+        //Open quantity
+        public decimal? OpenQty { get; set; }
         //Scheduled Start Date
         public DateTime? ScheduledStartDate { get; set; }
         //Scheduled Finish Date

@@ -92,6 +92,7 @@ namespace MES.Application.DTOs.MES.XCK
 
     public class GetInputDataResponse
     {
+        public int IndexKey { get; set; }
         //1. Plant
         public string Plant { get; set; }
         public string PlantName { get; set; }
@@ -107,8 +108,10 @@ namespace MES.Application.DTOs.MES.XCK
         public string MovementType { get; set; }
         //7. Stor.Loc
         public string Sloc { get; set; }
+        public string SlocName { get; set; }
         //8. Receving Sloc
         public string ReceivingSloc { get; set; }
+        public string ReceivingSlocName { get; set; }
         //9. Batch
         public string Batch { get; set; }
         //10. Total Quantity

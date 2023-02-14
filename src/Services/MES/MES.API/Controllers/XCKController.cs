@@ -1,5 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ISD.Core.Models;
+using ISD.Core.Properties;
+using MediatR;
+using MES.Application.Commands.XCK;
+using MES.Application.Commands.XTHLSX;
+using MES.Application.DTOs.Common;
+using MES.Application.DTOs.MES.XCK;
+using MES.Application.DTOs.MES.XTHLSX;
+using MES.Application.Queries;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MES.API.Controllers
 {
@@ -8,5 +18,125 @@ namespace MES.API.Controllers
     [ApiController]
     public class XCKController : ControllerBase
     {
+        private readonly IMediator _mediator;
+        private readonly IXCKQuery _query;
+
+        public XCKController(IMediator mediator, IXCKQuery query)
+        {
+            _mediator = mediator;
+            _query = query;
+        }
+
+        /// <summary>GET Bảng 1</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/get-data-input
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             
+        /// OUT PUT
+        /// 
+        /// 
+        ///</remarks>
+        [HttpPost("get-data-input")]
+        public async Task<IActionResult> GetDataInputAsync([FromBody] SearchXCKCommand command)
+        {
+            var response = await _query.GetInputData(command);
+
+            return Ok(new ApiSuccessResponse<List<GetInputDataResponse>>
+            {
+                Data = response
+            });
+        }
+
+        /// <summary>
+        /// Save dữ liệu xck
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-xck")]
+        public async Task<IActionResult> SaveNKPPPPAsync([FromBody] SaveXCKCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu xuất chuyển kho")
+            });
+        }
+
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu xuất chuyển kho)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-xck")]
+        public async Task<IActionResult> GetXCKAsync([FromBody] SearchXCKCommand command)
+        {
+            var response = await _query.GetDataXCK(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchXCKResponse>>
+            {
+                Data = response
+            });
+        }
+
+        /// <summary>
+        /// Update dữ liệu xck
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-xck")]
+        public async Task<IActionResult> UpdateXCKAsync([FromBody] UpdateXCKCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+
+        /// <summary>
+        /// Lấy dữ liệu theo wo và nvl
+        /// </summary>
+        /// <param name="workorder"></param>
+        /// <returns></returns>
+        //[HttpGet("get-data-by-wo-and-component")]
+        //public async Task<IActionResult> GetDataByWoAndComponent(string workorder, string component)
+        //{
+        //    var response = await _query.GetDataByWoAndComponent(workorder, component);
+
+        //    return Ok(new ApiSuccessResponse<GetDataByWoAndComponentResponse>
+        //    {
+        //        Data = response,
+        //        IsSuccess = true,
+        //        Message = string.Format(CommonResource.Msg_Success, "Lấy data")
+        //    });
+        //}
+
+        #region Get số phiếu cân
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-weight-vote")]
+        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
+        {
+            var dropdownList = await _query.GetDropDownWeightVote(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

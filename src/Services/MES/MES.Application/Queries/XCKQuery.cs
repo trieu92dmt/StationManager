@@ -177,6 +177,7 @@ namespace MES.Application.Queries
                 MovementType = x.MovementType ?? "",
                 //7. Stor.Loc
                 Sloc = x.Reservation.Sloc ?? "",
+                SlocName = string.IsNullOrEmpty(x.Reservation.Sloc) ? "" : $"{x.Reservation.Sloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.Reservation.Sloc).StorageLocationName}",
                 //8. Receving Sloc
                 ReceivingSloc = x.Reservation.ReceivingSloc ?? "",
                 //9. Batch
@@ -190,10 +191,13 @@ namespace MES.Application.Queries
 
             }).ToListAsync();
 
+            var index = 1;
             //Tính open quantity
             foreach (var item in data)
             {
                 item.OpenQty = item.TotalQty - item.DeliveredQty;
+                item.IndexKey = index;
+                index++;
             }
 
             if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
@@ -342,10 +346,10 @@ namespace MES.Application.Queries
                 MovementType = x.DetailReservationId.HasValue ? x.DetailReservation.MovementType : "",
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
-                SlocName = x.SlocName ?? "",
+                SlocName = string.IsNullOrEmpty(x.SlocCode) ? $"{x.SlocCode} | {x.SlocName}" : "",
                 //Receiving Stor.Sloc
                 ReceivingSloc = x.ReceivingSlocCode ?? "",
-                ReceivingSlocName = x.ReceivingSlocName ?? "",
+                ReceivingSlocName = string.IsNullOrEmpty(x.ReceivingSlocCode) ? $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}" : "",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Sl bao

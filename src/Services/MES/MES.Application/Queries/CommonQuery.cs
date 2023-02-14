@@ -536,16 +536,21 @@ namespace MES.Application.Queries
 
         public async Task<List<CommonResponse>> GetDropdownComponent(string workorder)
         {
-            var wo = await _workOrderRep.GetQuery().Include(x => x.DetailWorkOrderModel).FirstOrDefaultAsync(x => x.WorkOrderCode == workorder);
+            var wo = await _workOrderRep.GetQuery().Include(x => x.DetailWorkOrderModel).FirstOrDefaultAsync(x => x.WorkOrderCodeInt == long.Parse(workorder));
 
             var productQuery = _prodRepo.GetQuery().AsNoTracking();
-            
-            var response = wo.DetailWorkOrderModel.OrderBy(x => x.WorkOrderItem)
+
+            var response = new List<CommonResponse>();
+
+            if (wo != null)
+            {
+                response = wo.DetailWorkOrderModel.OrderBy(x => x.WorkOrderItem)
                                                       .Select(x => new CommonResponse
                                                       {
                                                           Key = x.ProductCodeInt.ToString(),
                                                           Value = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
                                                       }).ToList();
+            }
 
             return response;
         }

@@ -245,14 +245,14 @@ namespace MES.Application.Queries
             }
 
             //Thêm dòng trống nếu search theo component
-            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
+            if (!string.IsNullOrEmpty(command.Component))
             {
                 data.Add(new GetDataInputResponse
                 {
                     Plant = command.Plant,
-                    Component = long.Parse(command.MaterialFrom).ToString(),
-                    ComponentDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
-                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
+                    Component = long.Parse(command.Component).ToString(),
+                    ComponentDesc = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.Component)).ProductName,
+                    Unit = materials.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.Component)).Unit
                 });
             }
 

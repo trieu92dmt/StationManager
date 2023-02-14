@@ -157,6 +157,11 @@ namespace IntegrationNS.Application.Queries
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
 
+            //Search Status
+            if (!string.IsNullOrEmpty(command.Status))
+            {
+                query = query.Where(x => x.Status == command.Status);
+            }
 
             //Get query data material
             var materials = _prodRepo.GetQuery().AsNoTracking();

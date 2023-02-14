@@ -959,13 +959,76 @@ namespace IntegrationNS.API.Controllers
         ///     Url: /api/v{version}/MasterDataIntegration/nktpsx
         ///     Params: 
         ///             + version : 1
-        ///             
+        ///             {
+        ///               "plant": "string",
+        ///               "orderType": "string",
+        ///               "workOrderFrom": "string",
+        ///               "workOrderTo": "string",
+        ///               "saleOrderFrom": "string",
+        ///               "saleOrderTo": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "scheduledStartFrom": "2023-02-14T06:00:32.314Z",
+        ///               "scheduledStartTo": "2023-02-14T06:00:32.315Z",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-14T06:00:32.315Z",
+        ///               "weightDateTo": "2023-02-14T06:00:32.315Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
         /// 
         /// Body: 
         ///
         ///
         /// OUT PUT
-        /// 
+        ///                 {
+        ///                   "code": 200,
+        ///                   "data": [
+        ///                     {
+        ///                       "nktpsxId": "03b767c8-3c2a-4af4-86c9-3895854a4c26",
+        ///                       "plant": "A200",
+        ///                       "workOrder": "001070000020",
+        ///                       "material": "000000005310000011",
+        ///                       "materialDesc": "",
+        ///                       "sloc": "",
+        ///                       "batch": null,
+        ///                       "bagQuantity": 0,
+        ///                       "singleWeight": 0,
+        ///                       "weightHeadCode": "NHAP01",
+        ///                       "weight": 120.456,
+        ///                       "confirmQuantity": 123.456,
+        ///                       "quantityWithPackage": 789,
+        ///                       "quantityWeight": 0,
+        ///                       "totalQuantity": 100000,
+        ///                       "deliveryQuantity": 100000,
+        ///                       "openQuantity": 0,
+        ///                       "unit": "KG",
+        ///                       "description": "Ghi chú đến từ Mobile",
+        ///                       "image": "",
+        ///                       "status": "Chưa tạo giao dịch",
+        ///                       "weightVote": "N1000010",
+        ///                       "startTime": "2023-01-10T07:00:00",
+        ///                       "endTime": "2023-02-14T11:56:00.26",
+        ///                       "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///                       "createBy": "admin",
+        ///                       "createOn": "2023-02-14T11:56:00.263",
+        ///                       "changeById": null,
+        ///                       "changeBy": "",
+        ///                       "materialDoc": "",
+        ///                       "reverseDoc": "",
+        ///                       "isDelete": false,
+        ///                       "isEdit": false
+        ///                     }
+        ///                   ],
+        ///                   "message": "\"Get data NKTPSX\" thành công.",
+        ///                   "isSuccess": true,
+        ///                   "resultsCount": null,
+        ///                   "recordsTotal": null,
+        ///                   "pagesCount": null
+        ///                 }
         /// 
         /// </remarks>
         [HttpPost("nktpsx")]

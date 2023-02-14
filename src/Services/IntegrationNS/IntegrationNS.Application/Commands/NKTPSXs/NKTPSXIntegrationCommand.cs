@@ -41,6 +41,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
         public DateTime? WeightDateTo { get; set; }
         //Create by
         public Guid? CreateBy { get; set; }
+        public string Status { get; set; }
 
     }
 }

@@ -959,6 +959,7 @@ namespace IntegrationNS.API.Controllers
         ///     Url: /api/v{version}/MasterDataIntegration/nktpsx
         ///     Params: 
         ///             + version : 1
+        ///     Body:         
         ///             {
         ///               "plant": "string",
         ///               "orderType": "string",
@@ -980,7 +981,7 @@ namespace IntegrationNS.API.Controllers
         ///               "status": "string"
         ///             }
         /// 
-        /// Body: 
+        /// 
         ///
         ///
         /// OUT PUT

@@ -69,14 +69,14 @@ namespace MES.Application.Commands.XTHLSX
     public class UpdateXTHLSXCommandHandler : IRequestHandler<UpdateXTHLSXCommand, ApiResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<ScrapFromProductionModel> _xthlsxRepo;
+        private readonly IRepository<IssueForProductionModel> _xthlsxRepo;
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<DetailWorkOrderModel> _woRepo;
 
-        public UpdateXTHLSXCommandHandler(IUnitOfWork unitOfWork, IRepository<ScrapFromProductionModel> xthlsxRepo, IRepository<ProductModel> prdRepo,
+        public UpdateXTHLSXCommandHandler(IUnitOfWork unitOfWork, IRepository<IssueForProductionModel> xthlsxRepo, IRepository<ProductModel> prdRepo,
                                           IRepository<StorageLocationModel> slocRepo, IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService,
                                           IRepository<DetailWorkOrderModel> woRepo)
         {
@@ -128,7 +128,7 @@ namespace MES.Application.Commands.XTHLSX
                 //Tính tổng confirm quantity ban đầu
                 var sumConfirmQty1 = xthlsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
                 //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
-                var sumConfirmQty2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.ScFromProductiontId)).Sum(x => x.ConfirmQty);
+                var sumConfirmQty2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.IssForProductiontId)).Sum(x => x.ConfirmQty);
                 //So sánh
                 if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
                 {
@@ -139,7 +139,7 @@ namespace MES.Application.Commands.XTHLSX
                 //Tính tổng SL kèm bao bì
                 var sumQtyWithPackage1 = xthlsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
                 //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
-                var sumQtyWithPackage2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.ScFromProductiontId)).Sum(x => x.QuantityWithPackaging);
+                var sumQtyWithPackage2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.IssForProductiontId)).Sum(x => x.QuantityWithPackaging);
                 //So sánh
                 if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
                 {
@@ -152,7 +152,7 @@ namespace MES.Application.Commands.XTHLSX
             foreach (var item in request.UpdateXTHLSXs)
             {
                 //Check tồn tại nktpsx
-                var xthlsx = await xthlsxs.FirstOrDefaultAsync(x => x.ScFromProductiontId == item.XTHLSXId);
+                var xthlsx = await xthlsxs.FirstOrDefaultAsync(x => x.IssForProductiontId == item.XTHLSXId);
 
                 //Lấy ra workorder detail
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
@@ -173,9 +173,9 @@ namespace MES.Application.Commands.XTHLSX
                 //Chưa có thì tạo mới
                 if (xthlsx == null)
                 {
-                    _xthlsxRepo.Add(new ScrapFromProductionModel
+                    _xthlsxRepo.Add(new IssueForProductionModel
                     {
-                        ScFromProductiontId = item.XTHLSXId,
+                        IssForProductiontId = item.XTHLSXId,
                         DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null,
                         PlantCode = item.Plant,
                         ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode,

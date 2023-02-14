@@ -13,6 +13,7 @@ namespace ISD.Infrastructure.Models
     {
         public DetailWorkOrderModel()
         {
+            IssueForProductionModel = new HashSet<IssueForProductionModel>();
             ScrapFromProductionModel = new HashSet<ScrapFromProductionModel>();
         }
 
@@ -77,6 +78,8 @@ namespace ISD.Infrastructure.Models
         [ForeignKey("WorkOrderId")]
         [InverseProperty("DetailWorkOrderModel")]
         public virtual WorkOrderModel WorkOrder { get; set; }
+        [InverseProperty("DetailWorkOrder")]
+        public virtual ICollection<IssueForProductionModel> IssueForProductionModel { get; set; }
         [InverseProperty("DetailWorkOrder")]
         public virtual ICollection<ScrapFromProductionModel> ScrapFromProductionModel { get; set; }
     }

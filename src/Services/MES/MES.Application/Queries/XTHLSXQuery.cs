@@ -46,7 +46,7 @@ namespace MES.Application.Queries
 
     public class XTHLSXQuery : IXTHLSXQuery
     {
-        private readonly IRepository<ScrapFromProductionModel> _xthlsxRepo;
+        private readonly IRepository<IssueForProductionModel> _xthlsxRepo;
         private readonly IRepository<WorkOrderModel> _woRepo;
         private readonly IRepository<DetailWorkOrderModel> _detailWoRepo;
         private readonly IRepository<ProductModel> _prdRepo;
@@ -55,7 +55,7 @@ namespace MES.Application.Queries
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
 
-        public XTHLSXQuery(IRepository<ScrapFromProductionModel> xthlsxRepo, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWoRepo,
+        public XTHLSXQuery(IRepository<IssueForProductionModel > xthlsxRepo, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWoRepo,
                           IRepository<ProductModel> prdRepo, IRepository<OrderTypeModel> orderTypeRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo,
                           IRepository<StorageLocationModel> slocRepo)
         {
@@ -398,7 +398,7 @@ namespace MES.Application.Queries
             var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchXTHLSXResponse
             {
                 //ID NKPPPP
-                XTHLSXId = x.ScFromProductiontId,
+                XTHLSXId = x.IssForProductiontId,
                 //7 Plant
                 Plant = x.PlantCode ?? "",
                 //8 Production Order

@@ -195,6 +195,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[IssueForProductionModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[MaterialDocumentModel]",
          "ObjectType": 0
       },

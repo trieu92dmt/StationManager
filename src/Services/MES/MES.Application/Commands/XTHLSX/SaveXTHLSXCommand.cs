@@ -61,13 +61,13 @@ namespace MES.Application.Commands.XTHLSX
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
-        private readonly IRepository<ScrapFromProductionModel> _nkppppRepo;
+        private readonly IRepository<IssueForProductionModel> _xthlsxRepo;
         private readonly IRepository<DetailWorkOrderModel> _woDetailRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
 
         public SaveXTHLSXCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
-                                             IRepository<ProductModel> prodRepo, IRepository<ScrapFromProductionModel> nkppppRepo,
+                                             IRepository<ProductModel> prodRepo, IRepository<IssueForProductionModel> xthlsxRepo,
                                              IRepository<DetailWorkOrderModel> woDetailRepo, IRepository<StorageLocationModel> slocRepo)
         {
             _unitOfWork = unitOfWork;
@@ -75,7 +75,7 @@ namespace MES.Application.Commands.XTHLSX
             _scaleRepo = scaleRepo;
             _utilitiesService = utilitiesService;
             _prodRepo = prodRepo;
-            _nkppppRepo = nkppppRepo;
+            _xthlsxRepo = xthlsxRepo;
             _woDetailRepo = woDetailRepo;
             _slocRepo = slocRepo;
         }
@@ -95,7 +95,7 @@ namespace MES.Application.Commands.XTHLSX
             var slocs = _slocRepo.GetQuery().AsNoTracking();
 
             //Danh sách nhập kho tpsx
-            var nkhts = await _nkppppRepo.GetQuery().ToListAsync();
+            var nkhts = await _xthlsxRepo.GetQuery().ToListAsync();
             //Last index dùng để tạo số phiếu cân tự sinh
             var lastIndex = nkhts.Count() > 0 ? nkhts.OrderBy(x => x.WeightVote).LastOrDefault().WeightVote.Substring(1) : "1000000";
 
@@ -105,7 +105,7 @@ namespace MES.Application.Commands.XTHLSX
             var index = 1;
             foreach (var item in request.SaveXTHLSXs)
             {
-                var ScFromProductiontId = Guid.NewGuid();
+                var IssForProductiontId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -114,7 +114,7 @@ namespace MES.Application.Commands.XTHLSX
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, ScFromProductiontId.ToString(), $"{ScFromProductiontId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, IssForProductiontId.ToString(), $"{IssForProductiontId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "XTHLSX");
                 }
@@ -128,10 +128,10 @@ namespace MES.Application.Commands.XTHLSX
                                                              d.WorkOrder.ProductCodeInt == long.Parse(item.Material) &&
                                                              d.ProductCodeInt == long.Parse(item.Component)) : null;
 
-                _nkppppRepo.Add(new ScrapFromProductionModel
+                _xthlsxRepo.Add(new IssueForProductionModel
                 {
-                    //1 ScFromProductiontId
-                    ScFromProductiontId = ScFromProductiontId,
+                    //1 IssForProductiontId
+                    IssForProductiontId = IssForProductiontId,
                     //2 DetailWorkOrderId
                     DetailWorkOrderId = detailWo != null ? detailWo.DetailWorkOrderId : null,
                     //3 PlantCode

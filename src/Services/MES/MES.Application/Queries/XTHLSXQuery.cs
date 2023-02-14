@@ -403,7 +403,7 @@ namespace MES.Application.Queries
                 //10 Material Desc
                 MaterialDesc = x.DetailWorkOrderId.HasValue ? materials.FirstOrDefault(m => m.ProductCode == x.DetailWorkOrder.WorkOrder.ProductCode).ProductName : "",
                 //11 Component
-                Component = x.ComponentCode ?? "",
+                Component = x.ComponentCodeInt.ToString() ?? "",
                 //12 Component Desc
                 ComponentDesc = !string.IsNullOrEmpty(x.ComponentCode) ? materials.FirstOrDefault(m => m.ProductCode == x.ComponentCode).ProductName : "",
                 //13 Stor.Loc

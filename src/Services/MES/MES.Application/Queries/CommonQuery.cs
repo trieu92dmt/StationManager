@@ -219,7 +219,7 @@ namespace MES.Application.Queries
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new Common3Response
                                      {
-                                         Key = long.Parse(x.ProductCode).ToString(),
+                                         Key = x.ProductCodeInt.ToString(),
                                          Value = $"{x.ProductCodeInt} | {x.ProductName}",
                                          Name = x.ProductName
                                      }).Take(10).ToListAsync();
@@ -547,7 +547,7 @@ namespace MES.Application.Queries
                 return wo.DetailWorkOrderModel
                     .Select(x => new CommonResponse
                     {
-                        Key = x.ProductCode.ToString(),
+                        Key = x.ProductCodeInt.ToString(),
                         Value = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
                     }).OrderBy(x => x.Key).DistinctBy(x => x.Key).ToList();
             }

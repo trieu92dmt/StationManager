@@ -58,8 +58,4 @@
 	  <None Include="appsettings.json" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Infrastructure\Validators\" />
-	</ItemGroup>
-
 </Project>

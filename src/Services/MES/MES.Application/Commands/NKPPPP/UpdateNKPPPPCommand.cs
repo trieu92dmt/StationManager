@@ -7,9 +7,11 @@ using ISD.Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -203,7 +205,7 @@ namespace MES.Application.Commands.NKPPPP
                 {
                     //Cập nhật
                     //Detail wo id
-                    nkpppp.DetailWorkOrderId = wo != null ? wo.WorkOrderId : null;
+                    nkpppp.DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null;
                     //Component Code
                     nkpppp.ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode;
                     //Component Code Int

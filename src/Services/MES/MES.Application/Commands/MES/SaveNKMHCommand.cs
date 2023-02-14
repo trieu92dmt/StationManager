@@ -89,6 +89,7 @@ namespace MES.Application.Commands.MES
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
 
+
             //Danh sách storage location
             var slocs = _slocRepo.GetQuery().AsNoTracking();
 
@@ -107,6 +108,7 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
+                //Check confirm quantity
 
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)

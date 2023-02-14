@@ -50,6 +50,14 @@ namespace IntegrationNS.Application.DTOs
         public string Image { get; set; }
         //Status
         public string Status { get; set; }
+        //Sales Order
+        public string SalesOrder { get; set; }
+        //Sales Order Item
+        public string SalesOrderItem { get; set; }
+        //Order Type
+        public string OrderType { get; set; }
+        //Schedule Start Date
+        public DateTime? ScheduledStartDate { get; set; }
         //Số phiếu cân
         public string WeightVote { get; set; }
         //Thời gian bắt đầu

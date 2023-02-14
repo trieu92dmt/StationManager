@@ -53,6 +53,14 @@ namespace MES.Application.DTOs.MES.NKTPSX
         public string Status { get; set; }
         //Số phiếu cân
         public string WeightVote { get; set; }
+        //Sales Order
+        public string SalesOrder { get; set; }
+        //Sales Order Item
+        public string SalesOrderItem { get; set; }
+        //Order Type
+        public string OrderType { get; set; }
+        //Schedule Start Date
+        public DateTime? ScheduledStartDate { get; set; }
         //Thời gian bắt đầu
         public DateTime? StartTime { get; set; }
         //Thời gian kết thúc

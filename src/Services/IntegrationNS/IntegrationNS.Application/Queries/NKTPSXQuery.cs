@@ -219,6 +219,14 @@ namespace IntegrationNS.Application.Queries
                 Image = x.Image ?? "",
                 //Status
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
+                //Sales Order
+                SalesOrder = x.WorkOrderId.HasValue ? x.WorkOrder.SalesOrder : "",
+                //Sales Order Item
+                SalesOrderItem = x.WorkOrderId.HasValue ? x.WorkOrder.SalesOrderItem : "",
+                //Order Type
+                OrderType = x.WorkOrderId.HasValue ? x.WorkOrder.OrderTypeCode : "",
+                //Schedule Start Date
+                ScheduledStartDate = x.WorkOrderId.HasValue ? x.WorkOrder.ScheduledStartDate : null,
                 //Số phiếu cân
                 WeightVote = x.WeightVote ?? "",
                 //Thời gian bắt đầu

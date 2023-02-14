@@ -129,7 +129,6 @@ namespace MES.Application.Queries
             //Tạo query
             var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL"))
                                      .Include(x => x.WorkOrder)
-                                     .Where(x => x.RequirementQuantiy <= 0)
                                      .AsNoTracking();
 
             //Lọc điều kiện
@@ -162,7 +161,8 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.WorkorderTo))
                     command.WorkorderTo = command.WorkorderFrom;
                 query = query.Where(x => x.WorkOrder.WorkOrderCodeInt >= long.Parse(command.WorkorderFrom) &&
-                                         x.WorkOrder.WorkOrderCodeInt <= long.Parse(command.WorkorderTo));
+                                         x.WorkOrder.WorkOrderCodeInt <= long.Parse(command.WorkorderTo) &&
+                                         x.RequirementQuantiy <= 0);
             }
 
             //Theo Order Type
@@ -277,7 +277,7 @@ namespace MES.Application.Queries
             //Tạo query
             var query = _nkppppRepo.GetQuery()
                                .Include(x => x.DetailWorkOrder).ThenInclude(x => x.WorkOrder)
-                               .Where(x => x.DetailWorkOrder.RequirementQuantiy <= 0)
+                               //.Where(x => x.DetailWorkOrder.RequirementQuantiy <= 0)
                                .AsNoTracking();
 
             //Lọc điều kiện
@@ -310,7 +310,8 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.WorkorderTo))
                     command.WorkorderTo = command.WorkorderFrom;
                 query = query.Where(x => x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.WorkOrderCode.CompareTo(command.WorkorderFrom) >= 0 &&
-                                                                        x.DetailWorkOrder.WorkOrder.WorkOrderCode.CompareTo(command.WorkorderTo) <= 0 : false);
+                                                                        x.DetailWorkOrder.WorkOrder.WorkOrderCode.CompareTo(command.WorkorderTo) <= 0 &&
+                                                                        x.DetailWorkOrder.RequirementQuantiy <= 0 : false);
             }
 
             //Theo Order Type

@@ -142,6 +142,6 @@
     <value>"{0}" thành công.</value>
   </data>
   <data name="MSG_SYSTEM_ERROR" xml:space="preserve">
-    <value>Lỗi hệ thống.</value>
+    <value>Hệ thống đang gặp sự cố kỹ thuật, vui lòng chờ trong giây lát.</value>
   </data>
 </root>

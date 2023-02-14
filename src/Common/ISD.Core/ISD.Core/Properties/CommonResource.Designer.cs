@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ISD.Core.Properties
-{
-
-
+namespace ISD.Core.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -133,7 +133,7 @@ namespace ISD.Core.Properties
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lỗi hệ thống..
+        ///   Looks up a localized string similar to Hệ thống đang gặp sự cố kỹ thuật, vui lòng chờ trong giây lát..
         /// </summary>
         public static string MSG_SYSTEM_ERROR {
             get {

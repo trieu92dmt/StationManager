@@ -14,6 +14,7 @@ namespace ISD.Infrastructure.Models
         public DetailOutboundDeliveryModel()
         {
             GoodsReturnModel = new HashSet<GoodsReturnModel>();
+            InhouseTransferModel = new HashSet<InhouseTransferModel>();
         }
 
         [Key]
@@ -100,5 +101,7 @@ namespace ISD.Infrastructure.Models
         public virtual OutboundDeliveryModel OutboundDelivery { get; set; }
         [InverseProperty("DetailOD")]
         public virtual ICollection<GoodsReturnModel> GoodsReturnModel { get; set; }
+        [InverseProperty("DetailOD")]
+        public virtual ICollection<InhouseTransferModel> InhouseTransferModel { get; set; }
     }
 }

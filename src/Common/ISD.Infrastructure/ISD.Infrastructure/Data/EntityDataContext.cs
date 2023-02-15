@@ -120,6 +120,7 @@ namespace ISD.Infrastructure.Data
         public virtual DbSet<Hash> Hash { get; set; }
         public virtual DbSet<HeaderSaleOrderModel> HeaderSaleOrderModel { get; set; }
         public virtual DbSet<HistoryModel> HistoryModel { get; set; }
+        public virtual DbSet<InhouseTransferModel> InhouseTransferModel { get; set; }
         public virtual DbSet<IssueForProductionModel> IssueForProductionModel { get; set; }
         public virtual DbSet<Job> Job { get; set; }
         public virtual DbSet<JobParameter> JobParameter { get; set; }
@@ -1157,6 +1158,16 @@ namespace ISD.Infrastructure.Data
             modelBuilder.Entity<HistoryModel>(entity =>
             {
                 entity.Property(e => e.HistoryModifyId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<InhouseTransferModel>(entity =>
+            {
+                entity.Property(e => e.InhouseTransferId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailOD)
+                    .WithMany(p => p.InhouseTransferModel)
+                    .HasForeignKey(d => d.DetailODId)
+                    .HasConstraintName("FK_InhouseTransferModel_DetailOutboundDeliveryModel");
             });
 
             modelBuilder.Entity<IssueForProductionModel>(entity =>

@@ -5,6 +5,7 @@ using IntegrationNS.Application.Commands.Divisions;
 using IntegrationNS.Application.Commands.MaterialDocument;
 using IntegrationNS.Application.Commands.NKHTs;
 using IntegrationNS.Application.Commands.NKMHs;
+using IntegrationNS.Application.Commands.NKPPPPs;
 using IntegrationNS.Application.Commands.NKTPSXs;
 using IntegrationNS.Application.Commands.OrderTypes;
 using IntegrationNS.Application.Commands.OutboundDelivery;
@@ -21,6 +22,7 @@ using IntegrationNS.Application.Commands.ShippingPoint;
 using IntegrationNS.Application.Commands.StorageLocations;
 using IntegrationNS.Application.Commands.Vendors;
 using IntegrationNS.Application.Commands.WorkOrder;
+using IntegrationNS.Application.Commands.XTHLSXs;
 using IntegrationNS.Application.DTOs;
 using IntegrationNS.Application.Queries;
 using ISD.Core.Models;
@@ -39,14 +41,18 @@ namespace IntegrationNS.API.Controllers
         private readonly INKMHQuery _nkmhQuery;
         private readonly IOutboundDeliveryQuery _outboundDeliveryQuery;
         private readonly INKTPSXQuery _nKTPSXQuery;
+        private readonly INKPPPPQuery _nkppppQuery;
+        private readonly IXTHLSXQuery _xthlsxQuery;
 
         public MasterDataIntegrationController(IMediator mediator, INKMHQuery nkmhQuery, IOutboundDeliveryQuery outboundDeliveryQuery,
-                                               INKTPSXQuery nKTPSXQuery)
+                                               INKTPSXQuery nKTPSXQuery, INKPPPPQuery nkppppQuery, IXTHLSXQuery xthlsxQuery)
         {
             _mediator = mediator;
             _nkmhQuery = nkmhQuery;
             _outboundDeliveryQuery = outboundDeliveryQuery;
             _nKTPSXQuery = nKTPSXQuery;
+            _nkppppQuery = nkppppQuery;
+            _xthlsxQuery = xthlsxQuery;
         }
 
         #region Tích hợp Order Type
@@ -1324,7 +1330,7 @@ namespace IntegrationNS.API.Controllers
         ///             }
         /// </remarks>
         [HttpPut("update-nkmh")]
-        public async Task<IActionResult> UpdateOrCancelNKMHAsync([FromBody] UpdateAndCancelNKMHCommand req)
+        public async Task<IActionResult> UpdateOrCancelNKMHAsync([FromBody] UpdateAndCancelNKPPPPCommand req)
         {
             var response = await _mediator.Send(req);
 
@@ -1855,6 +1861,342 @@ namespace IntegrationNS.API.Controllers
             var response = await _mediator.Send(req);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Xóa material document") });
+        }
+        #endregion
+
+        #region Tích hợp NKPPPP
+        /// <summary>Get data NKPPPP</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nkpppp
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///         {
+        ///           "plant": "string",
+        ///           "materialFrom": "string",
+        ///           "materialTo": "string",
+        ///           "component": "string",
+        ///           "workorderFrom": "string",
+        ///           "workorderTo": "string",
+        ///           "salesOrderFrom": "string",
+        ///           "salesOrderTo": "string",
+        ///           "orderType": "string",
+        ///           "scheduledStartFrom": "2023-02-14T15:36:56.394Z",
+        ///           "scheduledStartTo": "2023-02-14T15:36:56.394Z",
+        ///           "weightHeadCode": "string",
+        ///           "weightVotes": [
+        ///             "string"
+        ///           ],
+        ///           "weightDateFrom": "2023-02-14T15:36:56.394Z",
+        ///           "weightDateTo": "2023-02-14T15:36:56.394Z",
+        ///           "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///           "status": "string"
+        ///         }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "nkppppId": "2e8a253e-fd2d-4205-8d39-73718ccf94e4",
+        ///               "plant": "A200",
+        ///               "workOrder": "1070000020",
+        ///               "material": "5310000011",
+        ///               "materialDesc": "Gạo 504 25% tấm đã sortex ĐX22",
+        ///               "component": "5510000024",
+        ///               "componentDesc": "Cám (KB1) 1",
+        ///               "sloc": "",
+        ///               "slocName": "",
+        ///               "batch": null,
+        ///               "bagQuantity": 1,
+        ///               "singleWeight": 1,
+        ///               "weightHeadCode": "",
+        ///               "weight": 0,
+        ///               "confirmQuantity": 1,
+        ///               "quantityWithPackage": 0,
+        ///               "quantityWeight": 0,
+        ///               "requirementQty": 540.54,
+        ///               "withdrawnQty": 540.54,
+        ///               "openQty": 0,
+        ///               "unit": "KG",
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "N1000005",
+        ///               "startTime": null,
+        ///               "endTime": "2023-02-14T17:36:19.973",
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-14T17:36:19.973",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "materialDoc": "",
+        ///               "reverseDoc": "",
+        ///               "scheduleStartTime": null,
+        ///               "scheduleFinishTime": null,
+        ///               "salesOrder": null,
+        ///               "isDelete": false
+        ///             }
+        ///           ],
+        ///           "message": "\"Get data NKPPPP\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("nkpppp")]
+        public async Task<IActionResult> NKPPPPIntegration([FromBody] NKPPPPIntegrationCommand req)
+        {
+            var response = await _nkppppQuery.GetNKPPPP(req);
+
+            return Ok(new ApiSuccessResponse<IList<NKPPPPResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NKPPPP") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy nhập kho phụ phẩm phế phẩm
+        /// <summary>Update, cancel phiếu nhập kho phụ phẩm phế phẩm</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/update-nkpppp
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nkppppId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKPPPP MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nkppppId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKPPPP MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nkpppPs": [
+        ///                 {
+        ///                   "nkppppId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NKPPPP MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nkpppPs": [
+        ///                 {
+        ///                   "nkppppId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKPPPP MES
+        ///                   "batch": "",
+        ///                   "materialDocument": "",
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nkpppp")]
+        public async Task<IActionResult> UpdateOrCancelNKPPPPAsync([FromBody] UpdateAndCancelNKPPPPCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NKPPPP") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NKPPPP")
+            });
+        }
+        #endregion
+
+        #region Tích hợp XTHLSX
+        /// <summary>Get data XTHLSX</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xthlsx
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///          {
+        ///           "plant": "string",
+        ///           "materialFrom": "string",
+        ///           "materialTo": "string",
+        ///           "component": "string",
+        ///           "workorderFrom": "string",
+        ///           "workorderTo": "string",
+        ///           "salesOrderFrom": "string",
+        ///           "salesOrderTo": "string",
+        ///           "orderType": "string",
+        ///           "scheduledStartFrom": "2023-02-14T15:50:07.698Z",
+        ///           "scheduledStartTo": "2023-02-14T15:50:07.698Z",
+        ///           "weightHeadCode": "string",
+        ///           "weightVotes": [
+        ///             "string"
+        ///           ],
+        ///           "weightDateFrom": "2023-02-14T15:50:07.698Z",
+        ///           "weightDateTo": "2023-02-14T15:50:07.698Z",
+        ///           "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///           "status": "string"
+        ///         }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "xthlsxId": "d39dfc95-4ab4-4aa7-b987-b6ffe6f3a167",
+        ///               "plant": "A200",
+        ///               "workOrder": "1070000020",
+        ///               "material": "5310000011",
+        ///               "materialDesc": "Gạo 504 25% tấm đã sortex ĐX22",
+        ///               "component": "5210000022",
+        ///               "componentDesc": "Gạo lứt 504 25% tấm ĐX22",
+        ///               "sloc": "A224",
+        ///               "slocName": "A224 | YD.K phụ phẩm MN",
+        ///               "batch": null,
+        ///               "bagQuantity": 0,
+        ///               "singleWeight": 0,
+        ///               "weightHeadCode": "NHAP01",
+        ///               "weight": 120.456,
+        ///               "confirmQuantity": 122.123,
+        ///               "quantityWithPackage": 120,
+        ///               "quantityWeight": 0,
+        ///               "requirementQty": 50000,
+        ///               "withdrawnQty": 50000,
+        ///               "openQty": 0,
+        ///               "unit": "KG",
+        ///               "description": "Mobile ghi chú",
+        ///               "image": "https://itp-mes.isdcorp.vn/Upload/NKMH/202302/2023-02-07T09-08-452935ed03-21f5-4383-a70d-0851d60b69d1.jpg",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "X1000003",
+        ///               "startTime": "2023-01-10T07:00:00",
+        ///               "endTime": "2023-02-14T13:53:32.56",
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-14T13:53:32.563",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "materialDoc": "",
+        ///               "reverseDoc": "",
+        ///               "scheduleStartTime": null,
+        ///               "scheduleFinishTime": null,
+        ///               "salesOrder": null,
+        ///               "isDelete": false
+        ///             }
+        ///           ],
+        ///           "message": "\"Get data XTHLSX\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("xthlsx")]
+        public async Task<IActionResult> XTHLSXIntegration([FromBody] XTHLSXIntegrationCommand req)
+        {
+            var response = await _xthlsxQuery.GetXTHLSX(req);
+
+            return Ok(new ApiSuccessResponse<IList<XTHLSXResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data XTHLSX") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy xuất tiêu hao vào lệnh sản xuất
+        /// <summary>Update, cancel phiếu xuất tiêu hao vào lệnh sản xuất</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/update-xthlsx
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "xthlsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XTHLSX MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "xthlsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XTHLSX MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "xthlsXs": [
+        ///                 {
+        ///                   "xthlsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID XTHLSX MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "xthlsXs": [
+        ///                 {
+        ///                   "xthlsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XTHLSX MES
+        ///                   "batch": "",
+        ///                   "materialDocument": "",
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-xthlsx")]
+        public async Task<IActionResult> UpdateOrCancelXTHLSXAsync([FromBody] UpdateAndCancelXTHLSXCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu XTHlSX") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu XTHLSX")
+            });
         }
         #endregion
     }

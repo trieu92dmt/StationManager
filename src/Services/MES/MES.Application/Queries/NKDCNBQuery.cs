@@ -3,15 +3,8 @@ using Infrastructure.Models;
 using MES.Application.Commands.NKDCNB;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKDCNB;
-using MES.Application.DTOs.MES.OutboundDelivery;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace MES.Application.Queries
 {
@@ -41,9 +34,10 @@ namespace MES.Application.Queries
         /// <summary>
         /// Lấy data theo wo
         /// </summary>
-        /// <param name="workorder"></param>
+        /// <param name="od"></param>
+        /// <param name="odItem"></param>
         /// <returns></returns>
-        //Task<GetDataByWoAndComponentResponse> GetDataByWoAndComponent(string workorder, string component);
+        Task<GetDataByOdAndOdItem> GetDataByOdAndOdItem(string od, string odItem);
     }
 
     public class NKDCNBQuery : INKDCNBQuery
@@ -67,6 +61,46 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _cataRepo = cataRepo;
             _userRepo = userRepo;
+        }
+
+        public async Task<GetDataByOdAndOdItem> GetDataByOdAndOdItem(string od, string odItem)
+        {
+            //Lấy ra od
+            var odDetails = await _detailOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                              .FirstOrDefaultAsync(x => x.OutboundDeliveryItem == odItem && x.OutboundDelivery.DeliveryCodeInt == long.Parse(od));
+
+            if (odDetails == null)
+                return null;
+
+            //Danh sách product
+            var prods = _prdRepo.GetQuery().AsNoTracking();
+
+            //NKDCNB
+            var nkdcnbs = _nkdcnbRepo.GetQuery().AsNoTracking();
+
+            var totalQuantity = odDetails.DeliveryQuantity.HasValue ? odDetails.DeliveryQuantity : 0;
+            var deliveryQuantity = nkdcnbs.Where(n => n.DetailODId == odDetails.DetailOutboundDeliveryId).Sum(n => n.ConfirmQty) ?? 0;
+            var openQuantity = totalQuantity - deliveryQuantity;
+
+            var response = new GetDataByOdAndOdItem
+            {
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialName = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductName,
+                //Batch
+                Batch = odDetails.Batch,
+                //Số phương tiện
+                VehicleCode = odDetails.OutboundDelivery.VehicleCode,
+                //Total Quantity
+                TotalQty = totalQuantity,
+                //Delivered Quantity
+                DeliveryQty = deliveryQuantity,
+                //Open Quantity
+                OpenQty = openQuantity
+            };
+
+            return response;
         }
 
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
@@ -100,7 +134,7 @@ namespace MES.Application.Queries
             var query = _detailOdRepo.GetQuery()
                                         .Include(x => x.OutboundDelivery)
                                         //Lọc delivery type
-                                        .Where(x => x.OutboundDelivery.DeliveryType == "ZNLC" && x.OutboundDelivery.DeliveryType == "ZNLN" &&
+                                        .Where(x => (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                     //Lấy delivery đã hoàn tất giao dịch
                                                     x.OutboundDelivery.GoodsMovementSts == "C" &&
                                                     x.GoodsMovementSts == "C")

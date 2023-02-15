@@ -1,24 +1,11 @@
-﻿using IntegrationNS.Application.Commands.PurchaseOrders;
-using IntegrationNS.Application.DTOs;
-using Infrastructure.Models;
-using MediatR;
-using Microsoft.Graph.TermStore;
-using Microsoft.Graph;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using ZXing.QrCode.Internal;
+﻿using Core.Exceptions;
 using Core.Interfaces.Databases;
-using Core.SeedWork.Repositories;
-using Core.Exceptions;
 using Core.Properties;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
+using IntegrationNS.Application.DTOs;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml.Style;
-using System.Security.Cryptography.X509Certificates;
 
 namespace IntegrationNS.Application.Commands.OutboundDelivery
 {

@@ -72,6 +72,7 @@ namespace IntegrationNS.API.Extensions
                     dbContext.LogApiModel.Add(new Infrastructure.Models.LogApiModel
                     {
                         Url = $"{context.Request.Path}{context.Request.QueryString}",
+                        Module = "IntegrationNS.API",
                         StatusCode = statusCode,
                         Method = context.Request.Method,
                         Request = request,

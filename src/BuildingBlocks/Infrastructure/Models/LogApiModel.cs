@@ -13,6 +13,8 @@ namespace Infrastructure.Models
     {
         [Key]
         public long Id { get; set; }
+        [StringLength(50)]
+        public string Module { get; set; }
         [StringLength(500)]
         public string Url { get; set; }
         public int? StatusCode { get; set; }

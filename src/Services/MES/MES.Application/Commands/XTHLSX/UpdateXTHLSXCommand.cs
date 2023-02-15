@@ -118,7 +118,7 @@ namespace MES.Application.Commands.XTHLSX
                                                  .Select(x => new
                                                  {
                                                      WeightVote = x.Key,
-                                                     NKHTIDs = x.Value.Select(v => v.XTHLSXId).ToList(),
+                                                     XTHLSXs = x.Value.Select(v => v.XTHLSXId).ToList(),
                                                      ConfirmQty = x.Value.Sum(x => x.ConfirmQty),
                                                      QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackaging)
                                                  }).ToList();
@@ -128,7 +128,7 @@ namespace MES.Application.Commands.XTHLSX
                 //Tính tổng confirm quantity ban đầu
                 var sumConfirmQty1 = xthlsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
                 //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
-                var sumConfirmQty2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.IssForProductiontId)).Sum(x => x.ConfirmQty);
+                var sumConfirmQty2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.XTHLSXs.Contains(x.IssForProductiontId)).Sum(x => x.ConfirmQty);
                 //So sánh
                 if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
                 {
@@ -139,7 +139,7 @@ namespace MES.Application.Commands.XTHLSX
                 //Tính tổng SL kèm bao bì
                 var sumQtyWithPackage1 = xthlsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
                 //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
-                var sumQtyWithPackage2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.IssForProductiontId)).Sum(x => x.QuantityWithPackaging);
+                var sumQtyWithPackage2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.XTHLSXs.Contains(x.IssForProductiontId)).Sum(x => x.QuantityWithPackaging);
                 //So sánh
                 if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
                 {

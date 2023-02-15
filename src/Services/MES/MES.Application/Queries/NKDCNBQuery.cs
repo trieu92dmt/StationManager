@@ -85,9 +85,11 @@ namespace MES.Application.Queries
         //                                .Where(x => x.OutboundDelivery.DeliveryType == "ZNLC" && x.OutboundDelivery.DeliveryType == "ZNLN" &&
         //                                            //Lấy delivery đã hoàn tất giao dịch
         //                                            x.OutboundDelivery.GoodsMovementSts == "C" &&
-        //                                            )
+        //                                            x.GoodsMovementSts == "C")
         //                                .AsNoTracking();
 
+        //    //
+            
         //    //Products
         //    //var prods = _prdRepo.GetQuery().AsNoTracking();
 
@@ -110,38 +112,10 @@ namespace MES.Application.Queries
         //        query = query.Where(x => x.OutboundDelivery.ShippingPoint == command.ShippingPoint);
         //    }
 
-        //    //Theo sale order
-        //    if (!string.IsNullOrEmpty(command.SalesOrderFrom))
-        //    {
-        //        if (string.IsNullOrEmpty(command.SalesOrderTo))
-        //            command.SalesOrderTo = command.SalesOrderFrom;
-
-        //        query = query.Where(x => x.ReferenceDocument1.CompareTo(command.SalesOrderFrom) >= 0 &&
-        //                                 x.ReferenceDocument1.CompareTo(command.SalesOrderTo) <= 0);
-        //    }
-
-        //    //Theo outbound deliver
-        //    if (!string.IsNullOrEmpty(command.OutboundDeliveryFrom))
-        //    {
-        //        if (string.IsNullOrEmpty(command.OutboundDeliveryTo))
-        //            command.OutboundDeliveryTo = command.OutboundDeliveryFrom;
-
-        //        query = query.Where(x => x.OutboundDelivery.DeliveryCode.CompareTo(command.OutboundDeliveryFrom) >= 0 &&
-        //                                 x.OutboundDelivery.DeliveryCode.CompareTo(command.OutboundDeliveryTo) <= 0);
-        //    }
-
-        //    //Theo ship to party
-        //    if (!string.IsNullOrEmpty(command.ShipToPartyFrom))
-        //    {
-        //        if (string.IsNullOrEmpty(command.ShipToPartyTo))
-        //            command.ShipToPartyTo = command.ShipToPartyFrom;
-        //        query = query.Where(x => x.OutboundDelivery.ShiptoParty.CompareTo(command.ShipToPartyFrom) >= 0 &&
-        //                                 x.OutboundDelivery.ShiptoParty.CompareTo(command.ShipToPartyTo) <= 0);
-        //    }
-
         //    //Theo Material
         //    if (!string.IsNullOrEmpty(command.MaterialFrom))
         //    {
+        //        //Không có to thì search 1
         //        if (string.IsNullOrEmpty(command.MaterialTo))
         //            command.MaterialTo = command.MaterialFrom;
 
@@ -149,9 +123,32 @@ namespace MES.Application.Queries
         //                                 x.ProductCodeInt <= long.Parse(command.MaterialTo));
         //    }
 
+        //    //Theo Purchase order
+        //    if (!string.IsNullOrEmpty(command.PurchaseOrderFrom))
+        //    {
+        //        //Không có to thì search 1
+        //        if (string.IsNullOrEmpty(command.PurchaseOrderTo))
+        //            command.PurchaseOrderTo = command.PurchaseOrderFrom;
+
+        //        query = query.Where(x => x.ReferenceDocument1.CompareTo(command.PurchaseOrderFrom) >= 0 &&
+        //                                 x.ReferenceDocument1.CompareTo(command.PurchaseOrderTo) <= 0);
+        //    }
+
+        //    //Theo outbound deliver
+        //    if (!string.IsNullOrEmpty(command.OutboundDeliveryFrom))
+        //    {
+        //        //Không có to thì search 1
+        //        if (string.IsNullOrEmpty(command.OutboundDeliveryTo))
+        //            command.OutboundDeliveryTo = command.OutboundDeliveryFrom;
+
+        //        query = query.Where(x => x.OutboundDelivery.DeliveryCode.CompareTo(command.OutboundDeliveryFrom) >= 0 &&
+        //                                 x.OutboundDelivery.DeliveryCode.CompareTo(command.OutboundDeliveryTo) <= 0);
+        //    }
+
         //    //Theo document date
         //    if (command.DocumentDateFrom.HasValue)
         //    {
+        //        //Không có to thì search 1
         //        if (!command.DocumentDateTo.HasValue)
         //        {
         //            command.DocumentDateTo = command.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);

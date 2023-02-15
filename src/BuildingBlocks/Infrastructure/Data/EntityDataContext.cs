@@ -145,6 +145,7 @@ namespace Infrastructure.Data
         public virtual DbSet<LaborModel> LaborModel { get; set; }
         public virtual DbSet<LastRunCheckInOutModel> LastRunCheckInOutModel { get; set; }
         public virtual DbSet<List> List { get; set; }
+        public virtual DbSet<LogApiModel> LogApiModel { get; set; }
         public virtual DbSet<Log_BC01Model> Log_BC01Model { get; set; }
         public virtual DbSet<Log_BC18Model> Log_BC18Model { get; set; }
         public virtual DbSet<MachineChainModel> MachineChainModel { get; set; }

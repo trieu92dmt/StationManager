@@ -995,6 +995,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[system].[LogApiModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[Task].[AppointmentModel]",
          "ObjectType": 0
       },

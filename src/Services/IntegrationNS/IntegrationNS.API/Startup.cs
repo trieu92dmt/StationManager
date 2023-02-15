@@ -6,6 +6,7 @@ using Core.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using IntegrationNS.API.Extensions;
 
 namespace IntegrationNS.API
 {
@@ -89,6 +90,8 @@ namespace IntegrationNS.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseRequestResponseLogging();
 
             app.UseAuthorization();
 

@@ -155,7 +155,8 @@ namespace MES.Application.Commands.XTHLSX
                 var xthlsx = await xthlsxs.FirstOrDefaultAsync(x => x.IssForProductiontId == item.XTHLSXId);
 
                 //Lấy ra workorder detail
-                var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
+                var wo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ? 
+                         wos.FirstOrDefault(x => x.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) && x.ProductCodeInt == long.Parse(item.Component)) : null;
 
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile
@@ -203,7 +204,7 @@ namespace MES.Application.Commands.XTHLSX
                 {
                     //Cập nhật
                     //Detail wo id
-                    xthlsx.DetailWorkOrderId = wo != null ? wo.WorkOrderId : null;
+                    xthlsx.DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null;
                     //Component Code
                     xthlsx.ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode;
                     //Component Code Int

@@ -1,5 +1,5 @@
-﻿using ISD.Core.Models;
-using ISD.Core.Properties;
+﻿using Core.Models;
+using Core.Properties;
 using MediatR;
 using MES.Application.Commands.XTHLSX;
 using MES.Application.DTOs.Common;

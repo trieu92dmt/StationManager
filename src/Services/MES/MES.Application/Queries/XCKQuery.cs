@@ -1,16 +1,10 @@
-﻿using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MES.Application.Commands.XCK;
 using MES.Application.DTOs.Common;
-using MES.Application.DTOs.MES.OutboundDelivery;
 using MES.Application.DTOs.MES.XCK;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Queries
 {

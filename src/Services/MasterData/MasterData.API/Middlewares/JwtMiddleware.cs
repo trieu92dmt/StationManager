@@ -1,5 +1,5 @@
-﻿using ISD.Core.Jwt;
-using ISD.Core.Models;
+﻿using Core.Jwt;
+using Core.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

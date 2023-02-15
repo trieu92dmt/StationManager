@@ -1,6 +1,5 @@
-﻿using ISD.Core.Models;
-using ISD.Core.Properties;
-using ISD.Core.Utilities;
+﻿using Core.Models;
+using Core.Properties;
 using MediatR;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;

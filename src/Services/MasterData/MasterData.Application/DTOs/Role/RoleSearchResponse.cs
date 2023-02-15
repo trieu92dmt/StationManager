@@ -1,4 +1,4 @@
-﻿using ISD.Core.Properties;
+﻿using Core.Properties;
 
 namespace MasterData.Application.DTOs
 {

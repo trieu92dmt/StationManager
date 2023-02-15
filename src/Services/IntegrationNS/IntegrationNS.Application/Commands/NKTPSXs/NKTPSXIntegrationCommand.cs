@@ -1,6 +1,6 @@
 ﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;

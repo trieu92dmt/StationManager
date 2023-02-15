@@ -1,6 +1,6 @@
-﻿using ISD.Core.SeedWork;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.SeedWork;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MasterData.Application.DTOs;
 using MasterData.Applications.Commands.Company;
 using Microsoft.EntityFrameworkCore;

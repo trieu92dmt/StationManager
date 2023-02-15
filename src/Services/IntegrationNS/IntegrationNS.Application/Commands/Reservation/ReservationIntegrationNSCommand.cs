@@ -1,22 +1,11 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.Properties;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.Exceptions;
+using Core.Interfaces.Databases;
+using Core.Properties;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
+using IntegrationNS.Application.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph.TermStore;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using static Grpc.Core.Metadata;
 
 namespace IntegrationNS.Application.Commands.Reservation
 {

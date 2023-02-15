@@ -1,16 +1,9 @@
-﻿
-using ISD.Core.Exceptions;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.Properties;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.Exceptions;
+using Core.Interfaces.Databases;
+using Core.Properties;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MediatR;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.TruckInfo
 {

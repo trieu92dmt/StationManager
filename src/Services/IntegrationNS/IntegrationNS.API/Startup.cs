@@ -1,8 +1,8 @@
 ﻿using FluentValidation.AspNetCore;
+using Infrastructure.Data;
 using IntegrationNS.API.Configures;
-using ISD.Core.Attributes;
-using ISD.Core.Extensions;
-using ISD.Infrastructure.Data;
+using Core.Attributes;
+using Core.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

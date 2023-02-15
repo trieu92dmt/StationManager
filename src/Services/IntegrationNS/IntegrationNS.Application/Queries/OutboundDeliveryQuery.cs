@@ -1,18 +1,9 @@
-﻿using Azure.Core;
+﻿using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using IntegrationNS.Application.Commands.NKMHs;
 using IntegrationNS.Application.DTOs;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationNS.Application.Queries
 {

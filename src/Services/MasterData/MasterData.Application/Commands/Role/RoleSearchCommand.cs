@@ -1,4 +1,4 @@
-﻿using ISD.Core.SeedWork;
+﻿using Core.SeedWork;
 
 namespace MasterData.Applications.Commands.Role
 {

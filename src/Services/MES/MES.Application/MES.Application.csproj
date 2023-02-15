@@ -11,10 +11,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\..\..\Common\ISD.Infrastructure\ISD.Infrastructure\ISD.Infrastructure.csproj" />
-  </ItemGroup>
+	  <Folder Include="DTOs\MES\XNVLGC\" />
+	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="DTOs\MES\XNVLGC\" />
+	  <ProjectReference Include="..\..\..\BuildingBlocks\Core\Core.csproj" />
+	  <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 </Project>

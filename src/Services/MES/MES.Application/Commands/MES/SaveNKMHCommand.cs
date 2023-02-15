@@ -1,17 +1,13 @@
-﻿using ISD.Core.Exceptions;
-using ISD.Core.Extensions;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Core.Utilities;
-using ISD.Infrastructure.Models;
+﻿using Core.Exceptions;
+using Core.Extensions;
+using Core.Interfaces.Databases;
+using Core.SeedWork.Repositories;
+using Core.Utilities;
+using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Net.WebSockets;
 
 namespace MES.Application.Commands.MES
 {

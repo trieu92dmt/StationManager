@@ -1,20 +1,11 @@
-﻿using Azure.Core;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.Interfaces.Databases;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MES.Application.Commands.ReceiptFromProduction;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKTPSX;
-using MES.Application.DTOs.MES.OutboundDelivery;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Queries
 {

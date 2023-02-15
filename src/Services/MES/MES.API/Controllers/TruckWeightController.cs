@@ -1,11 +1,9 @@
-﻿using ISD.Core.Models;
-using ISD.Core.Properties;
+﻿using Core.Models;
+using Core.Properties;
 using MediatR;
-using MES.Application.Commands.MES;
 using MES.Application.Commands.TruckInfo;
 using MES.Application.DTOs.MES.TruckInfo;
 using MES.Application.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MES.API.Controllers

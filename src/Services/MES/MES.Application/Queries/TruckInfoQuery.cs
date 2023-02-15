@@ -1,14 +1,8 @@
-﻿using Azure.Core;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MES.Application.Commands.TruckInfo;
 using MES.Application.DTOs.MES.TruckInfo;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Queries
 {

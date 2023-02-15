@@ -1,8 +1,8 @@
 using FluentValidation.AspNetCore;
-using ISD.Core.Attributes;
-using ISD.Core.Extensions;
-using ISD.Core.Jwt;
-using ISD.Infrastructure.Data;
+using Core.Attributes;
+using Core.Extensions;
+using Core.Jwt;
+using Infrastructure.Data;
 using MasterData.API.Configures;
 using MasterData.Middlewares;
 using MediatR;

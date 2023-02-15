@@ -1,15 +1,10 @@
-﻿using IntegrationNS.Application.Commands.NKTPSXs;
+﻿using Core.Interfaces.Databases;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
+using IntegrationNS.Application.Commands.NKTPSXs;
 using IntegrationNS.Application.DTOs;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationNS.Application.Queries
 {

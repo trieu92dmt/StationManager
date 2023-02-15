@@ -1,6 +1,6 @@
-﻿using ISD.Core.Interfaces.Databases;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Repositories;
+﻿using Core.Interfaces.Databases;
+using Core.SeedWork.Repositories;
+using Infrastructure.Repositories;
 using NetCore.AutoRegisterDi;
 using System.Text;
 

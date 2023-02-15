@@ -1,6 +1,6 @@
-﻿using ISD.API.Applications.Queries.MasterData;
-using ISD.Core.Models;
-using ISD.Core.Properties;
+﻿using Core.Models;
+using Core.Properties;
+using ISD.API.Applications.Queries.MasterData;
 using MasterData.Application.DTOs;
 using MasterData.Applications.Commands.Role;
 using MediatR;

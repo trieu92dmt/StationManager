@@ -1,0 +1,1569 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "EntityDataContext",
+   "ContextNamespace": "Data",
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": "Models",
+   "OutputContextPath": "Data",
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Infrastructure",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[Customer].[CustomerTastes_CollectionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[CustomerTastes_ColorToneModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[CustomerTastes_ProductGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[CustomerTastes_WoodGrainModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[CustomerTastesModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[FileAttachmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[PartnerModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[PersonInChargeDeletedModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[PersonInChargeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[Profile_File_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[Profile_Opportunity_CompetitorModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[Profile_Opportunity_InternalModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[Profile_Opportunity_MaterialModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[Profile_Opportunity_PartnerModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileBAttributeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileCareerModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileCategoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileCAttributeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileConfigModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileContactAttributeDeletedModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileContactAttributeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileDeletedModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileEmailDeletedModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileEmailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileFieldModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileLevelModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfilePhoneDeletedModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfilePhoneModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[ProfileTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[RegisterReceiveNewsModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[RoleInChargeDeletedModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[RoleInChargeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[SMSModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[CustmdSaleModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[CustomerModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[DetailOutboundDeliveryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[DetailReservationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[DetailSalesDocumentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[DetailWorkOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[DistributionChannelModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[DivisionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[GoodsReceiptModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[GoodsReturnModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[InhouseTransferModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[IssueForProductionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[MaterialDocumentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[MaterialTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[OrderTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[OutboundDeliveryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[PlantModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ProductGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ProductModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[PurchaseOrderDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[PurchaseOrderMasterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[PurchasingGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[PurchasingOrgModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ReceiptFromProductionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ReservationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[SaleOrgModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[SalesDocumentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[SalesOfficeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ScaleModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ScrapFromProductionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ShippingPointModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[StorageLocationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[TruckInfoModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[VendorModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[WarehouseTransferModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[WeighSessionDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[WeighSessionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[WorkOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ApplicationConfig]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ApplicationLog]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EquipmentStatus_Temp]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FaceCheckInOutModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LastRunCheckInOutModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[AccessoryPriceModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[CareerModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[CollectingAuthorityModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[ContainerRequirementModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[CustomerModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[GH_NotificationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[LaborModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[MaterialModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[MobileScreenFunctionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[MobileScreenModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[NotificationAccountMappingModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[NotificationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[PaymentMethodModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[PaymentNationalBudgetModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[PrintMoldModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[ProductHierarchyModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[ProfitCenterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[PromotionByStoreModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[PromotionGiftAccessoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[ProspectModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[ServiceTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[StateTreasuryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[TaxConfigModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghMasterData].[TemperatureConditionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghSale].[AccessorySaleOrderDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghSale].[AccessorySaleOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghSale].[AccessorySellTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghSale].[SaleOrderDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghSale].[SaleOrderMasterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[BookingModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[CheckingTimesNotificationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ClaimAccessoryLogModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ClaimAccessoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ClaimAccessoryStatusModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[FixingTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceAppointmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceFlagModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceOrderConsultModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceOrderDetailAccessoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceOrderDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceOrderDetailServiceModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceOrderPoolModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[ServiceOrderTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[VehicleInfoModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[WorkingDateModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[WorkingTimeConfigModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[WorkingTimeDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ghService].[WorkingTimeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Maintenance].[ProductWarrantyModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Maintenance].[WarrantyModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[CampaignModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[ContentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[EmailAccountModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[MailServerProviderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[MemberOfExternalProfileTargetGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[MemberOfTargetGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[SendMailCalendarModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[TargetGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[TemplateAndGiftCampaignModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[TemplateAndGiftMemberAddressModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[TemplateAndGiftMemberModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[TemplateAndGiftTargetGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Marketing].[Unfollow]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[Assignment_ProductionOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[Assignment_StepModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[AssignmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[BOM_Header_InventorModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[BOM_Item_InventorModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[BOMDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[BOMHeaderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ConsumableMaterialsDeliveryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ContConfigModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[DateClosedHistoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[DateClosedModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[EquipmentGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[EquipmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[HangTagModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[MarmModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[MaterialGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[MaterialTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[MigoModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[NFCCheckInOutModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[PlantRoutingConfigModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[POTEXT_PR_SO_Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[Product_Routing_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[Product_Routing_Mapping_Deleted]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[Product_Routing_Mold_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[Product_Routing_Mold_Mapping_Deleted]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ProductionComponent80Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ProductionComponentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ProductionOperation80Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ProductionOperationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ProductionOrder80Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ProductionOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ProductVersionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[PurchaseOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[PurchaseRequisitionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControl_Error_File_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControl_Error_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControl_FileAttachment_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControl_QCInformation_File_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControl_QCInformation_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControlDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControlInformation_WorkCenter_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[QualityControlModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ReservationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[RoutingInventorModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[RoutingModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[RoutingSapModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SaleOrderHeader100Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SaleOrderHeader80Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SaleOrderItem100Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SaleOrderItem80Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SO100ScheduleLineModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SO100TextModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SO80ScheduleLineModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SO80TextModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SOTEXT_PR_Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SOTextHeader100Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SOTextHeader80Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SOTextItem100Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[SOTextItem80Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[ThucThiLenhSanXuatModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[WeighingSessionDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[WeighingSessionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[WeighModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[WorkCenterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MES].[WorkShopModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[CheckInOutModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[CommandQCModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[ConfirmStageModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[DetailQCModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[DetailSaleOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[DetailStageTranferModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[EmployeeRecordModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[EquimenRecordModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[EquipmentCardModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[HeaderSaleOrderModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[MatchCardCommandModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[MoldRecordModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[OutputRecordModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[MESP2].[StageTransferModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[Account_Device_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[AccountInRoleModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[AccountInStoreModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[AccountModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[FunctionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[MenuModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[MobileScreenPermissionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[ModuleModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[Page_Module_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[PageFunctionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[PageModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[PagePermissionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[RefreshToken]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[ResourceModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[pms].[RolesModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[BC01Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[BC03Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[BC07Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[BC15Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[BC16Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[BC18Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[BC19Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[Log_BC01Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Report].[Log_BC18Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[AppointmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[AutoConditionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[Comment_File_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[RatingModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[RemindTaskModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[StatusTransition_Task_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[StatusTransitionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[Task_Component_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[Task_File_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[Task_Mold_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskAssignModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskCommentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskContactModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskGroupDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskGroupModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskReferenceModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskReporterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskRoleInChargeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[TaskStatusModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[WorkFlowCategoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[WorkFlowConfigModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[WorkFlowFieldModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Task].[WorkFlowModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[AllDepartmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[APIModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[BangTinModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[BannerModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CapacityRegisterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CatalogModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CatalogTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CompanyModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[ContactDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[ContactModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[ContRegisterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[ContRegisterSO60Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CustomerGiftDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CustomerGiftModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CustomerLevelModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[CustomerPromotionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[Department_Equipment_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[Department_Routing_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[DepartmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[DistrictModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[EmailConfig]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[ErrorListModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[FavoriteReportModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[Kanban_TaskStatus_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[KanbanDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[KanbanModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[MachineChainModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[News_Company_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[NewsCategoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[NewsModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[PhysicsWorkShopModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[PrognosisModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[PromotionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[ProvinceModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[QualityControlInformationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[QuestionBankModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[RequestEccEmailConfigModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[Routing_Equipment_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[SaleProcessModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[SalesEmployeeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[SaleUnitModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[SourceModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[StoreModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[StoreTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[TestTargetModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tMasterData].[WardModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[AccessoryCategoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[AccessoryDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[AccessoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[CategoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[CategoryTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[ColorModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[ConfigurationModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[PeriodicallyCheckingModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[PlateFeeDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[PlateFeeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[ProductModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[ShowroomCategoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[SpecificationsModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[StyleModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[tSale].[WarehouseModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[AggregatedCounter]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[Counter]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[Hash]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[Job]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[JobParameter]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[JobQueue]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[List]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[Schema]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[Server]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[Set]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[TTF_MES].[State]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[ChangeDataLogModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[DatatableConfig]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[ExcelLogModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[HistoryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[MesSyncLogModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[SearchResultDetailTemplateModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[SearchResultTemplateModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[utilities].[SearchTemplateModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[DeliveryDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[DeliveryModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[DimDateModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[Stock_Store_Mapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[StockModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[StockReceivingDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[StockReceivingMasterModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[StockTransferRequestDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[StockTransferRequestModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[TransferDetailModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Warehouse].[TransferModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Customer].[View_Profile_Address]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Customer].[View_Profile_Company_Mapping]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Customer].[View_Profile_ContactPhone]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Customer].[View_Profile_ExtendInfo]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Customer].[View_Profile_MainContact]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Customer].[View_Profile_ProfilePhone]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Customer].[View_ProfileDeleted_ContactPhone]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Customer].[View_Task_Area]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[View_Catalog_Category]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[View_MES_StockReceiving]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[View_PriorityModel]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[MES].[View_BOM_Inventor_Rip]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[MES].[View_Product_Detail]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[MES].[View_Product_Material]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[MES].[View_SO_Active]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[MES].[VIEW_TonKhoTheo_SO_CongDoan]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Task].[View_FaceCheckIn]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Task].[View_FaceCheckOut]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Task].[View_Task_GTB]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Warehouse].[View_Stock_Delivery]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Warehouse].[View_Stock_Receive]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Warehouse].[View_Stock_TransferFrom_Delivery]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Warehouse].[View_Stock_TransferTo_Receive]",
+         "ObjectType": 3
+      }
+   ],
+   "UiHint": "SERVER-3.TLG_MES",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

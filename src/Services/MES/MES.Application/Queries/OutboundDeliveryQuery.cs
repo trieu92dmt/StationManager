@@ -1,20 +1,10 @@
-﻿using Azure.Core;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
-using MediatR;
+﻿using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MES.Application.Commands.OutboundDelivery;
 using MES.Application.DTOs.Common;
-using MES.Application.DTOs.MES.NKMH;
 using MES.Application.DTOs.MES.OutboundDelivery;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Queries
 {

@@ -1,12 +1,11 @@
-﻿using ISD.Core.Exceptions;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.Jwt;
-using ISD.Core.Jwt.Models;
-using ISD.Core.Properties;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Core.Utilities;
-using ISD.Infrastructure.Extensions;
-using ISD.Infrastructure.Models;
+﻿using Core.Exceptions;
+using Core.Jwt;
+using Core.Jwt.Models;
+using Core.Properties;
+using Core.SeedWork.Repositories;
+using Core.Utilities;
+using Infrastructure.Extensions;
+using Infrastructure.Models;
 using MediatR;
 
 namespace Authentication.Application.Commands

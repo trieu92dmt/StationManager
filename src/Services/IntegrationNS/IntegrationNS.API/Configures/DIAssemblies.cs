@@ -1,6 +1,6 @@
 ﻿using IntegrationNS.Application.Commands.Vendors;
-using ISD.Core.Interfaces.Databases;
-using ISD.Infrastructure.Data;
+using Core.Interfaces.Databases;
+using Infrastructure.Data;
 using System.Reflection;
 
 namespace IntegrationNS.API.Configures

@@ -1,22 +1,12 @@
-﻿using ISD.Core.Exceptions;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.Models;
-using ISD.Core.Properties;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Core.Utilities;
-using ISD.Infrastructure.Models;
+﻿using Core.Interfaces.Databases;
+using Core.Models;
+using Core.Properties;
+using Core.SeedWork.Repositories;
+using Core.Utilities;
+using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.MES
 {

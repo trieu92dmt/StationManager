@@ -1,5 +1,5 @@
-﻿using ISD.Core.Models;
-using ISD.Core.Properties;
+﻿using Core.Models;
+using Core.Properties;
 using MES.Application.DTOs.Common;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using ISD.Core.Jwt;
+﻿using Core.Jwt;
 using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

@@ -1,7 +1,7 @@
 ﻿using Authentication.Application.Commands;
-using ISD.Core.Jwt.Models;
-using ISD.Core.Models;
-using ISD.Core.Properties;
+using Core.Jwt.Models;
+using Core.Models;
+using Core.Properties;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

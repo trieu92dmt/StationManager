@@ -1,8 +1,8 @@
-﻿using ISD.Core.Exceptions;
-using ISD.Core.Properties;
-using ISD.Core.SeedWork;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.Exceptions;
+using Core.Properties;
+using Core.SeedWork;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MasterData.Application.DTOs;
 using MasterData.Applications.Commands.Role;
 using Microsoft.EntityFrameworkCore;

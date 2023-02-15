@@ -1,5 +1,5 @@
-﻿using ISD.Core.Interfaces.Databases;
-using ISD.Infrastructure.Data;
+﻿using Core.Interfaces.Databases;
+using Infrastructure.Data;
 using MES.Application.Commands.MES;
 using System.Reflection;
 

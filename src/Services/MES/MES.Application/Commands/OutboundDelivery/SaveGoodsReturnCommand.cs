@@ -1,20 +1,13 @@
-﻿using ISD.Core.Exceptions;
-using ISD.Core.Extensions;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Core.Utilities;
-using ISD.Infrastructure.Models;
+﻿using Core.Exceptions;
+using Core.Extensions;
+using Core.Interfaces.Databases;
+using Core.SeedWork.Repositories;
+using Core.Utilities;
+using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.OutboundDelivery
 {

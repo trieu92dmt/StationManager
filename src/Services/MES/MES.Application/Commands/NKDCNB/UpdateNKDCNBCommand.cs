@@ -1,4 +1,4 @@
-﻿using ISD.Core.Models;
+﻿using Core.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;

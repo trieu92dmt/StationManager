@@ -1,8 +1,8 @@
 ﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.Exceptions;
-using ISD.Core.Properties;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+using Core.Exceptions;
+using Core.Properties;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace IntegrationNS.Application.Queries

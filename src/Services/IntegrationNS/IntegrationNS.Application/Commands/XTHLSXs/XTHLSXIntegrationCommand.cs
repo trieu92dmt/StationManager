@@ -1,10 +1,4 @@
-﻿using IntegrationNS.Application.DTOs;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-
-namespace IntegrationNS.Application.Commands.XTHLSXs
+﻿namespace IntegrationNS.Application.Commands.XTHLSXs
 {
     public class XTHLSXIntegrationCommand
     {

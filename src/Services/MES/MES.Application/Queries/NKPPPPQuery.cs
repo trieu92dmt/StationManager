@@ -1,17 +1,10 @@
-﻿using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MES.Application.Commands.NKPPPP;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKPPPP;
-using MES.Application.DTOs.MES.NKTPSX;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace MES.Application.Queries
 {

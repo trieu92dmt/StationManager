@@ -1,16 +1,10 @@
-﻿using Azure.Core;
-using ISD.Core.Extensions;
-using ISD.Core.Interfaces.Databases;
-using ISD.Core.SeedWork.Repositories;
-using ISD.Infrastructure.Models;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
+using Core.SeedWork.Repositories;
+using Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.TruckInfo
 {

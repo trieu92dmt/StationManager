@@ -112,7 +112,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
             {
 
                 if (!request.NKTPSXs.Any())
-                    throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu NKHT");
+                    throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu NKTPSX");
 
                 foreach (var item in request.NKTPSXs)
                 {

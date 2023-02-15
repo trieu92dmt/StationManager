@@ -35,7 +35,7 @@ namespace MES.Application.DTOs.MES.NKDCNB
         //Delivered Quantity
         public decimal? DeliveryQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty.Value - DeliveryQty.Value;
         //Units of Measure
         public string Unit { get; set; }
         //Purchase order
@@ -48,7 +48,7 @@ namespace MES.Application.DTOs.MES.NKDCNB
     public class SearchNKDCNBResponse
     {
         //Id
-        public Guid NKDCNB { get; set; }
+        public Guid NKDCNBId { get; set; }
         //Plant
         public string Plant { get; set; }
         //Shipping point
@@ -90,15 +90,15 @@ namespace MES.Application.DTOs.MES.NKDCNB
         //Open Quantity
         public decimal? OpenQty { get; set; }
         //UoM
-        public string UOM { get; set; }
+        public string Unit { get; set; }
         //Purchase Order
         public string PurchaseOrder { get; set; }
         //Số xe tải
         public string TruckNumber { get; set; }
         //Số cân đầu vào
-        public string InputWeight { get; set; }
+        public decimal? InputWeight { get; set; }
         //Số cân đầu ra
-        public string OutputWeight { get; set; }
+        public decimal? OutputWeight { get; set; }
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh

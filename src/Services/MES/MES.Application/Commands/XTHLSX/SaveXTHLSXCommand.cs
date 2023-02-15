@@ -160,6 +160,8 @@ namespace MES.Application.Commands.XTHLSX
                                weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //6 WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
+                    //Batch
+                    Batch = detailWo.Batch,
                     //7   BagQuantity
                     BagQuantity = item.BagQuantity,
                     //8   SingleWeight

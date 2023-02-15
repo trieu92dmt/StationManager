@@ -40,7 +40,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownComponent(string workorder);
+        Task<List<Common2Response<string>>> GetDropdownComponent(string workorder);
 
         /// <summary>
         /// Dropdown Purchasing Org by Plant
@@ -534,21 +534,22 @@ namespace MES.Application.Queries
             return result;
         }
 
-        public async Task<List<CommonResponse>> GetDropdownComponent(string workorder)
+        public async Task<List<Common2Response<string>>> GetDropdownComponent(string workorder)
         {
             var wo = await _workOrderRep.GetQuery().Include(x => x.DetailWorkOrderModel).FirstOrDefaultAsync(x => x.WorkOrderCodeInt == long.Parse(workorder));
 
             var productQuery = _prodRepo.GetQuery().AsNoTracking();
 
-            var response = new List<CommonResponse>();
+            var response = new List<Common2Response<string>>();
 
             if (wo != null)
             {
                 return wo.DetailWorkOrderModel
-                    .Select(x => new CommonResponse
+                    .Select(x => new Common2Response<string>
                     {
-                        Key = x.ProductCodeInt.ToString(),
-                        Value = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
+                        Key = x.DetailWorkOrderId,
+                        Value = $"{x.WorkOrderItem} | {x.ProductCodeInt} | {productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}", 
+                        Data = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
                     }).OrderBy(x => x.Key).DistinctBy(x => x.Key).ToList();
             }
             return response;

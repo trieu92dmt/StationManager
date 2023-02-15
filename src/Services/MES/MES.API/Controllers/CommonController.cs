@@ -70,7 +70,7 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetListComponent(string wo)
         {
             var dropdownList = await _commonQuery.GetDropdownComponent(wo);
-            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách component") });
+            return Ok(new ApiSuccessResponse<List<Common2Response<string>>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách component") });
         }
         #endregion
 

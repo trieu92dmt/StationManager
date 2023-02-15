@@ -26,4 +26,11 @@
         public string Value { get; set; }
         public T Data { get; set; }
     }
+
+    public class Common2Response<T>
+    {
+        public Guid Key { get; set; }
+        public string Value { get; set; }
+        public T Data { get; set; }
+    }
 }

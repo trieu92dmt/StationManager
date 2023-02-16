@@ -159,9 +159,9 @@ namespace MES.API.Controllers
         /// <param name="workorder"></param>
         /// <returns></returns>
         [HttpGet("get-data-by-wo-and-item")]
-        public async Task<IActionResult> GetDataByWoAndItem(string workorder, string component)
+        public async Task<IActionResult> GetDataByWoAndItem(string workorder, string item)
         {
-            var response = await _query.GetDataByWoAndItemComponent(workorder, component);
+            var response = await _query.GetDataByWoAndItemComponent(workorder, item);
 
             return Ok(new ApiSuccessResponse<GetDataByWoAndItemComponentResponse>
             {

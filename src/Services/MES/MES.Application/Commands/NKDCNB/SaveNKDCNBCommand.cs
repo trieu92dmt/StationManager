@@ -179,7 +179,7 @@ namespace MES.Application.Commands.NKDCNB
                     //Shipping point
                     ShippingPoint = item.ShippingPoint,
                     //4   MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.ShippingPoint).ProductCode,
+                    MaterialCode = !string.IsNullOrEmpty(item.ShippingPoint) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.ShippingPoint).ProductCode : "",
                     MaterialCodeInt = long.Parse(item.Material),
                     //Batch
                     Batch = item.Batch,

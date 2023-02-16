@@ -43,6 +43,13 @@ namespace MES.Application.Queries
         Task<List<Common2Response<string>>> GetDropdownComponent(string workorder);
 
         /// <summary>
+        /// Dropdown Item Component by wo
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownItemComponent(string workorder);
+
+        /// <summary>
         /// Dropdown Purchasing Org by Plant
         /// </summary>
         /// <param name="plantCode"></param>
@@ -563,6 +570,28 @@ namespace MES.Application.Queries
                                     Key = x.ReservationCode,
                                     Value = x.ReservationCodeInt.ToString()
                                 }).AsNoTracking().ToListAsync();
+        }
+
+        #endregion
+
+        #region Drop down component item theo wo
+        public async Task<List<CommonResponse>> GetDropdownItemComponent(string workorder)
+        {
+            var wo = await _workOrderRep.GetQuery().Include(x => x.DetailWorkOrderModel).FirstOrDefaultAsync(x => x.WorkOrderCodeInt == long.Parse(workorder));
+
+            var response = new List<CommonResponse>();
+
+            if (wo != null)
+            {
+                return wo.DetailWorkOrderModel
+                    .Select(x => new CommonResponse
+                    {
+                        Key = x.WorkOrderItem,
+                        Value = x.WorkOrderItem
+                    }).OrderBy(x => x.Key).DistinctBy(x => x.Key).ToList();
+            }
+
+            return response;
         }
         #endregion
     }

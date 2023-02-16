@@ -30,7 +30,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="workorder"></param>
         /// <returns></returns>
-        Task<GetDataByWoAndComponentResponse> GetDataByWoAndComponent(string workorder, string component);
+        Task<GetDataByWoAndItemComponentResponse> GetDataByWoAndItemComponent(string workorder, string item);
     }
 
     public class KPPPPQuery : INKPPPPQuery
@@ -58,12 +58,12 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
         }
 
-        public async Task<GetDataByWoAndComponentResponse> GetDataByWoAndComponent(string workorder, string component)
+        public async Task<GetDataByWoAndItemComponentResponse> GetDataByWoAndComponent(string workorder, string item)
         {
             //Lấy ra wo
             var woDetail = await _detailWoRepo.GetQuery().Include(x => x.WorkOrder)
                                               .FirstOrDefaultAsync(x => x.WorkOrder.WorkOrderCodeInt == long.Parse(workorder) &&
-                                                                        x.ProductCodeInt == long.Parse(component));
+                                                                        x.WorkOrderItem == item); ;
 
             //Danh sách product
             var prods = _prdRepo.GetQuery().AsNoTracking();
@@ -73,12 +73,16 @@ namespace MES.Application.Queries
             //Số lượng nhập đã thu hồi
             var withdrawnQty = woDetail.QuantityWithdrawn.HasValue ? Math.Abs(woDetail.QuantityWithdrawn.Value) : 0;
 
-            var response = new GetDataByWoAndComponentResponse
+            var response = new GetDataByWoAndItemComponentResponse
             {
                 //Material
                 Material = woDetail.WorkOrder.ProductCodeInt.ToString(),
                 //Material Desc
                 MaterialName = prods.FirstOrDefault(p => p.ProductCodeInt == woDetail.WorkOrder.ProductCodeInt).ProductName,
+                //Component
+                Component = woDetail.ProductCodeInt.ToString(),
+                //Component desc
+                ComponentDesc = prods.FirstOrDefault(p => p.ProductCodeInt == woDetail.ProductCodeInt).ProductName,
                 //Batch
                 Batch = woDetail.Batch,
                 //Số lượng yêu cầu

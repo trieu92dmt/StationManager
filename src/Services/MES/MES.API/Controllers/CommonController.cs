@@ -74,6 +74,20 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Lấy dropdown Item Component
+        /// <summary>
+        /// Lấy dropdown Item Component
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-dropdown-item-component")]
+        public async Task<IActionResult> GetListItemComponent(string wo)
+        {
+            var dropdownList = await _commonQuery.GetDropdownItemComponent(wo);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách item component") });
+        }
+        #endregion
+
         #region Lấy Purchasing Org theo Plant Code
         /// <summary>
         /// Lấy Purchasing Org theo Plant Code

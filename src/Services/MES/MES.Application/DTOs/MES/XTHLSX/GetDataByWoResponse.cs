@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace MES.Application.DTOs.MES.XTHLSX
 {
-    public class GetDataByWoAndComponentResponse
+    public class GetDataByWoAndItemComponentResponse
     {
         //Material
         public string Material { get; set; }
         //Material desc
         public string MaterialName { get; set; }
+        //Component
+        public string Component { get; set; }
+        //Component desc
+        public string ComponentDesc { get; set; }
         //Batch
         public string Batch { get; set; }
         //Số lượng yêu cầu

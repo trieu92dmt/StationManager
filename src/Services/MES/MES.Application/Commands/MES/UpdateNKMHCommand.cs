@@ -180,7 +180,7 @@ namespace MES.Application.Commands.MES
 
 
                 //Check po, poitem có khớp với material
-                if (detailPO.ProductCodeInt != long.Parse(item.Material))
+                if (detailPO != null && detailPO.ProductCodeInt != long.Parse(item.Material))
                 {
                     response.IsSuccess = false;
                     response.Message = $"Po PoItem và Material Không mapping với nhau";

@@ -152,7 +152,7 @@ namespace MES.Application.Commands.NKTPSX
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
 
                 //Check wo có khớp với material
-                if (wo.ProductCodeInt != long.Parse(item.Material))
+                if (wo!= null && wo.ProductCodeInt != long.Parse(item.Material))
                 {
                     response.IsSuccess = false;
                     response.Message = $"WorkOrder và Material Không mapping với nhau";

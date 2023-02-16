@@ -160,7 +160,7 @@ namespace MES.Application.Commands.XTHLSX
                 if (!string.IsNullOrEmpty(item.WorkOrder) && 
                     !string.IsNullOrEmpty(item.ItemComponent) && 
                     !string.IsNullOrEmpty(item.Component) &&
-                    wo == null)
+                    wo != null)
                 {
                     response.IsSuccess = false;
                     response.Message = "Workorder, Item component và Component không mapping với nhau";

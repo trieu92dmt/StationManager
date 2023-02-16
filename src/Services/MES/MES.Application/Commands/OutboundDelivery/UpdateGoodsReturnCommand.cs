@@ -181,7 +181,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 var detailOD = odDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.ODCode) ? x.OutboundDeliveryItem == item.ODItem && x.OutboundDelivery.DeliveryCodeInt == long.Parse(item.ODCode) : false);
 
                 //Check od, oditem có khớp với material
-                if (detailOD.ProductCodeInt != long.Parse(item.Material))
+                if (detailOD != null && detailOD.ProductCodeInt != long.Parse(item.Material))
                 {
                     response.IsSuccess = false;
                     response.Message = $"Od OdItem và Material Không mapping với nhau";
@@ -189,7 +189,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     return response;
                 }
 
-                //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
+                //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");SS
 
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile

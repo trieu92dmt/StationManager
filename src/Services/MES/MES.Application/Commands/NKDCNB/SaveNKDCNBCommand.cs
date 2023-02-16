@@ -220,7 +220,7 @@ namespace MES.Application.Commands.NKDCNB
                     //21  SlocCode
                     SlocCode = item.Sloc,
                     //22  SlocName
-                    SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc)?.StorageLocationName,
+                    SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
                     //Truckinfo
                     TruckInfoId = item.TruckInfoId,
                     //TruckNumber

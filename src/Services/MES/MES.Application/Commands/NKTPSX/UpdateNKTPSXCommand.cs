@@ -197,7 +197,7 @@ namespace MES.Application.Commands.NKTPSX
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
-                        SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation)?.StorageLocationName,
+                        SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }
@@ -214,7 +214,7 @@ namespace MES.Application.Commands.NKTPSX
                     //Storage Location
                     nktpsx.SlocCode = item.StorageLocation;
                     //Sloc Name
-                    nktpsx.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation)?.StorageLocationName;
+                    nktpsx.SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "";
                     //Số lượng bao
                     nktpsx.BagQuantity = item.BagQuantity;
                     //Đơn trọng

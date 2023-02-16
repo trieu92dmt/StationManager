@@ -206,7 +206,7 @@ namespace MES.Application.Commands.XTHLSX
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
-                        SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation)?.StorageLocationName,
+                        SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }
@@ -223,7 +223,7 @@ namespace MES.Application.Commands.XTHLSX
                     //Storage Location
                     xthlsx.SlocCode = item.StorageLocation;
                     //Sloc Name
-                    xthlsx.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation)?.StorageLocationName;
+                    xthlsx.SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "";
                     //Batch
                     xthlsx.Batch = item.Batch;
                     //Sl bao

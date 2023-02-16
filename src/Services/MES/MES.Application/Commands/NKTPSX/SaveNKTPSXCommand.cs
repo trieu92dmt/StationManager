@@ -189,7 +189,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //21  SlocCode
                     SlocCode = item.SlocCode,
                     //22  SlocName
-                    SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.SlocCode)?.StorageLocationName,
+                    SlocName = !string.IsNullOrEmpty(item.SlocCode) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.SlocCode).StorageLocationName : "",
                     //24  CreateTime
                     CreateTime = DateTime.Now,
                     //25  CreateBy

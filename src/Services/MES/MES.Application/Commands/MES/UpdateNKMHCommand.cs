@@ -232,7 +232,7 @@ namespace MES.Application.Commands.MES
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
-                        SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName,
+                        SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
                         DocumentDate = item.DocumentDate,
                         DateKey = dimDate.FirstOrDefault(x => x.Date.Value.Date == item.DocumentDate.Value.Date && x.Date.Value.Month == item.DocumentDate.Value.Month && x.Date.Value.Year == item.DocumentDate.Value.Year).DateKey,
                         Batch = item.Batch,
@@ -255,7 +255,7 @@ namespace MES.Application.Commands.MES
                     //Storage Location
                     nkmh.SlocCode = item.StorageLocation;
                     //Sloc Name
-                    nkmh.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName;
+                    nkmh.SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "";
                     //Confirm Quantity
                     nkmh.ConfirmQty = item.ConfirmQty;
                     //Sl kèm bao bì

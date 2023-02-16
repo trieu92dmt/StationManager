@@ -15,6 +15,8 @@ namespace MES.Application.DTOs.MES.NK
         public string Plant { get; set; }
         //Customer
         public string Customer { get; set; }
+        //Customer name
+        public string CustomerName { get; set; }
         //Material
         public string Material { get; set; }
         //Material Desc

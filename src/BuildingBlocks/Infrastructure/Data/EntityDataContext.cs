@@ -1661,6 +1661,16 @@ namespace Infrastructure.Data
             modelBuilder.Entity<OrderImportModel>(entity =>
             {
                 entity.Property(e => e.OrderImportId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.OrderImportModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_OrderImportModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.OrderImportModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_OrderImportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<OrderTypeModel>(entity =>

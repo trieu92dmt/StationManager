@@ -11,6 +11,11 @@ namespace Infrastructure.Models
     [Table("TruckInfoModel", Schema = "DataCollection")]
     public partial class TruckInfoModel
     {
+        public TruckInfoModel()
+        {
+            OrderImportModel = new HashSet<OrderImportModel>();
+        }
+
         [Key]
         public Guid TruckInfoId { get; set; }
         [StringLength(50)]
@@ -29,5 +34,8 @@ namespace Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
+
+        [InverseProperty("TruckInfo")]
+        public virtual ICollection<OrderImportModel> OrderImportModel { get; set; }
     }
 }

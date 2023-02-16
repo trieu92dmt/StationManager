@@ -13,5 +13,92 @@ namespace Infrastructure.Models
     {
         [Key]
         public Guid OrderImportId { get; set; }
+        public Guid? WeightSessionId { get; set; }
+        [StringLength(50)]
+        public string WeightHeadCode { get; set; }
+        [StringLength(50)]
+        public string WeightVote { get; set; }
+        [StringLength(50)]
+        public string PlantCode { get; set; }
+        [StringLength(50)]
+        public string MaterialCode { get; set; }
+        public long? MaterialCodeInt { get; set; }
+        [StringLength(50)]
+        public string SlocCode { get; set; }
+        [StringLength(200)]
+        public string SlocName { get; set; }
+        [StringLength(50)]
+        public string Batch { get; set; }
+        [StringLength(50)]
+        public string MovementType { get; set; }
+        [StringLength(1)]
+        public string SpecialStock { get; set; }
+        [StringLength(50)]
+        public string Customer { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? TotalQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? DeliveredQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OpenQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? ConfirmQty { get; set; }
+        [StringLength(50)]
+        public string UOM { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? NetWeight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? CrossWeight { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? DocumentDate { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? QuantityWithPackaging { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? StartTime { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? EndTime { get; set; }
+        public int? QuantityWeight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? Weight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? BagQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? SingleWeight { get; set; }
+        [StringLength(50)]
+        public string VehicleCode { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? InputWeight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OutputWeight { get; set; }
+        [StringLength(50)]
+        public string GoodsWeight { get; set; }
+        [StringLength(50)]
+        public string MaterialDocument { get; set; }
+        [StringLength(50)]
+        public string ReverseDocument { get; set; }
+        [StringLength(2000)]
+        public string Description { get; set; }
+        [StringLength(200)]
+        public string Image { get; set; }
+        [StringLength(50)]
+        public string Status { get; set; }
+        public Guid? TruckInfoId { get; set; }
+        [StringLength(50)]
+        public string TruckNumber { get; set; }
+        public bool? IsReverse { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? CreateTime { get; set; }
+        public Guid? CreateBy { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? LastEditTime { get; set; }
+        public Guid? LastEditBy { get; set; }
+        public bool? Actived { get; set; }
+
+        [ForeignKey("TruckInfoId")]
+        [InverseProperty("OrderImportModel")]
+        public virtual TruckInfoModel TruckInfo { get; set; }
+        [ForeignKey("WeightSessionId")]
+        [InverseProperty("OrderImportModel")]
+        public virtual WeighSessionModel WeightSession { get; set; }
     }
 }

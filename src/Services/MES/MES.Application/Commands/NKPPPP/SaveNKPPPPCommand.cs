@@ -23,6 +23,8 @@ namespace MES.Application.Commands.NKPPPP
         public string WorkOrder { get; set; }
         //Material
         public string Material { get; set; }
+        //Item componênt
+        public string ItemComponent { get; set; }
         //Component
         public string Component { get; set; }
         //Sloc
@@ -142,6 +144,7 @@ namespace MES.Application.Commands.NKPPPP
                 var detailWo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Material) && !string.IsNullOrEmpty(item.Component) ?
                                     detailWos.FirstOrDefault(d => d.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) &&
                                                              d.WorkOrder.ProductCodeInt == long.Parse(item.Material) &&
+                                                             d.WorkOrderItem == item.ItemComponent &&
                                                              d.ProductCodeInt == long.Parse(item.Component)) : null;
 
                 _nkppppRepo.Add(new ScrapFromProductionModel

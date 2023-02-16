@@ -190,7 +190,7 @@ namespace MES.Application.Commands.MES
                     //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
                     Img = string.IsNullOrEmpty(imgPath) ? "" : imgPath,
                     //document date = document date po
-                    DocumentDate = x.PoDetailId.HasValue ? poLine.PurchaseOrder.DocumentDate : null,
+                    DocumentDate = x.PoDetailId.HasValue && x.PoDetailId != Guid.Empty ? poLine.PurchaseOrder.DocumentDate : null,
                     //Số phiếu cân
                     WeitghtVote = $"N{long.Parse(lastIndex) + index}",
                     //Common

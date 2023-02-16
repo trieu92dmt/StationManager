@@ -186,7 +186,7 @@ namespace MES.Application.Commands.MES
                     response.Message = $"Po PoItem và Material Không mapping với nhau";
 
                     return response;
-                }    
+                }
 
 
                 //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");

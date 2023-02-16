@@ -23,6 +23,8 @@ namespace MES.Application.Commands.NKPPPP
         public string Plant { get; set; }
         //Lệnh sản xuất
         public string WorkOrder { get; set; }
+        //Item component
+        public string ItemComponent { get; set; }
         //Component
         public string Component { get; set; }
         //Storage Location
@@ -149,7 +151,10 @@ namespace MES.Application.Commands.NKPPPP
                 var nkpppp = await nkpppps.FirstOrDefaultAsync(x => x.ScFromProductiontId == item.NKPPPPId);
 
                 //Lấy ra workorder detail
-                var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
+                var wo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ?
+                                    wos.FirstOrDefault(d => d.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) &&
+                                                             d.WorkOrderItem == item.ItemComponent &&
+                                                             d.ProductCodeInt == long.Parse(item.Component)) : null;
 
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile

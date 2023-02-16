@@ -23,6 +23,8 @@ namespace MES.Application.Commands.XTHLSX
         public string Plant { get; set; }
         //Lệnh sản xuất
         public string WorkOrder { get; set; }
+        //Item component
+        public string ItemComponent { get; set; }
         //Component
         public string Component { get; set; }
         //Storage Location
@@ -149,10 +151,24 @@ namespace MES.Application.Commands.XTHLSX
                 var xthlsx = await xthlsxs.FirstOrDefaultAsync(x => x.IssForProductiontId == item.XTHLSXId);
 
                 //Lấy ra workorder detail
-                var wo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ? 
-                         wos.FirstOrDefault(x => x.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) && x.ProductCodeInt == long.Parse(item.Component)) : null;
+                var wo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ?
+                                    wos.FirstOrDefault(d => d.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) &&
+                                                             d.WorkOrderItem == item.ItemComponent &&
+                                                             d.ProductCodeInt == long.Parse(item.Component)) : null;
 
-                
+                //Check wo, woitem có mapping với component
+                if (!string.IsNullOrEmpty(item.WorkOrder) && 
+                    !string.IsNullOrEmpty(item.ItemComponent) && 
+                    !string.IsNullOrEmpty(item.Component) &&
+                    wo == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Workorder, Item component và Component không mapping với nhau";
+
+                    return response;
+                }  
+                    
+
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile
                 if (!string.IsNullOrEmpty(item.NewImage))

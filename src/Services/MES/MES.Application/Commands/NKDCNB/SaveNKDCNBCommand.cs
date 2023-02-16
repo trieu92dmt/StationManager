@@ -77,10 +77,11 @@ namespace MES.Application.Commands.NKDCNB
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _detailOdRepo;
+        private readonly IRepository<TruckInfoModel> _truckRepo;
 
         public SaveNKDCNBCommandHandler(IUnitOfWork unitOfWork, IRepository<InhouseTransferModel> nkdcnbRepo, IUtilitiesService utilitiesService, IRepository<ScaleModel> scaleRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                        IRepository<DetailOutboundDeliveryModel> detailOdRepo)
+                                        IRepository<DetailOutboundDeliveryModel> detailOdRepo, IRepository<TruckInfoModel> truckRepo)
         {
             _unitOfWork = unitOfWork;
             _nkdcnbRepo = nkdcnbRepo;
@@ -90,6 +91,7 @@ namespace MES.Application.Commands.NKDCNB
             _slocRepo = slocRepo;
             _weightSsRepo = weightSsRepo;
             _detailOdRepo = detailOdRepo;
+            _truckRepo = truckRepo;
         }
 
         public async Task<bool> Handle(SaveNKDCNBCommand request, CancellationToken cancellationToken)
@@ -108,6 +110,9 @@ namespace MES.Application.Commands.NKDCNB
 
             //Get query od detail
             var detailOds = _detailOdRepo.GetQuery().Include(x => x.OutboundDelivery).AsNoTracking();
+
+            //Get query truck info
+            var truckInfos = _truckRepo.GetQuery().AsNoTracking();
 
             //Danh sách nhập kho tpsx
             var nkdcnbs = await _nkdcnbRepo.GetQuery().ToListAsync();
@@ -216,6 +221,10 @@ namespace MES.Application.Commands.NKDCNB
                     SlocCode = item.Sloc,
                     //22  SlocName
                     SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc)?.StorageLocationName,
+                    //Truckinfo
+                    TruckInfoId = item.TruckInfoId,
+                    //TruckNumber
+                    TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,
                     //24  CreateTime
                     CreateTime = DateTime.Now,
                     //25  CreateBy

@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.WebSockets;
 
 namespace MES.Application.Commands.MES
 {
@@ -69,11 +70,12 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IUtilitiesService _utilitiesService;
+        private readonly IRepository<TruckInfoModel> _truckRepo;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
                                       IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                      IUtilitiesService utilitiesService)
+                                      IUtilitiesService utilitiesService, IRepository<TruckInfoModel> truckRepo)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
@@ -83,6 +85,7 @@ namespace MES.Application.Commands.MES
             _scaleRepo = scaleRepo;
             _weightSsRepo = weightSsRepo;
             _utilitiesService = utilitiesService;
+            _truckRepo = truckRepo;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -101,6 +104,9 @@ namespace MES.Application.Commands.MES
 
             //Danh sách material
             var materials = _prdRepo.GetQuery().AsNoTracking();
+
+            //Get query truck inffo
+            var truckinfos = _truckRepo.GetQuery().AsNoTracking();
 
             int index = 1;
 
@@ -178,9 +184,7 @@ namespace MES.Application.Commands.MES
                     //Số phương tiện
                     VehicleCode = x.VehicleCode,
                     //Id cân xe tải
-                    TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,    
-                    //Số xe tải 
-                    TruckQuantity = x.TruckQuantity,
+                    TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,
                     //Số cân đầu vào
                     InputWeight = x.InputWeight,
                     OutputWeight = x.OutputWeight,

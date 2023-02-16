@@ -605,12 +605,14 @@ namespace MES.Application.Queries
 
         public async Task<List<CommonResponse>> GetDropdownCustomer(string keyword)
         {
-            return await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
+            var response = await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
                                 .Select(x => new CommonResponse
                                 {
                                     Key = x.CustomerNumber,
                                     Value = $"{x.CustomerNumber} | {x.CustomerName}"
                                 }).AsNoTracking().ToListAsync();
+
+            return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).ToList();
         }
     }
 }

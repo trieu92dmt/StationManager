@@ -211,6 +211,8 @@ namespace MES.Application.Queries
                 Material = long.Parse(x.WorkOrder.ProductCode).ToString() ?? "",
                 //Material Desc
                 MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == x.WorkOrder.ProductCode).ProductName ?? "",
+                //Item component
+                ItemComponent = x.WorkOrderItem ?? "",
                 //Component
                 Component = long.Parse(x.ProductCode).ToString() ?? "",
                 //Component Desc
@@ -402,6 +404,8 @@ namespace MES.Application.Queries
                 Material = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ProductCodeInt.ToString() : "",
                 //10 Material Desc
                 MaterialDesc = x.DetailWorkOrderId.HasValue ? materials.FirstOrDefault(m => m.ProductCode == x.DetailWorkOrder.WorkOrder.ProductCode).ProductName : "",
+                // Item component
+                ItemComponent = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrderItem : "",
                 //11 Component
                 Component = x.ComponentCodeInt.ToString() ?? "",
                 //12 Component Desc

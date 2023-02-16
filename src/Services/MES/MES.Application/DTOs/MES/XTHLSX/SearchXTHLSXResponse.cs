@@ -16,6 +16,8 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public string Material { get; set; }
         //Material Desc
         public string MaterialDesc { get; set; }
+        //Item component
+        public string ItemComponent { get; set; }
         //Component
         public string Component { get; set; }
         //Component
@@ -54,6 +56,8 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public string Material { get; set; }
         //Material Desc
         public string MaterialDesc { get; set; }
+        //Item component
+        public string ItemComponent { get; set; }
         //Component
         public string Component { get; set; }
         //Component desc

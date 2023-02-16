@@ -180,6 +180,15 @@ namespace MES.Application.Commands.OutboundDelivery
                 //Lấy ra podetail
                 var detailOD = odDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.ODCode) ? x.OutboundDeliveryItem == item.ODItem && x.OutboundDelivery.DeliveryCodeInt == long.Parse(item.ODCode) : false);
 
+                //Check od, oditem có khớp với material
+                if (detailOD.ProductCodeInt != long.Parse(item.Material))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Od OdItem và Material Không mapping với nhau";
+
+                    return response;
+                }
+
                 //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
 
                 var imgPath = string.Empty;

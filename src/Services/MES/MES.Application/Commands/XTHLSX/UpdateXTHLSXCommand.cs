@@ -152,6 +152,7 @@ namespace MES.Application.Commands.XTHLSX
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ? 
                          wos.FirstOrDefault(x => x.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) && x.ProductCodeInt == long.Parse(item.Component)) : null;
 
+                
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile
                 if (!string.IsNullOrEmpty(item.NewImage))

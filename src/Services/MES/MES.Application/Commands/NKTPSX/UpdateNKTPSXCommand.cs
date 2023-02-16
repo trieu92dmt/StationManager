@@ -151,6 +151,15 @@ namespace MES.Application.Commands.NKTPSX
                 //Lấy ra workorder
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(x => x.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
 
+                //Check wo có khớp với material
+                if (wo.ProductCodeInt != long.Parse(item.Material))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"WorkOrder và Material Không mapping với nhau";
+
+                    return response;
+                }
+
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile
                 if (!string.IsNullOrEmpty(item.NewImage))

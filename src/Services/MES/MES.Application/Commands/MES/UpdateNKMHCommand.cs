@@ -178,6 +178,17 @@ namespace MES.Application.Commands.MES
                 //Lấy ra podetail
                 var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
 
+
+                //Check po, poitem có khớp với material
+                if (detailPO.ProductCodeInt != long.Parse(item.Material))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Po PoItem và Material Không mapping với nhau";
+
+                    return response;
+                }    
+
+
                 //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");
 
                 var imgPath = string.Empty;

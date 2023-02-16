@@ -168,6 +168,13 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetReservation(string keyword);
+
+        /// <summary>
+        /// Get dropdown customer
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownCustomer(string keyword);
     }
     
     public class CommonQuery : ICommonQuery
@@ -593,6 +600,17 @@ namespace MES.Application.Queries
 
             return response;
         }
+
         #endregion
+
+        public async Task<List<CommonResponse>> GetDropdownCustomer(string keyword)
+        {
+            return await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
+                                .Select(x => new CommonResponse
+                                {
+                                    Key = x.CustomerNumber,
+                                    Value = $"{x.CustomerNumber} | {x.CustomerName}"
+                                }).AsNoTracking().ToListAsync();
+        }
     }
 }

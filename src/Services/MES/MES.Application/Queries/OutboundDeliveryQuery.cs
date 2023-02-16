@@ -325,7 +325,7 @@ namespace MES.Application.Queries
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
                 Sloc = x.SlocCode,
                 SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName}",
-                Batch = x.DetailODId.HasValue ? x.DetailOD.Batch : "",
+                Batch = x.Batch ?? "",
                 BagQuantity = x.BagQuantity,
                 SingleWeight = x.SingleWeight,
                 WeightHeadCode = x.WeightHeadCode,

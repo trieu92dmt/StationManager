@@ -185,7 +185,7 @@ namespace IntegrationNS.Application.Queries
                 //Stor.Loc
                 Sloc = x.SlocCode ?? "",
                 //Batch
-                Batch = x.WorkOrderId.HasValue ? x.WorkOrder.Batch : "",
+                Batch = x.Batch,
                 //SL bao
                 BagQuantity = x.BagQuantity ?? 0,
                 //Đơn trọng

@@ -79,20 +79,20 @@ namespace IntegrationNS.Application.Queries
                 query = query.Where(x => x.PlantCode == command.Plant);
             }
 
-            //Theo Component
-            if (!string.IsNullOrEmpty(command.Component))
+            //Theo Material
+            if (!string.IsNullOrEmpty(command.Material))
             {
-                query = query.Where(x => x.ComponentCode == command.Component);
+                query = query.Where(x => x.DetailWorkOrder.WorkOrder.ProductCodeInt == long.Parse(command.Material));
             }
 
-            //Theo Material
-            if (!string.IsNullOrEmpty(command.MaterialFrom))
+            //Theo Component
+            if (!string.IsNullOrEmpty(command.ComponentFrom))
             {
                 //Nếu không có To thì search 1
-                if (string.IsNullOrEmpty(command.MaterialTo))
-                    command.MaterialTo = command.MaterialFrom;
-                query = query.Where(x => x.DetailWorkOrder.WorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
-                                         x.DetailWorkOrder.WorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));
+                if (string.IsNullOrEmpty(command.ComponentTo))
+                    command.ComponentTo = command.ComponentFrom;
+                query = query.Where(x => x.ComponentCodeInt >= long.Parse(command.ComponentFrom) &&
+                                         x.ComponentCodeInt <= long.Parse(command.ComponentTo));
             }
 
             //Theo lệnh sản xuát

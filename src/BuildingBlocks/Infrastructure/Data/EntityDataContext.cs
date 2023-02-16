@@ -172,6 +172,7 @@ namespace Infrastructure.Data
         public virtual DbSet<News_Company_Mapping> News_Company_Mapping { get; set; }
         public virtual DbSet<NotificationAccountMappingModel> NotificationAccountMappingModel { get; set; }
         public virtual DbSet<NotificationModel> NotificationModel { get; set; }
+        public virtual DbSet<OrderImportModel> OrderImportModel { get; set; }
         public virtual DbSet<OrderTypeModel> OrderTypeModel { get; set; }
         public virtual DbSet<OutboundDeliveryModel> OutboundDeliveryModel { get; set; }
         public virtual DbSet<OutputRecordModel> OutputRecordModel { get; set; }
@@ -1655,6 +1656,11 @@ namespace Infrastructure.Data
             modelBuilder.Entity<NotificationModel>(entity =>
             {
                 entity.Property(e => e.NotificationId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<OrderImportModel>(entity =>
+            {
+                entity.Property(e => e.OrderImportId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<OrderTypeModel>(entity =>

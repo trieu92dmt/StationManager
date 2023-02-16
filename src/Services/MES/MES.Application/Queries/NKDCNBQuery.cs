@@ -417,7 +417,7 @@ namespace MES.Application.Queries
             }
 
             //Get data
-            var data = await query.Select(x => new SearchNKDCNBResponse
+            var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNKDCNBResponse
             {
                 //Id
                 NKDCNBId = x.InhouseTransferId,

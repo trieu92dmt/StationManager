@@ -35,12 +35,12 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public string SlocName { get; set; }
         //Batch
         public string Batch { get; set; }
-        //Requirement Qty
+        //RequirementQty
         public decimal? RequirementQty { get; set; }
-        //Withdrawn Qty
+        //WithdrawQty
         public decimal? WithdrawQty { get; set; }
-        //OpenQty
-        public decimal? OpenQty => RequirementQty.Value - WithdrawQty.Value;
+        //Total Qty
+        public decimal? TotalQty { get; set; }
         //UoM
         public string Unit { get; set; }
     }
@@ -81,12 +81,12 @@ namespace MES.Application.DTOs.MES.XTHLSX
         public decimal? QuantityWithPackage { get; set; }
         //Số lần cân
         public int? QuantityWeight { get; set; }
-        //Số lượng yêu cầu
+        //RequirementQty
         public decimal? RequirementQty { get; set; }
-        //Số lượng đã nhập thu hồi
+        //WithdrawQty
         public decimal? WithdrawnQty { get; set; }
-        //OpenQty
-        public decimal? OpenQty => RequirementQty.Value - WithdrawnQty.Value;
+        //Total Qty
+        public decimal? TotalQty { get; set; }
         //UOM
         public string Unit { get; set; }
         //Ghi chú

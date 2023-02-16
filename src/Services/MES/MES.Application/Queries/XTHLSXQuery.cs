@@ -240,7 +240,9 @@ namespace MES.Application.Queries
                 //Requirement Qty
                 RequirementQty = x.RequirementQuantiy ?? 0,
                 //Withdraw Qty
-                WithdrawQty = x.QuantityWithdrawn ?? 0
+                WithdrawQty = x.QuantityWithdrawn ?? 0,
+                //Total quantity
+                TotalQty = x.WorkOrder.TargetQuantity ?? 0
             }).ToListAsync();
 
             var index = 1;
@@ -433,6 +435,8 @@ namespace MES.Application.Queries
                 QuantityWithPackage = x.QuantityWithPackaging ?? 0,
                 //21 Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
+                //Total Quantity
+                TotalQty = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.TargetQuantity : 0,
                 //22 Số lượng yêu cầu
                 RequirementQty = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.RequirementQuantiy : 0,
                 //23 Số lượng đã nhập thu hồi

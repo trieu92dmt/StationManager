@@ -176,7 +176,7 @@ namespace MES.Application.Commands.MES
                 var nkmh = await nkmhs.FirstOrDefaultAsync(x => x.GoodsReceiptId == item.NKMHId);
 
                 //Lấy ra podetail
-                var detailPO = poDetails.FirstOrDefault(x => !string.IsNullOrEmpty(item.PurchaseOrderCode) ? x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode) : false);
+                var detailPO = !string.IsNullOrEmpty(item.PurchaseOrderCode) && !string.IsNullOrEmpty(item.POItem) ? poDetails.FirstOrDefault(x => x.POLine == item.POItem && x.PurchaseOrder.PurchaseOrderCodeInt == long.Parse(item.PurchaseOrderCode)) : null;
 
 
                 //Check po, poitem có khớp với material

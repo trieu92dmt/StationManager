@@ -232,10 +232,12 @@ namespace MES.Application.Queries
                 ScheduleStartTime = x.WorkOrder.ScheduledStartDate ?? null,
                 //Schedule Finish Time
                 ScheduleFinishTime = x.WorkOrder.ScheduledFinishDate ?? null,
+                //ToTal Qty
+                TotalQty = x.WorkOrder.TargetQuantity.HasValue ? Math.Abs(x.WorkOrder.TargetQuantity.Value) : 0,
                 //Requirement Qty
                 RequirementQty = x.RequirementQuantiy.HasValue ? Math.Abs(x.RequirementQuantiy.Value) : 0,
                 //Withdraw Qty
-                WithdrawQty = x.QuantityWithdrawn.HasValue ? Math.Abs(x.QuantityWithdrawn.Value) : 0
+                WithdrawQty = x.QuantityWithdrawn.HasValue ? Math.Abs(x.QuantityWithdrawn.Value) : 0,
             }).ToListAsync();
 
             var index = 1;
@@ -417,6 +419,8 @@ namespace MES.Application.Queries
                 QuantityWithPackage = x.QuantityWithPackaging ?? 0,
                 //21 Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
+                //Total qty
+                TotalQty = x.DetailWorkOrder.WorkOrder.TargetQuantity.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity.Value) : 0,
                 //22 Số lượng yêu cầu
                 RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy.Value) : 0,
                 //23 Số lượng đã nhập thu hồi

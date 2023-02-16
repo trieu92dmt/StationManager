@@ -35,12 +35,12 @@ namespace MES.Application.DTOs.MES.NKPPPP
         public string SlocName { get; set; }
         //Batch
         public string Batch { get; set; }
-        //Requirement Qty
+        //RequirementQty
         public decimal? RequirementQty { get; set; }
-        //Withdrawn Qty
+        //WithdrawQty
         public decimal? WithdrawQty { get; set; }
         //Total Qty
-        public decimal? OpenQty => RequirementQty - WithdrawQty;
+        public decimal? TotalQty { get; set; }
         //UoM
         public string Unit { get; set; }
     }
@@ -85,7 +85,7 @@ namespace MES.Application.DTOs.MES.NKPPPP
         public decimal? RequirementQty { get; set; }
         //Số lượng đã nhập thu hồi
         public decimal? WithdrawnQty { get; set; }
-        public decimal? OpenQty => RequirementQty - WithdrawnQty;
+        public decimal? TotalQty { get; set; }
         //UOM
         public string Unit { get; set; }
         //Ghi chú

@@ -46,7 +46,7 @@ namespace IntegrationNS.Application.DTOs
         //Số lượng đã nhập thu hồi
         public decimal? WithdrawnQty { get; set; }
         //OpenQty
-        public decimal? OpenQty => RequirementQty.Value - WithdrawnQty.Value;
+        public decimal? TotalQty { get; set; }
         //UOM
         public string Unit { get; set; }
         //Ghi chú

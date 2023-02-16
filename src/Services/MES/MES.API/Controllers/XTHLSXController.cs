@@ -158,12 +158,12 @@ namespace MES.API.Controllers
         /// </summary>
         /// <param name="workorder"></param>
         /// <returns></returns>
-        [HttpGet("get-data-by-wo-and-component")]
-        public async Task<IActionResult> GetDataByWoAndComponent(string workorder, string component)
+        [HttpGet("get-data-by-wo-and-item")]
+        public async Task<IActionResult> GetDataByWoAndItem(string workorder, string component)
         {
-            var response = await _query.GetDataByWoAndComponent(workorder, component);
+            var response = await _query.GetDataByWoAndItemComponent(workorder, component);
 
-            return Ok(new ApiSuccessResponse<GetDataByWoAndComponentResponse>
+            return Ok(new ApiSuccessResponse<GetDataByWoAndItemComponentResponse>
             {
                 Data = response,
                 IsSuccess = true,

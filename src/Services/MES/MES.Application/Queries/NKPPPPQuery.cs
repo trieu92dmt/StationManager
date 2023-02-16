@@ -58,7 +58,7 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
         }
 
-        public async Task<GetDataByWoAndItemComponentResponse> GetDataByWoAndComponent(string workorder, string item)
+        public async Task<GetDataByWoAndItemComponentResponse> GetDataByWoAndItemComponent(string workorder, string item)
         {
             //Lấy ra wo
             var woDetail = await _detailWoRepo.GetQuery().Include(x => x.WorkOrder)

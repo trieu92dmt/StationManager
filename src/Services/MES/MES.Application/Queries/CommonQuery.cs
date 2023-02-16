@@ -612,7 +612,7 @@ namespace MES.Application.Queries
                                     Value = $"{x.CustomerNumber} | {x.CustomerName}"
                                 }).AsNoTracking().ToListAsync();
 
-            return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).ToList();
+            return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
         }
     }
 }

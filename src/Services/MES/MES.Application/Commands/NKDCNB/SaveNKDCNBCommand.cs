@@ -24,6 +24,8 @@ namespace MES.Application.Commands.NKDCNB
     {
         //Plant
         public string Plant { get; set; }
+        //Shipping point
+        public string ShippingPoint { get; set; }
         //Outbound delivery
         public string OutboundDelivery { get; set; }
         //Outbound delivery Item
@@ -174,8 +176,10 @@ namespace MES.Application.Commands.NKDCNB
                     DetailODId = detailOd != null ? detailOd.DetailOutboundDeliveryId : null,
                     //3 PlantCode
                     PlantCode = item.Plant,
+                    //Shipping point
+                    ShippingPoint = item.ShippingPoint,
                     //4   MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductCode,
+                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.ShippingPoint).ProductCode,
                     MaterialCodeInt = long.Parse(item.Material),
                     //Batch
                     Batch = item.Batch,

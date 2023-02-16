@@ -22,6 +22,8 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]
+        public string ShippingPoint { get; set; }
+        [StringLength(50)]
         public string MaterialCode { get; set; }
         public long? MaterialCodeInt { get; set; }
         [StringLength(50)]

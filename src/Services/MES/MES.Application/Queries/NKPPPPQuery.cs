@@ -68,11 +68,6 @@ namespace MES.Application.Queries
             //Danh sách product
             var prods = _prdRepo.GetQuery().AsNoTracking();
 
-            //Số lượng nhập đã thu hồi
-            var requiremenQty = woDetail.RequirementQuantiy.HasValue ? Math.Abs(woDetail.RequirementQuantiy.Value) : 0;
-            //Số lượng nhập đã thu hồi
-            var withdrawnQty = woDetail.QuantityWithdrawn.HasValue ? Math.Abs(woDetail.QuantityWithdrawn.Value) : 0;
-
             var response = new GetDataByWoAndItemComponentResponse
             {
                 //Material
@@ -86,9 +81,11 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = woDetail.Batch,
                 //Số lượng yêu cầu
-                RequiremenQty = requiremenQty,
+                RequiremenQty = woDetail.RequirementQuantiy.HasValue ? Math.Abs(woDetail.RequirementQuantiy.Value) : 0,
                 //Số lượng nhập đã thu hồi
-                WithdrawnQty = withdrawnQty,
+                WithdrawnQty = woDetail.QuantityWithdrawn.HasValue ? Math.Abs(woDetail.QuantityWithdrawn.Value) : 0,
+                //Total quantity
+                TotalQty = woDetail.WorkOrder.TargetQuantity,
                 //Scheduled Start Date
                 ScheduledStartDate = woDetail.WorkOrder.ScheduledStartDate,
                 //Scheduled Finish Date

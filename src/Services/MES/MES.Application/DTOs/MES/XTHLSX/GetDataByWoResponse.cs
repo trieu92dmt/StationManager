@@ -23,7 +23,7 @@ namespace MES.Application.DTOs.MES.XTHLSX
         //Số lượng nhập đã thu hồi
         public decimal? WithdrawnQty { get; set; }
         //Open quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? TotalQty { get; set; }
         //Scheduled Start Date
         public DateTime? ScheduledStartDate { get; set; }
         //Scheduled Finish Date

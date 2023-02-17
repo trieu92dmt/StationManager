@@ -365,7 +365,7 @@ namespace MES.Application.Queries
                 //Plant
                 Plant = x.Reservation.Plant ?? "",
                 //Reservatiom
-                Reservatiom = x.Reservation.ReservationCodeInt.ToString() ?? "",
+                Reservation = x.Reservation.ReservationCodeInt.ToString() ?? "",
                 //Reservatiom item
                 ReservationItem = x.ReservationItem ?? "",
                 //Material

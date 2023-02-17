@@ -13,7 +13,7 @@ namespace MES.Application.DTOs.MES.XK
         //Plant
         public string Plant { get; set; }
         //Reservation
-        public string Reservatiom { get; set; }
+        public string Reservation { get; set; }
         //Reserbation Item
         public string ReservationItem { get; set; }
         //Material

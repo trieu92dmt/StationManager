@@ -73,6 +73,10 @@ namespace MES.Application.DTOs.MES.XK
         public string WeightHeadCode { get; set; }
         //Trọng lượng cân
         public decimal? Weight { get; set; }
+        //Customer
+        public string Customer { get; set; }
+        //Special Stock
+        public string SpecialStock { get; set; }
         //Confirm Quantity
         public decimal? ConfirmQty { get; set; }
         //SL kèm bao bì

@@ -39,6 +39,8 @@ namespace MES.Application.DTOs.MES.NK
         public string Customer { get; set; }
         //Cusstomer label
         public string CustomerFmt { get; set; }
+        //Special Stock
+        public string SpecialStock { get; set; }
         //Sloc
         public string Sloc { get; set; }
         public string SlocFmt { get; set; }

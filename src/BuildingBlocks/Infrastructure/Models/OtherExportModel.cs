@@ -46,6 +46,10 @@ namespace Infrastructure.Models
         public decimal? CrossWeight { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DocumentDate { get; set; }
+        [StringLength(50)]
+        public string Customer { get; set; }
+        [StringLength(1)]
+        public string SpecialStock { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? QuantityWithPackaging { get; set; }
         [Column(TypeName = "datetime")]

@@ -1,8 +1,12 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Exceptions;
+using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
 using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace MES.Application.Commands.XK
 {
@@ -51,40 +55,192 @@ namespace MES.Application.Commands.XK
         public string Image { get; set; }
         //Trạng thái
         public string Status { get; set; }
+        //Ghi chus
+        public string Description { get; set; }
         //Số xe tải
-        public Guid TruckInfoId { get; set; }
+        public Guid? TruckInfoId { get; set; }
         //Số cân đầu ra
         public decimal? OutputWeight { get; set; }
     }
 
-    //public class SaveXKCommandHandler : IRequestHandler<SaveXKCommand, bool>
-    //{
-    //    private readonly IUnitOfWork _unitOfWork;
-    //    private readonly IRepository<WeighSessionModel> _weightSsRepo;
-    //    private readonly IRepository<ScaleModel> _scaleRepo;
-    //    private readonly IUtilitiesService _utilitiesService;
-    //    private readonly IRepository<ProductModel> _prodRepo;
-    //    private readonly IRepository<IssueForProductionModel> _xkRepo;
-    //    private readonly IRepository<DetailOutboundDeliveryModel> _detalOd;
-    //    private readonly IRepository<StorageLocationModel> _slocRepo;
-    //    public SaveXKCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
-    //                                IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
-    //                                IRepository<ProductModel> prodRepo, IRepository<OtherExportModel> xkRepo,
-    //                                IRepository<DetailOutboundDeliveryModel> detalOd, IRepository<StorageLocationModel> slocRepo)
-    //    {
-    //        _unitOfWork = unitOfWork;
-    //        _weightSsRepo = weightSsRepo;
-    //        _scaleRepo = scaleRepo;
-    //        _utilitiesService = utilitiesService;
-    //        _prodRepo = prodRepo;
-    //        _xkRepo = xkRepo;
-    //        _detalOd = detalOd;
-    //        _slocRepo = slocRepo;
-    //    }
+    public class SaveXKCommandHandler : IRequestHandler<SaveXKCommand, bool>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<WeighSessionModel> _weightSsRepo;
+        private readonly IRepository<TruckInfoModel> _truckRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
+        private readonly IUtilitiesService _utilitiesService;
+        private readonly IRepository<ProductModel> _prodRepo;
+        private readonly IRepository<OtherExportModel> _xkRepo;
+        private readonly IRepository<DetailReservationModel> _dtResRepo;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
+        public SaveXKCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo, IRepository<TruckInfoModel> truckRepo,
+                                    IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
+                                    IRepository<ProductModel> prodRepo, IRepository<OtherExportModel> xkRepo,
+                                    IRepository<DetailReservationModel> dtResRepo, IRepository<StorageLocationModel> slocRepo)
+        {
+            _unitOfWork = unitOfWork;
+            _weightSsRepo = weightSsRepo;
+            _truckRepo = truckRepo;
+            _scaleRepo = scaleRepo;
+            _utilitiesService = utilitiesService;
+            _prodRepo = prodRepo;
+            _xkRepo = xkRepo;
+            _dtResRepo = dtResRepo;
+            _slocRepo = slocRepo;
+        }
 
-    //    public Task<bool> Handle(SaveXKCommand request, CancellationToken cancellationToken)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+        public async Task<bool> Handle(SaveXKCommand request, CancellationToken cancellationToken)
+        {
+            //Get query đợt cân
+            var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
+
+            //Get query cân
+            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+
+            //Products
+            var prods = _prodRepo.GetQuery().AsNoTracking();
+
+            //Get query sloc
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Get query reservation
+            var dtRes = _dtResRepo.GetQuery().Include(x => x.Reservation).AsNoTracking();
+
+            //Get query truck info
+            var truckInfos = _truckRepo.GetQuery().AsNoTracking();
+
+            //Danh sách nhập kho xk
+            var xks = await _xkRepo.GetQuery().ToListAsync();
+            //Last index dùng để tạo số phiếu cân tự sinh
+            var lastIndex = xks.Count() > 0 ? xks.OrderBy(x => x.WeightVote).LastOrDefault().WeightVote.Substring(1) : "1000000";
+
+            var index = 1;
+            foreach (var item in request.DataSaveNKs)
+            {
+                //Check điều kiện lưu
+                #region Check điều kiện lưu
+
+                if (!item.ConfirmQty.HasValue || item.ConfirmQty <= 0)
+                {
+                    throw new ISDException("Confirm Quantity phải lớn hơn 0");
+                }
+
+                if (string.IsNullOrEmpty(item.WeightHeadCode))
+                {
+                    if (!item.BagQuantity.HasValue || item.BagQuantity <= 0)
+                    {
+                        throw new ISDException("Số lượng bao phải lớn hơn 0");
+                    }
+                    if (!item.SingleWeight.HasValue || item.SingleWeight <= 0)
+                    {
+                        throw new ISDException("Đơn trọng phải lớn hơn 0");
+                    }
+                }
+                #endregion
+
+                var OtherExportId = Guid.NewGuid();
+
+                var imgPath = "";
+                if (!string.IsNullOrEmpty(item.Image))
+                {
+                    //Convert Base64 to Iformfile
+                    byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
+                    MemoryStream stream = new MemoryStream(bytes);
+
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, OtherExportId.ToString(), $"{OtherExportId.ToString()}.jpg");
+                    //Save image to server
+                    imgPath = await _utilitiesService.UploadFile(file, "XK");
+                }
+
+                //Lấy od detail
+                var detailRes = dtRes.FirstOrDefault(x => !string.IsNullOrEmpty(item.Reservation) && !string.IsNullOrEmpty(item.ReservationItem) ?
+                                                             x.Reservation.ReservationCodeInt == long.Parse(item.Reservation) &&
+                                                             x.ReservationItem == item.ReservationItem : false);
+
+                //Lấy ra cân hiện tại
+                var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
+
+
+                _xkRepo.Add(new OtherExportModel
+                {
+                    //1 XK Id
+                    OtherExportId = OtherExportId,
+                    //2 Detail reservation id
+                    DetailReservationId = detailRes != null ? detailRes.DetailReservationId : null,
+                    //3 PlantCode
+                    PlantCode = item.Plant,
+                    //4   MaterialCode
+                    MaterialCode = !string.IsNullOrEmpty(item.Plant) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductCode : "",
+                    MaterialCodeInt = long.Parse(item.Material),
+                    //Batch
+                    Batch = item.Batch,
+                    //5   WeightId
+                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                    //6 WeightVote
+                    WeightVote = $"X{long.Parse(lastIndex) + index}",
+                    //7   BagQuantity
+                    BagQuantity = item.BagQuantity,
+                    //8   SingleWeight
+                    SingleWeight = item.SingleWeight,
+                    //9  WeightHeadCode
+                    WeightHeadCode = item.WeightHeadCode,
+                    //10  Weight
+                    Weight = item.Weight,
+                    //11  ConfirmQty
+                    ConfirmQty = item.ConfirmQty,
+                    //12  QuantityWithPackaging
+                    QuantityWithPackaging = item.QuantityWithPackage,
+                    //VehicleCode
+                    VehicleCode = item.VehicleCode,
+                    //Số lần cân
+                    QuantityWeight = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.TotalNumberOfWeigh : null,
+                    //UOM
+                    UOM = item.Unit,
+                    //Customer
+                    Customer = item.Customer,
+                    //Special Stock
+                    SpecialStock = item.SpecialStock,
+                    //Số cân đầu vào
+                    InputWeight = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(x => x.TruckInfoId == item.TruckInfoId).InputWeight : null,
+                    //Số cân đầu ra
+                    OutputWeight = item.OutputWeight,
+                    //14  Description
+                    Description = item.Description,
+                    //15  Image
+                    Image = !string.IsNullOrEmpty(imgPath) ? imgPath : null,
+                    //16  Status
+                    Status = "NOT",
+                    //17  StartTime
+                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
+                    //18  EndTime
+                    EndTime = DateTime.Now,
+                    //21  SlocCode
+                    SlocCode = item.Sloc,
+                    //22  SlocName
+                    SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
+                    //Truckinfo
+                    TruckInfoId = item.TruckInfoId,
+                    //TruckNumber
+                    TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,
+                    //24  CreateTime
+                    CreateTime = DateTime.Now,
+                    //25  CreateBy
+                    CreateBy = TokenExtensions.GetAccountId(),
+                    //28  Actived
+                    Actived = true
+
+                });
+
+                index++;
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+    }
 }

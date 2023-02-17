@@ -197,6 +197,8 @@ namespace MES.Application.Queries
                 //Customer
                 Customer = x.Customer,
                 CustomerFmt = !string.IsNullOrEmpty(x.Customer) ? $"{x.Customer} | {customers.FirstOrDefault(x => x.CustomerNumber == x.CustomerNumber).CustomerName}" : "",
+                 //Special Stock
+                 SpecialStock = x.SpecialStock ?? "",
                 //13 Stor.Loc
                 Sloc = x.SlocCode ?? "",
                 SlocFmt = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",

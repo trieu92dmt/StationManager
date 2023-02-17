@@ -216,7 +216,7 @@ namespace MES.Application.Queries
                 //18 Trọng lượng cân
                 Weight = x.Weight ?? 0,
                 //Customer
-                Customer = x.Customer,
+                Customer = x.Customer ?? "",
                 //Customer name
                 CustomerName = !string.IsNullOrEmpty(x.Customer) ? customers.FirstOrDefault(c => c.CustomerNumber == x.Customer).CustomerName : "",
                 //19 Confirm Quantity

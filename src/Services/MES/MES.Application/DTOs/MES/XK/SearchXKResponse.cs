@@ -24,6 +24,8 @@ namespace MES.Application.DTOs.MES.XK
         public string MovementType { get; set; }
         //Customer
         public string Customer { get; set; }
+        //Customer name
+        public string CustomerName { get; set; }
         //Special Stock
         public string SpecialStock { get; set; }
         //Stor Sloc
@@ -75,6 +77,8 @@ namespace MES.Application.DTOs.MES.XK
         public decimal? Weight { get; set; }
         //Customer
         public string Customer { get; set; }
+        //Customer name
+        public string CustomerName { get; set; }
         //Special Stock
         public string SpecialStock { get; set; }
         //Confirm Quantity

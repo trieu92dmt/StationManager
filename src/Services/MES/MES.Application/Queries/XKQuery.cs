@@ -215,6 +215,10 @@ namespace MES.Application.Queries
                 WeightHeadCode = x.WeightHeadCode ?? "",
                 //18 Trọng lượng cân
                 Weight = x.Weight ?? 0,
+                //Customer
+                Customer = x.Customer,
+                //Customer name
+                CustomerName = !string.IsNullOrEmpty(x.Customer) ? customers.FirstOrDefault(c => c.CustomerNumber == x.Customer).CustomerName : "",
                 //19 Confirm Quantity
                 ConfirmQty = x.ConfirmQty ?? 0,
                 //20 SL kèm bao bì
@@ -359,6 +363,9 @@ namespace MES.Application.Queries
             //Get query data sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
 
+            //Query Customer
+            var customers = _custRepo.GetQuery().AsNoTracking();
+
             //Get data
             var data = await query.Select(x => new GetInputDataResponse
             {
@@ -376,6 +383,8 @@ namespace MES.Application.Queries
                 MovementType = x.MovementType ?? "",
                 //Customer
                 Customer = x.Reservation.Customer ?? "",
+                //CustomerName
+                CustomerName = !string.IsNullOrEmpty(x.Reservation.Customer) ? customers.FirstOrDefault(c => c.CustomerNumber == x.Reservation.Customer).CustomerName : "",
                 //Special Stock
                 SpecialStock = x.SpecialStock ?? "",
                 //Storage Location

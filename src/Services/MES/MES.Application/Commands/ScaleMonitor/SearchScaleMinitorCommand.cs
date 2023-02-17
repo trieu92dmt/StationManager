@@ -15,8 +15,10 @@ namespace MES.Application.Commands.ScaleMonitor
         public string WeightHeadCodeFrom { get; set; }
         public string WeightHeadCodeTo { get; set; }
         //Loại
-        //public  MyProperty { get; set; }
+        public char TypeFrom { get; set; }
+        public char TypeTo { get; set; }
         //Ngày ghi nhận
-        //Giờ ghi nhận
+        public DateTime RecordTimeFrom { get; set; }
+        public DateTime RecordTimeTo { get; set; }
     }
 }

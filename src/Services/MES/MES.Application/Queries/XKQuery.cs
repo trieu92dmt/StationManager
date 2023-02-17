@@ -404,8 +404,8 @@ namespace MES.Application.Queries
                 {
                     Plant = command.Plant,
                     Material = long.Parse(command.MaterialFrom).ToString(),
-                    MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == command.MaterialFrom).ProductName ?? "",
-                    Unit = materials.FirstOrDefault(m => m.ProductCode == command.MaterialFrom).Unit ?? ""
+                    MaterialDesc = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName ?? "",
+                    Unit = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit ?? ""
                 });
             }
 

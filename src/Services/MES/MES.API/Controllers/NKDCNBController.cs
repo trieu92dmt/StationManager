@@ -9,6 +9,7 @@ using MES.Application.DTOs.MES.OutboundDelivery;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace MES.API.Controllers
 {
@@ -126,5 +127,19 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
+
+        #region Get dropdown od theo điều kiện
+        /// <summary>
+        /// Dropdown od theo điều kiện
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-od")]
+        public async Task<IActionResult> GetDropdownOdAsync(string keyword)
+        {
+            var dropdownList = await _query.GetDropdownOutboundDelivery(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+#endregion
     }
 }

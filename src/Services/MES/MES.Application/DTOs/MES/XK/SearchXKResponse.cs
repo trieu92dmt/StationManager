@@ -25,7 +25,7 @@ namespace MES.Application.DTOs.MES.XK
         //Customer
         public string Customer { get; set; }
         //Special Stock
-        public string SpecialStocl { get; set; }
+        public string SpecialStock { get; set; }
         //Stor Sloc
         public string Sloc { get; set; }
         //Stor Sloc Fmt
@@ -35,16 +35,16 @@ namespace MES.Application.DTOs.MES.XK
         //Total Quantity
         public decimal? TotalQuantity { get; set; }
         //Delivered Quantity
-        public decimal? DeliveredQuantitu { get; set; }
+        public decimal? DeliveredQuantity { get; set; }
         //Open Quantity
-        public decimal? OpenQuantity { get; set; }
+        public decimal? OpenQuantity => TotalQuantity - DeliveredQuantity;
         //UoM
         public string Unit { get; set; }
     }
     public class SearchXKResponse
     {
         //ID
-        public Guid NKId { get; set; }
+        public Guid XKId { get; set; }
         //Plant
         public string Plant { get; set; }
         //Reservation
@@ -59,10 +59,10 @@ namespace MES.Application.DTOs.MES.XK
         public string MovementType { get; set; }
         //Stor Sloc
         public string Sloc { get; set; }
-        public string SlocName { get; set; }
+        public string SlocFmt { get; set; }
         //Receiving Sloc
         public string ReceivingSloc { get; set; }
-        public string ReceivingSlocName { get; set; }
+        public string ReceivingSlocFmt { get; set; }
         //Batch
         public string Batch { get; set; }
         //SL bao

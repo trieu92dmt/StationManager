@@ -19,6 +19,12 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string WeightVote { get; set; }
         public Guid? DetailReservationId { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? TotalQty { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? DeliveredQty { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OpenQty { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]

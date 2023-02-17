@@ -38,6 +38,14 @@ namespace MES.Application.Queries
         /// <param name="odItem"></param>
         /// <returns></returns>
         Task<GetDataByOdAndOdItem> GetDataByOdAndOdItem(string od, string odItem);
+
+        /// <summary>
+        /// Lấy dropdown od theo điều kiện
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword);
+
     }
 
     public class NKDCNBQuery : INKDCNBQuery
@@ -49,10 +57,11 @@ namespace MES.Application.Queries
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<OutboundDeliveryModel> _odRepo;
 
         public NKDCNBQuery(IRepository<InhouseTransferModel> nkdcnbRepo, IRepository<DetailOutboundDeliveryModel> detailOdRepo,
                            IRepository<PurchaseOrderDetailModel> detailPoRepo, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo,
-                           IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
+                           IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<OutboundDeliveryModel> odRepo)
         {
             _nkdcnbRepo = nkdcnbRepo;
             _detailOdRepo = detailOdRepo;
@@ -61,6 +70,7 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _cataRepo = cataRepo;
             _userRepo = userRepo;
+            _odRepo = odRepo;
         }
 
         public async Task<GetDataByOdAndOdItem> GetDataByOdAndOdItem(string od, string odItem)
@@ -500,5 +510,23 @@ namespace MES.Application.Queries
 
             return data;
         }
+        #region Dropdown Outbound Delivery
+        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword)
+        {
+
+            return await _odRepo.GetQuery().Include(x => x.DetailOutboundDeliveryModel)
+                                .Where(x => (string.IsNullOrEmpty(keyword) ? true : x.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                            (x.DeliveryType == "ZNLC" || x.DeliveryType == "ZNLN") &&
+                                            //Lấy delivery đã hoàn tất giao dịch
+                                            x.GoodsMovementSts == "C" &&
+                                            x.DetailOutboundDeliveryModel.FirstOrDefault(p => p.GoodsMovementSts == "C") != null)
+                                         .OrderBy(x => x.DeliveryCode)
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.DeliveryCode,
+                                             Value = x.DeliveryCode
+                                         }).Take(10).ToListAsync();
+        }
+        #endregion
     }
 }

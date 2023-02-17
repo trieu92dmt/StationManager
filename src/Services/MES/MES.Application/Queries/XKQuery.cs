@@ -191,7 +191,7 @@ namespace MES.Application.Queries
                 //7 Plant
                 Plant = x.PlantCode ?? "",
                 //Reservation
-                Reservation = x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReservationCode : "",
+                Reservation = x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReservationCodeInt.ToString() : "",
                 //Reservation item
                 ReservationItem = x.DetailReservationId.HasValue ? x.DetailReservation.ReservationItem : "",
                 //9 Material

@@ -8,16 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Models
 {
-    [Table("OrderImportModel", Schema = "DataCollection")]
-    public partial class OrderImportModel
+    [Table("OtherExportModel", Schema = "DataCollection")]
+    public partial class OtherExportModel
     {
         [Key]
-        public Guid OrderImportId { get; set; }
+        public Guid OtherExportId { get; set; }
         public Guid? WeightSessionId { get; set; }
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
         [StringLength(50)]
         public string WeightVote { get; set; }
+        public Guid? DetailReservationId { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]
@@ -29,20 +30,14 @@ namespace Infrastructure.Models
         public string SlocName { get; set; }
         [StringLength(50)]
         public string Batch { get; set; }
-        [StringLength(50)]
-        public string MovementType { get; set; }
-        [StringLength(1)]
-        public string SpecialStock { get; set; }
-        [StringLength(50)]
-        public string Customer { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveredQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OpenQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? TotalQty { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? DeliveredQty { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? OpenQty { get; set; }
         [StringLength(50)]
         public string UOM { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -93,11 +88,14 @@ namespace Infrastructure.Models
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
 
+        [ForeignKey("DetailReservationId")]
+        [InverseProperty("OtherExportModel")]
+        public virtual DetailReservationModel DetailReservation { get; set; }
         [ForeignKey("TruckInfoId")]
-        [InverseProperty("OrderImportModel")]
+        [InverseProperty("OtherExportModel")]
         public virtual TruckInfoModel TruckInfo { get; set; }
         [ForeignKey("WeightSessionId")]
-        [InverseProperty("OrderImportModel")]
+        [InverseProperty("OtherExportModel")]
         public virtual WeighSessionModel WeightSession { get; set; }
     }
 }

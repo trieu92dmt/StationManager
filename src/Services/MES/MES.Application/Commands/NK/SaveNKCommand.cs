@@ -64,7 +64,7 @@ namespace MES.Application.Commands.NK
     public class SaveNKCommandHandler : IRequestHandler<SaveNKCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<OrderImportModel> _nkRepo;
+        private readonly IRepository<OtherImportModel> _nkRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<ProductModel> _prodRepo;
@@ -72,7 +72,7 @@ namespace MES.Application.Commands.NK
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
 
-        public SaveNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OrderImportModel> nkRepo, IUtilitiesService utilitiesService, 
+        public SaveNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherImportModel> nkRepo, IUtilitiesService utilitiesService, 
                                     IRepository<ScaleModel> scaleRepo, IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, 
                                     IRepository<WeighSessionModel> weightSsRepo,IRepository<TruckInfoModel> truckRepo)
         {
@@ -133,7 +133,7 @@ namespace MES.Application.Commands.NK
                 }
                 #endregion
 
-                var OrderImportId = Guid.NewGuid();
+                var OtherImportId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -142,7 +142,7 @@ namespace MES.Application.Commands.NK
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, OrderImportId.ToString(), $"{OrderImportId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, OtherImportId.ToString(), $"{OtherImportId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NK");
                 }
@@ -151,10 +151,10 @@ namespace MES.Application.Commands.NK
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
 
-                _nkRepo.Add(new OrderImportModel
+                _nkRepo.Add(new OtherImportModel
                 {
                     //1 NK Id
-                    OrderImportId = OrderImportId,
+                    OtherImportId = OtherImportId,
                     //3 PlantCode
                     PlantCode = item.Plant,
                     //Customer

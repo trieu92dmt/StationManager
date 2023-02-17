@@ -68,14 +68,14 @@ namespace MES.Application.Commands.NK
     public class UpdateNKCommandHandler : IRequestHandler<UpdateNKCommand, ApiResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<OrderImportModel> _nkRepo;
+        private readonly IRepository<OtherImportModel> _nkRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
-        public UpdateNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OrderImportModel> nkRepo, IUtilitiesService utilitiesService,
+        public UpdateNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherImportModel> nkRepo, IUtilitiesService utilitiesService,
                                     IRepository<ScaleModel> scaleRepo, IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo,
                                     IRepository<WeighSessionModel> weightSsRepo, IRepository<TruckInfoModel> truckRepo)
         {
@@ -128,7 +128,7 @@ namespace MES.Application.Commands.NK
                 //Tính tổng confirm quantity ban đầu
                 var sumConfirmQty1 = nks.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
                 //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
-                var sumConfirmQty2 = nks.Where(x => x.WeightVote == item.WeightVote && !item.NKDCNBIds.Contains(x.OrderImportId)).Sum(x => x.ConfirmQty);
+                var sumConfirmQty2 = nks.Where(x => x.WeightVote == item.WeightVote && !item.NKDCNBIds.Contains(x.OtherImportId)).Sum(x => x.ConfirmQty);
                 //So sánh
                 if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
                 {
@@ -139,7 +139,7 @@ namespace MES.Application.Commands.NK
                 //Tính tổng SL kèm bao bì
                 var sumQtyWithPackage1 = nks.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
                 //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
-                var sumQtyWithPackage2 = nks.Where(x => x.WeightVote == item.WeightVote && !item.NKDCNBIds.Contains(x.OrderImportId)).Sum(x => x.QuantityWithPackaging);
+                var sumQtyWithPackage2 = nks.Where(x => x.WeightVote == item.WeightVote && !item.NKDCNBIds.Contains(x.OtherImportId)).Sum(x => x.QuantityWithPackaging);
                 //So sánh
                 if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
                 {
@@ -153,7 +153,7 @@ namespace MES.Application.Commands.NK
             {
 
                 //Check tồn tại nk
-                var nk = await nks.FirstOrDefaultAsync(x => x.OrderImportId == item.NKId);
+                var nk = await nks.FirstOrDefaultAsync(x => x.OtherImportId == item.NKId);
 
                 var imgPath = string.Empty;
                 //Convert Base64 to Iformfile
@@ -173,10 +173,10 @@ namespace MES.Application.Commands.NK
                 //Chưa có thì tạo mới
                 if (nk == null)
                 {
-                    _nkRepo.Add(new OrderImportModel
+                    _nkRepo.Add(new OtherImportModel
                     {
                         //Id
-                        OrderImportId = item.NKId,
+                        OtherImportId = item.NKId,
                         //Receving Plant
                         PlantCode = item.Plant,
                         //Material

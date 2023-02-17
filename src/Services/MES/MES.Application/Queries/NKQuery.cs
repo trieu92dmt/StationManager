@@ -49,14 +49,14 @@ namespace MES.Application.Queries
 
     public class NKQuery : INKQuery
     {
-        private readonly IRepository<OrderImportModel> _nkRepo;
+        private readonly IRepository<OtherImportModel> _nkRepo;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<CustmdSaleModel> _custRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
 
-        public NKQuery(IRepository<OrderImportModel> nkRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prdRepo, IRepository<CustmdSaleModel> custRepo,
+        public NKQuery(IRepository<OtherImportModel> nkRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prdRepo, IRepository<CustmdSaleModel> custRepo,
                        IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
         {
             _nkRepo = nkRepo;
@@ -187,7 +187,7 @@ namespace MES.Application.Queries
             var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNKResponse
             {
                 //ID NK
-                NKID = x.OrderImportId,
+                NKID = x.OtherImportId,
                 //7 Plant
                 Plant = x.PlantCode ?? "",
                 //9 Material

@@ -211,15 +211,15 @@
          "ObjectType": 0
       },
       {
-         "Name": "[DataCollection].[OrderExportModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[DataCollection].[OrderImportModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[DataCollection].[OrderTypeModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[OtherExportModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[OtherImportModel]",
          "ObjectType": 0
       },
       {

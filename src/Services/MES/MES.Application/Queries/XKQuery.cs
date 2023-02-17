@@ -43,7 +43,7 @@ namespace MES.Application.Queries
 
     public class XKQuery : IXKQuery
     {
-        private readonly IRepository<OrderExportModel> _xkRepo;
+        private readonly IRepository<OtherExportModel> _xkRepo;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<CustmdSaleModel> _custRepo;
@@ -52,7 +52,7 @@ namespace MES.Application.Queries
         private readonly IRepository<DetailReservationModel> _dtResRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
 
-        public XKQuery(IRepository<OrderExportModel> nkRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prdRepo, IRepository<CustmdSaleModel> custRepo,
+        public XKQuery(IRepository<OtherExportModel> nkRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prdRepo, IRepository<CustmdSaleModel> custRepo,
                        IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<DetailReservationModel> dtResRepo,
                        IRepository<StorageLocationModel> slocRepo)
         {
@@ -187,7 +187,7 @@ namespace MES.Application.Queries
             var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchXKResponse
             {
                 //ID NK
-                XKId = x.OrderExportId,
+                XKId = x.OtherExportId,
                 //7 Plant
                 Plant = x.PlantCode ?? "",
                 //Reservation

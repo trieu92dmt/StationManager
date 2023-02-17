@@ -172,9 +172,9 @@ namespace Infrastructure.Data
         public virtual DbSet<News_Company_Mapping> News_Company_Mapping { get; set; }
         public virtual DbSet<NotificationAccountMappingModel> NotificationAccountMappingModel { get; set; }
         public virtual DbSet<NotificationModel> NotificationModel { get; set; }
-        public virtual DbSet<OrderExportModel> OrderExportModel { get; set; }
-        public virtual DbSet<OrderImportModel> OrderImportModel { get; set; }
         public virtual DbSet<OrderTypeModel> OrderTypeModel { get; set; }
+        public virtual DbSet<OtherExportModel> OtherExportModel { get; set; }
+        public virtual DbSet<OtherImportModel> OtherImportModel { get; set; }
         public virtual DbSet<OutboundDeliveryModel> OutboundDeliveryModel { get; set; }
         public virtual DbSet<OutputRecordModel> OutputRecordModel { get; set; }
         public virtual DbSet<POTEXT_PR_SO_Model> POTEXT_PR_SO_Model { get; set; }
@@ -1659,46 +1659,52 @@ namespace Infrastructure.Data
                 entity.Property(e => e.NotificationId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<OrderExportModel>(entity =>
-            {
-                entity.Property(e => e.OrderExportId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.DetailReservation)
-                    .WithMany(p => p.OrderExportModel)
-                    .HasForeignKey(d => d.DetailReservationId)
-                    .HasConstraintName("FK_OrderExportModel_DetailReservationModel");
-
-                entity.HasOne(d => d.TruckInfo)
-                    .WithMany(p => p.OrderExportModel)
-                    .HasForeignKey(d => d.TruckInfoId)
-                    .HasConstraintName("FK_OrderExportModel_TruckInfoModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.OrderExportModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_OrderExportModel_WeighSessionModel");
-            });
-
-            modelBuilder.Entity<OrderImportModel>(entity =>
-            {
-                entity.Property(e => e.OrderImportId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.TruckInfo)
-                    .WithMany(p => p.OrderImportModel)
-                    .HasForeignKey(d => d.TruckInfoId)
-                    .HasConstraintName("FK_OrderImportModel_TruckInfoModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.OrderImportModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_OrderImportModel_WeighSessionModel");
-            });
-
             modelBuilder.Entity<OrderTypeModel>(entity =>
             {
                 entity.Property(e => e.OrderTypeId).ValueGeneratedNever();
 
                 entity.Property(e => e.Category).IsFixedLength();
+            });
+
+            modelBuilder.Entity<OtherExportModel>(entity =>
+            {
+                entity.HasKey(e => e.OtherExportId)
+                    .HasName("PK_OrderExportModel");
+
+                entity.Property(e => e.OtherExportId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailReservation)
+                    .WithMany(p => p.OtherExportModel)
+                    .HasForeignKey(d => d.DetailReservationId)
+                    .HasConstraintName("FK_OrderExportModel_DetailReservationModel");
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.OtherExportModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_OrderExportModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.OtherExportModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_OrderExportModel_WeighSessionModel");
+            });
+
+            modelBuilder.Entity<OtherImportModel>(entity =>
+            {
+                entity.HasKey(e => e.OtherImportId)
+                    .HasName("PK_OrderImportModel");
+
+                entity.Property(e => e.OtherImportId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.OtherImportModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_OrderImportModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.OtherImportModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_OrderImportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<OutboundDeliveryModel>(entity =>

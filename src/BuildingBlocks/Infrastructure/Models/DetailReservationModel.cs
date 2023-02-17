@@ -13,7 +13,7 @@ namespace Infrastructure.Models
     {
         public DetailReservationModel()
         {
-            OrderExportModel = new HashSet<OrderExportModel>();
+            OtherExportModel = new HashSet<OtherExportModel>();
             WarehouseTransferModel = new HashSet<WarehouseTransferModel>();
         }
 
@@ -87,7 +87,7 @@ namespace Infrastructure.Models
         [InverseProperty("DetailReservationModel")]
         public virtual ReservationModel Reservation { get; set; }
         [InverseProperty("DetailReservation")]
-        public virtual ICollection<OrderExportModel> OrderExportModel { get; set; }
+        public virtual ICollection<OtherExportModel> OtherExportModel { get; set; }
         [InverseProperty("DetailReservation")]
         public virtual ICollection<WarehouseTransferModel> WarehouseTransferModel { get; set; }
     }

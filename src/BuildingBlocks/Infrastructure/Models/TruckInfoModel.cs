@@ -13,8 +13,8 @@ namespace Infrastructure.Models
     {
         public TruckInfoModel()
         {
-            OrderExportModel = new HashSet<OrderExportModel>();
-            OrderImportModel = new HashSet<OrderImportModel>();
+            OtherExportModel = new HashSet<OtherExportModel>();
+            OtherImportModel = new HashSet<OtherImportModel>();
         }
 
         [Key]
@@ -37,8 +37,8 @@ namespace Infrastructure.Models
         public bool? Actived { get; set; }
 
         [InverseProperty("TruckInfo")]
-        public virtual ICollection<OrderExportModel> OrderExportModel { get; set; }
+        public virtual ICollection<OtherExportModel> OtherExportModel { get; set; }
         [InverseProperty("TruckInfo")]
-        public virtual ICollection<OrderImportModel> OrderImportModel { get; set; }
+        public virtual ICollection<OtherImportModel> OtherImportModel { get; set; }
     }
 }

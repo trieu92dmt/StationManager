@@ -11,6 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="DTOs\MES\ScaleMonitor\" />
 	  <Folder Include="DTOs\MES\XNVLGC\" />
 	</ItemGroup>
 

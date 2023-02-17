@@ -33,7 +33,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<Common3Response>> GetDropdownMaterial(string keyword, string plant);
+        Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant);
 
         /// <summary>
         /// Dropdown Component by wo
@@ -176,7 +176,17 @@ namespace MES.Application.Queries
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownCustomer(string keyword);
     }
-    
+
+    #region Response
+    //Response Dropdown material
+    public class DropdownMaterialResponse
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public string Name { get; set; }
+        public string Unit { get; set; }
+    }
+    #endregion
     public class CommonQuery : ICommonQuery
     {
         private readonly IRepository<PlantModel> _plantRepo;
@@ -226,16 +236,17 @@ namespace MES.Application.Queries
         }
 
         #region Get DropdownMaterial
-        public Task<List<Common3Response>> GetDropdownMaterial(string keyword, string plant)
+        public Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant)
         {
             var response = _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCodeInt.ToString().Contains(keyword) : true) &&
                                                    (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true))
                                     .OrderBy(x => x.ProductCode)
-                                    .Select(x => new Common3Response
-                                     {
+                                    .Select(x => new DropdownMaterialResponse
+                                    {
                                          Key = x.ProductCodeInt.ToString(),
                                          Value = $"{x.ProductCodeInt} | {x.ProductName}",
-                                         Name = x.ProductName
+                                         Name = x.ProductName,
+                                         Unit = x.Unit
                                      }).Take(10).ToListAsync();
 
             return response;

@@ -172,6 +172,7 @@ namespace Infrastructure.Data
         public virtual DbSet<News_Company_Mapping> News_Company_Mapping { get; set; }
         public virtual DbSet<NotificationAccountMappingModel> NotificationAccountMappingModel { get; set; }
         public virtual DbSet<NotificationModel> NotificationModel { get; set; }
+        public virtual DbSet<OrderExportModel> OrderExportModel { get; set; }
         public virtual DbSet<OrderImportModel> OrderImportModel { get; set; }
         public virtual DbSet<OrderTypeModel> OrderTypeModel { get; set; }
         public virtual DbSet<OutboundDeliveryModel> OutboundDeliveryModel { get; set; }
@@ -1656,6 +1657,26 @@ namespace Infrastructure.Data
             modelBuilder.Entity<NotificationModel>(entity =>
             {
                 entity.Property(e => e.NotificationId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<OrderExportModel>(entity =>
+            {
+                entity.Property(e => e.OrderExportId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailReservation)
+                    .WithMany(p => p.OrderExportModel)
+                    .HasForeignKey(d => d.DetailReservationId)
+                    .HasConstraintName("FK_OrderExportModel_DetailReservationModel");
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.OrderExportModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_OrderExportModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.OrderExportModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_OrderExportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<OrderImportModel>(entity =>

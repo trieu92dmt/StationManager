@@ -83,7 +83,8 @@ namespace MES.Application.Queries
 
             //Get material
             var materials = await _prdRepo.GetQuery(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
-                                                   x.ProductCodeInt <= long.Parse(command.MaterialTo)).Select(x => new GetInputDataResponse
+                                                         x.ProductCodeInt <= long.Parse(command.MaterialTo) &&
+                                                         x.PlantCode == command.Plant).Select(x => new GetInputDataResponse
                                                    {
                                                        Plant = plant.PlantCode,
                                                        Customer = customer != null ? customer.CustomerNumber : "",

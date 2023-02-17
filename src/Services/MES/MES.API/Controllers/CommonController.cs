@@ -56,7 +56,7 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetListMaterial(string keyword, string plant)
         {
             var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant);
-            return Ok(new ApiSuccessResponse<List<Common3Response>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách material") });
+            return Ok(new ApiSuccessResponse<List<DropdownMaterialResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách material") });
         }
         #endregion
 

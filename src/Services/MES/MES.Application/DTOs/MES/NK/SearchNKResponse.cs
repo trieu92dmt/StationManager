@@ -38,9 +38,10 @@ namespace MES.Application.DTOs.MES.NK
         //Customer
         public string Customer { get; set; }
         //Cusstomer label
-        public string CustomerLabel { get; set; }
+        public string CustomerFmt { get; set; }
         //Sloc
         public string Sloc { get; set; }
+        public string SlocFmt { get; set; }
         //Batch
         public string Batch { get; set; }
         //SL bao
@@ -52,7 +53,7 @@ namespace MES.Application.DTOs.MES.NK
         //Trọng lượng cân
         public decimal? Weight { get; set; }
         //Confirm Quantity
-        public string ConfirmQuantity { get; set; }
+        public decimal? ConfirmQuantity { get; set; }
         //SL kèm bao bì
         public decimal? QuantityWithPackage { get; set; }
         //Số phương tiện
@@ -66,7 +67,7 @@ namespace MES.Application.DTOs.MES.NK
         //Hình ảnh
         public string Image { get; set; }
         //Status
-        public string Stautss { get; set; }
+        public string Status { get; set; }
         //Số phiếu cân
         public string WeightVote { get; set; }
         //Thời gian bắt đầu

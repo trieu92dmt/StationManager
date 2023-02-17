@@ -60,8 +60,7 @@ namespace Infrastructure.Models
         public int? QuantityWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? BagQuantity { get; set; }
+        public int? BagQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? SingleWeight { get; set; }
         [StringLength(50)]

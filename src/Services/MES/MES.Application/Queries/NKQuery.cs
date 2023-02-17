@@ -1,6 +1,7 @@
 ﻿using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.NK;
+using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NK;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update.Internal;
@@ -29,6 +30,21 @@ namespace MES.Application.Queries
         /// <param name="command"></param>
         /// <returns></returns>
         Task<List<SearchNKResponse>> SearchNK(SearchNKCommand command);
+
+        /// <summary>
+        /// Drop down số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropDownWeightVote(string keyword);
+
+        /// <summary>
+        /// Lấy unit theo material và plant
+        /// </summary>
+        /// <param name="material"></param>
+        /// <param name="plant"></param>
+        /// <returns></returns>
+        Task<string> GetUnitByMaterialAndPlant(string material, string plant);
     }
 
     public class NKQuery : INKQuery
@@ -37,13 +53,18 @@ namespace MES.Application.Queries
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<CustmdSaleModel> _custRepo;
+        private readonly IRepository<CatalogModel> _cataRepo;
+        private readonly IRepository<AccountModel> _userRepo;
 
-        public NKQuery(IRepository<OrderImportModel> nkRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prdRepo, IRepository<CustmdSaleModel> custRepo)
+        public NKQuery(IRepository<OrderImportModel> nkRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prdRepo, IRepository<CustmdSaleModel> custRepo,
+                       IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
         {
             _nkRepo = nkRepo;
             _plantRepo = plantRepo;
             _prdRepo = prdRepo;
             _custRepo = custRepo;
+            _cataRepo = cataRepo;
+            _userRepo = userRepo;
         }
 
         public async Task<List<GetInputDataResponse>> GetInputData(SearchNKCommand command)
@@ -82,7 +103,7 @@ namespace MES.Application.Queries
             return materials;
         }
 
-        public Task<List<SearchNKResponse>> SearchNK(SearchNKCommand command)
+        public async Task<List<SearchNKResponse>> SearchNK(SearchNKCommand command)
         {
             #region Format Day
             //Ngày thực hiện cân
@@ -148,7 +169,104 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
 
-            throw new NotImplementedException();
+            //Query Material
+            var materials = _prdRepo.GetQuery().AsNoTracking();
+
+            //Query Customer
+            var customers = _custRepo.GetQuery().AsNoTracking();
+
+            //User Query
+            var user = _userRepo.GetQuery().AsNoTracking();
+
+            //Catalog status
+            var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
+
+
+            //Get data
+            var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNKResponse
+            {
+                //ID NK
+                NKID = x.OrderImportId,
+                //7 Plant
+                Plant = x.PlantCode ?? "",
+                //9 Material
+                Material = x.MaterialCodeInt.ToString() ?? "",
+                //10 Material Desc
+                MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? materials.FirstOrDefault(m => m.ProductCode == x.MaterialCode).ProductName : "",
+                //Customer
+                Customer = x.Customer,
+                CustomerFmt = !string.IsNullOrEmpty(x.Customer) ? $"{x.Customer} | {customers.FirstOrDefault(x => x.CustomerNumber == x.CustomerNumber).CustomerName}" : "",
+                //13 Stor.Loc
+                Sloc = x.SlocCode ?? "",
+                SlocFmt = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
+                //14 Batch
+                Batch = x.Batch ?? "",
+                //15 SL bao
+                BagQuantity = x.BagQuantity ?? 0,
+                //16 Đơn trọng
+                SingleWeight = x.SingleWeight ?? 0,
+                //17 Đầu cân
+                WeightHeadCode = x.WeightHeadCode ?? "",
+                //18 Trọng lượng cân
+                Weight = x.Weight ?? 0,
+                //19 Confirm Quantity
+                ConfirmQuantity = x.ConfirmQty ?? 0,
+                //20 SL kèm bao bì
+                QuantityWithPackage = x.QuantityWithPackaging ?? 0,
+                //21 Số lần cân
+                QuantityWeight = x.QuantityWeight ?? 0,
+                //Số cân đầu vào
+                InputWeight = x.InputWeight ?? 0,
+                //Số cân đầu ra
+                OutputWeight = x.OutputWeight ?? 0, 
+                //24 UOM
+                Unit = x.UOM ?? "",
+                //25 Ghi chú
+                Description = x.Description ?? "",
+                //26 Hình ảnh
+                Image = string.IsNullOrEmpty(x.Image) ? "" : $"https://itp-mes.isdcorp.vn/{x.Image}",
+                //27 Status
+                Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
+                //28 Số phiếu cân
+                WeightVote = x.WeightVote ?? "",
+                //29 Thời gian bắt đầu
+                StartTime = x.StartTime ?? null,
+                //30 Thời gian kết thúc
+                EndTime = x.EndTime ?? null,
+                //31 Create by
+                CreateById = x.CreateBy ?? null,
+                CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",
+                //32 Crete On
+                CreateOn = x.CreateTime ?? null,
+                //33 Change by
+                ChangeById = x.LastEditBy ?? null,
+                ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
+                //34 Material Doc
+                MaterialDoc = x.MaterialDocument ?? "",
+                //35 Reverse Doc
+                ReverseDoc = x.ReverseDocument ?? "",
+                isDelete = x.Status == "DEL" ? true : false,
+                isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
+            }).ToListAsync();
+
+            return data;
+        }
+
+        public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
+        {
+            return await _nkRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.WeightVote,
+                                             Value = x.WeightVote
+                                         }).Distinct().Take(20).ToListAsync();
+        }
+
+        public async Task<string> GetUnitByMaterialAndPlant(string material, string plant)
+        {
+            var prd = await _prdRepo.FindOneAsync(x => x.ProductCodeInt == long.Parse(material) && x.PlantCode == plant);
+
+            return prd.Unit;
         }
     }
 }

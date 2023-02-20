@@ -127,6 +127,7 @@ namespace IntegrationNS.Application.Commands.MaterialDocument
                             MovementType = item.MovementType,
                             ItemAutoCreated = item.ItemAutoCreated,
                             MaterialCode = item.MaterialCode,
+                            MaterialCodeInt = long.Parse(item.MaterialCode),
                             PlantCode = item.PlantCode,
                             StorageLocation = item.StorageLocation,
                             Batch = item.Batch,
@@ -189,6 +190,7 @@ namespace IntegrationNS.Application.Commands.MaterialDocument
                         material.MovementType = item.MovementType;
                         material.ItemAutoCreated = item.ItemAutoCreated;
                         material.MaterialCode = item.MaterialCode;
+                        material.MaterialCodeInt = long.Parse(item.MaterialCode);
                         material.PlantCode = item.PlantCode;
                         material.StorageLocation = item.StorageLocation;
                         material.Batch = item.Batch;

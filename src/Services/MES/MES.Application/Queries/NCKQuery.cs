@@ -21,7 +21,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name = "command" ></param>
         /// <returns ></returns>
-        //Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command);
+        Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command);
 
         /// <summary>
         /// Lấy data xck
@@ -45,14 +45,18 @@ namespace MES.Application.Queries
         private readonly IRepository<MaterialDocumentModel> _matDocRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<PlantModel> _plantRepo;
+        private readonly IRepository<ReservationModel> _resRepo;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
 
         public NCKQuery(IRepository<WarehouseImportTransferModel> nckRepo, IRepository<MaterialDocumentModel> matDocRepo, IRepository<ProductModel> prodRepo,
-                        IRepository<PlantModel> plantRepo)
+                        IRepository<PlantModel> plantRepo, IRepository<ReservationModel> resRepo, IRepository<StorageLocationModel> slocRepo)
         {
             _nckRepo = nckRepo;
             _matDocRepo = matDocRepo;
             _prodRepo = prodRepo;
             _plantRepo = plantRepo;
+            _resRepo = resRepo;
+            _slocRepo = slocRepo;
         }
 
         public Task<List<SearchNCKResponse>> GetDataXCK(SearchNCKCommand command)
@@ -70,153 +74,159 @@ namespace MES.Application.Queries
                                         }).Distinct().Take(20).ToListAsync();
         }
 
-        //public async Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command)
-        //{
-        //    #region Format Day
+        public async Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command)
+        {
+            #region Format Day
 
-        //    if (command.DocumentDateFrom.HasValue)
-        //    {
-        //        command.DocumentDateFrom = command.DocumentDateFrom.Value.Date;
-        //    }
-        //    if (command.DocumentDateTo.HasValue)
-        //    {
-        //        command.DocumentDateTo = command.DocumentDateTo.Value.Date.AddDays(1).AddSeconds(-1);
-        //    }
-        //    #endregion
+            if (command.DocumentDateFrom.HasValue)
+            {
+                command.DocumentDateFrom = command.DocumentDateFrom.Value.Date;
+            }
+            if (command.DocumentDateTo.HasValue)
+            {
+                command.DocumentDateTo = command.DocumentDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+            }
+            #endregion
 
-        //    //Tạo query
-        //    var query = _matDocRepo.GetQuery()
-        //                                //Lấy các mat doc có movement type là 313
-        //                                .Where(x => (x.MovementType == "313") &&
-        //                                            //Lấy các mat doc đã post xuất kho
-        //                                            (x.ItemAutoCreated == "X") &&
-        //                                            //Loại trừ các mat doc có movement type là 315
-        //                                            (x.MovementType != "315"))
-        //                                .AsNoTracking();
+            //Tạo query
+            var query = _matDocRepo.GetQuery()
+                                        //Lấy các mat doc có movement type là 313
+                                        .Where(x => (x.MovementType == "313") &&
+                                                    //Lấy các mat doc đã post xuất kho
+                                                    (x.ItemAutoCreated == "X") &&
+                                                    //Loại trừ các mat doc có movement type là 315
+                                                    (x.MovementType != "315"))
+                                        .AsNoTracking();
 
-        //    //Products
-        //    var prods = _prodRepo.GetQuery().AsNoTracking();
+            //Products
+            var prods = _prodRepo.GetQuery().AsNoTracking();
 
-        //    //Sloc
-        //    var slocs = _slocRepo.GetQuery().AsNoTracking();
+            //Sloc
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
 
-        //    //Plant
-        //    var plants = _plantRepo.GetQuery().AsNoTracking();
+            //Plant
+            var plants = _plantRepo.GetQuery().AsNoTracking();
 
-        //    //Lọc điều kiện
-        //    //Theo plant
-        //    if (!string.IsNullOrEmpty(command.Plant))
-        //    {
-        //        query = query.Where(x => x.PlantCode == command.Plant);
-        //    }
+            //Reservation
+            var reservations = _resRepo.GetQuery().AsNoTracking();
 
-        //    //Theo reservation
-        //    if (!string.IsNullOrEmpty(command.ReservationFrom))
-        //    {
-        //        //Không có reservation to thì search 1
-        //        if (string.IsNullOrEmpty(command.ReservationTo))
-        //            command.ReservationTo = command.ReservationFrom;
+            //Lọc điều kiện
+            //Theo plant
+            if (!string.IsNullOrEmpty(command.Plant))
+            {
+                query = query.Where(x => x.PlantCode == command.Plant);
+            }
 
-        //        query = query.Where(x => x.Reservation.CompareTo(command.ReservationFrom) >= 0 &&
-        //                                 x.Reservation.CompareTo(command.ReservationTo) <= 0);
-        //    }
+            //Theo reservation
+            if (!string.IsNullOrEmpty(command.ReservationFrom))
+            {
+                //Không có reservation to thì search 1
+                if (string.IsNullOrEmpty(command.ReservationTo))
+                    command.ReservationTo = command.ReservationFrom;
 
-        //    //Theo sloc
-        //    if (!string.IsNullOrEmpty(command.SlocFrom))
-        //    {
-        //        //Không có sloc to thì search 1
-        //        if (string.IsNullOrEmpty(command.SlocFrom))
-        //            command.SlocTo = command.SlocFrom;
+                query = query.Where(x => x.Reservation.CompareTo(command.ReservationFrom) >= 0 &&
+                                         x.Reservation.CompareTo(command.ReservationTo) <= 0);
+            }
 
-        //        query = query.Where(x => x.StorageLocation.CompareTo(command.SlocFrom) >= 0 &&
-        //                                 x.StorageLocation.CompareTo(command.SlocTo) <= 0);
-        //    }
+            //Theo sloc
+            if (!string.IsNullOrEmpty(command.SlocFrom))
+            {
+                //Không có sloc to thì search 1
+                if (string.IsNullOrEmpty(command.SlocFrom))
+                    command.SlocTo = command.SlocFrom;
 
-        //    //Theo Material Doc
-        //    if (!string.IsNullOrEmpty(command.MaterialDocFrom))
-        //    {
-        //        if (string.IsNullOrEmpty(command.MaterialDocTo))
-        //            command.MaterialDocTo = command.MaterialDocFrom;
+                query = query.Where(x => x.StorageLocation.CompareTo(command.SlocFrom) >= 0 &&
+                                         x.StorageLocation.CompareTo(command.SlocTo) <= 0);
+            }
 
-        //        query = query.Where(x => x.MaterialDocCode.CompareTo(command.MaterialDocFrom) >= 0 &&
-        //                                 x.MaterialDocCode.CompareTo(command.MaterialDocTo) <= 0);
-        //    }
+            //Theo Material Doc
+            if (!string.IsNullOrEmpty(command.MaterialDocFrom))
+            {
+                if (string.IsNullOrEmpty(command.MaterialDocTo))
+                    command.MaterialDocTo = command.MaterialDocFrom;
 
-        //    //Theo Material
-        //    if (!string.IsNullOrEmpty(command.MaterialFrom))
-        //    {
-        //        if (string.IsNullOrEmpty(command.MaterialTo))
-        //            command.MaterialTo = command.MaterialFrom;
+                query = query.Where(x => x.MaterialDocCode.CompareTo(command.MaterialDocFrom) >= 0 &&
+                                         x.MaterialDocCode.CompareTo(command.MaterialDocTo) <= 0);
+            }
 
-        //        query = query.Where(x => x.MaterialCodeInt >= long.Parse(command.MaterialFrom) &&
-        //                                 x.MaterialCodeInt <= long.Parse(command.MaterialTo));
-        //    }
+            //Theo Material
+            if (!string.IsNullOrEmpty(command.MaterialFrom))
+            {
+                if (string.IsNullOrEmpty(command.MaterialTo))
+                    command.MaterialTo = command.MaterialFrom;
 
-        //    //Theo document date
-        //    //if (command.DocumentDateFrom.HasValue)
-        //    //{
-        //    //    if (!command.DocumentDateTo.HasValue)
-        //    //    {
-        //    //        command.DocumentDateTo = command.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
-        //    //    }
-        //    //    query = query.Where(x => x.Doc >= command.DocumentDateFrom &&
-        //    //                             x.RequirementsDate <= command.DocumentDateTo);
-        //    //}
+                query = query.Where(x => x.MaterialCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.MaterialCodeInt <= long.Parse(command.MaterialTo));
+            }
+
+            //Theo document date
+            if (command.DocumentDateFrom.HasValue)
+            {
+                if (!command.DocumentDateTo.HasValue)
+                {
+                    command.DocumentDateTo = command.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
+                }
+                query = query.Where(x => x.PostingDate >= command.DocumentDateFrom &&
+                                         x.PostingDate <= command.DocumentDateTo);
+            }
 
 
-        //    //Data 
-        //    var data = await query.Select(x => new GetInputDataResponse
-        //    {
-        //        //1. Plant
-        //        Plant = x.PlantCode,
-        //        PlantName = plants.FirstOrDefault(p => p.PlantCode == x.PlantCode).PlantName,
-        //        //2. Reservation
-        //        //Reservation = x.Reservation.ReservationCodeInt.ToString(),
-        //        ////3. Reservation Item
-        //        //ReservationItem = x.ReservationItem,
-        //        ////4. Material
-        //        //Material = x.MaterialCodeInt.HasValue ? x.MaterialCodeInt.ToString() : "",
-        //        ////5. Material Desc
-        //        //MaterialDesc = !string.IsNullOrEmpty(x.Material) ? prods.FirstOrDefault(p => p.ProductCode == x.Material).ProductName : "",
-        //        ////6. Movement Type
-        //        //MovementType = x.MovementType ?? "",
-        //        ////7. Stor.Loc
-        //        //Sloc = x.Reservation.Sloc ?? "",
-        //        //SlocName = string.IsNullOrEmpty(x.Reservation.Sloc) ? "" : $"{x.Reservation.Sloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.Reservation.Sloc).StorageLocationName}",
-        //        ////8. Receving Sloc
-        //        //ReceivingSloc = x.Reservation.ReceivingSloc ?? "",
-        //        ////9. Batch
-        //        //Batch = x.Batch,
-        //        ////10. Total Quantity
-        //        //TotalQty = x.RequirementQty ?? 0,
-        //        ////11. Delivered Quantity
-        //        //DeliveredQty = x.QtyWithdrawn ?? 0,
-        //        ////13. UoM
-        //        //Unit = x.BaseUnit
+            //Data 
+            var data = await query.Select(x => new GetInputDataResponse
+            {
+                //1. Plant
+                Plant = x.PlantCode,
+                PlantName = plants.FirstOrDefault(p => p.PlantCode == x.PlantCode).PlantName,
+                //Material doc
+                MaterialDoc = x.MaterialDocCode,
+                //Material doc item
+                MaterialDocItem = x.MaterialDocItem ?? "",
+                //2. Reservation
+                Reservation = string.IsNullOrEmpty(x.Reservation) ? long.Parse(x.Reservation).ToString() : "",
+                //4. Material
+                Material = x.MaterialCodeInt.HasValue ? x.MaterialCodeInt.ToString() : "",
+                //5. Material Desc
+                MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName : "",
+                //7. Stor.Loc
+                Sloc = x.StorageLocation ?? "",
+                SlocName = string.IsNullOrEmpty(x.StorageLocation) ? "" : slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName,
+                SlocFmt = string.IsNullOrEmpty(x.StorageLocation) ? "" : $"{x.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName}",
+                //9. Batch
+                Batch = x.Batch,
+                //10. Total Quantity
+                TotalQty = x.Quantity ?? 0,
+                //11. Delivered Quantity
+                DeliveredQty = 0,
+                //12. Open Quantity
+                OpenQty = 0,
+                //13. UoM
+                Unit = x.BaseUOM,
+                //Document Date
+                DocumentDate = x.PostingDate
 
-        //    }).ToListAsync();
+            }).ToListAsync();
 
-        //    var index = 1;
-        //    //Tính open quantity
-        //    foreach (var item in data)
-        //    {
-        //        item.OpenQty = item.TotalQty - item.DeliveredQty;
-        //        item.IndexKey = index;
-        //        index++;
-        //    }
+            var index = 1;
+            //Tính open quantity
+            foreach (var item in data)
+            {
+                item.OpenQty = item.TotalQty - item.DeliveredQty;
+                item.IndexKey = index;
+                index++;
+            }
 
-        //    if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
-        //    {
-        //        data.Add(new GetInputDataResponse
-        //        {
-        //            Plant = command.Plant,
-        //            Material = long.Parse(command.MaterialFrom).ToString(),
-        //            MaterialDesc = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
-        //            Unit = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
-        //        });
-        //    }
+            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
+            {
+                data.Add(new GetInputDataResponse
+                {
+                    Plant = command.Plant,
+                    Material = long.Parse(command.MaterialFrom).ToString(),
+                    MaterialDesc = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
+                    Unit = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
+                });
+            }
 
-        //    return data;
-        //}
+            return data;
+        }
     }
 }

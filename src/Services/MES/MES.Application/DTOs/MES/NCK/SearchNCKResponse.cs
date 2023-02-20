@@ -26,7 +26,6 @@ namespace MES.Application.DTOs.MES.NCK
         //Stor.Sloc
         public string Sloc { get; set; }
         public string SlocName { get; set; }
-        public string SlocFmt { get; set; }
         //Batch
         public string Batch { get; set; }
         //Sl bao
@@ -50,7 +49,7 @@ namespace MES.Application.DTOs.MES.NCK
         //Delivered Quantity
         public decimal? DeliveredQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveredQty;
         //UoM
         public string Unit { get; set; }
         //Số xe tải

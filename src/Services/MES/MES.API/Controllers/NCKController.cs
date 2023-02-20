@@ -53,20 +53,6 @@ namespace MES.API.Controllers
             });
         }
 
-        #region Get số phiếu cân
-        /// <summary>
-        /// Dropdown số phiếu cân
-        /// </summary>
-        /// <param name="keyword"></param>
-        /// <returns></returns>
-        [HttpGet("list-weight-vote")]
-        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
-        {
-            var dropdownList = await _query.GetDropDownWeightVote(keyword);
-            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
-        }
-        #endregion
-
         /// <summary>
         /// Save dữ liệu nck
         /// </summary>
@@ -83,5 +69,35 @@ namespace MES.API.Controllers
                 Message = string.Format(CommonResource.Msg_Success, "Lưu dữ liệu nhập chuyển kho")
             });
         }
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu nhập chuyển kho)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-nck")]
+        public async Task<IActionResult> GetNCKAsync([FromBody] SearchNCKCommand command)
+        {
+            var response = await _query.GetDataNCK(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchNCKResponse>>
+            {
+                Data = response
+            });
+        }
+
+        #region Get số phiếu cân
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-weight-vote")]
+        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
+        {
+            var dropdownList = await _query.GetDropDownWeightVote(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

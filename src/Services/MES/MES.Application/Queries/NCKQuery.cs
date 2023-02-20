@@ -1,6 +1,9 @@
-﻿using MES.Application.Commands.NCK;
+﻿using Core.SeedWork.Repositories;
+using Infrastructure.Models;
+using MES.Application.Commands.NCK;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NCK;
+using Microsoft.EntityFrameworkCore;
 
 namespace MES.Application.Queries
 {
@@ -18,7 +21,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name = "command" ></param>
         /// <returns ></returns>
-        Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command);
+        //Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command);
 
         /// <summary>
         /// Lấy data xck
@@ -38,8 +41,18 @@ namespace MES.Application.Queries
 
     public class NCKQuery : INCKQuery
     {
-        public NCKQuery()
+        private readonly IRepository<WarehouseImportTransferModel> _nckRepo;
+        private readonly IRepository<MaterialDocumentModel> _matDocRepo;
+        private readonly IRepository<ProductModel> _prodRepo;
+        private readonly IRepository<PlantModel> _plantRepo;
+
+        public NCKQuery(IRepository<WarehouseImportTransferModel> nckRepo, IRepository<MaterialDocumentModel> matDocRepo, IRepository<ProductModel> prodRepo,
+                        IRepository<PlantModel> plantRepo)
         {
+            _nckRepo = nckRepo;
+            _matDocRepo = matDocRepo;
+            _prodRepo = prodRepo;
+            _plantRepo = plantRepo;
         }
 
         public Task<List<SearchNCKResponse>> GetDataXCK(SearchNCKCommand command)
@@ -47,14 +60,163 @@ namespace MES.Application.Queries
             throw new NotImplementedException();
         }
 
-        public Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
+        public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
         {
-            throw new NotImplementedException();
+            return await _nckRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                        .Select(x => new CommonResponse
+                                        {
+                                            Key = x.WeightVote,
+                                            Value = x.WeightVote
+                                        }).Distinct().Take(20).ToListAsync();
         }
 
-        public Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command)
+        //{
+        //    #region Format Day
+
+        //    if (command.DocumentDateFrom.HasValue)
+        //    {
+        //        command.DocumentDateFrom = command.DocumentDateFrom.Value.Date;
+        //    }
+        //    if (command.DocumentDateTo.HasValue)
+        //    {
+        //        command.DocumentDateTo = command.DocumentDateTo.Value.Date.AddDays(1).AddSeconds(-1);
+        //    }
+        //    #endregion
+
+        //    //Tạo query
+        //    var query = _matDocRepo.GetQuery()
+        //                                //Lấy các mat doc có movement type là 313
+        //                                .Where(x => (x.MovementType == "313") &&
+        //                                            //Lấy các mat doc đã post xuất kho
+        //                                            (x.ItemAutoCreated == "X") &&
+        //                                            //Loại trừ các mat doc có movement type là 315
+        //                                            (x.MovementType != "315"))
+        //                                .AsNoTracking();
+
+        //    //Products
+        //    var prods = _prodRepo.GetQuery().AsNoTracking();
+
+        //    //Sloc
+        //    var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+        //    //Plant
+        //    var plants = _plantRepo.GetQuery().AsNoTracking();
+
+        //    //Lọc điều kiện
+        //    //Theo plant
+        //    if (!string.IsNullOrEmpty(command.Plant))
+        //    {
+        //        query = query.Where(x => x.PlantCode == command.Plant);
+        //    }
+
+        //    //Theo reservation
+        //    if (!string.IsNullOrEmpty(command.ReservationFrom))
+        //    {
+        //        //Không có reservation to thì search 1
+        //        if (string.IsNullOrEmpty(command.ReservationTo))
+        //            command.ReservationTo = command.ReservationFrom;
+
+        //        query = query.Where(x => x.Reservation.CompareTo(command.ReservationFrom) >= 0 &&
+        //                                 x.Reservation.CompareTo(command.ReservationTo) <= 0);
+        //    }
+
+        //    //Theo sloc
+        //    if (!string.IsNullOrEmpty(command.SlocFrom))
+        //    {
+        //        //Không có sloc to thì search 1
+        //        if (string.IsNullOrEmpty(command.SlocFrom))
+        //            command.SlocTo = command.SlocFrom;
+
+        //        query = query.Where(x => x.StorageLocation.CompareTo(command.SlocFrom) >= 0 &&
+        //                                 x.StorageLocation.CompareTo(command.SlocTo) <= 0);
+        //    }
+
+        //    //Theo Material Doc
+        //    if (!string.IsNullOrEmpty(command.MaterialDocFrom))
+        //    {
+        //        if (string.IsNullOrEmpty(command.MaterialDocTo))
+        //            command.MaterialDocTo = command.MaterialDocFrom;
+
+        //        query = query.Where(x => x.MaterialDocCode.CompareTo(command.MaterialDocFrom) >= 0 &&
+        //                                 x.MaterialDocCode.CompareTo(command.MaterialDocTo) <= 0);
+        //    }
+
+        //    //Theo Material
+        //    if (!string.IsNullOrEmpty(command.MaterialFrom))
+        //    {
+        //        if (string.IsNullOrEmpty(command.MaterialTo))
+        //            command.MaterialTo = command.MaterialFrom;
+
+        //        query = query.Where(x => x.MaterialCodeInt >= long.Parse(command.MaterialFrom) &&
+        //                                 x.MaterialCodeInt <= long.Parse(command.MaterialTo));
+        //    }
+
+        //    //Theo document date
+        //    //if (command.DocumentDateFrom.HasValue)
+        //    //{
+        //    //    if (!command.DocumentDateTo.HasValue)
+        //    //    {
+        //    //        command.DocumentDateTo = command.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
+        //    //    }
+        //    //    query = query.Where(x => x.Doc >= command.DocumentDateFrom &&
+        //    //                             x.RequirementsDate <= command.DocumentDateTo);
+        //    //}
+
+
+        //    //Data 
+        //    var data = await query.Select(x => new GetInputDataResponse
+        //    {
+        //        //1. Plant
+        //        Plant = x.PlantCode,
+        //        PlantName = plants.FirstOrDefault(p => p.PlantCode == x.PlantCode).PlantName,
+        //        //2. Reservation
+        //        //Reservation = x.Reservation.ReservationCodeInt.ToString(),
+        //        ////3. Reservation Item
+        //        //ReservationItem = x.ReservationItem,
+        //        ////4. Material
+        //        //Material = x.MaterialCodeInt.HasValue ? x.MaterialCodeInt.ToString() : "",
+        //        ////5. Material Desc
+        //        //MaterialDesc = !string.IsNullOrEmpty(x.Material) ? prods.FirstOrDefault(p => p.ProductCode == x.Material).ProductName : "",
+        //        ////6. Movement Type
+        //        //MovementType = x.MovementType ?? "",
+        //        ////7. Stor.Loc
+        //        //Sloc = x.Reservation.Sloc ?? "",
+        //        //SlocName = string.IsNullOrEmpty(x.Reservation.Sloc) ? "" : $"{x.Reservation.Sloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.Reservation.Sloc).StorageLocationName}",
+        //        ////8. Receving Sloc
+        //        //ReceivingSloc = x.Reservation.ReceivingSloc ?? "",
+        //        ////9. Batch
+        //        //Batch = x.Batch,
+        //        ////10. Total Quantity
+        //        //TotalQty = x.RequirementQty ?? 0,
+        //        ////11. Delivered Quantity
+        //        //DeliveredQty = x.QtyWithdrawn ?? 0,
+        //        ////13. UoM
+        //        //Unit = x.BaseUnit
+
+        //    }).ToListAsync();
+
+        //    var index = 1;
+        //    //Tính open quantity
+        //    foreach (var item in data)
+        //    {
+        //        item.OpenQty = item.TotalQty - item.DeliveredQty;
+        //        item.IndexKey = index;
+        //        index++;
+        //    }
+
+        //    if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
+        //    {
+        //        data.Add(new GetInputDataResponse
+        //        {
+        //            Plant = command.Plant,
+        //            Material = long.Parse(command.MaterialFrom).ToString(),
+        //            MaterialDesc = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
+        //            Unit = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
+        //        });
+        //    }
+
+        //    return data;
+        //}
     }
 }

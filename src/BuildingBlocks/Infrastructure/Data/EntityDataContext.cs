@@ -383,6 +383,7 @@ namespace Infrastructure.Data
         public virtual DbSet<View_Task_GTB> View_Task_GTB { get; set; }
         public virtual DbSet<WardModel> WardModel { get; set; }
         public virtual DbSet<WarehouseExportTransferModel> WarehouseExportTransferModel { get; set; }
+        public virtual DbSet<WarehouseImportTransferModel> WarehouseImportTransferModel { get; set; }
         public virtual DbSet<WarehouseModel> WarehouseModel { get; set; }
         public virtual DbSet<WarrantyModel> WarrantyModel { get; set; }
         public virtual DbSet<WeighModel> WeighModel { get; set; }
@@ -3482,6 +3483,26 @@ namespace Infrastructure.Data
                     .WithMany(p => p.WarehouseExportTransferModel)
                     .HasForeignKey(d => d.DetailReservationId)
                     .HasConstraintName("FK_WarehouseTransferModel_DetailReservationModel");
+            });
+
+            modelBuilder.Entity<WarehouseImportTransferModel>(entity =>
+            {
+                entity.Property(e => e.WarehouseImportTransferId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.MaterialDoc)
+                    .WithMany(p => p.WarehouseImportTransferModel)
+                    .HasForeignKey(d => d.MaterialDocId)
+                    .HasConstraintName("FK_WarehouseImportTransferModel_MaterialDocumentModel");
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.WarehouseImportTransferModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_WarehouseImportTransferModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightNavigation)
+                    .WithMany(p => p.WarehouseImportTransferModel)
+                    .HasForeignKey(d => d.WeightId)
+                    .HasConstraintName("FK_WarehouseImportTransferModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<WarehouseModel>(entity =>

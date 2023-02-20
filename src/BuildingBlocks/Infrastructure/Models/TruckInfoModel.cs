@@ -15,6 +15,7 @@ namespace Infrastructure.Models
         {
             OtherExportModel = new HashSet<OtherExportModel>();
             OtherImportModel = new HashSet<OtherImportModel>();
+            WarehouseImportTransferModel = new HashSet<WarehouseImportTransferModel>();
         }
 
         [Key]
@@ -40,5 +41,7 @@ namespace Infrastructure.Models
         public virtual ICollection<OtherExportModel> OtherExportModel { get; set; }
         [InverseProperty("TruckInfo")]
         public virtual ICollection<OtherImportModel> OtherImportModel { get; set; }
+        [InverseProperty("TruckInfo")]
+        public virtual ICollection<WarehouseImportTransferModel> WarehouseImportTransferModel { get; set; }
     }
 }

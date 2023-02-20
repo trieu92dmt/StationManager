@@ -307,6 +307,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[WarehouseImportTransferModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[WeighSessionDetailModel]",
          "ObjectType": 0
       },

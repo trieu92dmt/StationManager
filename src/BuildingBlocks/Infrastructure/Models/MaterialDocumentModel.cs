@@ -11,6 +11,11 @@ namespace Infrastructure.Models
     [Table("MaterialDocumentModel", Schema = "DataCollection")]
     public partial class MaterialDocumentModel
     {
+        public MaterialDocumentModel()
+        {
+            WarehouseImportTransferModel = new HashSet<WarehouseImportTransferModel>();
+        }
+
         [Key]
         public Guid MaterialDocId { get; set; }
         [StringLength(50)]
@@ -31,6 +36,7 @@ namespace Infrastructure.Models
         public string ItemAutoCreated { get; set; }
         [StringLength(50)]
         public string MaterialCode { get; set; }
+        public long? MaterialCodeInt { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]
@@ -132,5 +138,8 @@ namespace Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
+
+        [InverseProperty("MaterialDoc")]
+        public virtual ICollection<WarehouseImportTransferModel> WarehouseImportTransferModel { get; set; }
     }
 }

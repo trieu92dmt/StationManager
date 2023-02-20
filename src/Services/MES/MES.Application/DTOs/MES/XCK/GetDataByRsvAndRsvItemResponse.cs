@@ -9,14 +9,20 @@ namespace MES.Application.DTOs.MES.XCK
     public class GetDataByRsvAndRsvItemResponse
     {
         //Material
+        public string Material { get; set; }
         //Material name
+        public string MaterialDesc { get; set; }
         //Movement type
-        //Receiving Sloc
+        public string MovementType { get; set; }
         //Batch
-        //Số phương tiện
+        public string Batch { get; set; }
         //Total quantity
+        public decimal? TotalQty { get; set; }
         //Delivered Quantity
+        public decimal? DeliveredQty { get; set; }
         //Open quantity
+        public decimal? OpenQty => TotalQty - DeliveredQty;
         //UOM
+        public string Unit { get; set; }
     }
 }

@@ -4,7 +4,6 @@ using MediatR;
 using MES.Application.Commands.XK;
 using MES.Application.DTOs.MES.XK;
 using MES.Application.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MES.API.Controllers
@@ -99,7 +98,7 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetDataByResAndResItem(reservation, reservationItem);
 
-            return Ok(new ApiSuccessResponse<GetDataByRevAndRevItemResponse>
+            return Ok(new ApiSuccessResponse<GetDataByRsvAndRsvItemResponse>
             {
                 Data = response,
                 Message = string.Format(CommonResource.Msg_Success, "Get Data")

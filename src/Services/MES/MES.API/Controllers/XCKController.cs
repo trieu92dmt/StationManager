@@ -104,22 +104,20 @@ namespace MES.API.Controllers
         }
 
         /// <summary>
-        /// Lấy dữ liệu theo wo và nvl
+        /// Get data by reservation and reservation item
         /// </summary>
-        /// <param name="workorder"></param>
         /// <returns></returns>
-        //[HttpGet("get-data-by-wo-and-component")]
-        //public async Task<IActionResult> GetDataByWoAndComponent(string workorder, string component)
-        //{
-        //    var response = await _query.GetDataByWoAndComponent(workorder, component);
+        [HttpGet("get-data-by-res-and-item")]
+        public async Task<IActionResult> SaveXCKAsync(string reservation, string reservationItem)
+        {
+            var response = await _query.GetDataByRsvAndRsvItem(reservation, reservationItem);
 
-        //    return Ok(new ApiSuccessResponse<GetDataByWoAndComponentResponse>
-        //    {
-        //        Data = response,
-        //        IsSuccess = true,
-        //        Message = string.Format(CommonResource.Msg_Success, "Lấy data")
-        //    });
-        //}
+            return Ok(new ApiSuccessResponse<GetDataByRsvAndRsvItemResponse>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Get Data")
+            });
+        }
 
         #region Get số phiếu cân
         /// <summary>

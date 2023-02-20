@@ -66,7 +66,7 @@ namespace MES.Application.Commands.XCK
         public bool? isDelete { get; set; }
     }
 
-    public class UpdateXCKCommandHanler : IRequestHandler<UpdateXCKCommand, ApiResponse>
+    public class UpdateXCKCommandHandler : IRequestHandler<UpdateXCKCommand, ApiResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<WarehouseTransferModel> _xckRepo;
@@ -76,7 +76,7 @@ namespace MES.Application.Commands.XCK
         private readonly IRepository<DimDateModel> _dimDateRepo;
         private readonly IUtilitiesService _utilitiesService;
 
-        public UpdateXCKCommandHanler(IUnitOfWork unitOfWork, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo, 
+        public UpdateXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo, 
                                       IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService, IRepository<WarehouseTransferModel> xckRepo,
                                       IRepository<DetailReservationModel> detailRsRepo)
         {
@@ -241,6 +241,8 @@ namespace MES.Application.Commands.XCK
                     xck.BagQuantity = item.BagQuantity;
                     //Đơn trọng
                     xck.SingleWeight = item.SingleWeight;
+                    //Trọng lượng cân
+                    xck.Weight = item.Weight;
                     //Confirm Quantity
                     xck.ConfirmQty = item.ConfirmQty;
                     //Sl kèm bao bì

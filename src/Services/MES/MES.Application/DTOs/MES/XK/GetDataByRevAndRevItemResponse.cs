@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MES.Application.DTOs.MES.XK
 {
-    public class GetDataByRevAndRevItemResponse
+    public class GetDataByRsvAndRsvItemResponse
     {
         //Material
         public string Material { get; set; }

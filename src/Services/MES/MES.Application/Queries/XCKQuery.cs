@@ -30,6 +30,8 @@ namespace MES.Application.Queries
         /// <param name="command"></param>
         /// <returns></returns>
         Task<List<SearchXCKResponse>> GetDataXCK(SearchXCKCommand command);
+
+        Task<GetDataByRsvAndRsvItemResponse> GetDataByRsvAndRsvItem(string reservation, string reservationItem);
     }
 
     public class XCKQuery : IXCKQuery
@@ -411,6 +413,36 @@ namespace MES.Application.Queries
             }
 
             return data;
+        }
+
+        public async Task<GetDataByRsvAndRsvItemResponse> GetDataByRsvAndRsvItem(string reservation, string reservationItem)
+        {
+            //Lấy ra reservation detail
+            var detailRes = await _detailReserRepo.GetQuery().Include(x => x.Reservation)
+                                            .FirstOrDefaultAsync(x => x.Reservation.ReservationCodeInt == long.Parse(reservation) && x.ReservationItem == reservationItem);
+
+            //Danh sách product
+            var prods = _prodRepo.GetQuery().AsNoTracking();
+
+            var response = new GetDataByRsvAndRsvItemResponse
+            {
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == detailRes.MaterialCodeInt).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialDesc = prods.FirstOrDefault(p => p.ProductCodeInt == detailRes.MaterialCodeInt).ProductName,
+                //Movement type
+                MovementType = detailRes.MovementType ?? "",
+                //Batch
+                Batch = detailRes.Batch ?? "",
+                //Total Quantity
+                TotalQty = detailRes.RequirementQty ?? 0,
+                //Delivered Quantity
+                DeliveredQty = detailRes.QtyWithdrawn ?? 0,
+                //Unit
+                Unit = detailRes.BaseUnit
+            };
+
+            return response;
         }
     }
 }

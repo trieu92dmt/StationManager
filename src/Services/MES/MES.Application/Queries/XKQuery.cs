@@ -2,7 +2,6 @@
 using Infrastructure.Models;
 using MES.Application.Commands.XK;
 using MES.Application.DTOs.Common;
-using MES.Application.DTOs.MES.NKTPSX;
 using MES.Application.DTOs.MES.XK;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -38,7 +37,7 @@ namespace MES.Application.Queries
         /// <param name="resCode"></param>
         /// <param name="resItem"></param>
         /// <returns></returns>
-        Task<GetDataByRevAndRevItemResponse> GetDataByResAndResItem(string resCode, string resItem);
+        Task<GetDataByRsvAndRsvItemResponse> GetDataByResAndResItem(string resCode, string resItem);
     }
 
     public class XKQuery : IXKQuery
@@ -431,7 +430,7 @@ namespace MES.Application.Queries
                                          }).Distinct().Take(20).ToListAsync();
         }
 
-        public async Task<GetDataByRevAndRevItemResponse> GetDataByResAndResItem(string resCode, string resItem)
+        public async Task<GetDataByRsvAndRsvItemResponse> GetDataByResAndResItem(string resCode, string resItem)
         {
             //Lấy ra reservation detail
             var detailRes = await _dtResRepo.GetQuery().Include(x => x.Reservation)
@@ -440,7 +439,7 @@ namespace MES.Application.Queries
             //Danh sách product
             var prods = _prdRepo.GetQuery().AsNoTracking();
 
-            var response = new GetDataByRevAndRevItemResponse
+            var response = new GetDataByRsvAndRsvItemResponse
             {
                 //Material
                 Material = prods.FirstOrDefault(p => p.ProductCodeInt == detailRes.MaterialCodeInt).ProductCodeInt.ToString(),

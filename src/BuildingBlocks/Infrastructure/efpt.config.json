@@ -303,7 +303,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[DataCollection].[WarehouseTransferModel]",
+         "Name": "[DataCollection].[WarehouseExportTransferModel]",
          "ObjectType": 0
       },
       {

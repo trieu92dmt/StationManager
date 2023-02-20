@@ -31,12 +31,18 @@ namespace MES.Application.Queries
         /// <returns></returns>
         Task<List<SearchXCKResponse>> GetDataXCK(SearchXCKCommand command);
 
+        /// <summary>
+        /// Get data by reservation and reservation item
+        /// </summary>
+        /// <param name="reservation"></param>
+        /// <param name="reservationItem"></param>
+        /// <returns></returns>
         Task<GetDataByRsvAndRsvItemResponse> GetDataByRsvAndRsvItem(string reservation, string reservationItem);
     }
 
     public class XCKQuery : IXCKQuery
     {
-        private readonly IRepository<WarehouseTransferModel> _xckRepo;
+        private readonly IRepository<WarehouseExportTransferModel> _xckRepo;
         private readonly IRepository<ReservationModel> _reserRepo;
         private readonly IRepository<DetailReservationModel> _detailReserRepo;
         private readonly IRepository<PlantModel> _plantRepo;
@@ -45,7 +51,7 @@ namespace MES.Application.Queries
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
 
-        public XCKQuery(IRepository<WarehouseTransferModel> xckRepo, IRepository<ReservationModel> reserRepo, IRepository<DetailReservationModel> detailReserRepo,
+        public XCKQuery(IRepository<WarehouseExportTransferModel> xckRepo, IRepository<ReservationModel> reserRepo, IRepository<DetailReservationModel> detailReserRepo,
                         IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prodRepo,
                         IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo)
         {

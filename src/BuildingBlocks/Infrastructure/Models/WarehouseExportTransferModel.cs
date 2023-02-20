@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Models
 {
-    [Table("WarehouseTransferModel", Schema = "DataCollection")]
-    public partial class WarehouseTransferModel
+    [Table("WarehouseExportTransferModel", Schema = "DataCollection")]
+    public partial class WarehouseExportTransferModel
     {
         [Key]
         public Guid WarehouseTransferId { get; set; }
@@ -106,7 +106,7 @@ namespace Infrastructure.Models
         public bool? Actived { get; set; }
 
         [ForeignKey("DetailReservationId")]
-        [InverseProperty("WarehouseTransferModel")]
+        [InverseProperty("WarehouseExportTransferModel")]
         public virtual DetailReservationModel DetailReservation { get; set; }
     }
 }

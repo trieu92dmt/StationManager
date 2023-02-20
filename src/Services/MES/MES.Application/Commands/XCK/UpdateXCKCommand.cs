@@ -69,7 +69,7 @@ namespace MES.Application.Commands.XCK
     public class UpdateXCKCommandHandler : IRequestHandler<UpdateXCKCommand, ApiResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<WarehouseTransferModel> _xckRepo;
+        private readonly IRepository<WarehouseExportTransferModel> _xckRepo;
         private readonly IRepository<DetailReservationModel> _detailRsRepo;
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
@@ -77,7 +77,7 @@ namespace MES.Application.Commands.XCK
         private readonly IUtilitiesService _utilitiesService;
 
         public UpdateXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo, 
-                                      IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService, IRepository<WarehouseTransferModel> xckRepo,
+                                      IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService, IRepository<WarehouseExportTransferModel> xckRepo,
                                       IRepository<DetailReservationModel> detailRsRepo)
         {
             _unitOfWork = unitOfWork;
@@ -174,7 +174,7 @@ namespace MES.Application.Commands.XCK
                 //Chưa có thì tạo mới
                 if (xck == null)
                 {
-                    _xckRepo.Add(new WarehouseTransferModel
+                    _xckRepo.Add(new WarehouseExportTransferModel
                     {
                         //Id
                         WarehouseTransferId = item.XCKId,

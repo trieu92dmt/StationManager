@@ -71,7 +71,7 @@ namespace MES.Application.Commands.XCK
     public class SaveXCKCommandHandler : IRequestHandler<SaveXCKCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<WarehouseTransferModel> _xckRepo;
+        private readonly IRepository<WarehouseExportTransferModel> _xckRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IUtilitiesService _utilitiesService;
@@ -80,7 +80,7 @@ namespace MES.Application.Commands.XCK
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<PlantModel> _plantRepo;
 
-        public SaveXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseTransferModel> xckRepo, IRepository<WeighSessionModel> weightSsRepo,
+        public SaveXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseExportTransferModel> xckRepo, IRepository<WeighSessionModel> weightSsRepo,
                                      IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<DetailReservationModel> detailRsRepo,
                                      IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo)
         {
@@ -162,7 +162,7 @@ namespace MES.Application.Commands.XCK
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
-                _xckRepo.Add(new WarehouseTransferModel
+                _xckRepo.Add(new WarehouseExportTransferModel
                 {
                     //1. Warehouse Tranfer ID
                     WarehouseTransferId = WarehouseTranferId,

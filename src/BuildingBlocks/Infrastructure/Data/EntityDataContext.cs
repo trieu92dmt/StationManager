@@ -382,8 +382,8 @@ namespace Infrastructure.Data
         public virtual DbSet<View_Task_Area> View_Task_Area { get; set; }
         public virtual DbSet<View_Task_GTB> View_Task_GTB { get; set; }
         public virtual DbSet<WardModel> WardModel { get; set; }
+        public virtual DbSet<WarehouseExportTransferModel> WarehouseExportTransferModel { get; set; }
         public virtual DbSet<WarehouseModel> WarehouseModel { get; set; }
-        public virtual DbSet<WarehouseTransferModel> WarehouseTransferModel { get; set; }
         public virtual DbSet<WarrantyModel> WarrantyModel { get; set; }
         public virtual DbSet<WeighModel> WeighModel { get; set; }
         public virtual DbSet<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
@@ -3471,19 +3471,22 @@ namespace Infrastructure.Data
                 entity.Property(e => e.WardId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<WarehouseModel>(entity =>
+            modelBuilder.Entity<WarehouseExportTransferModel>(entity =>
             {
-                entity.Property(e => e.WarehouseId).ValueGeneratedNever();
-            });
+                entity.HasKey(e => e.WarehouseTransferId)
+                    .HasName("PK_WarehouseTransferModel");
 
-            modelBuilder.Entity<WarehouseTransferModel>(entity =>
-            {
                 entity.Property(e => e.WarehouseTransferId).ValueGeneratedNever();
 
                 entity.HasOne(d => d.DetailReservation)
-                    .WithMany(p => p.WarehouseTransferModel)
+                    .WithMany(p => p.WarehouseExportTransferModel)
                     .HasForeignKey(d => d.DetailReservationId)
                     .HasConstraintName("FK_WarehouseTransferModel_DetailReservationModel");
+            });
+
+            modelBuilder.Entity<WarehouseModel>(entity =>
+            {
+                entity.Property(e => e.WarehouseId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<WarrantyModel>(entity =>

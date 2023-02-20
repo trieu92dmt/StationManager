@@ -13,6 +13,7 @@ namespace Infrastructure.Models
     {
         public ScaleModel()
         {
+            ScaleMonitorModel = new HashSet<ScaleMonitorModel>();
             WeighSessionModel = new HashSet<WeighSessionModel>();
         }
 
@@ -34,6 +35,8 @@ namespace Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
 
+        [InverseProperty("Scale")]
+        public virtual ICollection<ScaleMonitorModel> ScaleMonitorModel { get; set; }
         [InverseProperty("Scale")]
         public virtual ICollection<WeighSessionModel> WeighSessionModel { get; set; }
     }

@@ -279,6 +279,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[ScaleMonitorModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[ScrapFromProductionModel]",
          "ObjectType": 0
       },

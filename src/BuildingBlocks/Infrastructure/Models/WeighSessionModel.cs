@@ -15,6 +15,7 @@ namespace Infrastructure.Models
         {
             OtherExportModel = new HashSet<OtherExportModel>();
             OtherImportModel = new HashSet<OtherImportModel>();
+            ScaleMonitorModel = new HashSet<ScaleMonitorModel>();
             WeighSessionDetailModel = new HashSet<WeighSessionDetailModel>();
         }
 
@@ -45,6 +46,8 @@ namespace Infrastructure.Models
         public virtual ICollection<OtherExportModel> OtherExportModel { get; set; }
         [InverseProperty("WeightSession")]
         public virtual ICollection<OtherImportModel> OtherImportModel { get; set; }
+        [InverseProperty("WeightSession")]
+        public virtual ICollection<ScaleMonitorModel> ScaleMonitorModel { get; set; }
         [InverseProperty("WeighSession")]
         public virtual ICollection<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
     }

@@ -171,7 +171,7 @@ namespace MES.Application.Commands.XK
                     //3 PlantCode
                     PlantCode = item.Plant,
                     //4   MaterialCode
-                    MaterialCode = !string.IsNullOrEmpty(item.Plant) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductCode : "",
+                    MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductCode : "",
                     MaterialCodeInt = long.Parse(item.Material),
                     //Batch
                     Batch = item.Batch,

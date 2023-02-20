@@ -357,5 +357,33 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Dropdown Scale monitor type
+        /// <summary>
+        /// Get dropdown Scale monitor type
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-scale-monitor-type")]
+        public async Task<IActionResult> GetScaleMonitorTypeAsync(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetScaleMonitorType(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
+
+        #region Dropdown Reservation item by Reservation
+        /// <summary>
+        /// Get Reservation item by Reservation
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-reservation-item")]
+        public async Task<IActionResult> GetReservationItemAsync(string reservation, string keyword)
+        {
+            var dropdownList = await _commonQuery.GetReservationItem(reservation ,keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
+
     }
 }

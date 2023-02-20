@@ -175,6 +175,21 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownCustomer(string keyword);
+
+        /// <summary>
+        /// Get dropdown scale monitor type
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetScaleMonitorType(string keyword);
+
+        /// <summary>
+        /// Get reservation item by reservation
+        /// </summary>
+        /// <param name="reservation"></param>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetReservationItem(string reservation, string keyword);
     }
 
     #region Response
@@ -207,13 +222,16 @@ namespace MES.Application.Queries
         private readonly IRepository<OrderTypeModel> _oTypeRep;
         private readonly IRepository<WorkOrderModel> _workOrderRep;
         private readonly IRepository<ReservationModel> _rsRepo;
+        private readonly IRepository<CatalogModel> _cataRepo;
+        private readonly IRepository<DetailReservationModel> _dtRsRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
                            IRepository<PurchaseOrderMasterModel> poMasterRepo, IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo,
                            IRepository<GoodsReceiptModel> nkmhRep, IRepository<SalesDocumentModel> saleDocRepo, IRepository<OutboundDeliveryModel> obDeliveryRepo,
                            IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
-                           IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo)
+                           IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
+                           IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -233,6 +251,8 @@ namespace MES.Application.Queries
             _oTypeRep = oTypeRep;
             _workOrderRep = workOrderRep;
             _rsRepo = rsRepo;
+            _cataRepo = cataRepo;
+            _dtRsRepo = dtRsRepo;
         }
 
         #region Get DropdownMaterial
@@ -625,5 +645,50 @@ namespace MES.Application.Queries
 
             return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
         }
+
+        #region Get Scale Monitor Type
+        /// <summary>
+        /// Get Scale Monitor Type
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        public async Task<List<CommonResponse>> GetScaleMonitorType(string keyword)
+        {
+            var result = await _cataRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CatalogCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) &&
+                                                                                         x.CatalogText_vi.Trim().ToUpper().Contains(keyword.Trim().ToUpper()): true) &&
+                                                       x.CatalogTypeCode == "ScaleMonitorType")
+                                  .OrderBy(x => x.CatalogText_vi)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.CatalogCode,
+                                      Value = x.CatalogText_vi
+                                  }).ToListAsync();
+
+            return result;
+        }
+        #endregion
+
+        #region Get Reservation item
+        /// <summary>
+        /// Get Reservation item
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        public async Task<List<CommonResponse>> GetReservationItem(string reservation, string keyword)
+        {
+            var result = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
+                                  .Where(x => !string.IsNullOrEmpty(reservation) ? x.Reservation.ReservationCodeInt == long.Parse(reservation) : false &&
+                                              !string.IsNullOrEmpty(keyword) ? x.ReservationItem.Contains(keyword) : true)
+                                  .OrderBy(x => x.ReservationItem)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.ReservationItem,
+                                      Value = x.ReservationItem
+                                  }).ToListAsync();
+
+            return result;
+        }
+        #endregion
+
     }
 }

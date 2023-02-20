@@ -292,6 +292,7 @@ namespace Infrastructure.Data
         public virtual DbSet<SalesEmployeeModel> SalesEmployeeModel { get; set; }
         public virtual DbSet<SalesOfficeModel> SalesOfficeModel { get; set; }
         public virtual DbSet<ScaleModel> ScaleModel { get; set; }
+        public virtual DbSet<ScaleMonitorModel> ScaleMonitorModel { get; set; }
         public virtual DbSet<Schema> Schema { get; set; }
         public virtual DbSet<ScrapFromProductionModel> ScrapFromProductionModel { get; set; }
         public virtual DbSet<SearchResultDetailTemplateModel> SearchResultDetailTemplateModel { get; set; }
@@ -2635,6 +2636,23 @@ namespace Infrastructure.Data
                 entity.Property(e => e.ScaleId).ValueGeneratedNever();
 
                 entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
+            });
+
+            modelBuilder.Entity<ScaleMonitorModel>(entity =>
+            {
+                entity.Property(e => e.ScaleMonitorId).ValueGeneratedNever();
+
+                entity.Property(e => e.Type).IsFixedLength();
+
+                entity.HasOne(d => d.Scale)
+                    .WithMany(p => p.ScaleMonitorModel)
+                    .HasForeignKey(d => d.ScaleId)
+                    .HasConstraintName("FK_ScaleMonitorModel_ScaleModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.ScaleMonitorModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_ScaleMonitorModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<Schema>(entity =>

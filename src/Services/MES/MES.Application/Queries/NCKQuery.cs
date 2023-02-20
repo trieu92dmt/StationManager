@@ -110,6 +110,9 @@ namespace MES.Application.Queries
             //Reservation
             var reservations = _resRepo.GetQuery().Include(x => x.DetailReservationModel).AsNoTracking();
 
+            //Query matDoc
+            var matDocs = _matDocRepo.GetQuery().AsNoTracking();
+
             //Lọc điều kiện
             //Theo plant
             if (!string.IsNullOrEmpty(command.Plant))
@@ -196,7 +199,9 @@ namespace MES.Application.Queries
                 //10. Total Quantity
                 TotalQty = x.Quantity ?? 0,
                 //11. Delivered Quantity
-                DeliveredQty = 0,
+                DeliveredQty = !string.IsNullOrEmpty(x.Reservation) && matDocs.Where(m => m.Reservation == x.Reservation && (x.MovementType == "313" || x.MovementType =="315")).Any() ? 
+                                                                       matDocs.Where(m => m.Reservation == x.Reservation && x.MovementType == "313").Sum(m => m.Quantity) 
+                                                                       - matDocs.Where(m => m.Reservation == x.Reservation && x.MovementType == "315").Sum(m => m.Quantity) : 0,
                 //13. UoM
                 Unit = x.BaseUOM,
                 //Document Date

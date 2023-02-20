@@ -1,5 +1,8 @@
 ﻿using Core.Models;
+using Core.Properties;
+using MediatR;
 using MES.Application.Commands.NCK;
+using MES.Application.Commands.XK;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NCK;
 using MES.Application.Queries;
@@ -14,10 +17,12 @@ namespace MES.API.Controllers
     public class NCKController : ControllerBase
     {
         private readonly INCKQuery _query;
+        private readonly IMediator _mediator;
 
-        public NCKController(INCKQuery query)
+        public NCKController(INCKQuery query, IMediator mediator)
         {
             _query = query;
+            _mediator = mediator;
         }
 
         /// <summary>GET Bảng 1</summary>
@@ -61,5 +66,22 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
+
+        /// <summary>
+        /// Save dữ liệu nck
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-nck")]
+        public async Task<IActionResult> SaveNCKAsync([FromBody] SaveNCKCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu dữ liệu nhập chuyển kho")
+            });
+        }
     }
 }

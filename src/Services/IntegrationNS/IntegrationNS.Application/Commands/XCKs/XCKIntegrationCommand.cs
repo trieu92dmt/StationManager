@@ -195,7 +195,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                 //Reservation Item
                 ReservationItem = x.DetailReservationId.HasValue ? x.DetailReservation.ReservationItem.ToString() : "",
                 //Material
-                Material = long.Parse(x.MaterialCode).ToString(),
+                Material = x.MaterialCode,
                 //MaterialDesc
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
                 //MVT

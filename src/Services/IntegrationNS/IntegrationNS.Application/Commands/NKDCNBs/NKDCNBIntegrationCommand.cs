@@ -232,7 +232,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                 //OD item
                 OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : "",
                 //Material
-                Material = x.MaterialCodeInt.ToString() ?? "",
+                Material = x.MaterialCode ?? "",
                 //Material Desc
                 MaterialDesc = prods.FirstOrDefault(m => m.ProductCode == x.MaterialCode).ProductName ?? "",
                 //Storage Location

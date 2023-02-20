@@ -241,7 +241,7 @@ namespace MES.Application.Queries
                 //Material
                 Material = x.ProductCodeInt.ToString() ?? "",
                 //Material Desc
-                MaterialDesc = prods.FirstOrDefault(m => m.ProductCode == x.ProductCode).ProductName ?? "",
+                MaterialDesc = prods.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.ProductCode)).ProductName ?? "",
                 //Storage Location
                 Sloc = x.StorageLocation ?? "",
                 SlocDesc = string.IsNullOrEmpty(x.StorageLocation) ? "" : $"{x.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName}",
@@ -442,7 +442,7 @@ namespace MES.Application.Queries
                 //Material
                 Material = x.MaterialCodeInt.ToString() ?? "",
                 //Material Desc
-                MaterialDesc = prods.FirstOrDefault(m => m.ProductCode == x.MaterialCode).ProductName ?? "",
+                MaterialDesc = prods.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductName ?? "",
                 //Storage Location
                 Sloc = x.SlocCode ?? "",
                 SlocDesc = x.SlocName ?? "",

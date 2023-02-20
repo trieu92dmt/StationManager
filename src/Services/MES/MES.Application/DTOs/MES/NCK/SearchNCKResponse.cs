@@ -118,7 +118,7 @@ namespace MES.Application.DTOs.MES.NCK
         //11. Delivered Quantity
         public decimal? DeliveredQty { get; set; }
         //12. Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveredQty;
         //13. UoM
         public string Unit { get; set; }
         //14. Document Date

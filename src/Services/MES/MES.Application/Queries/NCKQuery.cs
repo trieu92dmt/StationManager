@@ -108,7 +108,7 @@ namespace MES.Application.Queries
             var plants = _plantRepo.GetQuery().AsNoTracking();
 
             //Reservation
-            var reservations = _resRepo.GetQuery().AsNoTracking();
+            var reservations = _resRepo.GetQuery().Include(x => x.DetailReservationModel).AsNoTracking();
 
             //Lọc điều kiện
             //Theo plant
@@ -182,7 +182,7 @@ namespace MES.Application.Queries
                 //Material doc item
                 MaterialDocItem = x.MaterialDocItem ?? "",
                 //2. Reservation
-                Reservation = string.IsNullOrEmpty(x.Reservation) ? long.Parse(x.Reservation).ToString() : "",
+                Reservation = !string.IsNullOrEmpty(x.Reservation) ? long.Parse(x.Reservation).ToString() : "",
                 //4. Material
                 Material = x.MaterialCodeInt.HasValue ? x.MaterialCodeInt.ToString() : "",
                 //5. Material Desc
@@ -197,8 +197,6 @@ namespace MES.Application.Queries
                 TotalQty = x.Quantity ?? 0,
                 //11. Delivered Quantity
                 DeliveredQty = 0,
-                //12. Open Quantity
-                OpenQty = 0,
                 //13. UoM
                 Unit = x.BaseUOM,
                 //Document Date
@@ -210,7 +208,6 @@ namespace MES.Application.Queries
             //Tính open quantity
             foreach (var item in data)
             {
-                item.OpenQty = item.TotalQty - item.DeliveredQty;
                 item.IndexKey = index;
                 index++;
             }

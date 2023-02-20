@@ -206,6 +206,8 @@ namespace MES.Application.Queries
                                    $"{x.DetailReservation.Reservation.ReceivingSloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.DetailReservation.Reservation.ReceivingSloc).StorageLocationName}" : "",
                 //14 Batch
                 Batch = x.Batch ?? "",
+                //Special Stock
+                SpecialStock = x.SpecialStock ?? "",
                 //15 SL bao
                 BagQuantity = x.BagQuantity ?? 0,
                 //16 Đơn trọng

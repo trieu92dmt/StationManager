@@ -385,5 +385,18 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Dropdown Material Doc
+        /// <summary>
+        /// Get Material Doc
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-mat-doc")]
+        public async Task<IActionResult> GetMatDocAsync(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetMatDoc(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

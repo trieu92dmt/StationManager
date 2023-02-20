@@ -190,6 +190,13 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetReservationItem(string reservation, string keyword);
+
+        /// <summary>
+        /// Get mat doc
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetMatDoc(string keyword);
     }
 
     #region Response
@@ -690,5 +697,11 @@ namespace MES.Application.Queries
         }
         #endregion
 
+        #region Dropdown mat doc
+        public Task<List<CommonResponse>> GetMatDoc(string keyword)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

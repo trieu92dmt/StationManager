@@ -197,6 +197,13 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetMatDoc(string keyword);
+
+        /// <summary>
+        /// Get scale status
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetScaleStatus(string keyword);
     }
 
     #region Response
@@ -231,6 +238,7 @@ namespace MES.Application.Queries
         private readonly IRepository<ReservationModel> _rsRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<DetailReservationModel> _dtRsRepo;
+        private readonly IRepository<MaterialDocumentModel> _matDocRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -238,7 +246,7 @@ namespace MES.Application.Queries
                            IRepository<GoodsReceiptModel> nkmhRep, IRepository<SalesDocumentModel> saleDocRepo, IRepository<OutboundDeliveryModel> obDeliveryRepo,
                            IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
-                           IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo)
+                           IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -260,6 +268,7 @@ namespace MES.Application.Queries
             _rsRepo = rsRepo;
             _cataRepo = cataRepo;
             _dtRsRepo = dtRsRepo;
+            _matDocRepo = matDocRepo;
         }
 
         #region Get DropdownMaterial
@@ -698,9 +707,33 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown mat doc
-        public Task<List<CommonResponse>> GetMatDoc(string keyword)
+        public async Task<List<CommonResponse>> GetMatDoc(string keyword)
         {
-            throw new NotImplementedException();
+            var response = await _matDocRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.MaterialDocCode.ToLower().Contains(keyword.ToLower().Trim()) : true))
+                                .Select(x => new CommonResponse
+                                {
+                                    Key = x.MaterialDocCode,
+                                    Value = x.MaterialDocCode
+                                }).AsNoTracking().ToListAsync();
+
+            return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
+        }
+        #endregion
+
+        #region Dropdown scale status
+        public async Task<List<CommonResponse>> GetScaleStatus(string keyword)
+        {
+            var result = await _cataRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CatalogCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) &&
+                                                                                         x.CatalogText_vi.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
+                                                       x.CatalogTypeCode == "ScaleStatus")
+                                  .OrderBy(x => x.CatalogText_vi)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.CatalogCode,
+                                      Value = x.CatalogText_vi
+                                  }).ToListAsync();
+
+            return result;
         }
         #endregion
     }

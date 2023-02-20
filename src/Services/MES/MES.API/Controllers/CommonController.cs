@@ -398,5 +398,19 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
+
+        #region Dropdown Scale Status
+        /// <summary>
+        /// Get dropdown scale status
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-scale-status")]
+        public async Task<IActionResult> GetScaleStatusAsync(string keyword)
+        {
+            var dropdownList = await _commonQuery.GetScaleStatus(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

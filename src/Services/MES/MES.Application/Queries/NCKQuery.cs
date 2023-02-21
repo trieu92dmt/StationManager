@@ -170,8 +170,8 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.MaterialDocTo))
                     command.MaterialDocTo = command.MaterialDocFrom;
 
-                query = query.Where(x => x.MaterialDocId.HasValue ? x.MaterialDoc.MaterialDocCode.CompareTo(command.SlocFrom) >= 0 &&
-                                                                    x.MaterialDoc.MaterialDocCode.CompareTo(command.SlocTo) <= 0 : false);
+                query = query.Where(x => x.MaterialDocId.HasValue ? x.MaterialDoc.MaterialDocCode.CompareTo(command.MaterialDocFrom) >= 0 &&
+                                                                    x.MaterialDoc.MaterialDocCode.CompareTo(command.MaterialDocTo) <= 0 : false);
             }
 
             //Theo Material

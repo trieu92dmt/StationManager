@@ -244,6 +244,9 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                         //Cập nhật detail
                         foreach (var item in woIntegration.DetallWorkOrderIntegrations)
                         {
+                            if (materials.FirstOrDefault(x => x.ProductCode == item.ProductCode) == null)
+                                throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
+
                             var detailWO = await _detailWORepo.FindOneAsync(x => x.WorkOrderId == workorder.WorkOrderId && x.WorkOrderItem == item.WorkOrderItem);
                             if (detailWO == null)
                             {

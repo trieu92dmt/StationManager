@@ -26,6 +26,7 @@ namespace MES.Application.DTOs.MES.NCK
         //Stor.Sloc
         public string Sloc { get; set; }
         public string SlocName { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //Batch
         public string Batch { get; set; }
         //Sl bao

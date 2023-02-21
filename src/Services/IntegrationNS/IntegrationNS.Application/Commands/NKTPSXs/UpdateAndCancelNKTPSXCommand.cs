@@ -8,6 +8,7 @@ using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,33 +79,44 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                         nktpsx.Status = "NOT";
                     nktpsx.LastEditTime = DateTime.Now;
 
+                    //Clone object
+                    var serialized = JsonConvert.SerializeObject(nktpsx);
+                    var nktpsxNew = JsonConvert.DeserializeObject<ReceiptFromProductionModel>(serialized);
+
+                    nktpsxNew.RcFromProductiontId = Guid.NewGuid();
+                    nktpsxNew.MaterialDocument = null;
+                    nktpsxNew.ReverseDocument = null;
+
+
                     //Tạo line mới
-                    var nktpsxNew = new ReceiptFromProductionModel
-                    {
-                        RcFromProductiontId = Guid.NewGuid(),
-                        PlantCode = nktpsx.PlantCode,
-                        WorkOrderId = nktpsx.WorkOrderId,
-                        WeightId = nktpsx.WeightId,
-                        WeightVote = nktpsx.WeightVote,
-                        BagQuantity = nktpsx.BagQuantity,
-                        SingleWeight = nktpsx.SingleWeight,
-                        WeightHeadCode = nktpsx.WeightHeadCode,
-                        Weight = nktpsx.Weight,
-                        ConfirmQty = nktpsx.ConfirmQty,
-                        QuantityWithPackaging = nktpsx.QuantityWithPackaging,
-                        QuantityWeitght = nktpsx.QuantityWeitght,
-                        Description = nktpsx.Description,
-                        MaterialCode = nktpsx.MaterialCode,
-                        MaterialCodeInt = nktpsx.MaterialCodeInt,
-                        SlocCode = nktpsx.SlocCode,
-                        SlocName = nktpsx.SlocName,
-                        Image = nktpsx.Image,
-                        Status = nktpsx.Status,
-                        StartTime = nktpsx.StartTime,
-                        EndTime = nktpsx.EndTime,
-                        CreateTime = DateTime.Now,
-                        Actived = true
-                    };
+                    #region code cũ
+                    //var nktpsxNew = new ReceiptFromProductionModel
+                    //{
+                    //    RcFromProductiontId = Guid.NewGuid(),
+                    //    PlantCode = nktpsx.PlantCode,
+                    //    WorkOrderId = nktpsx.WorkOrderId,
+                    //    WeightId = nktpsx.WeightId,
+                    //    WeightVote = nktpsx.WeightVote,
+                    //    BagQuantity = nktpsx.BagQuantity,
+                    //    SingleWeight = nktpsx.SingleWeight,
+                    //    WeightHeadCode = nktpsx.WeightHeadCode,
+                    //    Weight = nktpsx.Weight,
+                    //    ConfirmQty = nktpsx.ConfirmQty,
+                    //    QuantityWithPackaging = nktpsx.QuantityWithPackaging,
+                    //    QuantityWeitght = nktpsx.QuantityWeitght,
+                    //    Description = nktpsx.Description,
+                    //    MaterialCode = nktpsx.MaterialCode,
+                    //    MaterialCodeInt = nktpsx.MaterialCodeInt,
+                    //    SlocCode = nktpsx.SlocCode,
+                    //    SlocName = nktpsx.SlocName,
+                    //    Image = nktpsx.Image,
+                    //    Status = nktpsx.Status,
+                    //    StartTime = nktpsx.StartTime,
+                    //    EndTime = nktpsx.EndTime,
+                    //    CreateTime = DateTime.Now,
+                    //    Actived = true
+                    //};
+                    #endregion
 
                     _nktpsxRep.Add(nktpsxNew);
                 }

@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.XTHLSXs
 {
@@ -67,31 +68,41 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     xthlsx.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
-                    var xthlsxNew = new IssueForProductionModel
-                    {
-                        IssForProductiontId = Guid.NewGuid(),
-                        PlantCode = xthlsx.PlantCode,
-                        DetailWorkOrderId = xthlsx.DetailWorkOrderId,
-                        WeightVote = xthlsx.WeightVote,
-                        BagQuantity = xthlsx.BagQuantity,
-                        SingleWeight = xthlsx.SingleWeight,
-                        WeightHeadCode = xthlsx.WeightHeadCode,
-                        Weight = xthlsx.Weight,
-                        ConfirmQty = xthlsx.ConfirmQty,
-                        QuantityWithPackaging = xthlsx.QuantityWithPackaging,
-                        QuantityWeitght = xthlsx.QuantityWeitght,
-                        SlocCode = xthlsx.SlocCode,
-                        Image = xthlsx.Image,
-                        Status = xthlsx.Status,
-                        StartTime = xthlsx.StartTime,
-                        EndTime = xthlsx.EndTime,
-                        CreateTime = DateTime.Now,
-                        Actived = true,
-                        ComponentCode = xthlsx.ComponentCode,
-                        ComponentCodeInt = xthlsx.ComponentCodeInt,
-                        WeightId = xthlsx.WeightId,
-                        SlocName = xthlsx.SlocName 
-                    };
+                    //Clone object
+                    var serialized = JsonConvert.SerializeObject(xthlsx);
+                    var xthlsxNew = JsonConvert.DeserializeObject<IssueForProductionModel>(serialized);
+
+                    xthlsxNew.IssForProductiontId = Guid.NewGuid();
+                    xthlsxNew.MaterialDocument = null;
+                    xthlsxNew.ReverseDocument = null;
+
+                    #region code cũ
+                    //var xthlsxNew = new IssueForProductionModel
+                    //{
+                    //    IssForProductiontId = Guid.NewGuid(),
+                    //    PlantCode = xthlsx.PlantCode,
+                    //    DetailWorkOrderId = xthlsx.DetailWorkOrderId,
+                    //    WeightVote = xthlsx.WeightVote,
+                    //    BagQuantity = xthlsx.BagQuantity,
+                    //    SingleWeight = xthlsx.SingleWeight,
+                    //    WeightHeadCode = xthlsx.WeightHeadCode,
+                    //    Weight = xthlsx.Weight,
+                    //    ConfirmQty = xthlsx.ConfirmQty,
+                    //    QuantityWithPackaging = xthlsx.QuantityWithPackaging,
+                    //    QuantityWeitght = xthlsx.QuantityWeitght,
+                    //    SlocCode = xthlsx.SlocCode,
+                    //    Image = xthlsx.Image,
+                    //    Status = xthlsx.Status,
+                    //    StartTime = xthlsx.StartTime,
+                    //    EndTime = xthlsx.EndTime,
+                    //    CreateTime = DateTime.Now,
+                    //    Actived = true,
+                    //    ComponentCode = xthlsx.ComponentCode,
+                    //    ComponentCodeInt = xthlsx.ComponentCodeInt,
+                    //    WeightId = xthlsx.WeightId,
+                    //    SlocName = xthlsx.SlocName 
+                    //};
+                    #endregion
 
                     _xthlsxRepo.Add(xthlsxNew);
                 }

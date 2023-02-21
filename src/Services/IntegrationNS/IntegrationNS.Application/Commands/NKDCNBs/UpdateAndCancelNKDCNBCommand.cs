@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,37 +76,47 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     nkdcnb.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
-                    var nkdcnbNew = new InhouseTransferModel
-                    {
-                        InhouseTransferId = Guid.NewGuid(),
-                        PlantCode = nkdcnb.PlantCode,
-                        DetailODId = nkdcnb.DetailODId,
-                        WeightSessionId = nkdcnb.WeightSessionId,
-                        MaterialCodeInt = nkdcnb.MaterialCodeInt,
-                        WeightVote = nkdcnb.WeightVote,
-                        BagQuantity = nkdcnb.BagQuantity,
-                        SingleWeight = nkdcnb.SingleWeight,
-                        WeightHeadCode = nkdcnb.WeightHeadCode,
-                        Weight = nkdcnb.Weight,
-                        ConfirmQty = nkdcnb.ConfirmQty,
-                        QuantityWithPackaging = nkdcnb.QuantityWithPackaging,
-                        VehicleCode = nkdcnb.VehicleCode,
-                        QuantityWeitght = nkdcnb.QuantityWeitght,
-                        TruckInfoId = nkdcnb.TruckInfoId,
-                        TruckNumber = nkdcnb.TruckNumber,
-                        InputWeight = nkdcnb.InputWeight,
-                        OutputWeight = nkdcnb.OutputWeight,
-                        Description = nkdcnb.Description,
-                        MaterialCode = nkdcnb.MaterialCode,
-                        SlocCode = nkdcnb.SlocCode,
-                        SlocName = nkdcnb.SlocName,
-                        Image = nkdcnb.Image,
-                        Status = nkdcnb.Status,
-                        StartTime = nkdcnb.StartTime,
-                        EndTime = nkdcnb.EndTime,
-                        CreateTime = DateTime.Now,
-                        Actived = true
-                    };
+                    //Clone object
+                    var serialized = JsonConvert.SerializeObject(nkdcnb);
+                    var nkdcnbNew = JsonConvert.DeserializeObject<InhouseTransferModel>(serialized);
+
+                    nkdcnbNew.InhouseTransferId = Guid.NewGuid();
+                    nkdcnbNew.MaterialDocument = null;
+                    nkdcnbNew.ReverseDocument = null;
+
+                    #region code cũ
+                    //var nkdcnbNew = new InhouseTransferModel
+                    //{
+                    //    InhouseTransferId = Guid.NewGuid(),
+                    //    PlantCode = nkdcnb.PlantCode,
+                    //    DetailODId = nkdcnb.DetailODId,
+                    //    WeightSessionId = nkdcnb.WeightSessionId,
+                    //    MaterialCodeInt = nkdcnb.MaterialCodeInt,
+                    //    WeightVote = nkdcnb.WeightVote,
+                    //    BagQuantity = nkdcnb.BagQuantity,
+                    //    SingleWeight = nkdcnb.SingleWeight,
+                    //    WeightHeadCode = nkdcnb.WeightHeadCode,
+                    //    Weight = nkdcnb.Weight,
+                    //    ConfirmQty = nkdcnb.ConfirmQty,
+                    //    QuantityWithPackaging = nkdcnb.QuantityWithPackaging,
+                    //    VehicleCode = nkdcnb.VehicleCode,
+                    //    QuantityWeitght = nkdcnb.QuantityWeitght,
+                    //    TruckInfoId = nkdcnb.TruckInfoId,
+                    //    TruckNumber = nkdcnb.TruckNumber,
+                    //    InputWeight = nkdcnb.InputWeight,
+                    //    OutputWeight = nkdcnb.OutputWeight,
+                    //    Description = nkdcnb.Description,
+                    //    MaterialCode = nkdcnb.MaterialCode,
+                    //    SlocCode = nkdcnb.SlocCode,
+                    //    SlocName = nkdcnb.SlocName,
+                    //    Image = nkdcnb.Image,
+                    //    Status = nkdcnb.Status,
+                    //    StartTime = nkdcnb.StartTime,
+                    //    EndTime = nkdcnb.EndTime,
+                    //    CreateTime = DateTime.Now,
+                    //    Actived = true
+                    //};
+                    #endregion
 
                     _nkdcnbRep.Add(nkdcnbNew);
                 }

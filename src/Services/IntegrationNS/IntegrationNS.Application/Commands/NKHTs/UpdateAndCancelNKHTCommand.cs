@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,37 +76,46 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     nkht.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
-                    var nkhtNew = new GoodsReturnModel
-                    {
-                        GoodsReturnId = Guid.NewGuid(),
-                        PlantCode = nkht.PlantCode,
-                        DetailODId = nkht.DetailODId,
-                        ShipToParty = nkht.ShipToParty,
-                        ShipToPartyName = nkht.ShipToPartyName,
-                        WeightSessionId = nkht.WeightSessionId,
-                        WeightVote = nkht.WeightVote,
-                        BagQuantity = nkht.BagQuantity,
-                        SingleWeight = nkht.SingleWeight,
-                        WeightHeadCode = nkht.WeightHeadCode,
-                        Weight = nkht.Weight,
-                        ConfirmQty = nkht.ConfirmQty,
-                        QuantityWithPackaging = nkht.QuantityWithPackaging,
-                        VehicleCode = nkht.VehicleCode,
-                        QuantityWeitght = nkht.QuantityWeitght,
-                        TruckNumber = nkht.TruckNumber,
-                        InputWeight = nkht.InputWeight,
-                        OutputWeight = nkht.OutputWeight,
-                        Description = nkht.Description,
-                        MaterialCode = nkht.MaterialCode,
-                        SlocCode = nkht.SlocCode,
-                        Image = nkht.Image,
-                        Status = nkht.Status,
-                        StartTime = nkht.StartTime,
-                        EndTime = nkht.EndTime,
-                        DocumentDate = nkht.DocumentDate,
-                        CreateTime = DateTime.Now,
-                        Actived = true
-                    };
+                    //Clone class
+                    var serialized = JsonConvert.SerializeObject(nkht);
+                    var nkhtNew = JsonConvert.DeserializeObject<GoodsReturnModel>(serialized);
+
+                    nkhtNew.GoodsReturnId = Guid.NewGuid();
+                    nkhtNew.MaterialDocument = null;
+                    nkhtNew.ReverseDocument = null;
+                    #region code cũ
+                    //var nkhtNew = new GoodsReturnModel
+                    //{
+                    //    GoodsReturnId = Guid.NewGuid(),
+                    //    PlantCode = nkht.PlantCode,
+                    //    DetailODId = nkht.DetailODId,
+                    //    ShipToParty = nkht.ShipToParty,
+                    //    ShipToPartyName = nkht.ShipToPartyName,
+                    //    WeightSessionId = nkht.WeightSessionId,
+                    //    WeightVote = nkht.WeightVote,
+                    //    BagQuantity = nkht.BagQuantity,
+                    //    SingleWeight = nkht.SingleWeight,
+                    //    WeightHeadCode = nkht.WeightHeadCode,
+                    //    Weight = nkht.Weight,
+                    //    ConfirmQty = nkht.ConfirmQty,
+                    //    QuantityWithPackaging = nkht.QuantityWithPackaging,
+                    //    VehicleCode = nkht.VehicleCode,
+                    //    QuantityWeitght = nkht.QuantityWeitght,
+                    //    TruckNumber = nkht.TruckNumber,
+                    //    InputWeight = nkht.InputWeight,
+                    //    OutputWeight = nkht.OutputWeight,
+                    //    Description = nkht.Description,
+                    //    MaterialCode = nkht.MaterialCode,
+                    //    SlocCode = nkht.SlocCode,
+                    //    Image = nkht.Image,
+                    //    Status = nkht.Status,
+                    //    StartTime = nkht.StartTime,
+                    //    EndTime = nkht.EndTime,
+                    //    DocumentDate = nkht.DocumentDate,
+                    //    CreateTime = DateTime.Now,
+                    //    Actived = true
+                    //};
+                    #endregion
 
                     _nkhtRep.Add(nkhtNew);
                 }

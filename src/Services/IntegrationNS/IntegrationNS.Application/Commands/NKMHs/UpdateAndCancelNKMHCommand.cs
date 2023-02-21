@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.NKMHs
 {
@@ -67,36 +68,48 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     nkmh.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
-                    var nkmhNew = new GoodsReceiptModel
-                    {
-                        GoodsReceiptId = Guid.NewGuid(),
-                        PlantCode = nkmh.PlantCode,
-                        PurchaseOrderDetailId = nkmh.PurchaseOrderDetailId,
-                        WeightId = nkmh.WeightId,
-                        WeitghtVote = nkmh.WeitghtVote,
-                        BagQuantity = nkmh.BagQuantity,
-                        SingleWeight = nkmh.SingleWeight,
-                        WeightHeadCode = nkmh.WeightHeadCode,
-                        Weight = nkmh.Weight,
-                        ConfirmQty = nkmh.ConfirmQty,
-                        QuantityWithPackaging = nkmh.QuantityWithPackaging,
-                        VehicleCode = nkmh.VehicleCode,
-                        QuantityWeitght = nkmh.QuantityWeitght,
-                        TruckQuantity = nkmh.TruckQuantity,
-                        InputWeight = nkmh.InputWeight,
-                        OutputWeight = nkmh.OutputWeight,
-                        Description = nkmh.Description,
-                        MaterialCode = nkmh.MaterialCode,
-                        MaterialCodeInt = nkmh.MaterialCodeInt,
-                        Img = nkmh.Img,
-                        Status = nkmh.Status,
-                        StartTime = nkmh.StartTime,
-                        EndTime = nkmh.EndTime,
-                        DocumentDate = nkmh.DocumentDate,
-                        DateKey = nkmh.DateKey,
-                        CreateTime = DateTime.Now,
-                        Actived = true
-                    };
+                    //Clone class
+                    var serialized = JsonConvert.SerializeObject(nkmh);
+                    var nkmhNew = JsonConvert.DeserializeObject<GoodsReceiptModel>(serialized);
+                    //Khác id
+                    nkmhNew.GoodsReceiptId = Guid.NewGuid();
+                    nkmhNew.MaterialDocument = null;
+                    nkmhNew.ReverseDocument = null;
+
+                    #region code cũ
+                    //var nkmhNew = new GoodsReceiptModel
+                    //{
+                    //    GoodsReceiptId = Guid.NewGuid(),
+                    //    PlantCode = nkmh.PlantCode,
+                    //    PurchaseOrderDetailId = nkmh.PurchaseOrderDetailId,
+                    //    WeightId = nkmh.WeightId,
+                    //    WeitghtVote = nkmh.WeitghtVote,
+                    //    BagQuantity = nkmh.BagQuantity,
+                    //    SingleWeight = nkmh.SingleWeight,
+                    //    WeightHeadCode = nkmh.WeightHeadCode,
+                    //    Weight = nkmh.Weight,
+                    //    ConfirmQty = nkmh.ConfirmQty,
+                    //    QuantityWithPackaging = nkmh.QuantityWithPackaging,
+                    //    VehicleCode = nkmh.VehicleCode,
+                    //    QuantityWeitght = nkmh.QuantityWeitght,
+                    //    TruckQuantity = nkmh.TruckQuantity,
+                    //    InputWeight = nkmh.InputWeight,
+                    //    OutputWeight = nkmh.OutputWeight,
+                    //    Description = nkmh.Description,
+                    //    MaterialCode = nkmh.MaterialCode,
+                    //    MaterialCodeInt = nkmh.MaterialCodeInt,
+                    //    SlocCode = nkmh.SlocCode,
+                    //    SlocName = nkmh.SlocName,   
+                    //    Img = nkmh.Img,
+                    //    Status = nkmh.Status,
+                    //    StartTime = nkmh.StartTime,
+                    //    EndTime = nkmh.EndTime,
+                    //    DocumentDate = nkmh.DocumentDate,
+                    //    DateKey = nkmh.DateKey,
+                    //    CreateTime = DateTime.Now,
+                    //    Actived = true
+                    //};
+                    #endregion
 
                     _nkmhRep.Add(nkmhNew);
                 }

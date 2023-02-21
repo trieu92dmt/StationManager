@@ -121,7 +121,7 @@ namespace MES.Application.Queries
             #endregion
 
             //Tạo query
-            var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL"))
+            var query = _detailWoRepo.GetQuery(x => x.SystemStatus.StartsWith("REL") && x.RequirementQuantiy <= 0)
                                      .Include(x => x.WorkOrder)
                                      .AsNoTracking();
 
@@ -155,8 +155,7 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(command.WorkorderTo))
                     command.WorkorderTo = command.WorkorderFrom;
                 query = query.Where(x => x.WorkOrder.WorkOrderCodeInt >= long.Parse(command.WorkorderFrom) &&
-                                         x.WorkOrder.WorkOrderCodeInt <= long.Parse(command.WorkorderTo) &&
-                                         x.RequirementQuantiy <= 0);
+                                         x.WorkOrder.WorkOrderCodeInt <= long.Parse(command.WorkorderTo));
             }
 
             //Theo Order Type
@@ -275,7 +274,7 @@ namespace MES.Application.Queries
             //Tạo query
             var query = _nkppppRepo.GetQuery()
                                .Include(x => x.DetailWorkOrder).ThenInclude(x => x.WorkOrder)
-                               //.Where(x => x.DetailWorkOrder.RequirementQuantiy <= 0)
+                               .Where(x => x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.RequirementQuantiy <= 0 : true)
                                .AsNoTracking();
 
             //Lọc điều kiện

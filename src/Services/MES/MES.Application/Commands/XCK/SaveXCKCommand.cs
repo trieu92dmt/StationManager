@@ -57,9 +57,9 @@ namespace MES.Application.Commands.XCK
         public Guid? TruckInfoId { get; set; }
         public string TruckNumber { get; set; }
         //23. Số cân đầu vào
-        public string InputWeight { get; set; }
+        public decimal? InputWeight { get; set; }
         //24. Số cân đầu ra
-        public string OutputWeight { get; set; }
+        public decimal? OutputWeight { get; set; }
         //25. Ghi chú
         public string Description { get; set; }
         //24. Hình ảnh
@@ -211,6 +211,10 @@ namespace MES.Application.Commands.XCK
                     VehicleCode = item.VehicleCode,
                     //21  Description
                     Description = item.Description,
+                    //Input weight
+                    InputWeight = item.InputWeight,
+                    //Output weight
+                    OutputWeight = item.OutputWeight,
                     //21  Image
                     Image = !string.IsNullOrEmpty(imgPath) ? imgPath : null,
                     //16  Status

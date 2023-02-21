@@ -32,12 +32,12 @@ namespace MES.Application.Queries
         Task<List<SearchNCKResponse>> GetDataNCK(SearchNCKCommand command);
 
         /// <summary>
-        /// Get data by reservation and reservation item
+        /// Get data by matdoc and matdoc item
         /// </summary>
-        /// <param name="reservation"></param>
-        /// <param name="reservationItem"></param>
+        /// <param name="matdoc"></param>
+        /// <param name="matdocItem"></param>
         /// <returns></returns>
-        //Task<GetDataByRsvAndRsvItemResponse> GetDataByRsvAndRsvItem(string reservation, string reservationItem);
+        Task<GetDataByMatDocAndMatDocItemResponse> GetDataByMatDocAndMatDocItem(string matdoc, string matdocItem);
     }
 
     public class NCKQuery : INCKQuery
@@ -63,6 +63,38 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _userRepo = userRepo;
             _cataRepo = cataRepo;
+        }
+
+        public async Task<GetDataByMatDocAndMatDocItemResponse> GetDataByMatDocAndMatDocItem(string matdoc, string matdocItem)
+        {
+            //Get query matdoc
+            var matDocs = _matDocRepo.GetQuery().AsNoTracking();
+
+            //Lấy ra mat doc
+            var matDoc = await matDocs.FirstOrDefaultAsync(x => x.MaterialDocCode == matdoc && x.MaterialDocItem == matdocItem);
+
+            //Danh sách product
+            var prods = _prodRepo.GetQuery().AsNoTracking();
+
+            var response = new GetDataByMatDocAndMatDocItemResponse
+            {
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == matDoc.MaterialCodeInt).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialDesc = prods.FirstOrDefault(p => p.ProductCodeInt == matDoc.MaterialCodeInt).ProductName,
+                //Batch
+                Batch = matDoc.Batch ?? "",
+                //Total Quantity
+                TotalQty = matDoc.Quantity ?? 0,
+                //Delivered Quantity
+                DeliveredQty = matDocs.Where(m => m.Reservation == matDoc.Reservation && (m.MovementType == "313" || m.MovementType == "315")).Any() ?
+                               matDocs.Where(m => m.Reservation == matDoc.Reservation && m.MovementType == "313").Sum(m => m.Quantity)
+                               - matDocs.Where(m => m.Reservation == matDoc.Reservation && m.MovementType == "315").Sum(m => m.Quantity) : 0,
+                //Unit
+                Unit = matDoc.BaseUOM ?? ""
+            };
+
+            return response;
         }
 
         public async Task<List<SearchNCKResponse>> GetDataNCK(SearchNCKCommand command)
@@ -232,8 +264,8 @@ namespace MES.Application.Queries
                 //Total Quantity
                 TotalQty = x.MaterialDocId.HasValue ? x.MaterialDoc.Quantity : 0,
                 //Delivered Quantity
-                DeliveredQty = !string.IsNullOrEmpty(x.Reservation) ? matDocs.Where(m => m.Reservation == x.Reservation && x.MovementType == "313").Sum(m => m.Quantity)
-                                                                      - matDocs.Where(m => m.Reservation == x.Reservation && x.MovementType == "315").Sum(m => m.Quantity) : 0,
+                DeliveredQty = !string.IsNullOrEmpty(x.Reservation) ? matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "313").Sum(m => m.Quantity)
+                                                                      - matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "315").Sum(m => m.Quantity) : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
                 //Số xe tải
@@ -411,9 +443,9 @@ namespace MES.Application.Queries
                 //10. Total Quantity
                 TotalQty = x.Quantity ?? 0,
                 //11. Delivered Quantity
-                DeliveredQty = !string.IsNullOrEmpty(x.Reservation) && matDocs.Where(m => m.Reservation == x.Reservation && (x.MovementType == "313" || x.MovementType =="315")).Any() ? 
-                                                                       matDocs.Where(m => m.Reservation == x.Reservation && x.MovementType == "313").Sum(m => m.Quantity) 
-                                                                       - matDocs.Where(m => m.Reservation == x.Reservation && x.MovementType == "315").Sum(m => m.Quantity) : 0,
+                DeliveredQty = !string.IsNullOrEmpty(x.Reservation) && matDocs.Where(m => m.Reservation == x.Reservation && (m.MovementType == "313" || m.MovementType =="315")).Any() ? 
+                                                                       matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "313").Sum(m => m.Quantity) 
+                                                                       - matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "315").Sum(m => m.Quantity) : 0,
                 //13. UoM
                 Unit = x.BaseUOM,
                 //Document Date

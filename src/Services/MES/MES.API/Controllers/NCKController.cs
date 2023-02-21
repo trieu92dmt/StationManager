@@ -2,11 +2,9 @@
 using Core.Properties;
 using MediatR;
 using MES.Application.Commands.NCK;
-using MES.Application.Commands.XK;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NCK;
 using MES.Application.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MES.API.Controllers
@@ -83,6 +81,40 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<SearchNCKResponse>>
             {
                 Data = response
+            });
+        }
+
+        /// <summary>
+        /// Update dữ liệu nck
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-nck")]
+        public async Task<IActionResult> UpdateXCKAsync([FromBody] UpdateNCKCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+
+        /// <summary>
+        /// Get data by mat doc and mat doc item
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("get-data-by-matdoc-and-matdoc-item")]
+        public async Task<IActionResult> GetDataByMatDocAndMatDocItemAsync(string matdoc, string matdocItem)
+        {
+            var response = await _query.GetDataByMatDocAndMatDocItem(matdoc, matdocItem);
+
+            return Ok(new ApiSuccessResponse<GetDataByMatDocAndMatDocItemResponse>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Get Data")
             });
         }
 

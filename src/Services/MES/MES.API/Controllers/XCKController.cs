@@ -57,7 +57,7 @@ namespace MES.API.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("save-xck")]
-        public async Task<IActionResult> SaveNKPPPPAsync([FromBody] SaveXCKCommand command)
+        public async Task<IActionResult> SaveXCKAsync([FromBody] SaveXCKCommand command)
         {
             var response = await _mediator.Send(command);
 
@@ -108,7 +108,7 @@ namespace MES.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("get-data-by-res-and-item")]
-        public async Task<IActionResult> SaveXCKAsync(string reservation, string reservationItem)
+        public async Task<IActionResult> GetDataByResAndResItemAsync(string reservation, string reservationItem)
         {
             var response = await _query.GetDataByRsvAndRsvItem(reservation, reservationItem);
 

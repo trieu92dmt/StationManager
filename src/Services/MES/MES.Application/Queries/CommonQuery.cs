@@ -199,6 +199,13 @@ namespace MES.Application.Queries
         Task<List<CommonResponse>> GetMatDoc(string keyword);
 
         /// <summary>
+        /// Get mat doc item
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetMatDocItem(string matdoc, string keyword);
+
+        /// <summary>
         /// Get scale status
         /// </summary>
         /// <param name="keyword"></param>
@@ -717,6 +724,19 @@ namespace MES.Application.Queries
                                 }).AsNoTracking().ToListAsync();
 
             return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
+        }
+        #endregion
+
+        #region Dropdown mat doc item
+        public async Task<List<CommonResponse>> GetMatDocItem(string matdoc, string keyword)
+        {
+            return  await _matDocRepo.GetQuery(x =>(!string.IsNullOrEmpty(matdoc) ? x.MaterialDocCode == matdoc : false) &&
+                                                   (!string.IsNullOrEmpty(keyword) ? x.MaterialDocItem.ToLower().Contains(keyword.ToLower().Trim()) : true))
+                                .Select(x => new CommonResponse
+                                {
+                                    Key = x.MaterialDocItem,
+                                    Value = x.MaterialDocItem
+                                }).AsNoTracking().ToListAsync();
         }
         #endregion
 

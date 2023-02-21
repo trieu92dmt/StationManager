@@ -15,4 +15,9 @@
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Commands\NCKs\" />
+	  <Folder Include="Commands\XKs\" />
+	</ItemGroup>
+
 </Project>

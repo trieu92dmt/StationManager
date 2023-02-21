@@ -322,9 +322,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-work-order")]
-        public async Task<IActionResult> GetWorkOrderAsync(string plant, string orderType, string keyword)
+        public async Task<IActionResult> GetWorkOrderAsync(string plant, string orderType, string material, string keyword)
         {
-            var dropdownList = await _commonQuery.GetWorkOrder(plant, orderType, keyword);
+            var dropdownList = await _commonQuery.GetWorkOrder(plant, orderType, material, keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion

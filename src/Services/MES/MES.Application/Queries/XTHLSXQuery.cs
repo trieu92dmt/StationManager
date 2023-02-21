@@ -5,6 +5,7 @@ using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.XTHLSX;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
 namespace MES.Application.Queries
 {
@@ -90,7 +91,7 @@ namespace MES.Application.Queries
                 RequiremenQty = woDetail.RequirementQuantiy.HasValue ? Math.Abs(woDetail.RequirementQuantiy.Value) : 0,
                 //Số lượng nhập đã thu hồi
                 WithdrawnQty = woDetail.QuantityWithdrawn.HasValue ? Math.Abs(woDetail.QuantityWithdrawn.Value) : 0,
-                TotalQty = woDetail.WorkOrder.TargetQuantity,
+                TotalQty = woDetail.WorkOrder.TargetQuantity.HasValue ? Math.Abs(woDetail.WorkOrder.TargetQuantity.Value) : 0,
                 //Scheduled Start Date
                 ScheduledStartDate = woDetail.WorkOrder.ScheduledStartDate,
                 //Scheduled Finish Date
@@ -234,11 +235,11 @@ namespace MES.Application.Queries
                 //Schedule Finish Time
                 ScheduleFinishTime = x.WorkOrder.ScheduledFinishDate ?? null,
                 //Requirement Qty
-                RequirementQty = x.RequirementQuantiy ?? 0,
+                RequirementQty = x.RequirementQuantiy.HasValue ? Math.Abs(x.RequirementQuantiy.Value) : 0,
                 //Withdraw Qty
-                WithdrawQty = x.QuantityWithdrawn ?? 0,
+                WithdrawQty = x.QuantityWithdrawn.HasValue ? Math.Abs(x.QuantityWithdrawn.Value) : 0,
                 //Total quantity
-                TotalQty = x.WorkOrder.TargetQuantity ?? 0
+                TotalQty = x.WorkOrder.TargetQuantity.HasValue ? Math.Abs(x.WorkOrder.TargetQuantity.Value) : 0
             }).ToListAsync();
 
             var index = 1;
@@ -432,11 +433,11 @@ namespace MES.Application.Queries
                 //21 Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
                 //Total Quantity
-                TotalQty = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.TargetQuantity : 0,
+                TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity.Value) : 0,
                 //22 Số lượng yêu cầu
-                RequirementQty = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.RequirementQuantiy : 0,
+                RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy.Value) : 0,
                 //23 Số lượng đã nhập thu hồi
-                WithdrawnQty = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.QuantityWithdrawn : 0,
+                WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn.Value) : 0,
                 //24 UOM
                 Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : "",
                 //25 Ghi chú

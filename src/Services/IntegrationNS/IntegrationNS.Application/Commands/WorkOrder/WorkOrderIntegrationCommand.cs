@@ -97,12 +97,15 @@ namespace IntegrationNS.Application.Commands.WorkOrder
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<WorkOrderModel> _woRepo;
         private readonly IRepository<DetailWorkOrderModel> _detailWORepo;
+        private readonly IRepository<ProductModel> _prodRepo;
 
-        public WorkOrderIntegrationCommandHandler(IUnitOfWork unitOfWork, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWORepo)
+        public WorkOrderIntegrationCommandHandler(IUnitOfWork unitOfWork, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWORepo,
+                                                  IRepository<ProductModel> prodRepo)
         {
             _unitOfWork = unitOfWork;
             _woRepo = woRepo;
             _detailWORepo = detailWORepo;
+            _prodRepo = prodRepo;
         }
 
         public async Task<IntegrationNSResponse> Handle(WorkOrderIntegrationCommand request, CancellationToken cancellationToken)
@@ -116,10 +119,16 @@ namespace IntegrationNS.Application.Commands.WorkOrder
 
             var workorders = _woRepo.GetQuery();
 
+            //Tạo query get material
+            var materials = _prodRepo.GetQuery().AsNoTracking();
+
             foreach (var woIntegration in request.WorkOrderIntegrations)
             {
                 try
                 {
+                    if (materials.FirstOrDefault(x => x.ProductCode == woIntegration.ProductCode) == null)
+                        throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
+
                     //Check tồn tại
                     var workorder = await workorders.FirstOrDefaultAsync(x => x.WorkOrderCode == woIntegration.WorkOrderCode);
 
@@ -162,6 +171,8 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                         var detailWOs = new List<DetailWorkOrderModel>();
                         foreach (var item in woIntegration.DetallWorkOrderIntegrations)
                         {
+                            if (materials.FirstOrDefault(x => x.ProductCode == item.ProductCode) == null)
+                                throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
 
                             detailWOs.Add(new DetailWorkOrderModel
                             {

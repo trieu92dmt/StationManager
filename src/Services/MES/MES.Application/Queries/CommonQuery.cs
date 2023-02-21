@@ -160,7 +160,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string keyword);
+        Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string material, string keyword);
 
         /// <summary>
         /// Get Reservation
@@ -584,14 +584,15 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        public async Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string keyword)
+        public async Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string material, string keyword)
         {
             var result = await _workOrderRep.GetQuery(x => x.Plant == plant &&
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
                                                            (!x.SystemStatus.StartsWith("TECO")) &&
                                                            (x.DeletionFlag != "X") &&
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
-                                                           (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
+                                                           (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
+                                                           (!string.IsNullOrEmpty(material) ? x.ProductCodeInt == long.Parse(material) : true))
                                   .OrderBy(x => x.WorkOrderCode)
                                   .Select(x => new CommonResponse
                                   {

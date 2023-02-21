@@ -85,7 +85,7 @@ namespace MES.Application.Queries
                 //Số lượng nhập đã thu hồi
                 WithdrawnQty = woDetail.QuantityWithdrawn.HasValue ? Math.Abs(woDetail.QuantityWithdrawn.Value) : 0,
                 //Total quantity
-                TotalQty = woDetail.WorkOrder.TargetQuantity,
+                TotalQty = woDetail.WorkOrder.TargetQuantity.HasValue ? Math.Abs(woDetail.WorkOrder.TargetQuantity.Value) : 0,
                 //Scheduled Start Date
                 ScheduledStartDate = woDetail.WorkOrder.ScheduledStartDate,
                 //Scheduled Finish Date

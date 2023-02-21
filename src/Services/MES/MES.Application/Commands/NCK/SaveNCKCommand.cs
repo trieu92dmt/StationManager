@@ -192,7 +192,7 @@ namespace MES.Application.Commands.NCK
                     //8. SlocCode
                     SlocCode = item.Sloc,
                     //9. SlocName
-                    SlocName = string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
+                    SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
                     //12. Batch - CHARG
                     Batch = item.Batch,
                     //14. UOM

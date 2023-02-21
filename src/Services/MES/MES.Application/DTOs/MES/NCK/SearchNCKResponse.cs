@@ -110,7 +110,7 @@ namespace MES.Application.DTOs.MES.NCK
         //7. Stor.Loc
         public string Sloc { get; set; }
         public string SlocName { get; set; }
-        public string SlocFmt { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //9. Batch
         public string Batch { get; set; }
         //10. Total Quantity

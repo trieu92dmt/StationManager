@@ -14,6 +14,10 @@ namespace MES.Application.DTOs.MES.XCK
         public string MaterialDesc { get; set; }
         //Movement type
         public string MovementType { get; set; }
+        //Rec Sloc
+        public string ReceivingSloc { get; set; }
+        public string ReceivingSlocName { get; set; }
+        public string ReceivingSlocFmt => !string.IsNullOrEmpty(ReceivingSloc) && !string.IsNullOrEmpty(ReceivingSlocName) ? $"{ReceivingSloc} | {ReceivingSlocName}" : "";
         //Batch
         public string Batch { get; set; }
         //Total quantity

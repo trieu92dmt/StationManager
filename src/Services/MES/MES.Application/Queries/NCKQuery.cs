@@ -242,7 +242,7 @@ namespace MES.Application.Queries
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
-                SlocName = string.IsNullOrEmpty(x.SlocCode) ? $"{x.SlocCode} | {x.SlocName}" : "",
+                SlocName = !string.IsNullOrEmpty(x.SlocCode) ? x.SlocName : "",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Sl bao
@@ -437,7 +437,6 @@ namespace MES.Application.Queries
                 //7. Stor.Loc
                 Sloc = x.StorageLocation ?? "",
                 SlocName = string.IsNullOrEmpty(x.StorageLocation) ? "" : slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName,
-                SlocFmt = string.IsNullOrEmpty(x.StorageLocation) ? "" : $"{x.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName}",
                 //9. Batch
                 Batch = x.Batch,
                 //10. Total Quantity

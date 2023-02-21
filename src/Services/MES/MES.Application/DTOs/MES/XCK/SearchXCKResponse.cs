@@ -25,9 +25,11 @@ namespace MES.Application.DTOs.MES.XCK
         //Stor.Sloc
         public string Sloc { get; set; }
         public string SlocName { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //Receiving Stor.Sloc
         public string ReceivingSloc { get; set; }
         public string ReceivingSlocName { get; set; }
+        public string ReceivingSlocFmt => !string.IsNullOrEmpty(ReceivingSloc) && !string.IsNullOrEmpty(ReceivingSlocName) ? $"{ReceivingSloc} | {ReceivingSlocName}" : "";
         //Batch
         public string Batch { get; set; }
         //Sl bao
@@ -109,9 +111,11 @@ namespace MES.Application.DTOs.MES.XCK
         //7. Stor.Loc
         public string Sloc { get; set; }
         public string SlocName { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //8. Receving Sloc
         public string ReceivingSloc { get; set; }
         public string ReceivingSlocName { get; set; }
+        public string ReceivingSlocFmt => !string.IsNullOrEmpty(ReceivingSloc) && !string.IsNullOrEmpty(ReceivingSlocName) ? $"{ReceivingSloc} | {ReceivingSlocName}" : "";
         //9. Batch
         public string Batch { get; set; }
         //10. Total Quantity

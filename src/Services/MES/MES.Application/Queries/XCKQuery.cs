@@ -5,6 +5,7 @@ using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.XCK;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace MES.Application.Queries
 {
@@ -182,6 +183,7 @@ namespace MES.Application.Queries
                 SlocName = string.IsNullOrEmpty(x.Reservation.Sloc) ? "" : $"{x.Reservation.Sloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.Reservation.Sloc).StorageLocationName}",
                 //8. Receving Sloc
                 ReceivingSloc = x.Reservation.ReceivingSloc ?? "",
+                ReceivingSlocName = string.IsNullOrEmpty(x.Reservation.ReceivingSloc) ? "" : $"{x.Reservation.ReceivingSloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.Reservation.ReceivingSloc).StorageLocationName}",
                 //9. Batch
                 Batch = x.Batch,
                 //10. Total Quantity
@@ -348,10 +350,10 @@ namespace MES.Application.Queries
                 MovementType = x.DetailReservationId.HasValue ? x.DetailReservation.MovementType : "",
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
-                SlocName = string.IsNullOrEmpty(x.SlocCode) ? $"{x.SlocCode} | {x.SlocName}" : "",
+                SlocName = !string.IsNullOrEmpty(x.SlocCode) ? $"{x.SlocCode} | {x.SlocName}" : "",
                 //Receiving Stor.Sloc
                 ReceivingSloc = x.ReceivingSlocCode ?? "",
-                ReceivingSlocName = string.IsNullOrEmpty(x.ReceivingSlocCode) ? $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}" : "",
+                ReceivingSlocName = !string.IsNullOrEmpty(x.ReceivingSlocCode) ? $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}" : "",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Sl bao
@@ -430,6 +432,9 @@ namespace MES.Application.Queries
             //Danh sách product
             var prods = _prodRepo.GetQuery().AsNoTracking();
 
+            //Danh sách sloc
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
+
             var response = new GetDataByRsvAndRsvItemResponse
             {
                 //Material
@@ -438,6 +443,9 @@ namespace MES.Application.Queries
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCodeInt == detailRes.MaterialCodeInt).ProductName,
                 //Movement type
                 MovementType = detailRes.MovementType ?? "",
+                //Rec Sloc
+                ReceivingSloc = detailRes.Reservation.ReceivingSloc,
+                ReceivingSlocName = string.IsNullOrEmpty(detailRes.Reservation.ReceivingSloc) ? "" : $"{detailRes.Reservation.ReceivingSloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == detailRes.Reservation.ReceivingSloc).StorageLocationName}",
                 //Batch
                 Batch = detailRes.Batch ?? "",
                 //Total Quantity

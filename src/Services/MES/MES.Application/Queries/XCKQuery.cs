@@ -411,7 +411,8 @@ namespace MES.Application.Queries
                 //Đánh dấu xóa
                 isDelete = x.Status == "DEL" ? true : false,
                 //Được chỉnh sửa
-                isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
+                isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
+                //isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
             }).ToListAsync();
 
             //Tính open quantity

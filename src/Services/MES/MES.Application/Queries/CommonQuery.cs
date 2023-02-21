@@ -111,7 +111,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword);
+        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string plant, string keyword);
 
         /// <summary>
         /// Dropdown Outbound Delivery Item
@@ -479,7 +479,7 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Outbound Delivery
-        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string plant, string keyword)
         {
             //Delivery Type lấy ra
             var deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };

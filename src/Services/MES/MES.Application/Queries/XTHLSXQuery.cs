@@ -464,7 +464,8 @@ namespace MES.Application.Queries
                 //35 Reverse Doc
                 ReverseDoc = x.ReverseDocument ?? "",
                 isDelete = x.Status == "DEL" ? true : false,
-                isEdit = x.Status == "DEL" || (x.MaterialDocument != null && x.MaterialDocument != "") ? false : true
+                isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
+                //isEdit = x.Status == "DEL" || (x.MaterialDocument != null && x.MaterialDocument != "") ? false : true
             }).ToListAsync();
 
             return data;

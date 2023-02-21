@@ -352,7 +352,8 @@ namespace MES.Application.Queries
                 MatDoc = x.MaterialDocument,
                 ReverseDoc = x.ReverseDocument,
                 isDelete = x.Status == "DEL" ? true : false,
-                isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
+                isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
+                //isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
 
             }).ToListAsync();
 

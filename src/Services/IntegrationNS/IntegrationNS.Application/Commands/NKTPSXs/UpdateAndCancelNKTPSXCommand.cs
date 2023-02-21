@@ -95,6 +95,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                         QuantityWeitght = nktpsx.QuantityWeitght,
                         Description = nktpsx.Description,
                         MaterialCode = nktpsx.MaterialCode,
+                        MaterialCodeInt = nktpsx.MaterialCodeInt,
                         SlocCode = nktpsx.SlocCode,
                         SlocName = nktpsx.SlocName,
                         Image = nktpsx.Image,

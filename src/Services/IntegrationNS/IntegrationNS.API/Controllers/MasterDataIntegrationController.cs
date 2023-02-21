@@ -1334,7 +1334,7 @@ namespace IntegrationNS.API.Controllers
         ///             }
         /// </remarks>
         [HttpPut("update-nkmh")]
-        public async Task<IActionResult> UpdateOrCancelNKMHAsync([FromBody] UpdateAndCancelNKPPPPCommand req)
+        public async Task<IActionResult> UpdateOrCancelNKMHAsync([FromBody] UpdateAndCancelNKMHCommand req)
         {
             var response = await _mediator.Send(req);
 

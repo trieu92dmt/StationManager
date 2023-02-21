@@ -184,11 +184,11 @@ namespace MES.Application.Commands.XCK
                     //8. SlocCode
                     SlocCode = item.Sloc,
                     //9. SlocName
-                    SlocName = string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
+                    SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
                     //10. ReceivingSlocCode - UMLGO - ZUMLGOTXT
                     ReceivingSlocCode = item.ReceivingSloc,
                     //11. ReceivingSlocName
-                    ReceivingSlocName = string.IsNullOrEmpty(item.ReceivingSloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.ReceivingSloc).StorageLocationName : "",
+                    ReceivingSlocName = !string.IsNullOrEmpty(item.ReceivingSloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.ReceivingSloc).StorageLocationName : "",
                     //12. Batch - CHARG
                     Batch = item.Batch,
                     //13. Movement Type

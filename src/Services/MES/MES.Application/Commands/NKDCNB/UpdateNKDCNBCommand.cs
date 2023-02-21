@@ -191,7 +191,7 @@ namespace MES.Application.Commands.NKDCNB
                         //Receving Plant
                         PlantCode = item.Plant,
                         //Material
-                        MaterialCode = !string.IsNullOrEmpty(item.ShippingPoint) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.ShippingPoint).ProductCode: "",
+                        MaterialCode = !string.IsNullOrEmpty(item.ShippingPoint) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode: "",
                         MaterialCodeInt = !string.IsNullOrEmpty(item.ShippingPoint) ? long.Parse(item.Material) : null,
                         //Đầu cân
                         WeightHeadCode = item.WeightHeadCode,

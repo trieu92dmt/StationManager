@@ -160,7 +160,7 @@ namespace MES.Application.Commands.NK
                     //Customer
                     Customer = item.Customer, 
                     //4 MaterialCode
-                    MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductCode : "",
+                    MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
                     MaterialCodeInt = long.Parse(item.Material), 
                     //5   WeightId
                     WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?

@@ -226,7 +226,7 @@ namespace MES.Application.Commands.XK
                         //Plant
                         PlantCode = item.Plant,
                         //Material
-                        MaterialCode = !string.IsNullOrEmpty(item.Plant) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductCode : "",
+                        MaterialCode = !string.IsNullOrEmpty(item.Plant) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
                         MaterialCodeInt = long.Parse(item.Material),
                         //Đầu cân
                         WeightHeadCode = item.WeightHeadCode,

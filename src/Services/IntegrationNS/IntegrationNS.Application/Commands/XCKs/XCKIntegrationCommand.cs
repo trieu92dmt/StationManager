@@ -162,7 +162,7 @@ namespace IntegrationNS.Application.Commands.XCKs
             }
 
             //Check số phiếu cân
-            if (!command.WeightVotes.IsNullOrEmpty() || command.WeightVotes.Any())
+            if (command.WeightVotes.Any())
             {
                 query = query.Where(x => command.WeightVotes.Contains(x.WeightVote));
             }

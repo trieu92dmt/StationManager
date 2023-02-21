@@ -179,8 +179,8 @@ namespace MES.Application.Commands.XCK
                     PlantCode = item.Plant,
                     PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,
                     //7. MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductCode,
-                    MaterialName = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material) && x.PlantCode == item.Plant).ProductName,
+                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
+                    MaterialName = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName,
                     MaterialCodeInt = long.Parse(item.Material),
                     //8. SlocCode
                     SlocCode = item.Sloc,

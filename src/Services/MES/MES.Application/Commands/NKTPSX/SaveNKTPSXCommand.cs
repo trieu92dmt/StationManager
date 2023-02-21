@@ -140,7 +140,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
                 //Lấy product
-                var material = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode) && x.PlantCode == item.Plant).ProductCode;
+                var material = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode)).ProductCode;
 
                 //Lấy ra workorder
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(d => d.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;

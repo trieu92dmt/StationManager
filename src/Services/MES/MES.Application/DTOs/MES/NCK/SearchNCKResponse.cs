@@ -53,6 +53,8 @@ namespace MES.Application.DTOs.MES.NCK
         public decimal? OpenQty => TotalQty - DeliveredQty;
         //UoM
         public string Unit { get; set; }
+        //Document date
+        public DateTime? DocumentDate { get; set; }
         //Số xe tải
         public Guid? TruckInfoId { get; set; }
         public string TruckNumber { get; set; }

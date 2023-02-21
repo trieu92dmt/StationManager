@@ -332,7 +332,7 @@ namespace MES.Application.Queries
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
-            var data = await query.OrderByDescending(x => x.CreateTime).Select(x => new SearchXCKResponse
+            var data = await query.OrderByDescending(x => x.WeightVote).OrderByDescending(x => x.CreateTime).Select(x => new SearchXCKResponse
             {
                 //Id
                 XCKId = x.WarehouseTransferId,

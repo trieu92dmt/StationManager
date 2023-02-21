@@ -268,6 +268,8 @@ namespace MES.Application.Queries
                                                                       - matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "315").Sum(m => m.Quantity) : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
+                //Document date
+                DocumentDate = x.MaterialDocId.HasValue ? x.MaterialDoc.PostingDate : null,
                 //Số xe tải
                 TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId.Value : null,
                 TruckNumber = x.TruckNumber ?? "",

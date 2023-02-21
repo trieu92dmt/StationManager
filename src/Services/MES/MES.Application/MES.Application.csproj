@@ -11,9 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Commands\XKLXH\" />
 	  <Folder Include="DTOs\MES\XNVLGC\" />
-	  <Folder Include="DTOs\MES\XKLXH\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -197,7 +197,7 @@ namespace MES.Application.Commands.XKLXH
                     //Sl kèm bao bì
                     QuantityWithPackaging = item.QuantityWithPackage,
                     //Số xe tải
-                    TruckInfoId = item.TruckInfoId,
+                    TruckInfoId = item.TruckInfoId.HasValue ? item.TruckInfoId : null,
                     TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,
                     //Số lần cân
                     QuantityWeight = item.QuantityWeight,

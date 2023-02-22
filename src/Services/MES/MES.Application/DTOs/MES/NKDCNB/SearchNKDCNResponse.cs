@@ -35,7 +35,7 @@ namespace MES.Application.DTOs.MES.NKDCNB
         //Delivered Quantity
         public decimal? DeliveryQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty => TotalQty.Value - DeliveryQty.Value;
+        public decimal? OpenQty => TotalQty.HasValue && DeliveryQty.HasValue ? TotalQty - DeliveryQty : 0;
         //Units of Measure
         public string Unit { get; set; }
         //Purchase order

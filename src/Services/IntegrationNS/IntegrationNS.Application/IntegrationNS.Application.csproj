@@ -16,7 +16,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Commands\NCKs\" />
 	  <Folder Include="Commands\NKs\" />
 	  <Folder Include="Commands\XKs\" />
 	</ItemGroup>

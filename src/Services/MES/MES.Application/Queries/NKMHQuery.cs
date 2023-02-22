@@ -5,6 +5,7 @@ using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MES.Application.Queries
 {
@@ -178,10 +179,10 @@ namespace MES.Application.Queries
                 if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
 
                 queryNKMH = queryNKMH.Where(x => x.WeighDate >= request.WeightDateFrom &&
-                                         x.WeighDate <= request.WeightDateTo);
+                x.WeighDate <= request.WeightDateTo);
             }
 
-            if (!request.WeightVotes.IsNullOrEmpty())
+            if (request.WeightVotes != null && request.WeightVotes.Any())
             {
                 queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote));
             }

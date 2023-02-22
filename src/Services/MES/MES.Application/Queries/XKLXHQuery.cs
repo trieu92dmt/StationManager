@@ -29,6 +29,14 @@ namespace MES.Application.Queries
         /// <param name="command"></param>
         /// <returns></returns>
         Task<List<SearchXKLXHResponse>> GetDataXKLXH(SearchXKLXHCommand command);
+
+        /// <summary>
+        /// Lấy data theo od và oditem 
+        /// </summary>
+        /// <param name="ODCode"></param>
+        /// <param name="ODItem"></param>
+        /// <returns></returns>
+        Task<GetDataByODODItemResponse> GetDataByODODItem(string outboundDelivery, string outboundDeliveryItem);
     }
 
     public class XKLXHQuery : IXKLXHQuery
@@ -54,6 +62,41 @@ namespace MES.Application.Queries
             _xklxhRepo = xklxhRepo;
             _userRepo = userRepo;
             _cataRepo = cataRepo;
+        }
+
+        public async Task<GetDataByODODItemResponse> GetDataByODODItem(string outboundDelivery, string outboundDeliveryItem)
+        {
+            //Lấy ra od
+            var odDetails = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                              .FirstOrDefaultAsync(x => x.OutboundDeliveryItem == outboundDeliveryItem && x.OutboundDelivery.DeliveryCodeInt == long.Parse(outboundDelivery));
+
+            if (odDetails == null)
+                return null;
+
+            //Danh sách product
+            var prods = _prodRepo.GetQuery().AsNoTracking();
+
+            var response = new GetDataByODODItemResponse
+            {
+                //Ship to party
+                ShipToPartyName = odDetails.OutboundDelivery.ShiptoPartyName,
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialName = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductName,
+                //Batch
+                Batch = odDetails.Batch,
+                //Số phương tiện
+                VehicleCode = odDetails.OutboundDelivery.VehicleCode,
+                //Total Quantity
+                TotalQty = odDetails.DeliveryQuantity.HasValue ? odDetails.DeliveryQuantity : 0,
+                //Delivered Quantity
+                DeliveryQty = odDetails.PickedQuantityPUoM.HasValue ? odDetails.PickedQuantityPUoM : 0,
+                //DocumentDate
+                DocumentDate = odDetails.OutboundDelivery.DocumentDate
+            };
+
+            return response;
         }
 
         public async Task<List<SearchXKLXHResponse>> GetDataXKLXH(SearchXKLXHCommand command)
@@ -252,7 +295,7 @@ namespace MES.Application.Queries
                 //Document date
                 DocumentDate = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DocumentDate : null,
                 //Số xe tải
-                TruckInfoId = x.TruckInfoId,
+                TruckInfoId = x.TruckInfoId ?? null,
                 TruckNumber = x.TruckNumber ?? "",
                 //Số cân đầu vào
                 InputWeight = x.InputWeight ?? 0,

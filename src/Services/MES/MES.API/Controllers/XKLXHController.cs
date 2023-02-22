@@ -1,6 +1,7 @@
 ﻿using Core.Models;
 using Core.Properties;
 using MediatR;
+using MES.Application.Commands.OutboundDelivery;
 using MES.Application.Commands.XKLXH;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.XKLXH;
@@ -90,13 +91,50 @@ namespace MES.API.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("get-xklxh")]
-        public async Task<IActionResult> GetXCKAsync([FromBody] SearchXKLXHCommand command)
+        public async Task<IActionResult> GetXKLXHAsync([FromBody] SearchXKLXHCommand command)
         {
             var response = await _query.GetDataXKLXH(command);
 
             return Ok(new ApiSuccessResponse<List<SearchXKLXHResponse>>
             {
                 Data = response
+            });
+        }
+
+        /// <summary>
+        /// Update dữ liệu xklxh
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-xklxh")]
+        public async Task<IActionResult> UpdateXKLXHAsync([FromBody] UpdateXKLXHCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+
+        /// <summary>
+        /// Lấy dữ liệu theo od và od item
+        /// </summary>
+        /// <param name="od"></param>
+        /// <param name="odItem"></param>
+        /// <returns></returns>
+        [HttpGet("get-data-by-od-oditem")]
+        public async Task<IActionResult> GetDataByODAndODItem(string od, string odItem)
+        {
+            var response = await _query.GetDataByODODItem(od, odItem);
+
+            return Ok(new ApiSuccessResponse<GetDataByODODItemResponse>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy data")
             });
         }
     }

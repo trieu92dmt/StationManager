@@ -1,4 +1,5 @@
-﻿using Core.SeedWork.Repositories;
+﻿using Azure;
+using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
@@ -111,7 +112,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string plant, string keyword);
+        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string materialFrom, string materialTo, string keyword);
 
         /// <summary>
         /// Dropdown Outbound Delivery Item
@@ -246,6 +247,7 @@ namespace MES.Application.Queries
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<DetailReservationModel> _dtRsRepo;
         private readonly IRepository<MaterialDocumentModel> _matDocRepo;
+        private readonly IRepository<DetailOutboundDeliveryModel> _dtOdRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -253,7 +255,8 @@ namespace MES.Application.Queries
                            IRepository<GoodsReceiptModel> nkmhRep, IRepository<SalesDocumentModel> saleDocRepo, IRepository<OutboundDeliveryModel> obDeliveryRepo,
                            IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
-                           IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo)
+                           IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
+                           IRepository<DetailOutboundDeliveryModel> dtOdRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -276,6 +279,7 @@ namespace MES.Application.Queries
             _cataRepo = cataRepo;
             _dtRsRepo = dtRsRepo;
             _matDocRepo = matDocRepo;
+            _dtOdRepo = dtOdRepo;
         }
 
         #region Get DropdownMaterial
@@ -479,19 +483,37 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Outbound Delivery
-        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string plant, string keyword)
+        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string materialFrom, string materialTo, string keyword)
         {
-            //Delivery Type lấy ra
-            var deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
+            //Ở màn hình nhập kho hàng trả
+            var query = _dtOdRepo.GetQuery()
+                                       .Include(x => x.OutboundDelivery)
+                                       .Where(x =>string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                       .AsNoTracking();
 
-            return await _obDeliveryRepo.GetQuery(x => (string.IsNullOrEmpty(keyword) ? true : x.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&             
-                                                       (deliveryType.Contains(x.DeliveryType)))
-                                         .OrderBy(x => x.DeliveryCode)
-                                         .Select(x => new CommonResponse
-                                         {
-                                             Key = x.DeliveryCode,
-                                             Value = x.DeliveryCode
-                                         }).Take(10).ToListAsync();
+            //Lọc điều kiện
+            //Theo plant
+            if (!string.IsNullOrEmpty(plant))
+            {
+                query = type == "NKDCNB" ? query.Where(x => x.OutboundDelivery.ReceivingPlant == plant) : query.Where(x => x.Plant == plant);
+            }
+            //Theo material
+            if (!string.IsNullOrEmpty(materialFrom))
+            {
+                //Nếu ko search To thì search 1
+                if (!string.IsNullOrEmpty(materialTo))
+                    materialTo = materialFrom;
+                query = query.Where(x => x.ProductCodeInt >= long.Parse(materialFrom) && x.ProductCodeInt <= long.Parse(materialTo));
+            }
+
+            var data = await query.OrderBy(x => x.OutboundDelivery.DeliveryCode)
+                               .Select(x => new CommonResponse
+                               {
+                                   Key = x.OutboundDelivery.DeliveryCode,
+                                   Value = x.OutboundDelivery.DeliveryCode
+                               }).ToListAsync();
+
+            return data.DistinctBy(x => x.Key).Take(10).ToList();
         }
 
         public async Task<List<CommonResponse>> GetDropdownShipToParty(string keyword)

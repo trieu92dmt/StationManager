@@ -13,6 +13,7 @@ namespace Infrastructure.Models
     {
         public TruckInfoModel()
         {
+            ExportByCommandModel = new HashSet<ExportByCommandModel>();
             OtherExportModel = new HashSet<OtherExportModel>();
             OtherImportModel = new HashSet<OtherImportModel>();
             WarehouseImportTransferModel = new HashSet<WarehouseImportTransferModel>();
@@ -37,6 +38,8 @@ namespace Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public bool? Actived { get; set; }
 
+        [InverseProperty("TruckInfo")]
+        public virtual ICollection<ExportByCommandModel> ExportByCommandModel { get; set; }
         [InverseProperty("TruckInfo")]
         public virtual ICollection<OtherExportModel> OtherExportModel { get; set; }
         [InverseProperty("TruckInfo")]

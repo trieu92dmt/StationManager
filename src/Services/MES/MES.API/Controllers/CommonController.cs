@@ -303,7 +303,7 @@ namespace MES.API.Controllers
 
         #region Dropdown OrderType
         /// <summary>
-        /// Get order type
+        /// Get order type (Delivery Type)
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>

@@ -187,6 +187,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[ExportByCommandModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[GoodsReceiptModel]",
          "ObjectType": 0
       },

@@ -122,6 +122,7 @@ namespace Infrastructure.Data
         public virtual DbSet<EquipmentStatus_Temp> EquipmentStatus_Temp { get; set; }
         public virtual DbSet<ErrorListModel> ErrorListModel { get; set; }
         public virtual DbSet<ExcelLogModel> ExcelLogModel { get; set; }
+        public virtual DbSet<ExportByCommandModel> ExportByCommandModel { get; set; }
         public virtual DbSet<FaceCheckInOutModel> FaceCheckInOutModel { get; set; }
         public virtual DbSet<FavoriteReportModel> FavoriteReportModel { get; set; }
         public virtual DbSet<FileAttachmentModel> FileAttachmentModel { get; set; }
@@ -1246,6 +1247,26 @@ namespace Infrastructure.Data
             modelBuilder.Entity<ExcelLogModel>(entity =>
             {
                 entity.Property(e => e.LogId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<ExportByCommandModel>(entity =>
+            {
+                entity.Property(e => e.ExportByCommandId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailOD)
+                    .WithMany(p => p.ExportByCommandModel)
+                    .HasForeignKey(d => d.DetailODId)
+                    .HasConstraintName("FK_ExportByCommandModel_DetailOutboundDeliveryModel");
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.ExportByCommandModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_ExportByCommandModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.ExportByCommandModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_ExportByCommandModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<FavoriteReportModel>(entity =>

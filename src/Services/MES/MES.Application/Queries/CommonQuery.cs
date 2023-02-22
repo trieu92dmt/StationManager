@@ -501,7 +501,7 @@ namespace MES.Application.Queries
             if (!string.IsNullOrEmpty(materialFrom))
             {
                 //Nếu ko search To thì search 1
-                if (!string.IsNullOrEmpty(materialTo))
+                if (string.IsNullOrEmpty(materialTo))
                     materialTo = materialFrom;
                 query = query.Where(x => x.ProductCodeInt >= long.Parse(materialFrom) && x.ProductCodeInt <= long.Parse(materialTo));
             }

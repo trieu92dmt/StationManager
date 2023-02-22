@@ -1,4 +1,6 @@
 ﻿using Core.Models;
+using Core.Properties;
+using MediatR;
 using MES.Application.Commands.XKLXH;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.XKLXH;
@@ -14,10 +16,12 @@ namespace MES.API.Controllers
     public class XKLXHController : ControllerBase
     {
         private readonly IXKLXHQuery _query;
+        private readonly IMediator _mediator;
 
-        public XKLXHController(IXKLXHQuery query)
+        public XKLXHController(IXKLXHQuery query, IMediator mediator)
         {
             _query = query;
+            _mediator = mediator;
         }
 
         #region Get số phiếu cân
@@ -57,6 +61,40 @@ namespace MES.API.Controllers
             var response = await _query.GetInputData(command);
 
             return Ok(new ApiSuccessResponse<List<GetInputDataResponse>>
+            {
+                Data = response
+            });
+        }
+
+        /// <summary>
+        /// Save dữ liệu xklxh
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-xklxh")]
+        public async Task<IActionResult> SaveXKLXHAsync([FromBody] SaveXKLXHCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu xuất kho theo lệnh xuất hàng")
+            });
+        }
+
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu xuất kho theo lệnh xuất hàng)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-xklxh")]
+        public async Task<IActionResult> GetXCKAsync([FromBody] SearchXKLXHCommand command)
+        {
+            var response = await _query.GetDataXKLXH(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchXKLXHResponse>>
             {
                 Data = response
             });

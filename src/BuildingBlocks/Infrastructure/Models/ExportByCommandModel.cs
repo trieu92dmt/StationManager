@@ -42,6 +42,8 @@ namespace Infrastructure.Models
         public string PurchaseOrderCode { get; set; }
         [StringLength(50)]
         public string SlocCode { get; set; }
+        [StringLength(200)]
+        public string SlocName { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? TotalQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -66,11 +68,10 @@ namespace Infrastructure.Models
         public DateTime? StartTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? EndTime { get; set; }
-        public int? QuantityWeitght { get; set; }
+        public int? QuantityWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? BagQuantity { get; set; }
+        public int? BagQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? SingleWeight { get; set; }
         [StringLength(50)]

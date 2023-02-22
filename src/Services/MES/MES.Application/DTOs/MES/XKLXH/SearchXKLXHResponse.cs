@@ -26,8 +26,8 @@ namespace MES.Application.DTOs.MES.XKLXH
         //Storage location
         public string Sloc { get; set; }
         //Storage location desc
-        public string SlocDesc { get; set; }
-        public string SlocFmt { get; set; }
+        public string SlocName { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //Batch
         public string Batch { get; set; }
         //Số phương tiện

@@ -347,7 +347,7 @@ namespace MES.Application.Queries
                 //Sloc
                 Sloc = x.StorageLocation ?? "",
                 //Sloc desc
-                SlocDesc = !string.IsNullOrEmpty(x.StorageLocation) ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName : "",
+                SlocName = !string.IsNullOrEmpty(x.StorageLocation) ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName : "",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Số phương tiện

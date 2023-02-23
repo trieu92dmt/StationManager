@@ -69,7 +69,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkdcnb.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument)//) && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument))//) && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
                         nkdcnb.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))
                     //    nkdcnb.Status = "NOT";

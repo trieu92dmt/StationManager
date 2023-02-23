@@ -34,7 +34,11 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant);
+        Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant, 
+                                                                 string poFrom, string poTo, 
+                                                                 string odFrom, string odTo, 
+                                                                 string woFrom, string woTo, 
+                                                                 string resFrom, string resTo);
 
         /// <summary>
         /// Dropdown Component by wo
@@ -77,7 +81,7 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <param name="plant"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType);
+        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType, string vendorFrom, string vendorTo);
 
         /// <summary>
         /// Dropdown PO Item
@@ -248,6 +252,7 @@ namespace MES.Application.Queries
         private readonly IRepository<DetailReservationModel> _dtRsRepo;
         private readonly IRepository<MaterialDocumentModel> _matDocRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _dtOdRepo;
+        private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -256,7 +261,7 @@ namespace MES.Application.Queries
                            IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
-                           IRepository<DetailOutboundDeliveryModel> dtOdRepo)
+                           IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -280,23 +285,54 @@ namespace MES.Application.Queries
             _dtRsRepo = dtRsRepo;
             _matDocRepo = matDocRepo;
             _dtOdRepo = dtOdRepo;
+            _poDetailRepo = poDetailRepo;
         }
 
         #region Get DropdownMaterial
-        public Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant)
+        public async Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant,
+                                                                        string poFrom, string poTo,
+                                                                        string odFrom, string odTo,
+                                                                        string woFrom, string woTo,
+                                                                        string resFrom, string resTo)
         {
-            var response = _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ProductName.Contains(keyword) || x.ProductCodeInt.ToString().Contains(keyword) : true) &&
-                                                   (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true))
+            var response = new List<DropdownMaterialResponse>();
+
+            //Get query product
+            var products = _prodRepo.GetQuery().AsNoTracking();
+
+            if (!string.IsNullOrEmpty(poFrom))
+            {
+                //Check nếu ko search field to thì gán to = from
+                if (string.IsNullOrEmpty(poTo))
+                    poTo = poFrom;
+
+                response = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder)
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&           //Lọc plant
+                                                    (x.ProductCodeInt >= long.Parse(poFrom) && x.ProductCodeInt <= long.Parse(poTo)))   //Lọc po from to
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
-                                         Key = x.ProductCodeInt.ToString(),
-                                         Value = $"{x.ProductCodeInt} | {x.ProductName}",
-                                         Name = x.ProductName,
-                                         Unit = x.Unit
-                                     }).Take(10).ToListAsync();
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                    }).ToListAsync();
+            }
+            else
+            {
+                response = await _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
+                                                   (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) && x.ProductName.Contains(keyword) : true))
+                                    .OrderBy(x => x.ProductCode)
+                                    .Select(x => new DropdownMaterialResponse
+                                    {
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {x.ProductName}",
+                                        Name = x.ProductName,
+                                        Unit = x.Unit
+                                    }).ToListAsync();
+            }
 
-            return response;
+            return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
         }
         #endregion
 
@@ -393,11 +429,17 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown po
-        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType)
+        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType, string vendorFrom, string vendorTo)
         {
+            //Nếu không search vendorto gán vendor to = vendor from
+            if (!string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo))
+                vendorTo = vendorFrom;
+
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
                                                              (!string.IsNullOrEmpty(poType) ? x.POType == poType : true) &&
+                                                             (!string.IsNullOrEmpty(vendorFrom) ? x.VendorCode.CompareTo(vendorFrom) >= 0 &&
+                                                                                                  x.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
                                                              (x.ReleaseIndicator == "R") &&
                                                              (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel )
                                         .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)

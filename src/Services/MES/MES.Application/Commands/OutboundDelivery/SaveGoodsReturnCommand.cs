@@ -58,6 +58,8 @@ namespace MES.Application.Commands.OutboundDelivery
         public string Status { get; set; }
         //Đầu cân
         public string WeightHeadCode { get; set; }
+        //Số batch
+        public string Batch { get; set; }
     }
 
     public class SaveGoodsReturnCommandHandler : IRequestHandler<SaveGoodsReturnCommand, bool>
@@ -224,6 +226,8 @@ namespace MES.Application.Commands.OutboundDelivery
                     SingleWeight = item.SingleWeight,
                     //32  VehicleCode
                     VehicleCode = item.VehicleCode,
+                    //Batch
+                    Batch = item.Batch,
                     ////33  InputWeight
                     //InputWeight = item.InputWeight,
                     ////34  OutputWeight

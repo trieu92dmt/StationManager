@@ -195,6 +195,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[GoodsReceiptTypeTModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[GoodsReturnModel]",
          "ObjectType": 0
       },

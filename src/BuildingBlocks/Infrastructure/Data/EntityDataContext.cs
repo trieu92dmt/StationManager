@@ -130,6 +130,7 @@ namespace Infrastructure.Data
         public virtual DbSet<FunctionModel> FunctionModel { get; set; }
         public virtual DbSet<GH_NotificationModel> GH_NotificationModel { get; set; }
         public virtual DbSet<GoodsReceiptModel> GoodsReceiptModel { get; set; }
+        public virtual DbSet<GoodsReceiptTypeTModel> GoodsReceiptTypeTModel { get; set; }
         public virtual DbSet<GoodsReturnModel> GoodsReturnModel { get; set; }
         public virtual DbSet<HangTagModel> HangTagModel { get; set; }
         public virtual DbSet<Hash> Hash { get; set; }
@@ -1311,6 +1312,26 @@ namespace Infrastructure.Data
                     .WithMany(p => p.GoodsReceiptModel)
                     .HasForeignKey(d => d.PurchaseOrderDetailId)
                     .HasConstraintName("FK_GoodsReceiptModel_PurchaseOrderDetailModel");
+            });
+
+            modelBuilder.Entity<GoodsReceiptTypeTModel>(entity =>
+            {
+                entity.Property(e => e.GoodsReceiptTypeTId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailOD)
+                    .WithMany(p => p.GoodsReceiptTypeTModel)
+                    .HasForeignKey(d => d.DetailODId)
+                    .HasConstraintName("FK_GoodsReceiptTypeTModel_DetailOutboundDeliveryModel");
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.GoodsReceiptTypeTModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_GoodsReceiptTypeTModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.GoodsReceiptTypeTModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_GoodsReceiptTypeTModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<GoodsReturnModel>(entity =>

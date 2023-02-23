@@ -14,6 +14,7 @@ namespace Infrastructure.Models
         public DetailOutboundDeliveryModel()
         {
             ExportByCommandModel = new HashSet<ExportByCommandModel>();
+            GoodsReceiptTypeTModel = new HashSet<GoodsReceiptTypeTModel>();
             GoodsReturnModel = new HashSet<GoodsReturnModel>();
             InhouseTransferModel = new HashSet<InhouseTransferModel>();
         }
@@ -102,6 +103,8 @@ namespace Infrastructure.Models
         public virtual OutboundDeliveryModel OutboundDelivery { get; set; }
         [InverseProperty("DetailOD")]
         public virtual ICollection<ExportByCommandModel> ExportByCommandModel { get; set; }
+        [InverseProperty("DetailOD")]
+        public virtual ICollection<GoodsReceiptTypeTModel> GoodsReceiptTypeTModel { get; set; }
         [InverseProperty("DetailOD")]
         public virtual ICollection<GoodsReturnModel> GoodsReturnModel { get; set; }
         [InverseProperty("DetailOD")]

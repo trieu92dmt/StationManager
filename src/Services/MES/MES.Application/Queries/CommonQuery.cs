@@ -300,6 +300,7 @@ namespace MES.Application.Queries
             //Get query product
             var products = _prodRepo.GetQuery().AsNoTracking();
 
+            #region po
             if (!string.IsNullOrEmpty(poFrom))
             {
                 //Check nếu ko search field to thì gán to = from
@@ -318,7 +319,68 @@ namespace MES.Application.Queries
                                         Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
             }
-            else
+            #endregion
+            #region od
+            else if (!string.IsNullOrEmpty(odFrom))
+            {
+                //Check nếu ko search field to thì gán to = from
+                if (string.IsNullOrEmpty(odTo))
+                    odTo = odFrom;
+
+                response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&           //Lọc plant
+                                                    (x.ProductCodeInt >= long.Parse(odFrom) && x.ProductCodeInt <= long.Parse(odTo)))   //Lọc from to
+                                    .OrderBy(x => x.ProductCode)
+                                    .Select(x => new DropdownMaterialResponse
+                                    {
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                    }).ToListAsync();
+            }
+            #endregion
+            #region wo
+            else if (!string.IsNullOrEmpty(woFrom))
+            {
+                //Check nếu ko search field to thì gán to = from
+                if (string.IsNullOrEmpty(woTo))
+                    woTo = woFrom;
+
+                response = await _workOrderRep.GetQuery()
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                         //Lọc plant
+                                                    (x.ProductCodeInt >= long.Parse(woFrom) && x.ProductCodeInt <= long.Parse(woTo)))   //Lọc from to
+                                    .OrderBy(x => x.ProductCode)
+                                    .Select(x => new DropdownMaterialResponse
+                                    {
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                    }).ToListAsync();
+            }
+            #endregion
+            #region reservation
+            else if (!string.IsNullOrEmpty(resFrom))
+            {
+                //Check nếu ko search field to thì gán to = from
+                if (string.IsNullOrEmpty(resTo))
+                    resTo = resFrom;
+
+                response = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder)
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&           //Lọc plant
+                                                    (x.ProductCodeInt >= long.Parse(resFrom) && x.ProductCodeInt <= long.Parse(resTo)))   //Lọc from to
+                                    .OrderBy(x => x.ProductCode)
+                                    .Select(x => new DropdownMaterialResponse
+                                    {
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                    }).ToListAsync();
+            }
+            #endregion
+            else 
             {
                 response = await _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
                                                    (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) && x.ProductName.Contains(keyword) : true))

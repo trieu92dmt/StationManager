@@ -61,10 +61,10 @@ namespace IntegrationNS.Application.Commands.NKMHs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkmh.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(nkmh.MaterialDocument) && string.IsNullOrEmpty(nkmh.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkmh.MaterialDocument))// && string.IsNullOrEmpty(nkmh.ReverseDocument))
                         nkmh.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkmh.ReverseDocument))
-                        nkmh.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkmh.ReverseDocument))
+                    //    nkmh.Status = "NOT";
                     nkmh.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
@@ -132,10 +132,10 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //Cập nhật Batch và MaterialDocument
                     nkmh.Batch = item.Batch;
                     nkmh.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(nkmh.MaterialDocument) && string.IsNullOrEmpty(nkmh.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkmh.MaterialDocument))// && string.IsNullOrEmpty(nkmh.ReverseDocument))
                         nkmh.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkmh.ReverseDocument))
-                        nkmh.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkmh.ReverseDocument))
+                    //    nkmh.Status = "NOT";
                 }             
             }
             await _unitOfWork.SaveChangesAsync();

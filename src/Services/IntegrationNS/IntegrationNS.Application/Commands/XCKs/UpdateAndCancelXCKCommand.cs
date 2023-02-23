@@ -66,10 +66,10 @@ namespace IntegrationNS.Application.Commands.XCKs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xck.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(xck.MaterialDocument) && string.IsNullOrEmpty(xck.ReverseDocument))
+                    if (!string.IsNullOrEmpty(xck.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
                         xck.Status = "POST";
-                    else if (!string.IsNullOrEmpty(xck.ReverseDocument))
-                        xck.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(xck.ReverseDocument))
+                    //    xck.Status = "NOT";
                     xck.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
@@ -144,10 +144,10 @@ namespace IntegrationNS.Application.Commands.XCKs
                     //Cập nhật Batch và MaterialDocument
                     xck.Batch = item.Batch;
                     xck.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(xck.MaterialDocument) && string.IsNullOrEmpty(xck.ReverseDocument))
+                    if (!string.IsNullOrEmpty(xck.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
                         xck.Status = "POST";
-                    else if (!string.IsNullOrEmpty(xck.ReverseDocument))
-                        xck.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(xck.ReverseDocument))
+                    //    xck.Status = "NOT";
                 }
             }
             await _unitOfWork.SaveChangesAsync();

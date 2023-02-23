@@ -73,10 +73,10 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nktpsx.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(nktpsx.MaterialDocument) && string.IsNullOrEmpty(nktpsx.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nktpsx.MaterialDocument))// && string.IsNullOrEmpty(nktpsx.ReverseDocument))
                         nktpsx.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nktpsx.ReverseDocument))
-                        nktpsx.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nktpsx.ReverseDocument))
+                    //    nktpsx.Status = "NOT";
                     nktpsx.LastEditTime = DateTime.Now;
 
                     //Clone object
@@ -139,10 +139,10 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     //Cập nhật Batch và MaterialDocument
                     nktpsx.Batch = item.Batch;
                     nktpsx.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(nktpsx.MaterialDocument) && string.IsNullOrEmpty(nktpsx.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nktpsx.MaterialDocument))// && string.IsNullOrEmpty(nktpsx.ReverseDocument))
                         nktpsx.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nktpsx.ReverseDocument))
-                        nktpsx.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nktpsx.ReverseDocument))
+                    //    nktpsx.Status = "NOT";
                 }
             }
             await _unitOfWork.SaveChangesAsync();

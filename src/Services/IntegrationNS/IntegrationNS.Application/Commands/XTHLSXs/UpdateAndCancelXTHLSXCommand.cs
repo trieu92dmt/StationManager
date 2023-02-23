@@ -61,10 +61,10 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xthlsx.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument) && string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument))// && string.IsNullOrEmpty(xthlsx.ReverseDocument))
                         xthlsx.Status = "POST";
-                    else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
-                        xthlsx.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    //    xthlsx.Status = "NOT";
                     xthlsx.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
@@ -125,10 +125,10 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     //Cập nhật Batch và MaterialDocument
                     xthlsx.Batch = item.Batch;
                     xthlsx.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument) && string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument))// && string.IsNullOrEmpty(xthlsx.ReverseDocument))
                         xthlsx.Status = "POST";
-                    else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
-                        xthlsx.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    //    xthlsx.Status = "NOT";
                 }             
             }
             await _unitOfWork.SaveChangesAsync();

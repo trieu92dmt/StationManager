@@ -69,10 +69,10 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkdcnb.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument) && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument)//) && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
                         nkdcnb.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))
-                        nkdcnb.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))
+                    //    nkdcnb.Status = "NOT";
                     nkdcnb.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
@@ -139,10 +139,10 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     //Cập nhật Batch và MaterialDocument
                     nkdcnb.Batch = item.Batch;
                     nkdcnb.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument) && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument))// && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
                         nkdcnb.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))
-                        nkdcnb.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))
+                    //    nkdcnb.Status = "NOT";
                 }
             }
             await _unitOfWork.SaveChangesAsync();

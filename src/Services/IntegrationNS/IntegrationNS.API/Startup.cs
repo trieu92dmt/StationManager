@@ -83,7 +83,7 @@ namespace IntegrationNS.API
                 });
                 app.UseSwaggerUI(options =>
                 {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "TLG - Integration Netsuite API");
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "TLG - Integration SAP API");
                 });
             }
 

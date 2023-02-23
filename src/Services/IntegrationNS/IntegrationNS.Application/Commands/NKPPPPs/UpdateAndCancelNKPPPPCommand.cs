@@ -61,10 +61,10 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkpppp.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument) && string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
                         nkpppp.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
-                        nkpppp.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    //    nkpppp.Status = "NOT";
                     nkpppp.LastEditTime = DateTime.Now;
 
 
@@ -126,10 +126,10 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     //Cập nhật Batch và MaterialDocument
                     nkpppp.Batch = item.Batch;
                     nkpppp.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument) && string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
                         nkpppp.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
-                        nkpppp.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    //    nkpppp.Status = "NOT";
                 }             
             }
             await _unitOfWork.SaveChangesAsync();

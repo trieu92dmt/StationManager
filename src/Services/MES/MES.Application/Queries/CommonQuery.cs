@@ -405,7 +405,7 @@ namespace MES.Application.Queries
                                         .Select(x => new CommonResponse
                                         {
                                             Key = x.PurchaseOrderCode,
-                                            Value = x.PurchaseOrderCode
+                                            Value = x.PurchaseOrderCodeInt.ToString()
                                         }).AsNoTracking().ToListAsync();
 
             return response;

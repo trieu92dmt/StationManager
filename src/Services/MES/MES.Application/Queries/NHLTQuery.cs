@@ -79,13 +79,13 @@ namespace MES.Application.Queries
             var plants = _plantRepo.GetQuery().AsNoTracking();
 
             //Get query material
-            var materials = _prodRepo.GetQuery().AsNoTracking();
+            var materials = _prodRepo.GetQuery(x => string.IsNullOrEmpty(command.MaterialFrom) ? false : true).AsNoTracking();
 
             //Get query detail od
-            var detailOds = _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery).AsNoTracking();
+            var detailOds = _dtOdRepo.GetQuery(x => string.IsNullOrEmpty(command.OutboundDeliveryFrom) ? false : true).Include(x => x.OutboundDelivery).AsNoTracking();
 
             //Get query customer
-            var customers = _cusRepo.GetQuery().AsNoTracking();
+            var customers = _cusRepo.GetQuery(x => string.IsNullOrEmpty(command.CustomerFrom) ? false : true).AsNoTracking();
 
             //Get query sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
@@ -109,11 +109,24 @@ namespace MES.Application.Queries
                                                  x.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
+            //Get data theo customer
+            if (!string.IsNullOrEmpty(command.CustomerFrom))
+            {
+                //Nếu ko có to thì search 1
+                if (string.IsNullOrEmpty(command.CustomerTo))
+                {
+                    command.CustomerTo = command.CustomerFrom;
+                }
+
+                customers = customers.Where(x => x.CustomerNumber.CompareTo(command.CustomerFrom) >= 0 &&
+                                                 x.CustomerNumber.CompareTo(command.CustomerTo) <= 0);
+            }
+
             //Get data theo Outbound delivery
             if (!string.IsNullOrEmpty(command.OutboundDeliveryFrom))
             {
                 //Nếu ko có to thì search 1
-                if (string.IsNullOrEmpty(command.OutboundDeliveryFrom))
+                if (string.IsNullOrEmpty(command.OutboundDeliveryTo))
                 {
                     command.OutboundDeliveryTo = command.OutboundDeliveryFrom;
                 }
@@ -145,28 +158,28 @@ namespace MES.Application.Queries
                             //Plant
                             Plant = p.PlantCode,
                             //Customer
-                            Customer = sales.CustomerNumber,
+                            Customer = sales != null ? sales.CustomerNumber : "",
                             //Customer name
-                            CustomerName = sales.CustomerName,
+                            CustomerName = sales != null ? sales.CustomerName : "",
                             //Material
-                            Material = mtrs.PlantCode,
+                            Material = mtrs != null ? mtrs.PlantCode : "",
                             //Material desc
-                            MaterialDesc = mtrs.ProductName,
+                            MaterialDesc = mtrs != null ? mtrs.ProductName : "",
                             //UoM
-                            Unit = mtrs.Unit,
+                            Unit = mtrs != null ? mtrs.Unit : "",
                             //Outbound Delivery
-                            OutboundDelivery = dtOds.OutboundDelivery.DeliveryCode,
+                            OutboundDelivery = dtOds != null ? dtOds.OutboundDelivery.DeliveryCode : "",
                             //Outbound Delivery Item
-                            OutboundDeliveryItem = dtOds.OutboundDeliveryItem,
+                            OutboundDeliveryItem = dtOds != null ? dtOds.OutboundDeliveryItem : "",
                             //Batch
-                            Batch = dtOds.Batch ?? "",
+                            Batch = dtOds != null ? dtOds.Batch : "",
                             //Số phương tiện
-                            VehicleCode = dtOds.OutboundDelivery.VehicleCode ?? "",
+                            VehicleCode = dtOds != null ? dtOds.OutboundDelivery.VehicleCode : "",
                             //Sloc
-                            Sloc = dtOds.StorageLocation ?? "",
-                            SlocName = string.IsNullOrEmpty(dtOds.StorageLocation) ? slocs.FirstOrDefault(s => s.StorageLocationCode == dtOds.StorageLocation).StorageLocationName : "",
+                            Sloc = dtOds != null ? dtOds.StorageLocation : "",
+                            SlocName = !string.IsNullOrEmpty(dtOds.StorageLocation) ? slocs.FirstOrDefault(s => s.StorageLocationCode == dtOds.StorageLocation).StorageLocationName : "",
                             //Document Date
-                            DocumentDate = dtOds.OutboundDelivery.DocumentDate
+                            DocumentDate = dtOds != null ? dtOds.OutboundDelivery.DocumentDate : null
                         }).AsNoTracking().ToListAsync();
 
 

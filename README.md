@@ -29,7 +29,9 @@
 2. Application
 	- Folder chứa tất cả các logic chính của hệ thống
 		+ Commands: Business chính của từng api
+		+ Query: Get data to database
 		+ Services: Chứa các logic có thể dùng chung giữa các command.
+
 
 # Environment Configuration
 #Development

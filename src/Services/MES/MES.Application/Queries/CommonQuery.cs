@@ -309,14 +309,14 @@ namespace MES.Application.Queries
 
                 response = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder)
                                         .Where(x => (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&           //Lọc plant
-                                                    (x.ProductCodeInt >= long.Parse(poFrom) && x.ProductCodeInt <= long.Parse(poTo)))   //Lọc po from to
+                                                    (x.PurchaseOrder.PurchaseOrderCode.CompareTo(poFrom) >= 0 && x.PurchaseOrder.PurchaseOrderCode.CompareTo(poTo) <= 0))   //Lọc po from to
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
                                         Key = x.ProductCodeInt.ToString(),
                                         Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
-                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
-                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
             }
             #endregion
@@ -328,15 +328,15 @@ namespace MES.Application.Queries
                     odTo = odFrom;
 
                 response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
-                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&           //Lọc plant
-                                                    (x.ProductCodeInt >= long.Parse(odFrom) && x.ProductCodeInt <= long.Parse(odTo)))   //Lọc from to
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                                                         //Lọc plant
+                                                    (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 && x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0))   //Lọc from to
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
                                         Key = x.ProductCodeInt.ToString(),
                                         Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
-                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
-                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
             }
             #endregion
@@ -349,14 +349,14 @@ namespace MES.Application.Queries
 
                 response = await _workOrderRep.GetQuery()
                                         .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                         //Lọc plant
-                                                    (x.ProductCodeInt >= long.Parse(woFrom) && x.ProductCodeInt <= long.Parse(woTo)))   //Lọc from to
+                                                    (x.WorkOrderCode.CompareTo(woFrom) >= 0 && x.WorkOrderCode.CompareTo(woTo) <= 0))   //Lọc from to
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
                                         Key = x.ProductCodeInt.ToString(),
-                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
-                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
-                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
             }
             #endregion
@@ -367,16 +367,16 @@ namespace MES.Application.Queries
                 if (string.IsNullOrEmpty(resTo))
                     resTo = resFrom;
 
-                response = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder)
-                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&           //Lọc plant
-                                                    (x.ProductCodeInt >= long.Parse(resFrom) && x.ProductCodeInt <= long.Parse(resTo)))   //Lọc from to
-                                    .OrderBy(x => x.ProductCode)
+                response = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Reservation.Plant == plant : true) &&                                           //Lọc plant
+                                                    (x.Reservation.ReservationCode.CompareTo(resFrom) >= 0 && x.Reservation.ReservationCode.CompareTo(resTo) <= 0))   //Lọc from to
+                                    .OrderBy(x => x.Material)
                                     .Select(x => new DropdownMaterialResponse
                                     {
-                                        Key = x.ProductCodeInt.ToString(),
-                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
-                                        Name = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName,
-                                        Unit = products.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit
+                                        Key = x.MaterialCodeInt.ToString(),
+                                        Value = $"{x.MaterialCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName}",
+                                        Name = products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName,
+                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.Material).Unit
                                     }).ToListAsync();
             }
             #endregion

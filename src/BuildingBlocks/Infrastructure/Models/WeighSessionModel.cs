@@ -13,17 +13,13 @@ namespace Infrastructure.Models
     {
         public WeighSessionModel()
         {
-            ExportByCommandModel = new HashSet<ExportByCommandModel>();
-            GoodsReceiptTypeTModel = new HashSet<GoodsReceiptTypeTModel>();
-            OtherExportModel = new HashSet<OtherExportModel>();
-            OtherImportModel = new HashSet<OtherImportModel>();
-            ScaleMonitorModel = new HashSet<ScaleMonitorModel>();
-            WarehouseImportTransferModel = new HashSet<WarehouseImportTransferModel>();
             WeighSessionDetailModel = new HashSet<WeighSessionDetailModel>();
         }
 
         [Key]
         public Guid WeighSessionID { get; set; }
+        [StringLength(50)]
+        public string WeighSessionCode { get; set; }
         public Guid ScaleId { get; set; }
         public int? TotalNumberOfWeigh { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -45,18 +41,6 @@ namespace Infrastructure.Models
         [ForeignKey("ScaleId")]
         [InverseProperty("WeighSessionModel")]
         public virtual ScaleModel Scale { get; set; }
-        [InverseProperty("WeightSession")]
-        public virtual ICollection<ExportByCommandModel> ExportByCommandModel { get; set; }
-        [InverseProperty("WeightSession")]
-        public virtual ICollection<GoodsReceiptTypeTModel> GoodsReceiptTypeTModel { get; set; }
-        [InverseProperty("WeightSession")]
-        public virtual ICollection<OtherExportModel> OtherExportModel { get; set; }
-        [InverseProperty("WeightSession")]
-        public virtual ICollection<OtherImportModel> OtherImportModel { get; set; }
-        [InverseProperty("WeightSession")]
-        public virtual ICollection<ScaleMonitorModel> ScaleMonitorModel { get; set; }
-        [InverseProperty("WeightNavigation")]
-        public virtual ICollection<WarehouseImportTransferModel> WarehouseImportTransferModel { get; set; }
         [InverseProperty("WeighSession")]
         public virtual ICollection<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
     }

@@ -11,7 +11,7 @@ namespace MES.Application.DTOs.MES.ScaleMonitor
         //Mã đầu cân
         public string WeightHeadCode { get; set; }
         //ID đợt cân
-        public Guid WeightSessionId { get; set; }
+        public string WeightSessionId { get; set; }
         //Trọng lượng cân
         public decimal? Weight { get; set; }
         //Đơn vị

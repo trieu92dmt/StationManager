@@ -111,8 +111,5 @@ namespace Infrastructure.Models
         [ForeignKey("TruckInfoId")]
         [InverseProperty("WarehouseImportTransferModel")]
         public virtual TruckInfoModel TruckInfo { get; set; }
-        [ForeignKey("WeightId")]
-        [InverseProperty("WarehouseImportTransferModel")]
-        public virtual WeighSessionModel WeightNavigation { get; set; }
     }
 }

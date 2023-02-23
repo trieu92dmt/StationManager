@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 2,
-   "ContextClassName": "EntityDataContext",
+   "ContextClassName": "\/\/EntityDataContext",
    "ContextNamespace": "Data",
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,

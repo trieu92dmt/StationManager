@@ -3,6 +3,7 @@ using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
 using Core.Utilities;
+using Grpc.Core;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -96,6 +97,10 @@ namespace MES.Application.Commands.MES
 
             //Danh sách nhập kho mua hàng
             var nkmh = await _nkRep.GetQuery().ToListAsync();
+
+            //Get query cân
+            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+
             //Last index dùng để tạo số phiếu cân tự sinh
             var lastIndex = nkmh.Count >0 ? nkmh.OrderBy(x => x.WeitghtVote).LastOrDefault().WeitghtVote.Substring(1) : "1000000";
 
@@ -148,7 +153,9 @@ namespace MES.Application.Commands.MES
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKMH");
                 }
-                
+
+                //Lấy ra cân hiện tại
+                var scale = scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
@@ -160,6 +167,9 @@ namespace MES.Application.Commands.MES
                     PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
                     //Mã đầu cân
                     WeightHeadCode = x.WeightHeadCode,
+                    //Id đợt cân
+                    WeightId = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //PlantCode
                     PlantCode = x.PlantCode,
                     //Material Desc

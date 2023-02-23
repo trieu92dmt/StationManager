@@ -4,6 +4,8 @@ using MES.Application.Commands.NHLT;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NHLT;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,9 +48,11 @@ namespace MES.Application.Queries
         private readonly IRepository<DetailOutboundDeliveryModel> _dtOdRepo;
         private readonly IRepository<CustmdSaleModel> _cusRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<AccountModel> _userRepo;
 
         public NHLTQuery(IRepository<GoodsReceiptTypeTModel> nhltRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prodRepo,
-                         IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<CustmdSaleModel> cusRepo, IRepository<StorageLocationModel> slocRepo)
+                         IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<CustmdSaleModel> cusRepo, IRepository<StorageLocationModel> slocRepo,
+                         IRepository<AccountModel> userRepo)
         {
             _nhltRepo = nhltRepo;
             _plantRepo = plantRepo;
@@ -56,9 +60,10 @@ namespace MES.Application.Queries
             _dtOdRepo = dtOdRepo;
             _cusRepo = cusRepo;
             _slocRepo = slocRepo;
+            _userRepo = userRepo;
         }
 
-        public Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)
+        public async Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)
         {
             #region Format Day
 
@@ -80,6 +85,9 @@ namespace MES.Application.Queries
                 command.WeightDateTo = command.WeightDateTo.Value.Date.AddDays(1).AddSeconds(-1);
             }
             #endregion
+
+            //User Query
+            var user = _userRepo.GetQuery().AsNoTracking();
 
             //Tạo query
             var query = _nhltRepo.GetQuery()
@@ -167,6 +175,55 @@ namespace MES.Application.Queries
             {
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
+
+            var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNHLTResponse
+            {
+                //Id
+                NHLTId = x.GoodsReceiptTypeTId,
+                //plant
+                Plant = x.PlantCode,
+                //material
+                Material = x.MaterialCodeInt.ToString(),
+                //material desc
+                //MaterialName = !string.IsNullOrEmpty(x.MaterialCode) ? product.FirstOrDefault(p => p.ProductCodeInt == x.MaterialCodeInt).ProductName : "",
+                //customer
+                //Sloc
+                //Batch
+                //Sl bao
+                //Đơn trọng
+                //Đầu cân
+                //Trọng lượng
+                //Confirm quantity
+                //SL kèm bao bì
+                //Số phương tiện
+                //Số lần cân
+                //Unit
+                //Ghi chú
+                //Hình ảnh
+                //Status
+                //Số phiếu cân
+                //Thời gian bắt đầu
+                //Thời gian kết thúc
+                //Số xe tải
+                //Cân xe đầu vào
+                //Cân xe đầu ra
+                //od
+                //31 Create by
+                CreateById = x.CreateBy ?? null,
+                CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",
+                //32 Crete On
+                CreateOn = x.CreateTime ?? null,
+                //33 Change by
+                ChangeById = x.LastEditBy ?? null,
+                ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
+                //34 Material Doc
+                MatDoc = x.MaterialDocument ?? "",
+                //35 Reverse Doc
+                RevDoc = x.ReverseDocument ?? "",
+                isDelete = x.Status == "DEL" ? true : false,
+                isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
+                //od item
+            }).ToListAsync();
 
             throw new NotImplementedException();
         }

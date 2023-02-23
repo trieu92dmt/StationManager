@@ -19,8 +19,7 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string MaterialCode { get; set; }
         public long? MaterialCodeInt { get; set; }
-        [StringLength(50)]
-        public string WeightId { get; set; }
+        public Guid? WeightId { get; set; }
         [StringLength(50)]
         public string WeitghtVote { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

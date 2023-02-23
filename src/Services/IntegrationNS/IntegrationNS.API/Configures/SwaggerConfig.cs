@@ -12,7 +12,7 @@ namespace IntegrationNS.API.Configures
             {
                 option.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "TLG - Integration Netsuite API",
+                    Title = "TLG - Integration SAP API",
                     Version = "v1"
                 });
                 //option.OperationFilter<AddAuthorizationHeader>();

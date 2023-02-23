@@ -53,9 +53,13 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-material")]
-        public async Task<IActionResult> GetListMaterial(string keyword, string plant)
+        public async Task<IActionResult> GetListMaterial(string keyword, string plant,
+                                                         string poFrom, string poTo,
+                                                         string odFrom, string odTo,
+                                                         string woFrom, string woTo,
+                                                         string resFrom, string resTo)
         {
-            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant);
+            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant, poFrom, poTo, odFrom, odTo, woFrom, woTo, resFrom, resTo);
             return Ok(new ApiSuccessResponse<List<DropdownMaterialResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách material") });
         }
         #endregion
@@ -151,9 +155,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-po")]
-        public async Task<IActionResult> GetListPO(string keyword, string plant)
+        public async Task<IActionResult> GetListPO(string keyword, string plant, string poType, string vendorFrom, string vendorTo)
         {
-            var dropdownList = await _commonQuery.GetDropdownPO(keyword, plant);
+            var dropdownList = await _commonQuery.GetDropdownPO(keyword, plant, poType, vendorFrom, vendorTo);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách po") });
         }
         #endregion
@@ -238,9 +242,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-outbound-delivery")]
-        public async Task<IActionResult> GetListOutboundDelivery(string plant, string keyword)
+        public async Task<IActionResult> GetListOutboundDelivery(string type, string plant, string materialFrom, string materialTo, string keyword)
         {
-            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(plant, keyword);
+            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(type, plant, materialFrom, materialTo, keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách outbound delivery") });
         }
         #endregion
@@ -303,7 +307,7 @@ namespace MES.API.Controllers
 
         #region Dropdown OrderType
         /// <summary>
-        /// Get order type
+        /// Get order type (Delivery Type)
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
@@ -336,9 +340,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-reservation")]
-        public async Task<IActionResult> GetReservationAsync(string keyword)
+        public async Task<IActionResult> GetReservationAsync(string keyword, string plant)
         {
-            var dropdownList = await _commonQuery.GetReservation(keyword);
+            var dropdownList = await _commonQuery.GetReservation(keyword, plant);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion

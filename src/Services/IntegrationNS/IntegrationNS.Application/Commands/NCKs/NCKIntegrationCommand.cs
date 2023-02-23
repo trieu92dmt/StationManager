@@ -1,21 +1,25 @@
 ﻿using Core.SeedWork.Repositories;
 using Infrastructure.Models;
-using IntegrationNS.Application.DTOs.MES.XCK;
+using IntegrationNS.Application.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
-namespace IntegrationNS.Application.Commands.XCKs
+namespace IntegrationNS.Application.Commands.NCKs
 {
-    public class SearchXCKCommand : IRequest<List<SearchXCKResponse>>
+    public class NCKIntegrationCommand : IRequest<List<NCKResponse>>
     {
         //Plant
         public string Plant { get; set; }
         //Receving Sloc
-        public string RecevingSlocFrom { get; set; }
-        public string RecevingSlocTo { get; set; }
+        public string SlocFrom { get; set; }
+        public string SlocTo { get; set; }
         //Reservation
         public string ReservationFrom { get; set; }
         public string ReservationTo { get; set; }
+        //Material Doc
+        public string MaterialDocFrom { get; set; }
+        public string MaterialDocTo { get; set; }
         //Material
         public string MaterialFrom { get; set; }
         public string MaterialTo { get; set; }
@@ -33,36 +37,31 @@ namespace IntegrationNS.Application.Commands.XCKs
         public DateTime? WeightDateTo { get; set; }
         //CreateBy
         public Guid? CreateBy { get; set; }
-
         //Status
         public string Status { get; set; }
     }
 
-    public class SearchXCKCommandHandler : IRequestHandler<SearchXCKCommand, List<SearchXCKResponse>>
+    public class NCKIntegrationCommandHandler : IRequestHandler<NCKIntegrationCommand, List<NCKResponse>>
     {
-        private readonly IRepository<WarehouseExportTransferModel> _xckRepo;
-        private readonly IRepository<ReservationModel> _reserRepo;
-        private readonly IRepository<DetailReservationModel> _detailReserRepo;
-        private readonly IRepository<PlantModel> _plantRepo;
+        private readonly IRepository<WarehouseImportTransferModel> _nckRepo;
+        private readonly IRepository<MaterialDocumentModel> _matDocRepo;
         private readonly IRepository<ProductModel> _prodRepo;
+        private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
-        private readonly IRepository<StorageLocationModel> _slocRepo;
-
-        public SearchXCKCommandHandler(IRepository<WarehouseExportTransferModel> xckRepo, IRepository<ReservationModel> reserRepo, IRepository<DetailReservationModel> detailReserRepo,
-                        IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prodRepo,
-                        IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo)
+        public NCKIntegrationCommandHandler(IRepository<WarehouseImportTransferModel> nckRepo, IRepository<MaterialDocumentModel> matDocRepo, IRepository<ProductModel> prodRepo,
+                                            IRepository<StorageLocationModel> slocRepo, IRepository<AccountModel> userRepo,
+                                            IRepository<CatalogModel> cataRepo)
         {
-            _xckRepo = xckRepo;
-            _reserRepo = reserRepo;
-            _detailReserRepo = detailReserRepo;
-            _plantRepo = plantRepo;
+            _nckRepo = nckRepo;
+            _matDocRepo = matDocRepo;
             _prodRepo = prodRepo;
+            _slocRepo = slocRepo;
             _userRepo = userRepo;
             _cataRepo = cataRepo;
-            _slocRepo = slocRepo;
         }
-        public async Task<List<SearchXCKResponse>> Handle(SearchXCKCommand command, CancellationToken cancellationToken)
+
+        public async Task<List<NCKResponse>> Handle(NCKIntegrationCommand command, CancellationToken cancellationToken)
         {
             #region Format Day
 
@@ -94,8 +93,11 @@ namespace IntegrationNS.Application.Commands.XCKs
             //Sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
 
-            //Get query xck
-            var query = _xckRepo.GetQuery().Include(x => x.DetailReservation).ThenInclude(x => x.Reservation).AsNoTracking();
+            //Query matDoc
+            var matDocs = _matDocRepo.GetQuery().AsNoTracking();
+
+            //Get query nck
+            var query = _nckRepo.GetQuery().Include(x => x.MaterialDoc).AsNoTracking();
 
             //Lọc theo điều kiện
             //Lọc theo plant
@@ -111,19 +113,29 @@ namespace IntegrationNS.Application.Commands.XCKs
                 if (string.IsNullOrEmpty(command.ReservationTo))
                     command.ReservationTo = command.ReservationFrom;
 
-                query = query.Where(x => x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReservationCode.CompareTo(command.ReservationFrom) >= 0 &&
-                                                                          x.DetailReservation.Reservation.ReservationCode.CompareTo(command.ReservationTo) <= 0 : false);
+                query = query.Where(x => !string.IsNullOrEmpty(x.Reservation) ? x.Reservation.CompareTo(command.ReservationFrom) >= 0 &&
+                                                                          x.Reservation.CompareTo(command.ReservationTo) <= 0 : false);
             }
 
-            //Theo Receiving sloc
-            if (!string.IsNullOrEmpty(command.RecevingSlocFrom))
+            //Theo sloc
+            if (!string.IsNullOrEmpty(command.SlocFrom))
             {
-                //Không có reveiving sloc to thì search 1
-                if (string.IsNullOrEmpty(command.RecevingSlocTo))
-                    command.RecevingSlocTo = command.RecevingSlocFrom;
+                //Không có sloc to thì search 1
+                if (string.IsNullOrEmpty(command.SlocTo))
+                    command.SlocTo = command.SlocFrom;
 
-                query = query.Where(x => x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocFrom) >= 0 &&
-                                                                          x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocTo) <= 0 : false);
+                query = query.Where(x => !string.IsNullOrEmpty(x.SlocCode) ? x.SlocCode.CompareTo(command.SlocFrom) >= 0 &&
+                                                                          x.SlocCode.CompareTo(command.SlocTo) <= 0 : false);
+            }
+
+            //Theo Material Doc
+            if (!string.IsNullOrEmpty(command.MaterialDocFrom))
+            {
+                if (string.IsNullOrEmpty(command.MaterialDocTo))
+                    command.MaterialDocTo = command.MaterialDocFrom;
+
+                query = query.Where(x => x.MaterialDocId.HasValue ? x.MaterialDoc.MaterialDocCode.CompareTo(command.MaterialDocFrom) >= 0 &&
+                                                                    x.MaterialDoc.MaterialDocCode.CompareTo(command.MaterialDocTo) <= 0 : false);
             }
 
             //Theo Material
@@ -143,8 +155,8 @@ namespace IntegrationNS.Application.Commands.XCKs
                 {
                     command.DocumentDateTo = command.DocumentDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
                 }
-                query = query.Where(x => x.DetailReservationId.HasValue ? x.DetailReservation.RequirementsDate >= command.DocumentDateFrom &&
-                                                                          x.DetailReservation.RequirementsDate <= command.DocumentDateTo : false);
+                query = query.Where(x => x.MaterialDocId.HasValue ? x.MaterialDoc.PostingDate >= command.DocumentDateFrom &&
+                                                                    x.MaterialDoc.PostingDate <= command.DocumentDateTo : false);
             }
 
             //Search dữ liệu đã cân
@@ -172,37 +184,34 @@ namespace IntegrationNS.Application.Commands.XCKs
             {
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
-
             //Search Status
             if (!string.IsNullOrEmpty(command.Status))
             {
                 query = query.Where(x => x.Status == command.Status);
             }
+
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
-            var data = await query.OrderByDescending(x => x.CreateTime).Select(x => new SearchXCKResponse
+            var data = await query.OrderByDescending(x => x.CreateTime).Select(x => new NCKResponse
             {
                 //Id
-                XCKId = x.WarehouseTransferId,
+                NCKId = x.WarehouseImportTransferId,
                 //Plant
                 Plant = x.PlantCode,
                 //Reservation
-                Reservation = x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReservationCodeInt.ToString() : "",
-                //Reservation Item
-                ReservationItem = x.DetailReservationId.HasValue ? x.DetailReservation.ReservationItem.ToString() : "",
+                Reservation = x.Reservation ?? "",
+                //Material Doc
+                MaterialDoc = x.MaterialDocId.HasValue ? x.MaterialDoc.MaterialDocCode : "",
+                //Material Doc Item
+                MaterialDocItem = x.MaterialDocId.HasValue ? x.MaterialDoc.MaterialDocItem : "",
                 //Material
-                Material = x.MaterialCode,
+                Material = x.MaterialCodeInt.ToString(),
                 //MaterialDesc
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
-                //MVT
-                MovementType = x.DetailReservationId.HasValue ? x.DetailReservation.MovementType : "",
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
-                SlocName = string.IsNullOrEmpty(x.SlocCode) ? $"{x.SlocCode} | {x.SlocName}" : "",
-                //Receiving Stor.Sloc
-                ReceivingSloc = x.ReceivingSlocCode ?? "",
-                ReceivingSlocName = string.IsNullOrEmpty(x.ReceivingSlocCode) ? $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}" : "",
+                SlocName = !string.IsNullOrEmpty(x.SlocCode) ? x.SlocName : "",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Sl bao
@@ -222,12 +231,16 @@ namespace IntegrationNS.Application.Commands.XCKs
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght.HasValue ? x.QuantityWeitght : 0,
                 //Total Quantity
-                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
+                TotalQty = x.MaterialDocId.HasValue ? x.MaterialDoc.Quantity : 0,
                 //Delivered Quantity
-                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
+                DeliveredQty = !string.IsNullOrEmpty(x.Reservation) ? matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "313").Sum(m => m.Quantity)
+                                                                      - matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "315").Sum(m => m.Quantity) : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
+                //Document date
+                DocumentDate = x.MaterialDocId.HasValue ? x.MaterialDoc.PostingDate : null,
                 //Số xe tải
+                TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId.Value : null,
                 TruckNumber = x.TruckNumber ?? "",
                 //Số cân đầu vào
                 InputWeight = x.InputWeight.HasValue ? x.InputWeight : 0,
@@ -256,18 +269,8 @@ namespace IntegrationNS.Application.Commands.XCKs
                 //Material doc
                 MatDoc = x.MaterialDocument,
                 //Reverse doc
-                RevDoc = x.ReverseDocument,
-                //Đánh dấu xóa
-                isDelete = x.Status == "DEL" ? true : false,
-                //Được chỉnh sửa
-                isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
+                RevDoc = x.ReverseDocument
             }).ToListAsync();
-
-            //Tính open quantity
-            foreach (var item in data)
-            {
-                item.OpenQty = item.TotalQty - item.DeliveredQty;
-            }
 
             return data;
         }

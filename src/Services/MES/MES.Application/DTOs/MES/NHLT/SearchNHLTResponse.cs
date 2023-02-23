@@ -4,71 +4,59 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MES.Application.DTOs.MES.XKLXH
+namespace MES.Application.DTOs.MES.NHLT
 {
     public class GetInputDataResponse
     {
-        //Index key
-        public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }
-        public string PlantName { get; set; }
-        //Ship to party name
-        public string ShipToPartyName { get; set; }
-        //Outbound delivery
-        public string OutboundDelivery { get; set; }
-        //Outbound delivery item
-        public string OutboundDeliveryItem { get; set; }
+        //Customer
+        public string Customer { get; set; }
+        //Customer Name
+        public string CustomerName { get; set; }
         //Material
         public string Material { get; set; }
-        //Material desc
+        //Material Desc
         public string MaterialDesc { get; set; }
-        //Storage location
-        public string Sloc { get; set; }
-        //Storage location desc
-        public string SlocName { get; set; }
-        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
+        //UOM
+        public string Unit { get; set; }
+        //Outbound Delivery
+        public string OutboundDelivery { get; set; }
+        //Outbound Delivery Item
+        public string OutboundDeliveryItem { get; set; }
         //Batch
         public string Batch { get; set; }
         //Số phương tiện
         public string VehicleCode { get; set; }
-        //Total quantity
-        public decimal? TotalQty { get; set; }
-        //Delivered quantity
-        public decimal? DeliveredQty { get; set; }
-        //Open quantity
-        public decimal? OpenQty => TotalQty - DeliveredQty;
-        //UOM
-        public string Unit { get; set; }
+        //Storage Location
+        public string Sloc { get; set; }
+        public string SlocName { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //Document Date
         public DateTime? DocumentDate { get; set; }
-        //ShipToParty
-        public string ShipToParty { get; set; }
     }
-    public class SearchXKLXHResponse
+    public class SearchNHLTResponse
     {
-        //XKLXH ID
-        public Guid XKLXHId { get; set; }
+        //NHLT Id
+        public Guid NHLTId { get; set; }
         //Plant
         public string Plant { get; set; }
-        //Ship to party name
-        public string ShipToPartyName { get; set; }
-        //Outbound delivery
-        public string OutboundDelivery { get; set; }
-        //Outbound delivery item
-        public string OutboundDeliveryItem { get; set; }
         //Material
         public string Material { get; set; }
-        //Material desc
-        public string MaterialDesc { get; set; }
-        //Sloc
+        //Material Desc
+        public string MaterialName { get; set; }
+        //Customer
+        public string Customer { get; set; }
+        //Customer Name
+        public string CustomerName { get; set; }
+        //Storage Location
         public string Sloc { get; set; }
         public string SlocName { get; set; }
         public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //Batch
         public string Batch { get; set; }
-        //SL bao
-        public int? BagQuantity { get; set; }
+        //Sl bao
+        public decimal? BagQuantity { get; set; }
         //Đơn trọng
         public decimal? SingleWeight { get; set; }
         //Đầu cân
@@ -77,18 +65,12 @@ namespace MES.Application.DTOs.MES.XKLXH
         public decimal? Weight { get; set; }
         //Confirm Qty
         public decimal? ConfirmQty { get; set; }
-        //Sl kèm bao bì
+        //SL kèm bao bì
         public decimal? QuantityWithPackage { get; set; }
         //Số phương tiện
         public string VehicleCode { get; set; }
         //Số lần cân
         public int? QuantityWeight { get; set; }
-        //Total quantity
-        public decimal? TotalQty { get; set; }
-        //Delivered Quantity
-        public decimal? DeliveredQty { get; set; }
-        //Open quantity
-        public decimal? OpenQty => TotalQty - DeliveredQty;
         //UOM
         public string Unit { get; set; }
         //Ghi chú
@@ -103,19 +85,6 @@ namespace MES.Application.DTOs.MES.XKLXH
         public DateTime? StartTime { get; set; }
         //Thời gian kết thúc
         public DateTime? EndTime { get; set; }
-        //Document Date
-        public DateTime? DocumentDate { get; set; }
-        //Số xe tải
-        public Guid? TruckInfoId { get; set; }
-        public string TruckNumber { get; set; }
-        //Số cân đầu vào
-        public decimal? InputWeight { get; set; }
-        //Số cân đầu ra
-        public decimal? OutputWeight { get; set; }
-        //Trọng lượng hàng hóa
-        public decimal? GoodsWeight { get; set; }
-        //Create by
-        public int MyProperty { get; set; }
         //Create by
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }
@@ -132,5 +101,17 @@ namespace MES.Application.DTOs.MES.XKLXH
         public bool isDelete { get; set; }
         //Được chỉnh sửa
         public bool isEdit { get; set; }
+        //Số xe tải
+        public Guid? TruckInfoId { get; set; }
+        public string TruckNumber { get; set; }
+        //Số cân đầu vào
+        public decimal? InputWeight { get; set; }
+        //Số cân đầu ra
+        public decimal? OutputWeight { get; set; }
+        //Outbound Delivery
+        public string OutboundDelivery { get; set; }
+        //Outbound Delivery Item
+        public string OutboundDeliveryItem { get; set; }
+
     }
 }

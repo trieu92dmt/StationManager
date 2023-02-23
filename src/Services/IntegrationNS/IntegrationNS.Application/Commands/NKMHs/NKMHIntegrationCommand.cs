@@ -3,6 +3,7 @@ using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace IntegrationNS.Application.Commands.NKMHs
 {
@@ -148,7 +149,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
             }
 
             //Search WeightVotes
-            if (request.WeightVotes.Any())
+            if (request.WeightVotes != null && request.WeightVotes.Any())
             {
                 query = query.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
             }

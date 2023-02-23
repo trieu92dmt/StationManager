@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.XTHLSXs
 {
@@ -60,38 +61,48 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xthlsx.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument) && string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument))// && string.IsNullOrEmpty(xthlsx.ReverseDocument))
                         xthlsx.Status = "POST";
-                    else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
-                        xthlsx.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    //    xthlsx.Status = "NOT";
                     xthlsx.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
-                    var xthlsxNew = new IssueForProductionModel
-                    {
-                        IssForProductiontId = Guid.NewGuid(),
-                        PlantCode = xthlsx.PlantCode,
-                        DetailWorkOrderId = xthlsx.DetailWorkOrderId,
-                        WeightVote = xthlsx.WeightVote,
-                        BagQuantity = xthlsx.BagQuantity,
-                        SingleWeight = xthlsx.SingleWeight,
-                        WeightHeadCode = xthlsx.WeightHeadCode,
-                        Weight = xthlsx.Weight,
-                        ConfirmQty = xthlsx.ConfirmQty,
-                        QuantityWithPackaging = xthlsx.QuantityWithPackaging,
-                        QuantityWeitght = xthlsx.QuantityWeitght,
-                        SlocCode = xthlsx.SlocCode,
-                        Image = xthlsx.Image,
-                        Status = xthlsx.Status,
-                        StartTime = xthlsx.StartTime,
-                        EndTime = xthlsx.EndTime,
-                        CreateTime = DateTime.Now,
-                        Actived = true,
-                        ComponentCode = xthlsx.ComponentCode,
-                        ComponentCodeInt = xthlsx.ComponentCodeInt,
-                        WeightId = xthlsx.WeightId,
-                        SlocName = xthlsx.SlocName 
-                    };
+                    //Clone object
+                    var serialized = JsonConvert.SerializeObject(xthlsx);
+                    var xthlsxNew = JsonConvert.DeserializeObject<IssueForProductionModel>(serialized);
+
+                    xthlsxNew.IssForProductiontId = Guid.NewGuid();
+                    xthlsxNew.MaterialDocument = null;
+                    xthlsxNew.ReverseDocument = null;
+
+                    #region code cũ
+                    //var xthlsxNew = new IssueForProductionModel
+                    //{
+                    //    IssForProductiontId = Guid.NewGuid(),
+                    //    PlantCode = xthlsx.PlantCode,
+                    //    DetailWorkOrderId = xthlsx.DetailWorkOrderId,
+                    //    WeightVote = xthlsx.WeightVote,
+                    //    BagQuantity = xthlsx.BagQuantity,
+                    //    SingleWeight = xthlsx.SingleWeight,
+                    //    WeightHeadCode = xthlsx.WeightHeadCode,
+                    //    Weight = xthlsx.Weight,
+                    //    ConfirmQty = xthlsx.ConfirmQty,
+                    //    QuantityWithPackaging = xthlsx.QuantityWithPackaging,
+                    //    QuantityWeitght = xthlsx.QuantityWeitght,
+                    //    SlocCode = xthlsx.SlocCode,
+                    //    Image = xthlsx.Image,
+                    //    Status = xthlsx.Status,
+                    //    StartTime = xthlsx.StartTime,
+                    //    EndTime = xthlsx.EndTime,
+                    //    CreateTime = DateTime.Now,
+                    //    Actived = true,
+                    //    ComponentCode = xthlsx.ComponentCode,
+                    //    ComponentCodeInt = xthlsx.ComponentCodeInt,
+                    //    WeightId = xthlsx.WeightId,
+                    //    SlocName = xthlsx.SlocName 
+                    //};
+                    #endregion
 
                     _xthlsxRepo.Add(xthlsxNew);
                 }
@@ -114,10 +125,10 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     //Cập nhật Batch và MaterialDocument
                     xthlsx.Batch = item.Batch;
                     xthlsx.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument) && string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    if (!string.IsNullOrEmpty(xthlsx.MaterialDocument))// && string.IsNullOrEmpty(xthlsx.ReverseDocument))
                         xthlsx.Status = "POST";
-                    else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
-                        xthlsx.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    //    xthlsx.Status = "NOT";
                 }             
             }
             await _unitOfWork.SaveChangesAsync();

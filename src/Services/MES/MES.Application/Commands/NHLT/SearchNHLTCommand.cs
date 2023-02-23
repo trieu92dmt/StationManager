@@ -4,42 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MES.Application.Commands.XKLXH
+namespace MES.Application.Commands.NHLT
 {
-    public class SearchXKLXHCommand
+    public class SearchNHLTCommand
     {
         //Plant
         public string Plant { get; set; }
-        //Delivery Type
-        public string DeliveryType { get; set; }
-        //Purchase order
-        public string PurchaseOrderFrom { get; set; }
-        public string PurchaseOrderTo { get; set; }
-        //Sales Order
-        public string SalesOrderFrom { get; set; }
-        public string SalesOrderTo { get; set; }
-        //Ship to party
-        public string ShipToPartyFrom { get; set; }
-        public string ShipToPartyTo { get; set; }
+        //Customer
+        public string CustomerFrom { get; set; }
+        public string CustomerTo { get; set; }
         //Outbound Delivery
         public string OutboundDeliveryFrom { get; set; }
         public string OutboundDeliveryTo { get; set; }
         //Material
         public string MaterialFrom { get; set; }
         public string MaterialTo { get; set; }
-        //Document date
+        //Document Date
         public DateTime? DocumentDateFrom { get; set; }
         public DateTime? DocumentDateTo { get; set; }
 
         //Dữ liệu đã lưu
         //Đầu cân
         public string WeightHeadCode { get; set; }
-        //Số phiếu cân
+        //Số phiếu cân 
         public List<string> WeightVotes { get; set; } = new List<string>();
-        //Ngày thực hiện cân
+        //Ngày thực hiện cân from
         public DateTime? WeightDateFrom { get; set; }
+        //Ngày thực hiện cân to
         public DateTime? WeightDateTo { get; set; }
-        //CreateBy
+        //Create by
         public Guid? CreateBy { get; set; }
     }
 }

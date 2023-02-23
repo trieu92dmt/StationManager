@@ -241,14 +241,14 @@ namespace MES.Application.Queries
                 //Material
                 Material = x.ProductCodeInt.ToString() ?? "",
                 //Material Desc
-                MaterialDesc = prods.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.ProductCode)).ProductName ?? "",
+                MaterialDesc = !string.IsNullOrEmpty(x.ProductCode) ? prods.FirstOrDefault(m => m.ProductCodeInt == x.ProductCodeInt).ProductName : "",
                 //Storage Location
                 Sloc = x.StorageLocation ?? "",
                 SlocDesc = string.IsNullOrEmpty(x.StorageLocation) ? "" : $"{x.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName}",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Total quantity
-                TotalQty = x.DeliveryQuantity ?? 0,
+                TotalQty = x.DeliveryQuantity.HasValue ? x.DeliveryQuantity : 0,
                 //Delivery Quantity
                 DeliveryQty = nkdcnbs.Where(n => n.DetailODId == x.DetailOutboundDeliveryId).Sum(n => n.ConfirmQty) ?? 0,
                 //UoM
@@ -415,7 +415,7 @@ namespace MES.Application.Queries
             }
 
             //Check số phiếu cân
-            if (!command.WeightVotes.IsNullOrEmpty() || command.WeightVotes.Any())
+            if (command.WeightVotes != null && command.WeightVotes.Any())
             {
                 query = query.Where(x => command.WeightVotes.Contains(x.WeightVote));
             }
@@ -442,7 +442,7 @@ namespace MES.Application.Queries
                 //Material
                 Material = x.MaterialCodeInt.ToString() ?? "",
                 //Material Desc
-                MaterialDesc = prods.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductName ?? "",
+                MaterialDesc = prods.FirstOrDefault(m => m.ProductCodeInt == x.MaterialCodeInt).ProductName ?? "",
                 //Storage Location
                 Sloc = x.SlocCode ?? "",
                 SlocDesc = x.SlocName ?? "",

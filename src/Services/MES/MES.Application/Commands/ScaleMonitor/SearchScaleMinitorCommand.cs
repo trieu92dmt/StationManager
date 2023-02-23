@@ -82,6 +82,8 @@ namespace MES.Application.Commands.ScaleMonitor
                 WeightSessionId = x.WeightSessionId.Value,
                 //Trọng lượng cân
                 Weight = x.Weight,
+                //Plant
+                Plant = x.Plant,
                 //Đơn vị
                 Unit = "",
                 //TG bắt đầu

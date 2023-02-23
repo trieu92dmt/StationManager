@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.NKPPPPs
 {
@@ -60,38 +61,49 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
 
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkpppp.ReverseDocument = item.ReverseDocument;
-                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument) && string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
                         nkpppp.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
-                        nkpppp.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    //    nkpppp.Status = "NOT";
                     nkpppp.LastEditTime = DateTime.Now;
 
+
+                    //Clone object
+                    var serialized = JsonConvert.SerializeObject(nkpppp);
+                    var nkppppNew = JsonConvert.DeserializeObject<ScrapFromProductionModel>(serialized);
+
+                    nkppppNew.ScFromProductiontId = Guid.NewGuid();
+                    nkppppNew.MaterialDocument = null;
+                    nkppppNew.ReverseDocument = null;
+
+                    #region code cũ
                     //Tạo line mới
-                    var nkppppNew = new ScrapFromProductionModel
-                    {
-                        ScFromProductiontId = Guid.NewGuid(),
-                        PlantCode = nkpppp.PlantCode,
-                        DetailWorkOrderId = nkpppp.DetailWorkOrderId,
-                        WeightVote = nkpppp.WeightVote,
-                        BagQuantity = nkpppp.BagQuantity,
-                        SingleWeight = nkpppp.SingleWeight,
-                        WeightHeadCode = nkpppp.WeightHeadCode,
-                        Weight = nkpppp.Weight,
-                        ConfirmQty = nkpppp.ConfirmQty,
-                        QuantityWithPackaging = nkpppp.QuantityWithPackaging,
-                        QuantityWeitght = nkpppp.QuantityWeitght,
-                        SlocCode = nkpppp.SlocCode,
-                        Image = nkpppp.Image,
-                        Status = nkpppp.Status,
-                        StartTime = nkpppp.StartTime,
-                        EndTime = nkpppp.EndTime,
-                        CreateTime = DateTime.Now,
-                        Actived = true,
-                        ComponentCode = nkpppp.ComponentCode,
-                        ComponentCodeInt = nkpppp.ComponentCodeInt,
-                        WeightId = nkpppp.WeightId,
-                        SlocName = nkpppp.SlocName 
-                    };
+                    //var nkppppNew = new ScrapFromProductionModel
+                    //{
+                    //    ScFromProductiontId = Guid.NewGuid(),
+                    //    PlantCode = nkpppp.PlantCode,
+                    //    DetailWorkOrderId = nkpppp.DetailWorkOrderId,
+                    //    WeightVote = nkpppp.WeightVote,
+                    //    BagQuantity = nkpppp.BagQuantity,
+                    //    SingleWeight = nkpppp.SingleWeight,
+                    //    WeightHeadCode = nkpppp.WeightHeadCode,
+                    //    Weight = nkpppp.Weight,
+                    //    ConfirmQty = nkpppp.ConfirmQty,
+                    //    QuantityWithPackaging = nkpppp.QuantityWithPackaging,
+                    //    QuantityWeitght = nkpppp.QuantityWeitght,
+                    //    SlocCode = nkpppp.SlocCode,
+                    //    Image = nkpppp.Image,
+                    //    Status = nkpppp.Status,
+                    //    StartTime = nkpppp.StartTime,
+                    //    EndTime = nkpppp.EndTime,
+                    //    CreateTime = DateTime.Now,
+                    //    Actived = true,
+                    //    ComponentCode = nkpppp.ComponentCode,
+                    //    ComponentCodeInt = nkpppp.ComponentCodeInt,
+                    //    WeightId = nkpppp.WeightId,
+                    //    SlocName = nkpppp.SlocName 
+                    //};
+                    #endregion
 
                     _nkppppRepo.Add(nkppppNew);
                 }
@@ -114,10 +126,10 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     //Cập nhật Batch và MaterialDocument
                     nkpppp.Batch = item.Batch;
                     nkpppp.MaterialDocument = item.MaterialDocument;
-                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument) && string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    if (!string.IsNullOrEmpty(nkpppp.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
                         nkpppp.Status = "POST";
-                    else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
-                        nkpppp.Status = "NOT";
+                    //else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    //    nkpppp.Status = "NOT";
                 }             
             }
             await _unitOfWork.SaveChangesAsync();

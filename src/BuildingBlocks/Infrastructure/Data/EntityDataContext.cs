@@ -122,6 +122,7 @@ namespace Infrastructure.Data
         public virtual DbSet<EquipmentStatus_Temp> EquipmentStatus_Temp { get; set; }
         public virtual DbSet<ErrorListModel> ErrorListModel { get; set; }
         public virtual DbSet<ExcelLogModel> ExcelLogModel { get; set; }
+        public virtual DbSet<ExportByCommandModel> ExportByCommandModel { get; set; }
         public virtual DbSet<FaceCheckInOutModel> FaceCheckInOutModel { get; set; }
         public virtual DbSet<FavoriteReportModel> FavoriteReportModel { get; set; }
         public virtual DbSet<FileAttachmentModel> FileAttachmentModel { get; set; }
@@ -129,6 +130,7 @@ namespace Infrastructure.Data
         public virtual DbSet<FunctionModel> FunctionModel { get; set; }
         public virtual DbSet<GH_NotificationModel> GH_NotificationModel { get; set; }
         public virtual DbSet<GoodsReceiptModel> GoodsReceiptModel { get; set; }
+        public virtual DbSet<GoodsReceiptTypeTModel> GoodsReceiptTypeTModel { get; set; }
         public virtual DbSet<GoodsReturnModel> GoodsReturnModel { get; set; }
         public virtual DbSet<HangTagModel> HangTagModel { get; set; }
         public virtual DbSet<Hash> Hash { get; set; }
@@ -1248,6 +1250,26 @@ namespace Infrastructure.Data
                 entity.Property(e => e.LogId).ValueGeneratedNever();
             });
 
+            modelBuilder.Entity<ExportByCommandModel>(entity =>
+            {
+                entity.Property(e => e.ExportByCommandId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailOD)
+                    .WithMany(p => p.ExportByCommandModel)
+                    .HasForeignKey(d => d.DetailODId)
+                    .HasConstraintName("FK_ExportByCommandModel_DetailOutboundDeliveryModel");
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.ExportByCommandModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_ExportByCommandModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.ExportByCommandModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_ExportByCommandModel_WeighSessionModel");
+            });
+
             modelBuilder.Entity<FavoriteReportModel>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -1290,6 +1312,26 @@ namespace Infrastructure.Data
                     .WithMany(p => p.GoodsReceiptModel)
                     .HasForeignKey(d => d.PurchaseOrderDetailId)
                     .HasConstraintName("FK_GoodsReceiptModel_PurchaseOrderDetailModel");
+            });
+
+            modelBuilder.Entity<GoodsReceiptTypeTModel>(entity =>
+            {
+                entity.Property(e => e.GoodsReceiptTypeTId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.DetailOD)
+                    .WithMany(p => p.GoodsReceiptTypeTModel)
+                    .HasForeignKey(d => d.DetailODId)
+                    .HasConstraintName("FK_GoodsReceiptTypeTModel_DetailOutboundDeliveryModel");
+
+                entity.HasOne(d => d.TruckInfo)
+                    .WithMany(p => p.GoodsReceiptTypeTModel)
+                    .HasForeignKey(d => d.TruckInfoId)
+                    .HasConstraintName("FK_GoodsReceiptTypeTModel_TruckInfoModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.GoodsReceiptTypeTModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_GoodsReceiptTypeTModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<GoodsReturnModel>(entity =>

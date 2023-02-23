@@ -5,6 +5,7 @@ using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MES.Application.Queries
 {
@@ -152,7 +153,7 @@ namespace MES.Application.Queries
             {
                 if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderFrom) >= 0 &&
-                                                                                    x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderFrom) <= 0 : false);
+                                                                                    x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderTo) <= 0 : false);
             }
 
             //Lọc document date
@@ -178,10 +179,10 @@ namespace MES.Application.Queries
                 if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
 
                 queryNKMH = queryNKMH.Where(x => x.WeighDate >= request.WeightDateFrom &&
-                                         x.WeighDate <= request.WeightDateTo);
+                x.WeighDate <= request.WeightDateTo);
             }
 
-            if (!request.WeightVotes.IsNullOrEmpty())
+            if (request.WeightVotes != null && request.WeightVotes.Any())
             {
                 queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote));
             }

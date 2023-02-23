@@ -151,9 +151,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-po")]
-        public async Task<IActionResult> GetListPO(string keyword, string plant)
+        public async Task<IActionResult> GetListPO(string keyword, string plant, string poType)
         {
-            var dropdownList = await _commonQuery.GetDropdownPO(keyword, plant);
+            var dropdownList = await _commonQuery.GetDropdownPO(keyword, plant, poType);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách po") });
         }
         #endregion

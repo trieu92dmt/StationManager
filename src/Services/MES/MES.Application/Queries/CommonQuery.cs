@@ -77,7 +77,7 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <param name="plant"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant);
+        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType);
 
         /// <summary>
         /// Dropdown PO Item
@@ -393,10 +393,11 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown po
-        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant)
+        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType)
         {
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             (!string.IsNullOrEmpty(poType) ? x.POType == poType : true) &&
                                                              (x.ReleaseIndicator == "R") &&
                                                              (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel )
                                         .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)

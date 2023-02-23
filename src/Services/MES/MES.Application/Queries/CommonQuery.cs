@@ -172,7 +172,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetReservation(string keyword);
+        Task<List<CommonResponse>> GetReservation(string keyword, string plant);
 
         /// <summary>
         /// Get dropdown customer
@@ -751,9 +751,10 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<CommonResponse>> GetReservation(string keyword)
+        public async Task<List<CommonResponse>> GetReservation(string keyword, string plant)
         {
-            return await _rsRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true))
+            return await _rsRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
+                                               (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true))
                                 .Select(x => new CommonResponse
                                 {
                                     Key = x.ReservationCode,

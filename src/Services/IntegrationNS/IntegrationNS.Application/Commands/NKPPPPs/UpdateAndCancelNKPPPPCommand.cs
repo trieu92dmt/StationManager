@@ -73,6 +73,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     var nkppppNew = JsonConvert.DeserializeObject<ScrapFromProductionModel>(serialized);
 
                     nkppppNew.ScFromProductiontId = Guid.NewGuid();
+                    nkppppNew.Status = "NOT";
                     nkppppNew.MaterialDocument = null;
                     nkppppNew.ReverseDocument = null;
 

@@ -81,6 +81,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     var nkhtNew = JsonConvert.DeserializeObject<GoodsReturnModel>(serialized);
 
                     nkhtNew.GoodsReturnId = Guid.NewGuid();
+                    nkhtNew.Status = "NOT";
                     nkhtNew.MaterialDocument = null;
                     nkhtNew.ReverseDocument = null;
                     #region code cũ

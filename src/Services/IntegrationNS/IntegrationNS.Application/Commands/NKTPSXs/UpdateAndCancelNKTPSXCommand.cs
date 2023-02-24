@@ -84,6 +84,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     var nktpsxNew = JsonConvert.DeserializeObject<ReceiptFromProductionModel>(serialized);
 
                     nktpsxNew.RcFromProductiontId = Guid.NewGuid();
+                    nktpsxNew.Status = "NOT";
                     nktpsxNew.MaterialDocument = null;
                     nktpsxNew.ReverseDocument = null;
 

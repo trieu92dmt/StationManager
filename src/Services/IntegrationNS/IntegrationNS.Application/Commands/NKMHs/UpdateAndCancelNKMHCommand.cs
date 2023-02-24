@@ -73,6 +73,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     var nkmhNew = JsonConvert.DeserializeObject<GoodsReceiptModel>(serialized);
                     //Khác id
                     nkmhNew.GoodsReceiptId = Guid.NewGuid();
+                    nkmhNew.Status = "NOT";
                     nkmhNew.MaterialDocument = null;
                     nkmhNew.ReverseDocument = null;
 

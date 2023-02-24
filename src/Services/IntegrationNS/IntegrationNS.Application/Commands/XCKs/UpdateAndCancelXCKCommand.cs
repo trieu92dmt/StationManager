@@ -78,6 +78,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                     var xckNew = JsonConvert.DeserializeObject<WarehouseExportTransferModel>(serialized);
 
                     xckNew.WarehouseTransferId = Guid.NewGuid();
+                    xckNew.Status = "NOT";
                     xckNew.MaterialDocument = null;
                     xckNew.ReverseDocument = null;
 

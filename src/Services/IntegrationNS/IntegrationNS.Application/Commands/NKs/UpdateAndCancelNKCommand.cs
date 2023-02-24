@@ -26,10 +26,10 @@ namespace IntegrationNS.Application.Commands.NKs
 
     public class UpdateAndCancelNKCommandHandler : IRequestHandler<UpdateAndCancelNKCommand, bool>
     {
-        private readonly IRepository<WarehouseImportTransferModel> _nkRepo;
+        private readonly IRepository<OtherImportModel> _nkRepo;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateAndCancelNKCommandHandler(IRepository<WarehouseImportTransferModel> nkRepo, IUnitOfWork unitOfWork)
+        public UpdateAndCancelNKCommandHandler(IRepository<OtherImportModel> nkRepo, IUnitOfWork unitOfWork)
         {
             _nkRepo = nkRepo;
             _unitOfWork = unitOfWork;
@@ -53,7 +53,7 @@ namespace IntegrationNS.Application.Commands.NKs
                 foreach (var item in request.NKs)
                 {
                     //Phiếu nhập khác
-                    var nk = await _nkRepo.FindOneAsync(x => x.WarehouseImportTransferId == item.NkId);
+                    var nk = await _nkRepo.FindOneAsync(x => x.OtherImportId == item.NkId);
 
                     //Check
                     if (nk is null)
@@ -70,9 +70,10 @@ namespace IntegrationNS.Application.Commands.NKs
 
                     //Clone object
                     var serialized = JsonConvert.SerializeObject(nk);
-                    var nkNew = JsonConvert.DeserializeObject<WarehouseImportTransferModel>(serialized);
+                    var nkNew = JsonConvert.DeserializeObject<OtherImportModel>(serialized);
 
-                    nkNew.WarehouseImportTransferId = Guid.NewGuid();
+                    nkNew.OtherImportId = Guid.NewGuid();
+                    nkNew.Status = "NOT";
                     nkNew.MaterialDocument = null;
                     nkNew.ReverseDocument = null;
 
@@ -89,7 +90,7 @@ namespace IntegrationNS.Application.Commands.NKs
                 foreach (var item in request.NKs)
                 {
                     //Phiếu nhập khác
-                    var nk = await _nkRepo.FindOneAsync(x => x.WarehouseImportTransferId == item.NkId);
+                    var nk = await _nkRepo.FindOneAsync(x => x.OtherImportId == item.NkId);
 
                     //Check
                     if (nk is null)

@@ -78,6 +78,7 @@ namespace IntegrationNS.Application.Commands.NCKs
                     var nckNew = JsonConvert.DeserializeObject<WarehouseImportTransferModel>(serialized);
 
                     nckNew.WarehouseImportTransferId = Guid.NewGuid();
+                    nckNew.Status = "NOT";
                     nckNew.MaterialDocument = null;
                     nckNew.ReverseDocument = null;
 

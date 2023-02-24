@@ -26,6 +26,10 @@ namespace MES.Application.Commands.NHLT
         public Guid NHLTId { get; set; }
         //Plant
         public string Plant { get; set; }
+        //Od
+        public string OutboundDelivery { get; set; }
+        //Od Item
+        public string OutboundDeliveryItem { get; set; }
         //Material
         public string Material { get; set; }
         //Sloc
@@ -150,9 +154,9 @@ namespace MES.Application.Commands.NHLT
             //    //Check tồn tại nhlt
             //    var nhlt = await nhlts.FirstOrDefaultAsync(x => x.GoodsReceiptTypeTId == item.NHLTId);
 
-            //    //Lấy ra workorder detail
-            //    var wo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ?
-            //                        wos.FirstOrDefault(d => d.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) &&
+            //    //Lấy ra od detail
+            //    var wo = !string.IsNullOrEmpty(item.OutboundDelivery) && !string.IsNullOrEmpty(item.OutboundDeliveryItem) ?
+            //                        odDetails.FirstOrDefault(d => d.OutboundDelivery.DeliveryCode == long.Parse(item.OutboundDelivery) &&
             //                                                 d.WorkOrderItem == item.ItemComponent &&
             //                                                 d.ProductCodeInt == long.Parse(item.Component)) : null;
 
@@ -239,6 +243,7 @@ namespace MES.Application.Commands.NHLT
             //await _unitOfWork.SaveChangesAsync();
 
             //return response;
+
             return null;
         }
     }

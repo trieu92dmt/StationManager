@@ -64,9 +64,9 @@ namespace MES.Application.Commands.NHLT
         //Số xe tải
         public Guid? TruckInfoId { get; set; }
         //Số cân đầu vào 
-        public DateTime? StartTime { get; set; }
+        public decimal? InputWeight { get; set; }
         //Số cân đầu ra
-        public DateTime? EndTime { get; set; }    
+        public decimal? OutputWeight { get; set; }    
     }
 
     public class SaveNHLTCommandHandler : IRequestHandler<SaveNHLTCommand, bool>
@@ -209,6 +209,10 @@ namespace MES.Application.Commands.NHLT
                                       weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
+                    //số cân đầu vào
+                    InputWeight = item.InputWeight,
+                    //số cân đầu ra
+                    OutputWeight = item.OutputWeight,
                     //21  SlocCode
                     SlocCode = item.Sloc,
                     //22  SlocName

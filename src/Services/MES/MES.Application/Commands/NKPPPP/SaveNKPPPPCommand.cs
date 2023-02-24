@@ -27,6 +27,8 @@ namespace MES.Application.Commands.NKPPPP
         public string ItemComponent { get; set; }
         //Component
         public string Component { get; set; }
+        //Số batch
+        public string Batch { get; set; }
         //Sloc
         public string SlocCode { get; set; }
         //SL bao
@@ -158,6 +160,8 @@ namespace MES.Application.Commands.NKPPPP
                     //4   MaterialCode
                     ComponentCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode,
                     ComponentCodeInt = long.Parse(item.Component),
+                    //Batch
+                    Batch = item.Batch,
                     //5   WeightId
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,

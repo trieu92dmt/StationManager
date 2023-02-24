@@ -44,7 +44,7 @@ namespace MES.Application.DTOs.MES.NHLT
         //Material
         public string Material { get; set; }
         //Material Desc
-        public string MaterialName { get; set; }
+        public string MaterialDesc { get; set; }
         //Customer
         public string Customer { get; set; }
         //Customer Name

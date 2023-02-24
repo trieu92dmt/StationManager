@@ -1,5 +1,8 @@
 ﻿using Core.Models;
+using Core.Properties;
+using MediatR;
 using MES.Application.Commands.NHLT;
+using MES.Application.Commands.NK;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NHLT;
 using MES.Application.Queries;
@@ -13,10 +16,12 @@ namespace MES.API.Controllers
     public class NHLTController : ControllerBase
     {
         private readonly INHLTQuery _query;
+        private readonly IMediator _mediator;
 
-        public NHLTController(INHLTQuery query)
+        public NHLTController(INHLTQuery query, IMediator mediator)
         {
             _query = query;
+            _mediator = mediator;
         }
 
         /// <summary>GET Bảng 1</summary>
@@ -44,6 +49,23 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<GetInputDataResponse>>
             {
                 Data = response
+            });
+        }
+
+        /// <summary>
+        /// Save dữ liệu nhlt
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-nhlt")]
+        public async Task<IActionResult> SaveNHLTAsync([FromBody] SaveNHLTCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu dữ liệu nhập hàng loại T")
             });
         }
 

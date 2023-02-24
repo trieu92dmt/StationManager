@@ -1,4 +1,5 @@
 ﻿using Core.SeedWork.Repositories;
+using Grpc.Core;
 using Infrastructure.Models;
 using MES.Application.Commands.NHLT;
 using MES.Application.DTOs.Common;
@@ -49,10 +50,11 @@ namespace MES.Application.Queries
         private readonly IRepository<CustmdSaleModel> _cusRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<CatalogModel> _cataRepo;
 
         public NHLTQuery(IRepository<GoodsReceiptTypeTModel> nhltRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prodRepo,
                          IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<CustmdSaleModel> cusRepo, IRepository<StorageLocationModel> slocRepo,
-                         IRepository<AccountModel> userRepo)
+                         IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo)
         {
             _nhltRepo = nhltRepo;
             _plantRepo = plantRepo;
@@ -61,6 +63,7 @@ namespace MES.Application.Queries
             _cusRepo = cusRepo;
             _slocRepo = slocRepo;
             _userRepo = userRepo;
+            _cataRepo = cataRepo;
         }
 
         public async Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)
@@ -93,6 +96,12 @@ namespace MES.Application.Queries
             var query = _nhltRepo.GetQuery()
                                  .Include(x => x.DetailOD).ThenInclude(x => x.DetailOutboundDeliveryId)
                                  .AsNoTracking();
+
+            //Get query customer
+            var customers = _cusRepo.GetQuery().AsNoTracking();
+
+            //Products
+            var prods = _prodRepo.GetQuery().AsNoTracking();
 
             //Get data theo plant
             if (!string.IsNullOrEmpty(command.Plant))
@@ -176,6 +185,9 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
 
+            //Catalog Nhập kho mua hàng status
+            var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
+
             var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNHLTResponse
             {
                 //Id
@@ -185,29 +197,54 @@ namespace MES.Application.Queries
                 //material
                 Material = x.MaterialCodeInt.ToString(),
                 //material desc
-                //MaterialName = !string.IsNullOrEmpty(x.MaterialCode) ? product.FirstOrDefault(p => p.ProductCodeInt == x.MaterialCodeInt).ProductName : "",
+                MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? prods.FirstOrDefault(p => p.ProductCodeInt == x.MaterialCodeInt).ProductName : "",
                 //customer
+                Customer = x.Customer,
+                CustomerName = !string.IsNullOrEmpty(x.Customer) ? customers.FirstOrDefault(c => c.CustomerNumber == x.Customer).CustomerName : "",
                 //Sloc
+                Sloc = x.SlocCode ?? "",
                 //Batch
+                SlocName = x.SlocName ?? "",
                 //Sl bao
+                BagQuantity = x.BagQuantity ?? 0 ,
                 //Đơn trọng
+                SingleWeight = x.SingleWeight ?? 0,
                 //Đầu cân
+                WeightHeadCode = x.WeightHeadCode ?? "",
                 //Trọng lượng
+                Weight = x.Weight ?? 0,
                 //Confirm quantity
+                ConfirmQty = x.ConfirmQty ?? 0 ,
                 //SL kèm bao bì
+                QuantityWithPackage = x.QuantityWithPackaging ?? 0,
                 //Số phương tiện
+                VehicleCode = x.VehicleCode ?? "",
                 //Số lần cân
+                QuantityWeight = x.QuantityWeight ?? 0,
                 //Unit
+                Unit = x.UOM,
                 //Ghi chú
+                Description = x.Description ?? "",
                 //Hình ảnh
+                Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
                 //Status
+                Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //Số phiếu cân
+                WeightVote = x.WeightVote ?? "",
                 //Thời gian bắt đầu
+                StartTime = x.StartTime ?? null,
                 //Thời gian kết thúc
+                EndTime = x.EndTime ?? null,
                 //Số xe tải
+                TruckInfoId = x.TruckInfoId ?? null,
+                TruckNumber = x.TruckNumber ?? "",
                 //Cân xe đầu vào
+                InputWeight = x.InputWeight ?? 0,
                 //Cân xe đầu ra
+                OutputWeight = x.OutputWeight ?? 0,
                 //od
+                OutboundDelivery = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DeliveryCode : "",
+                OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : "",
                 //31 Create by
                 CreateById = x.CreateBy ?? null,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",
@@ -222,7 +259,6 @@ namespace MES.Application.Queries
                 RevDoc = x.ReverseDocument ?? "",
                 isDelete = x.Status == "DEL" ? true : false,
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
-                //od item
             }).ToListAsync();
 
             throw new NotImplementedException();
@@ -340,7 +376,7 @@ namespace MES.Application.Queries
                             //Customer name
                             CustomerName = sales != null ? sales.CustomerName : "",
                             //Material
-                            Material = mtrs != null ? mtrs.PlantCode : "",
+                            Material = mtrs != null ? mtrs.ProductCodeInt.ToString() : "",
                             //Material desc
                             MaterialDesc = mtrs != null ? mtrs.ProductName : "",
                             //UoM

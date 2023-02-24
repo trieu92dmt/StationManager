@@ -38,11 +38,13 @@ namespace IntegrationNS.Application.Commands.NKMHs
     {
         private readonly IRepository<GoodsReceiptModel> _nkmhRep;
         private readonly IRepository<AccountModel> _userRep;
+        private readonly IRepository<WeighSessionModel> _weightSsRepo;
 
-        public NKMHIntegrationCommandHandler(IRepository<GoodsReceiptModel> nkmhRep, IRepository<AccountModel> userRep)
+        public NKMHIntegrationCommandHandler(IRepository<GoodsReceiptModel> nkmhRep, IRepository<AccountModel> userRep, IRepository<WeighSessionModel> weightSsRepo)
         {
             _nkmhRep = nkmhRep;
             _userRep = userRep;
+            _weightSsRepo = weightSsRepo;
         }
         public async Task<List<NKMHResponse>> Handle(NKMHIntegrationCommand request, CancellationToken cancellationToken)
         {
@@ -76,7 +78,10 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                       .Include(x => x.PurchaseOrderDetail)
                                       .ThenInclude(x => x.PurchaseOrder)
                                       .AsNoTracking()
-                                      .ToListAsync();   
+                                      .ToListAsync();
+
+            //WeightSS
+            var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
             //Search Plant
             if (!string.IsNullOrEmpty(request.Plant))
@@ -181,7 +186,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
 
                                 NkmhId = x.GoodsReceiptId,
                                 //ID đợt cân
-                                WeightId = x.WeightId,
+                                WeightId = x.WeightId.HasValue ? weightSs.FirstOrDefault(w => w.WeighSessionID == x.WeightId).WeighSessionCode : "",
                                 //Số đầu cân
                                 WeightVote = x.WeitghtVote,
                                 //Đơn trọng

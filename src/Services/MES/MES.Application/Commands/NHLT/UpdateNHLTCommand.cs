@@ -34,12 +34,14 @@ namespace MES.Application.Commands.NHLT
         public string Material { get; set; }
         //Sloc
         public string Sloc { get; set; }
+        //Số batch
+        public string Batch { get; set; }
         //Đầu cân
         public string WeightHeadCode { get; set; }
         //Trọng lượng cân
-        public string Weight { get; set; }
+        public decimal? Weight { get; set; }
         //Số lần cân
-        public string QuantityWeight { get; set; }
+        public int? QuantityWeight { get; set; }
         //UOM
         public string Unit { get; set; }
         //Số phiếu cân
@@ -91,160 +93,173 @@ namespace MES.Application.Commands.NHLT
 
         public async Task<ApiResponse> Handle(UpdateNHLTCommand request, CancellationToken cancellationToken)
         {
-            //var response = new ApiResponse
-            //{
-            //    IsSuccess = true,
-            //    Message = string.Format(CommonResource.Msg_Success, "Cập nhật nhập kho phụ phẩm phế phẩm")
-            //};
+            var response = new ApiResponse
+            {
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nhập kho phụ phẩm phế phẩm")
+            };
 
-            ////Data nhập hàng loại T
-            //var nhlts = _nhltRepo.GetQuery();
+            //Data nhập hàng loại T
+            var nhlts = _nhltRepo.GetQuery();
 
-            ////Data detail od
-            //var odDetails = _odDetailRepo.GetQuery().Include(x => x.OutboundDelivery).AsNoTracking();
+            //Data detail od
+            var odDetails = _odDetailRepo.GetQuery().Include(x => x.OutboundDelivery).AsNoTracking();
 
-            ////Data material
-            //var material = _prdRepo.GetQuery().AsNoTracking();
+            //Data material
+            var material = _prdRepo.GetQuery().AsNoTracking();
 
-            ////Data sloc
-            //var slocs = _slocRepo.GetQuery().AsNoTracking();
+            //Data sloc
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
 
-            ////Data DimDate
-            //var dimDate = _dimDateRepo.GetQuery().AsNoTracking();
+            //Data DimDate
+            var dimDate = _dimDateRepo.GetQuery().AsNoTracking();
 
-            ////Check confirm quantity
-            ////Lấy ra các phiếu cân cần update
-            //var weightVotes = request.UpdateNHLTs.GroupBy(x => x.WeightVote, (k, v) => new { Key = k, Value = v.ToList() })
-            //                                     .Select(x => new
-            //                                     {
-            //                                         WeightVote = x.Key,
-            //                                         NHLTIDs = x.Value.Select(v => v.NHLTId).ToList(),
-            //                                         ConfirmQty = x.Value.Sum(x => x.ConfirmQty),
-            //                                         QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackage)
-            //                                     }).ToList();
-            ////Duyệt phiếu cân kiểm tra confirm quantity và SL kèm bao bì
-            //foreach (var item in weightVotes)
-            //{
-            //    //Tính tổng confirm quantity ban đầu
-            //    var sumConfirmQty1 = nhlts.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
-            //    //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
-            //    var sumConfirmQty2 = nhlts.Where(x => x.WeightVote == item.WeightVote && !item.NHLTIDs.Contains(x.GoodsReceiptTypeTId)).Sum(x => x.ConfirmQty);
-            //    //So sánh
-            //    if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
-            //    {
-            //        response.IsSuccess = false;
-            //        response.Message = $"Confirm Quantity ban đầu là {sumConfirmQty1}";
-            //    }
+            //Check confirm quantity
+            //Lấy ra các phiếu cân cần update
+            var weightVotes = request.UpdateNHLTs.GroupBy(x => x.WeightVote, (k, v) => new { Key = k, Value = v.ToList() })
+                                                 .Select(x => new
+                                                 {
+                                                     WeightVote = x.Key,
+                                                     NHLTIDs = x.Value.Select(v => v.NHLTId).ToList(),
+                                                     ConfirmQty = x.Value.Sum(x => x.ConfirmQty),
+                                                     QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackage)
+                                                 }).ToList();
+            //Duyệt phiếu cân kiểm tra confirm quantity và SL kèm bao bì
+            foreach (var item in weightVotes)
+            {
+                //Tính tổng confirm quantity ban đầu
+                var sumConfirmQty1 = nhlts.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
+                //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
+                var sumConfirmQty2 = nhlts.Where(x => x.WeightVote == item.WeightVote && !item.NHLTIDs.Contains(x.GoodsReceiptTypeTId)).Sum(x => x.ConfirmQty);
+                //So sánh
+                if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Confirm Quantity ban đầu là {sumConfirmQty1}";
+                }
 
-            //    //Tính tổng SL kèm bao bì
-            //    var sumQtyWithPackage1 = nhlts.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
-            //    //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
-            //    var sumQtyWithPackage2 = nhlts.Where(x => x.WeightVote == item.WeightVote && !item.NHLTIDs.Contains(x.GoodsReceiptTypeTId)).Sum(x => x.QuantityWithPackaging);
-            //    //So sánh
-            //    if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
-            //    {
-            //        response.IsSuccess = false;
-            //        response.Message = "Vui lòng xem lại số lượng kèm bao bì";
-            //    }
-            //}
-
-
-            //foreach (var item in request.UpdateNHLTs)
-            //{
-            //    //Check tồn tại nhlt
-            //    var nhlt = await nhlts.FirstOrDefaultAsync(x => x.GoodsReceiptTypeTId == item.NHLTId);
-
-            //    //Lấy ra od detail
-            //    var wo = !string.IsNullOrEmpty(item.OutboundDelivery) && !string.IsNullOrEmpty(item.OutboundDeliveryItem) ?
-            //                        odDetails.FirstOrDefault(d => d.OutboundDelivery.DeliveryCode == long.Parse(item.OutboundDelivery) &&
-            //                                                 d.WorkOrderItem == item.ItemComponent &&
-            //                                                 d.ProductCodeInt == long.Parse(item.Component)) : null;
-
-            //    var imgPath = string.Empty;
-            //    //Convert Base64 to Iformfile
-            //    if (!string.IsNullOrEmpty(item.NewImage))
-            //    {
-            //        byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
-            //        MemoryStream stream = new MemoryStream(bytes);
-
-            //        IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKPPPPId.ToString(), $"{item.NKPPPPId.ToString()}.jpg");
-            //        //Save image to server
-            //        imgPath = await _utilitiesService.UploadFile(file, "NKPPPP");
-            //    }
+                //Tính tổng SL kèm bao bì
+                var sumQtyWithPackage1 = nhlts.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
+                //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
+                var sumQtyWithPackage2 = nhlts.Where(x => x.WeightVote == item.WeightVote && !item.NHLTIDs.Contains(x.GoodsReceiptTypeTId)).Sum(x => x.QuantityWithPackaging);
+                //So sánh
+                if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Vui lòng xem lại số lượng kèm bao bì";
+                }
+            }
 
 
-            //    //Chưa có thì tạo mới
-            //    if (nkpppp == null)
-            //    {
-            //        _nkppppRepo.Add(new ScrapFromProductionModel
-            //        {
-            //            ScFromProductiontId = item.NKPPPPId,
-            //            DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null,
-            //            PlantCode = item.Plant,
-            //            ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode,
-            //            ComponentCodeInt = long.Parse(item.Component),
-            //            Batch = item.Batch,
-            //            BagQuantity = item.BagQuantity,
-            //            SingleWeight = item.SingleWeight,
-            //            WeightVote = item.WeightVote,
-            //            WeightHeadCode = item.WeightHeadCode,
-            //            Weight = item.Weight,
-            //            ConfirmQty = item.ConfirmQty,
-            //            QuantityWithPackaging = item.QuantityWithPackaging,
-            //            QuantityWeitght = item.QuantityWeight,
-            //            Description = item.Description,
-            //            Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
-            //            StartTime = item.StartTime,
-            //            EndTime = item.EndTime,
-            //            SlocCode = item.StorageLocation,
-            //            SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
-            //            Status = item.isDelete == true ? "DEL" : "NOT"
-            //        });
-            //    }
-            //    //Tồn tại thì update
-            //    else
-            //    {
-            //        //Cập nhật
-            //        //Detail wo id
-            //        nkpppp.DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null;
-            //        //Component Code
-            //        nkpppp.ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode;
-            //        //Component Code Int
-            //        nkpppp.ComponentCodeInt = long.Parse(item.Component);
-            //        //Storage Location
-            //        nkpppp.SlocCode = item.StorageLocation;
-            //        //Sloc Name
-            //        nkpppp.SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "";
-            //        //Batch
-            //        nkpppp.Batch = item.Batch;
-            //        //Sl bao
-            //        nkpppp.BagQuantity = item.BagQuantity;
-            //        //Đơn trọng
-            //        nkpppp.SingleWeight = item.SingleWeight;
-            //        //Confirm Quantity
-            //        nkpppp.ConfirmQty = item.ConfirmQty;
-            //        //Sl kèm bao bì
-            //        nkpppp.QuantityWithPackaging = item.QuantityWithPackaging;
-            //        //Ghi chú
-            //        nkpppp.Description = item.Description;
-            //        //Hình ảnh
-            //        nkpppp.Image = string.IsNullOrEmpty(imgPath) ? nkpppp.Image : imgPath;
-            //        //Đánh dấu xóa
-            //        if (item.isDelete == true)
-            //            nkpppp.Status = "DEL";
-            //        //Hủy đánh dấu xóa
-            //        if (item.isDelete == false)
-            //        {
-            //            nkpppp.Status = "NOT";
-            //        }
-            //    }
-            //}
+            foreach (var item in request.UpdateNHLTs)
+            {
+                //Check tồn tại nhlt
+                var nhlt = await nhlts.FirstOrDefaultAsync(x => x.GoodsReceiptTypeTId == item.NHLTId);
 
-            //await _unitOfWork.SaveChangesAsync();
+                //Lấy ra od detail
+                var odDetail = !string.IsNullOrEmpty(item.OutboundDelivery) && !string.IsNullOrEmpty(item.OutboundDeliveryItem) ?
+                                    odDetails.FirstOrDefault(d => d.OutboundDelivery.DeliveryCodeInt == long.Parse(item.OutboundDelivery) &&
+                                                             d.OutboundDeliveryItem == item.OutboundDeliveryItem) : null;
 
-            //return response;
+                var imgPath = string.Empty;
+                //Convert Base64 to Iformfile
+                if (!string.IsNullOrEmpty(item.NewImage))
+                {
+                    byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
+                    MemoryStream stream = new MemoryStream(bytes);
 
-            return null;
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.NHLTId.ToString(), $"{item.NHLTId.ToString()}.jpg");
+                    //Save image to server
+                    imgPath = await _utilitiesService.UploadFile(file, "NHLT");
+                }
+
+
+                //Chưa có thì tạo mới
+                if (nhlt == null)
+                {
+                    _nhltRepo.Add(new GoodsReceiptTypeTModel
+                    {
+                        //Id
+                        GoodsReceiptTypeTId = item.NHLTId,
+                        //Detail od id
+                        DetailODId = odDetail != null ? odDetail.DetailOutboundDeliveryId : null,
+                        //Plant
+                        PlantCode = item.Plant,
+                        //Material
+                        MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
+                        MaterialCodeInt = long.Parse(item.Material),
+                        //Batch
+                        Batch = item.Batch,
+                        //Số phiếu cân
+                        WeightVote = item.WeightVote,
+                        //Đầu cân
+                        WeightHeadCode = item.WeightHeadCode,
+                        //Trọng lượng cân
+                        Weight = item.Weight,
+                        //Confirm quantity
+                        ConfirmQty = item.ConfirmQty,
+                        //Unit 
+                        UOM = item.Unit,
+                        //SL kèm bao bì
+                        QuantityWithPackaging = item.QuantityWithPackage,
+                        //Số phương tiện
+                        VehicleCode = item.VehicleCode,
+                        //Số lần cân
+                        QuantityWeight = item.QuantityWeight,
+                        Description = item.Description,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        //Thời gian bd
+                        StartTime = item.StartTime,
+                        //Thời gian kết thúc
+                        EndTime = item.EndTime,
+                        //Sloc
+                        SlocCode = item.Sloc,
+                        //Sloc
+                        SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
+                        Status = item.isDelete == true ? "DEL" : "NOT"
+                    });
+                }
+                //Tồn tại thì update
+                else
+                {
+                    //Cập nhật
+                    //Detail od id
+                    nhlt.DetailODId = odDetail != null ? odDetail.DetailOutboundDeliveryId : null;
+                    //Material Code
+                    nhlt.MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode;
+                    nhlt.MaterialCodeInt = long.Parse(item.Material);
+                    //Storage Location
+                    nhlt.SlocCode = item.Sloc;
+                    //Sloc Name
+                    nhlt.SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "";
+                    //Số phương tiện
+                    nhlt.VehicleCode = item.VehicleCode;
+                    //Batch
+                    nhlt.Batch = item.Batch;
+                    //Số cân đầu ra
+                    nhlt.OutputWeight = item.OutputWeight;
+                    //Confirm Quantity
+                    nhlt.ConfirmQty = item.ConfirmQty;
+                    //Sl kèm bao bì
+                    nhlt.QuantityWithPackaging = item.QuantityWithPackage;
+                    //Ghi chú
+                    nhlt.Description = item.Description;
+                    //Hình ảnh
+                    nhlt.Image = string.IsNullOrEmpty(imgPath) ? nhlt.Image : imgPath;
+                    //Đánh dấu xóa
+                    if (item.isDelete == true)
+                        nhlt.Status = "DEL";
+                    //Hủy đánh dấu xóa
+                    if (item.isDelete == false)
+                    {
+                        nhlt.Status = "NOT";
+                    }
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return response;
         }
     }
 }

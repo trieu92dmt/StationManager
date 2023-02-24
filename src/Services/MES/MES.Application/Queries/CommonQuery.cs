@@ -179,7 +179,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownCustomer(string keyword);
+        Task<List<Common3Response>> GetDropdownCustomer(string keyword);
 
         /// <summary>
         /// Get dropdown scale monitor type
@@ -786,13 +786,14 @@ namespace MES.Application.Queries
 
         #endregion
 
-        public async Task<List<CommonResponse>> GetDropdownCustomer(string keyword)
+        public async Task<List<Common3Response>> GetDropdownCustomer(string keyword)
         {
             var response = await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
-                                .Select(x => new CommonResponse
+                                .Select(x => new Common3Response
                                 {
                                     Key = x.CustomerNumber,
-                                    Value = $"{x.CustomerNumber} | {x.CustomerName}"
+                                    Value = $"{x.CustomerNumber} | {x.CustomerName}",
+                                    Name = x.CustomerName
                                 }).AsNoTracking().ToListAsync();
 
             return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();

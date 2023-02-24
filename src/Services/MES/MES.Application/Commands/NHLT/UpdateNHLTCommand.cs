@@ -96,7 +96,7 @@ namespace MES.Application.Commands.NHLT
             var response = new ApiResponse
             {
                 IsSuccess = true,
-                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nhập kho phụ phẩm phế phẩm")
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nhập hàng loại T")
             };
 
             //Data nhập hàng loại T

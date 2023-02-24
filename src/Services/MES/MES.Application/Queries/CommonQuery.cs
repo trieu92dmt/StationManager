@@ -380,10 +380,10 @@ namespace MES.Application.Queries
                                     }).ToListAsync();
             }
             #endregion
-            else 
+            else
             {
                 response = await _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
-                                                   (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) && x.ProductName.Contains(keyword) : true))
+                                                   (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) || x.ProductName.Contains(keyword) : true))
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {

@@ -199,7 +199,7 @@ namespace MES.Application.Queries
                 //material desc
                 MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? prods.FirstOrDefault(p => p.ProductCodeInt == x.MaterialCodeInt).ProductName : "",
                 //customer
-                Customer = x.Customer,
+                Customer = x.Customer ?? "",
                 CustomerName = !string.IsNullOrEmpty(x.Customer) ? customers.FirstOrDefault(c => c.CustomerNumber == x.Customer).CustomerName : "",
                 //Sloc
                 Sloc = x.SlocCode ?? "",
@@ -211,6 +211,8 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight ?? 0,
                 //Đầu cân
                 WeightHeadCode = x.WeightHeadCode ?? "",
+                //Số batch
+                Batch = x.Batch ?? "",
                 //Trọng lượng
                 Weight = x.Weight ?? 0,
                 //Confirm quantity
@@ -222,7 +224,7 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeight = x.QuantityWeight ?? 0,
                 //Unit
-                Unit = x.UOM,
+                Unit = x.UOM ?? "",
                 //Ghi chú
                 Description = x.Description ?? "",
                 //Hình ảnh

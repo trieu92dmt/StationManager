@@ -2794,7 +2794,7 @@ namespace IntegrationNS.API.Controllers
         ///               "isDelete": null
         ///             }
         ///           ],
-        ///           "message": "\"Get data NCK\" thành công.",
+        ///           "message": "\"Get data NK\" thành công.",
         ///           "isSuccess": true,
         ///           "resultsCount": null,
         ///           "recordsTotal": null,

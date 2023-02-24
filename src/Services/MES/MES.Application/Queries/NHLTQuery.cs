@@ -258,6 +258,8 @@ namespace MES.Application.Queries
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //34 Material Doc
                 MatDoc = x.MaterialDocument ?? "",
+                //Documentdate
+                DocumentDate = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DocumentDate : null,
                 //35 Reverse Doc
                 RevDoc = x.ReverseDocument ?? "",
                 isDelete = x.Status == "DEL" ? true : false,

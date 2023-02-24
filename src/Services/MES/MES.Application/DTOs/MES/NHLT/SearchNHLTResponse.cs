@@ -114,6 +114,8 @@ namespace MES.Application.DTOs.MES.NHLT
         public string OutboundDelivery { get; set; }
         //Outbound Delivery Item
         public string OutboundDeliveryItem { get; set; }
+        //Document Date
+        public DateTime? DocumentDate { get; set; }
 
     }
 }

@@ -94,7 +94,7 @@ namespace MES.Application.Queries
 
             //Tạo query
             var query = _nhltRepo.GetQuery()
-                                 .Include(x => x.DetailOD).ThenInclude(x => x.DetailOutboundDeliveryId)
+                                 .Include(x => x.DetailOD).ThenInclude(x => x.OutboundDelivery)
                                  .AsNoTracking();
 
             //Get query customer
@@ -228,7 +228,7 @@ namespace MES.Application.Queries
                 //Hình ảnh
                 Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
                 //Status
-                Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
+                Status = !string.IsNullOrEmpty(x.Status) ? status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi : "",
                 //Số phiếu cân
                 WeightVote = x.WeightVote ?? "",
                 //Thời gian bắt đầu
@@ -261,7 +261,7 @@ namespace MES.Application.Queries
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
             }).ToListAsync();
 
-            throw new NotImplementedException();
+            return data;
         }
 
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)

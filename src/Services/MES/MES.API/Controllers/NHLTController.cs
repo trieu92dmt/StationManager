@@ -2,7 +2,6 @@
 using Core.Properties;
 using MediatR;
 using MES.Application.Commands.NHLT;
-using MES.Application.Commands.NK;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NHLT;
 using MES.Application.Queries;
@@ -66,6 +65,22 @@ namespace MES.API.Controllers
             {
                 Data = response,
                 Message = string.Format(CommonResource.Msg_Success, "Lưu dữ liệu nhập hàng loại T")
+            });
+        }
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu nhập hàng loại T)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-nhlt")]
+        public async Task<IActionResult> GetNHLTAsync([FromBody] SearchNHLTCommand command)
+        {
+            var response = await _query.GetDataNHLT(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchNHLTResponse>>
+            {
+                Data = response
             });
         }
 

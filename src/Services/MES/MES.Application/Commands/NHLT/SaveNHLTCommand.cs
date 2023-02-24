@@ -175,6 +175,8 @@ namespace MES.Application.Commands.NHLT
                     MaterialCodeInt = long.Parse(item.Material),
                     //Batch
                     Batch = item.Batch,
+                    //Customer
+                    Customer = item.Customer,
                     //5   WeightId
                     WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
@@ -200,6 +202,8 @@ namespace MES.Application.Commands.NHLT
                     Image = !string.IsNullOrEmpty(imgPath) ? imgPath : null,
                     //16  Status
                     Status = "NOT",
+                    //Unit
+                    UOM = item.Unit,
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                       weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,

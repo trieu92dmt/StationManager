@@ -53,7 +53,7 @@ namespace MES.Application.DTOs.MES.XCK
         //Delivered Quantity
         public decimal? DeliveredQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveredQty;
         //UoM
         public string Unit { get; set; }
         //Số xe tải
@@ -123,7 +123,7 @@ namespace MES.Application.DTOs.MES.XCK
         //11. Delivered Quantity
         public decimal? DeliveredQty { get; set; }
         //12. Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveredQty;
         //13. UoM
         public string Unit { get; set; }
     }

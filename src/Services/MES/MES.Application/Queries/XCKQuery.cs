@@ -199,7 +199,6 @@ namespace MES.Application.Queries
             //Tính open quantity
             foreach (var item in data)
             {
-                item.OpenQty = item.TotalQty - item.DeliveredQty;
                 item.IndexKey = index;
                 index++;
             }
@@ -414,12 +413,6 @@ namespace MES.Application.Queries
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
                 //isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
             }).ToListAsync();
-
-            //Tính open quantity
-            foreach (var item in data)
-            {
-                item.OpenQty = item.TotalQty - item.DeliveredQty;
-            }
 
             return data;
         }

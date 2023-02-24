@@ -130,14 +130,14 @@ namespace MES.Application.Queries
             }
 
             //Theo Receiving sloc
-            if (!string.IsNullOrEmpty(command.RecevingSlocFrom))
+            if (!string.IsNullOrEmpty(command.ReceivingSlocFrom))
             {
                 //Không có reveiving sloc to thì search 1
-                if (string.IsNullOrEmpty(command.RecevingSlocTo))
-                    command.RecevingSlocTo = command.RecevingSlocFrom;
+                if (string.IsNullOrEmpty(command.ReceivingSlocTo))
+                    command.ReceivingSlocTo = command.ReceivingSlocFrom;
 
-                query = query.Where(x => x.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocFrom) >= 0 &&
-                                         x.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocTo) <= 0);
+                query = query.Where(x => x.Reservation.ReceivingSloc.CompareTo(command.ReceivingSlocFrom) >= 0 &&
+                                         x.Reservation.ReceivingSloc.CompareTo(command.ReceivingSlocTo) <= 0);
             }
 
             //Theo Material

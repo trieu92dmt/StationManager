@@ -34,6 +34,7 @@ using IntegrationNS.Application.DTOs.MES.DTOs;
 using IntegrationNS.Application.Commands.XCKs;
 using IntegrationNS.Application.DTOs.MES.XCK;
 using IntegrationNS.Application.Commands.NCKs;
+using IntegrationNS.Application.Commands.NKs;
 
 namespace IntegrationNS.API.Controllers
 {
@@ -2716,6 +2717,166 @@ namespace IntegrationNS.API.Controllers
                 Data = response,
                 Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NCK") :
                                                                                                        string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NCK")
+            });
+        }
+        #endregion
+
+        #region Tích hợp NK
+        /// <summary>Get data NK</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nk
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///             {
+        ///               "plant": "string",
+        ///               "customer": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-24T06:22:41.746Z",
+        ///               "weightDateTo": "2023-02-24T06:22:41.746Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "nkid": "1f9f5bcc-f4c4-4986-88f3-7bf437526e38",
+        ///               "plant": "A100",
+        ///               "material": "2000000003",
+        ///               "materialDesc": "Bao xuất khẩu Daily fresh 5kg",
+        ///               "customer": "",
+        ///               "customerFmt": "",
+        ///               "specialStock": "",
+        ///               "sloc": "A131",
+        ///               "slocFmt": "A131 | ÐT.K vật tư",
+        ///               "batch": "",
+        ///               "bagQuantity": 12,
+        ///               "singleWeight": 2,
+        ///               "weightHeadCode": "",
+        ///               "weight": 0,
+        ///               "confirmQuantity": 24,
+        ///               "quantityWithPackage": 0,
+        ///               "vehicleCode": null,
+        ///               "quantityWeight": 0,
+        ///               "unit": "KG",
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "N1000005",
+        ///               "startTime": null,
+        ///               "endTime": "2023-02-24T10:07:33.273",
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-24T10:07:33.273",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "materialDoc": "",
+        ///               "reverseDoc": "",
+        ///               "truckInfoId": null,
+        ///               "truckNumber": null,
+        ///               "inputWeight": 0,
+        ///               "outputWeight": 0,
+        ///               "isDelete": null
+        ///             }
+        ///           ],
+        ///           "message": "\"Get data NCK\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("nk")]
+        public async Task<IActionResult> NKIntegration([FromBody] NKIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<NKResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NK") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy nhập khác
+        /// <summary>Update, cancel phiếu nhập khác</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nk
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nKs": [
+        ///                 {
+        ///                   "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NK MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nKs": [
+        ///                 {
+        ///                   "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nk")]
+        public async Task<IActionResult> UpdateOrCancelNKAsync([FromBody] UpdateAndCancelNKCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NK") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NK")
             });
         }
         #endregion

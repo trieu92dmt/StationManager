@@ -31,14 +31,16 @@ namespace IntegrationNS.Application.Queries
         private readonly IRepository<AccountModel> _userRep;
         private readonly IRepository<PurchaseOrderMasterModel> _poRep;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRep;
+        private readonly IRepository<WeighSessionModel> _weightSsRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<AccountModel> userRep, IRepository<PurchaseOrderMasterModel> poRep,
-                         IRepository<PurchaseOrderDetailModel> poDetailRep)
+                         IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<WeighSessionModel> weightSsRepo)
         {
             _nkmhRep = nkmhRep;
             _userRep = userRep;
             _poRep = poRep;
             _poDetailRep = poDetailRep;
+            _weightSsRepo = weightSsRepo;
         }
 
         #region GET phiếu nhập kho mua hàng
@@ -56,6 +58,9 @@ namespace IntegrationNS.Application.Queries
                                       .ThenInclude(x => x.PurchaseOrder)
                                       .AsNoTracking()
                                       .FirstOrDefaultAsync();
+            //WeightSS
+            var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
+
 
             if (nkmh is null)
                 throw new ISDException(CommonResource.Msg_NotFound, "Phiếu NKMH");
@@ -65,7 +70,7 @@ namespace IntegrationNS.Application.Queries
             {
                 NkmhId = nkmh.GoodsReceiptId,
                 //ID đợt cân
-                WeightId = nkmh.WeightId,
+                WeightId = nkmh.WeightId.HasValue ? weightSs.FirstOrDefault(w => w.WeighSessionID == nkmh.WeightId).WeighSessionCode : "",
                 WeightVote = nkmh.WeitghtVote,
                 //Đơn trọng
                 SingleWeight = nkmh.SingleWeight,

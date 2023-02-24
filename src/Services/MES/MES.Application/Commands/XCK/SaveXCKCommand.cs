@@ -226,7 +226,9 @@ namespace MES.Application.Commands.XCK
                                       weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
-                    
+                    //Số xe tải
+                    TruckInfoId = item.TruckInfoId,
+                    TruckNumber = item.TruckNumber,
                     //24  CreateTime
                     CreateTime = DateTime.Now,
                     //25  CreateBy

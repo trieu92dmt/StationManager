@@ -6,6 +6,7 @@ using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NHLT;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
@@ -398,6 +399,13 @@ namespace MES.Application.Queries
                             DocumentDate = dtOds != null ? dtOds.OutboundDelivery.DocumentDate : null
                         }).AsNoTracking().ToListAsync();
 
+
+            var index = 1;
+            foreach (var item in query)
+            {
+                item.IndexKey = index;
+                index++;
+            }
 
             return query;
         }

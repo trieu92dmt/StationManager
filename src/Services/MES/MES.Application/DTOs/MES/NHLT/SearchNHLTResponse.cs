@@ -8,6 +8,8 @@ namespace MES.Application.DTOs.MES.NHLT
 {
     public class GetInputDataResponse
     {
+        //Index key
+        public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }
         //Customer

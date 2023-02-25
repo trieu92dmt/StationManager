@@ -36,6 +36,7 @@ using IntegrationNS.Application.DTOs.MES.XCK;
 using IntegrationNS.Application.Commands.NCKs;
 using IntegrationNS.Application.Commands.NKs;
 using IntegrationNS.Application.Commands.XKs;
+using IntegrationNS.Application.Commands.XKLXH;
 
 namespace IntegrationNS.API.Controllers
 {
@@ -3015,7 +3016,7 @@ namespace IntegrationNS.API.Controllers
         ///             -- Hủy phiếu
         ///             {
         ///               "isCancel": true,
-        ///               "XKs": [
+        ///               "xKs": [
         ///                 {
         ///                   "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID XK MES
         ///                   "reverseDocument": ""
@@ -3026,7 +3027,7 @@ namespace IntegrationNS.API.Controllers
         ///              -- Cập nhật phiếu
         ///             {
         ///               "isCancel": false,
-        ///               "XKs": [
+        ///               "xKs": [
         ///                 {
         ///                   "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XK MES
         ///                   "batch": "",
@@ -3051,6 +3052,183 @@ namespace IntegrationNS.API.Controllers
                 Data = response,
                 Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu XK") :
                                                                                                        string.Format(CommonResource.Msg_Success, "Cập nhật phiếu XK")
+            });
+        }
+        #endregion
+
+        #region Tích hợp XKLXH
+        /// <summary>Get data XKLXH</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xklxh
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///             {
+        ///               "plant": "string",
+        ///               "deliveryType": "string",
+        ///               "purchaseOrderFrom": "string",
+        ///               "purchaseOrderTo": "string",
+        ///               "salesOrderFrom": "string",
+        ///               "salesOrderTo": "string",
+        ///               "shipToPartyFrom": "string",
+        ///               "shipToPartyTo": "string",
+        ///               "outboundDeliveryFrom": "string",
+        ///               "outboundDeliveryTo": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "documentDateFrom": "2023-02-25T03:11:04.784Z",
+        ///               "documentDateTo": "2023-02-25T03:11:04.784Z",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-25T03:11:04.784Z",
+        ///               "weightDateTo": "2023-02-25T03:11:04.784Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "xklxhId": "8b3ac43b-d2d2-446c-80a0-26f72d7aadb0",
+        ///               "plant": "A100",
+        ///               "shipToPartyName": "",
+        ///               "outboundDelivery": "",
+        ///               "outboundDeliveryItem": "",
+        ///               "material": "2200000005",
+        ///               "materialDesc": "Gạo xô MN Đài Thơm 5% tấm, C, Đ",
+        ///               "sloc": "",
+        ///               "slocName": "",
+        ///               "slocFmt": "",
+        ///               "batch": "",
+        ///               "bagQuantity": 0,
+        ///               "singleWeight": 0,
+        ///               "weightHeadCode": "NHAP01",
+        ///               "weight": 120.456,
+        ///               "confirmQty": 120.456,
+        ///               "quantityWithPackage": 0,
+        ///               "vehicleCode": "",
+        ///               "quantityWeight": 3,
+        ///               "totalQty": 0,
+        ///               "deliveredQty": 0,
+        ///               "openQty": 0,
+        ///               "unit": "KG",
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "X1000009",
+        ///               "startTime": null,
+        ///               "endTime": null,
+        ///               "documentDate": null,
+        ///               "truckInfoId": null,
+        ///               "truckNumber": "",
+        ///               "inputWeight": 0,
+        ///               "outputWeight": 0,
+        ///               "goodsWeight": 0,
+        ///               "myProperty": 0,
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-24T09:10:55.457",
+        ///               "changeById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "changeBy": "admin",
+        ///               "matDoc": null,
+        ///               "revDoc": null,
+        ///               "isDelete": false
+        ///             }
+        ///           ],
+        ///           "message": "\"Get data XKLXH\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("xklxh")]
+        public async Task<IActionResult> XKLXHIntegration([FromBody] XKLXHIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<XKLXHResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data XKLXH") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy xuất kho theo lệnh xuất hàng
+        /// <summary>Update, cancel phiếu xuất kho theo lệnh xuất hàng</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xklxh
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "xklxHs": [
+        ///                 {
+        ///                   "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID XKLXH MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "xklxHs": [
+        ///                 {
+        ///                   "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-xklxh")]
+        public async Task<IActionResult> UpdateOrCancelXKLXHAsync([FromBody] UpdateAndCancelXKLXHCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu XKLXH") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu XKLXH")
             });
         }
         #endregion

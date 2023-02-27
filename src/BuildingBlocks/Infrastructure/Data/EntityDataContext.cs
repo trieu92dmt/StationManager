@@ -70,6 +70,7 @@ namespace Infrastructure.Data
         public virtual DbSet<CommandQCModel> CommandQCModel { get; set; }
         public virtual DbSet<Comment_File_Mapping> Comment_File_Mapping { get; set; }
         public virtual DbSet<CompanyModel> CompanyModel { get; set; }
+        public virtual DbSet<ComponentExportModel> ComponentExportModel { get; set; }
         public virtual DbSet<ConfigurationModel> ConfigurationModel { get; set; }
         public virtual DbSet<ConfirmStageModel> ConfirmStageModel { get; set; }
         public virtual DbSet<ConsumableMaterialsDeliveryModel> ConsumableMaterialsDeliveryModel { get; set; }
@@ -781,6 +782,21 @@ namespace Infrastructure.Data
             modelBuilder.Entity<CompanyModel>(entity =>
             {
                 entity.Property(e => e.CompanyId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<ComponentExportModel>(entity =>
+            {
+                entity.Property(e => e.ComponentExportId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.PurchaseOrderDetail)
+                    .WithMany(p => p.ComponentExportModel)
+                    .HasForeignKey(d => d.PurchaseOrderDetailId)
+                    .HasConstraintName("FK_ComponentExportModel_PurchaseOrderDetailModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.ComponentExportModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_ComponentExportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<ConfigurationModel>(entity =>

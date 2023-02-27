@@ -346,7 +346,7 @@ namespace MES.Application.Queries
                 //MaterialDesc
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
                 //MVT
-                MovementType = x.DetailReservationId.HasValue ? x.DetailReservation.MovementType : "",
+                MovementType = x.MovementType ?? "",
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
                 SlocName = !string.IsNullOrEmpty(x.SlocCode) ? x.SlocName : "",

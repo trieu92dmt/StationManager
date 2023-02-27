@@ -50,5 +50,79 @@ namespace MES.Application.DTOs.MES.XNVLGC
     }
     public class SearchXNVLGCResponse
     {
+        //Id
+        public Guid XNVLGCId { get; set; }
+        //Plant
+        public string Plant { get; set; }
+        public string PlantName { get; set; }
+        //PO
+        public string PurchaseOrder { get; set; }
+        //PO Item
+        public string PurchaseOrderItem { get; set; }
+        //Material
+        public string Material { get; set; }
+        //Material desc
+        public string MaterialDesc { get; set; }
+        //Component
+        public string Component { get; set; }
+        //Component desc
+        public string ComponentDesc { get; set; }
+        //Sloc
+        public string Sloc { get; set; }
+        public string SlocName { get; set; }
+        public string SlocFmt { get; set; }
+        //Batch
+        public string Batch { get; set; }
+        //SL bao
+        public int? BagQuantity { get; set; }
+        //Đơn trọng
+        public decimal? SingleWeight { get; set; }
+        //Đầu cân
+        public string WeightHeadCode { get; set; }
+        //Trọng lượng cân
+        public decimal? Weight { get; set; }
+        //Confirm quantity
+        public decimal? ConfirmQty { get; set; }
+        //SL kèm bao bì
+        public decimal? QuantityWithPackage { get; set; }
+        //Số phương tiện
+        public string VehicleCode { get; set; }
+        //Số lần cân
+        public int? QuantityWeight { get; set; }
+        //Order quantity
+        public decimal? OrderQuantity { get; set; }
+        //Order unit
+        public string OrderUnit { get; set; }
+        //Requirement quantity
+        public decimal? RequirementQuantity { get; set; }
+        //Requirement Unit
+        public string RequirementUnit { get; set; }
+        //Vendor name
+        public string VendorName { get; set; }
+        //Số xe tải
+        //Số cân đầu vào
+        //Số cân đầu ra
+        //Ghi chú
+        //Hình ảnh
+        //Status
+        //Số phiếu cân
+        //Thời gian bắt đầu
+        //Thời gian kết thúc
+        //Create by
+        public Guid? CreateById { get; set; }
+        public string CreateBy { get; set; }
+        //Crete On
+        public DateTime? CreateOn { get; set; }
+        //Change by
+        public Guid? ChangeById { get; set; }
+        public string ChangeBy { get; set; }
+        //Material Doc
+        public string MaterialDoc { get; set; }
+        //Reverse Doc
+        public string ReverseDoc { get; set; }
+        //Đánh dấu xóa
+        public bool? isDelete { get; set; }
+        //Có thể chỉnh sửa
+        public bool? isEdit { get; set; }
     }
 }

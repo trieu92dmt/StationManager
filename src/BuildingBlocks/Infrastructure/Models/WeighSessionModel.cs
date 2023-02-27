@@ -13,6 +13,7 @@ namespace Infrastructure.Models
     {
         public WeighSessionModel()
         {
+            ComponentExportModel = new HashSet<ComponentExportModel>();
             WeighSessionDetailModel = new HashSet<WeighSessionDetailModel>();
         }
 
@@ -41,6 +42,8 @@ namespace Infrastructure.Models
         [ForeignKey("ScaleId")]
         [InverseProperty("WeighSessionModel")]
         public virtual ScaleModel Scale { get; set; }
+        [InverseProperty("WeightSession")]
+        public virtual ICollection<ComponentExportModel> ComponentExportModel { get; set; }
         [InverseProperty("WeighSession")]
         public virtual ICollection<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
     }

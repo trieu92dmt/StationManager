@@ -155,6 +155,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[ComponentExportModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[CustmdSaleModel]",
          "ObjectType": 0
       },

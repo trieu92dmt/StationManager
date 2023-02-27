@@ -10,6 +10,9 @@ namespace IntegrationNS.Application.Commands.XCKs
     {
         //Plant
         public string Plant { get; set; }
+        //Sloc
+        public string SlocFrom { get; set; }
+        public string SlocTo { get; set; }
         //Receving Sloc
         public string RecevingSlocFrom { get; set; }
         public string RecevingSlocTo { get; set; }
@@ -115,6 +118,17 @@ namespace IntegrationNS.Application.Commands.XCKs
                                                                           x.DetailReservation.Reservation.ReservationCode.CompareTo(command.ReservationTo) <= 0 : false);
             }
 
+            //Theo sloc
+            if (!string.IsNullOrEmpty(command.SlocFrom))
+            {
+                //Không có reveiving sloc to thì search 1
+                if (string.IsNullOrEmpty(command.SlocTo))
+                    command.SlocFrom = command.SlocTo;
+
+                query = query.Where(x => x.DetailReservationId.HasValue ? x.SlocCode.CompareTo(command.RecevingSlocFrom) >= 0 &&
+                                                                          x.SlocCode.CompareTo(command.RecevingSlocTo) <= 0 : false);
+            }
+
             //Theo Receiving sloc
             if (!string.IsNullOrEmpty(command.RecevingSlocFrom))
             {
@@ -122,8 +136,8 @@ namespace IntegrationNS.Application.Commands.XCKs
                 if (string.IsNullOrEmpty(command.RecevingSlocTo))
                     command.RecevingSlocTo = command.RecevingSlocFrom;
 
-                query = query.Where(x => x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocFrom) >= 0 &&
-                                                                          x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocTo) <= 0 : false);
+                query = query.Where(x => x.DetailReservationId.HasValue ? x.ReceivingSlocCode.CompareTo(command.RecevingSlocFrom) >= 0 &&
+                                                                          x.ReceivingSlocCode.CompareTo(command.RecevingSlocTo) <= 0 : false);
             }
 
             //Theo Material

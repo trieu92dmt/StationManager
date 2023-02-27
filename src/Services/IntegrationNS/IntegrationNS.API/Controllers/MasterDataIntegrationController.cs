@@ -2395,20 +2395,22 @@ namespace IntegrationNS.API.Controllers
         /// 
         ///             {
         ///               "plant": "string",
+        ///               "slocFrom": "string",
+        ///               "slocTo": "string",
         ///               "recevingSlocFrom": "string",
         ///               "recevingSlocTo": "string",
         ///               "reservationFrom": "string",
         ///               "reservationTo": "string",
         ///               "materialFrom": "string",
         ///               "materialTo": "string",
-        ///               "documentDateFrom": "2023-02-20T06:19:22.053Z",
-        ///               "documentDateTo": "2023-02-20T06:19:22.053Z",
+        ///               "documentDateFrom": "2023-02-27T04:13:54.366Z",
+        ///               "documentDateTo": "2023-02-27T04:13:54.366Z",
         ///               "weightHeadCode": "string",
         ///               "weightVotes": [
         ///                 "string"
         ///               ],
-        ///               "weightDateFrom": "2023-02-20T06:19:22.053Z",
-        ///               "weightDateTo": "2023-02-20T06:19:22.053Z",
+        ///               "weightDateFrom": "2023-02-27T04:13:54.366Z",
+        ///               "weightDateTo": "2023-02-27T04:13:54.366Z",
         ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         ///               "status": "string"
         ///             }

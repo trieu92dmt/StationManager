@@ -205,6 +205,8 @@ namespace IntegrationNS.Application.Commands.XCKs
                 ReceivingSlocName = x.ReceivingSlocName ?? "",
                 //Batch
                 Batch = x.Batch ?? "",
+                //DocumentDate
+                DocumentDate = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementsDate : null,
                 //Sl bao
                 BagQuantity = x.BagQuantity.HasValue ? x.BagQuantity : 0,
                 //Đơn trọng

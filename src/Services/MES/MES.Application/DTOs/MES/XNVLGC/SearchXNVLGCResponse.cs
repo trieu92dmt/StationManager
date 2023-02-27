@@ -13,8 +13,10 @@ namespace MES.Application.DTOs.MES.XNVLGC
         //Plant
         public string Plant { get; set; }
         public string PlantName { get; set; }
-        //Ship to party name
+        //Vendor
         public string Vendor { get; set; }
+        //Vendor Name
+        public string VendorName { get; set; }
         //Outbound delivery
         public string PurchaseOrder { get; set; }
         //Outbound delivery item
@@ -33,21 +35,14 @@ namespace MES.Application.DTOs.MES.XNVLGC
         public string Batch { get; set; }
         //Số phương tiện
         public string VehicleCode { get; set; }
-        //Storage location
-        public string Sloc { get; set; }
-        //Storage location desc
-        public string SlocName { get; set; }
-        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
-        //Total quantity
-        public decimal? TotalQty { get; set; }
-        //Delivered quantity
-        public decimal? DeliveredQty { get; set; }
-        //Open quantity
-        public decimal? OpenQty => TotalQty - DeliveredQty;
-        //UOM
-        public string Unit { get; set; }
-        //ShipToParty
-        public string ShipToParty { get; set; }
+        //Order Quantity
+        public decimal? OrderQuantity { get; set; }
+        //Order Unit
+        public string OrderUnit { get; set; }
+        //Requirement Quantity
+        public decimal? RequirementQuantity { get; set; }
+        //Requirement Unit
+        public string RequirementUnit { get; set; }
     }
     public class SearchXNVLGCResponse
     {

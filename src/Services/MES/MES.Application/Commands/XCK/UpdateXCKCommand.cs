@@ -31,6 +31,8 @@ namespace MES.Application.Commands.XCK
         public string Sloc { get; set; }
         //7. Batch
         public string Batch { get; set; }
+        //MVT
+        public string MovementType { get; set; }
         //SL bao
         public decimal? BagQuantity { get; set; }
         //Đơn trọng
@@ -188,6 +190,7 @@ namespace MES.Application.Commands.XCK
                         MaterialName = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName,
                         //Batch
                         Batch = item.Batch,
+                        MovementType = item.MovementType,
                         //UoM
                         Unit = item.Unit,
                         //Sl bao
@@ -237,6 +240,8 @@ namespace MES.Application.Commands.XCK
                     xck.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc)?.StorageLocationName;
                     //Batch
                     xck.Batch = item.Batch;
+                    //MVT
+                    xck.MovementType = item.MovementType;
                     //Số lượng bao
                     xck.BagQuantity = item.BagQuantity;
                     //Đơn trọng

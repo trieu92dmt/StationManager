@@ -502,6 +502,7 @@ namespace MES.Application.Queries
                 return await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
                                                              (x.POType == "Z007") &&
+                                                             (x.ReleaseIndicator == "R") &&
                                                              (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
                                         .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
                                         .OrderBy(x => x.PurchaseOrderCode)
@@ -510,7 +511,22 @@ namespace MES.Application.Queries
                                             Key = x.PurchaseOrderCode,
                                             Value = x.PurchaseOrderCodeInt.ToString()
                                         }).AsNoTracking().ToListAsync();
-            }    
+            }   
+            else if (type == "XNVLGC")
+            {
+                return await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                                                             (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             (x.POType == "Z003") &&
+                                                             (x.ReleaseIndicator == "R") &&
+                                                             (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
+                                        .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
+                                        .OrderBy(x => x.PurchaseOrderCode)
+                                        .Select(x => new CommonResponse
+                                        {
+                                            Key = x.PurchaseOrderCode,
+                                            Value = x.PurchaseOrderCodeInt.ToString()
+                                        }).AsNoTracking().ToListAsync();
+            }
 
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&

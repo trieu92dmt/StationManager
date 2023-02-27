@@ -31,6 +31,10 @@ namespace MES.Application.DTOs.MES.XNVLGC
         public string ComponentDesc { get; set; }
         //Document Date
         public DateTime? DocumentDate { get; set; }
+        //Sloc
+        public string Sloc { get; set; }
+        public string SlocName { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //Batch
         public string Batch { get; set; }
         //Số phương tiện

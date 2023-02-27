@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using Core.Models;
+using MediatR;
+using MES.Application.Commands.XNVLGC;
+using MES.Application.DTOs.MES.XNVLGC;
 using MES.Application.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MES.API.Controllers
@@ -17,6 +19,34 @@ namespace MES.API.Controllers
         {
             _mediator = mediator;
             _query = query;
+        }
+
+        /// <summary>GET Bảng 1</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/get-data-input
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             
+        /// OUT PUT
+        /// 
+        /// 
+        ///</remarks>
+        [HttpPost("get-data-input")]
+        public async Task<IActionResult> GetDataInputAsync([FromBody] SearchXNVLGCCommand command)
+        {
+            var response = await _query.GetInputData(command);
+
+            return Ok(new ApiSuccessResponse<List<GetInputDataResponse>>
+            {
+                Data = response
+            });
         }
     }
 }

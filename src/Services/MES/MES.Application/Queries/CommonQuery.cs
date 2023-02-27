@@ -491,7 +491,7 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown po
-        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string type, string plant, string poType, string vendorFrom, string vendorTo)
+        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string type, string poType, string vendorFrom, string vendorTo)
         {
             //Nếu không search vendorto gán vendor to = vendor from
             if (!string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo))

@@ -81,7 +81,7 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <param name="plant"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownPO(string keyword, string type, string plant, string poType, string vendorFrom, string vendorTo);
+        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string type, string poType, string vendorFrom, string vendorTo);
 
         /// <summary>
         /// Dropdown PO Item

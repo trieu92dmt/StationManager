@@ -199,10 +199,10 @@ namespace IntegrationNS.Application.Commands.XCKs
                 MovementType = x.DetailReservationId.HasValue ? x.DetailReservation.MovementType : "",
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
-                SlocName = string.IsNullOrEmpty(x.SlocCode) ? $"{x.SlocCode} | {x.SlocName}" : "",
+                SlocName = x.SlocName ?? "",
                 //Receiving Stor.Sloc
                 ReceivingSloc = x.ReceivingSlocCode ?? "",
-                ReceivingSlocName = string.IsNullOrEmpty(x.ReceivingSlocCode) ? $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}" : "",
+                ReceivingSlocName = x.ReceivingSlocName ?? "",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Sl bao

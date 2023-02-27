@@ -491,11 +491,26 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown po
-        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType, string vendorFrom, string vendorTo)
+        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string type, string plant, string poType, string vendorFrom, string vendorTo)
         {
             //Nếu không search vendorto gán vendor to = vendor from
             if (!string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo))
                 vendorTo = vendorFrom;
+
+            if (type == "NKDCNB")
+            {
+                return await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                                                             (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             (x.POType == "Z007") &&
+                                                             (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
+                                        .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
+                                        .OrderBy(x => x.PurchaseOrderCode)
+                                        .Select(x => new CommonResponse
+                                        {
+                                            Key = x.PurchaseOrderCode,
+                                            Value = x.PurchaseOrderCodeInt.ToString()
+                                        }).AsNoTracking().ToListAsync();
+            }    
 
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
@@ -600,7 +615,8 @@ namespace MES.Application.Queries
             //Theo plant
             if (!string.IsNullOrEmpty(plant))
             {
-                query = type == "NKDCNB" ? query.Where(x => x.OutboundDelivery.ReceivingPlant == plant) : query.Where(x => x.Plant == plant);
+                query = type == "NKDCNB" ? query.Where(x => x.OutboundDelivery.ReceivingPlant == plant && 
+                                                            (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN")) : query.Where(x => x.Plant == plant);
             }
             //Theo material
             if (!string.IsNullOrEmpty(materialFrom))

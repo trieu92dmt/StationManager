@@ -123,10 +123,10 @@ namespace IntegrationNS.Application.Commands.XCKs
             {
                 //Không có reveiving sloc to thì search 1
                 if (string.IsNullOrEmpty(command.SlocTo))
-                    command.SlocFrom = command.SlocTo;
+                    command.SlocTo = command.SlocFrom;
 
-                query = query.Where(x => x.DetailReservationId.HasValue ? x.SlocCode.CompareTo(command.RecevingSlocFrom) >= 0 &&
-                                                                          x.SlocCode.CompareTo(command.RecevingSlocTo) <= 0 : false);
+                query = query.Where(x => x.DetailReservationId.HasValue ? x.SlocCode.CompareTo(command.SlocFrom) >= 0 &&
+                                                                          x.SlocCode.CompareTo(command.SlocTo) <= 0 : false);
             }
 
             //Theo Receiving sloc

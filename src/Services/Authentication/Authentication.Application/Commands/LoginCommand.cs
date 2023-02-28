@@ -14,7 +14,7 @@ namespace Authentication.Application.Commands
     {
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string SaleOrg { get; set; }
+        public string PlantCode { get; set; }
     }
     public class LoginCommandHandler : IRequestHandler<LoginCommand, UserToken>
     {
@@ -36,14 +36,14 @@ namespace Authentication.Application.Commands
             //Check tồn tại
             var user = await _accountRep.FindOneAsync(x => x.UserName == request.UserName);
             if (user == null)
-                throw new ISDException("Đăng nhập thất bại: Tài khoản không tồn tại");
+                throw new ISDException("Đăng nhập thất bại: Tài khoản không tồn tại.");
 
             //Check trạng thái hoạt động
             if (user.Actived != true)
                 throw new ISDException(LanguageResource.Account_Locked);
 
             //Kiểm tra nếu không phải sysadmin thì bắt buộc nhập SaleOrg
-            if (string.IsNullOrEmpty(request.SaleOrg) && request.UserName != "sysadmin")
+            if (string.IsNullOrEmpty(request.PlantCode) && request.UserName != "sysadmin")
                 throw new ISDException(LanguageResource.Choose_Store);
 
             //Encrypt passwork
@@ -51,9 +51,9 @@ namespace Authentication.Application.Commands
 
             //Default password
             if (user.Password != passwordEncrypt && request.Password != "isdcorp@2023")
-                throw new ISDException("Đăng nhập thất bại: Mật khẩu không chính xác");
+                throw new ISDException("Đăng nhập thất bại: Mật khẩu không chính xác.");
 
-            var userToken = await JwtHelpers.GenUserTokens(user, request.SaleOrg, _jwtSettings);
+            var userToken = await JwtHelpers.GenUserTokens(user, request.PlantCode, _jwtSettings);
 
             return userToken;
         }

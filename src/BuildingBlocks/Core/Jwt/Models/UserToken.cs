@@ -25,7 +25,7 @@ namespace Core.Jwt.Models
         public string CompanyCode { get; set; }
         public string CompanyName { get; set; }
         public DateTime ExpiredTime { get; set; }
-        public PermissionMobile MobilePermission { get; set; } = new PermissionMobile();
+        public PermissionMobile Permission { get; set; } = new PermissionMobile();
         public PermissionWeb WebPermission { get; set; } = new PermissionWeb();
     }
 }

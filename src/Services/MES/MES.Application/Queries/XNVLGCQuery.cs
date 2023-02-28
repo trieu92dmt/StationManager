@@ -188,7 +188,7 @@ namespace MES.Application.Queries
                 //POItem
                 PurchaseOrderItem = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.POLine : "",
                 //Material
-                Material = x.ComponentCodeInt.HasValue ? x.ComponentCodeInt.ToString() : "",
+                Material = x.MaterialCodeInt.HasValue ? x.MaterialCodeInt.ToString() : "",
                 //Material desc
                 MaterialDesc = x.MaterialName ?? "",
                 //Component

@@ -201,7 +201,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetMatDoc(string keyword);
+        Task<List<CommonResponse>> GetMatDoc(string keyword, string plant);
 
         /// <summary>
         /// Get mat doc item
@@ -886,9 +886,13 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown mat doc
-        public async Task<List<CommonResponse>> GetMatDoc(string keyword)
+        public async Task<List<CommonResponse>> GetMatDoc(string keyword, string plant)
         {
-            var response = await _matDocRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.MaterialDocCode.ToLower().Contains(keyword.ToLower().Trim()) : true))
+            var response = await _matDocRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
+                                                           (!string.IsNullOrEmpty(keyword) ? x.MaterialDocCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
+                                                           (x.MovementType == "313") &&
+                                                           (x.ItemAutoCreated == "X") &&
+                                                           (x.MovementType != "315"))
                                 .Select(x => new CommonResponse
                                 {
                                     Key = x.MaterialDocCode,

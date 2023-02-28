@@ -396,9 +396,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-mat-doc")]
-        public async Task<IActionResult> GetMatDocAsync(string keyword)
+        public async Task<IActionResult> GetMatDocAsync(string keyword, string plant)
         {
-            var dropdownList = await _commonQuery.GetMatDoc(keyword);
+            var dropdownList = await _commonQuery.GetMatDoc(keyword, plant);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion

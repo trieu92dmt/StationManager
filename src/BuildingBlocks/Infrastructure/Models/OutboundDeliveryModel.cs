@@ -99,6 +99,10 @@ namespace Infrastructure.Models
         public DateTime? CreateTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
+        [StringLength(10)]
+        public string BillingHeader { get; set; }
+        [StringLength(10)]
+        public string BillingAllItems { get; set; }
 
         [InverseProperty("OutboundDelivery")]
         public virtual ICollection<DetailOutboundDeliveryModel> DetailOutboundDeliveryModel { get; set; }

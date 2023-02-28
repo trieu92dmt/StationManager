@@ -55,6 +55,8 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
         public string GoodsMvtHeader { get; set; }    //Goods Mvt – Header
         public string GoodsMvtAllItems { get; set; }    //Goods Mvt – All Items
         public string GoodsMovementSts { get; set; }    //Goods Movement Sts
+        public string BillingHeader { get; set; }
+        public string BillingAllItems { get; set; }
 
         public List<OutboundDeliveryDetailIntegration> OutboundDeliveryDetails { get; set; } = new List<OutboundDeliveryDetailIntegration>();
 
@@ -99,6 +101,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
         public string GoodsMvtItem { get; set; }         //Goods Mvt – Item
         public string GoodsMovementSts { get; set; }         //Goods Movement Sts
         public string DistributionChannel { get; set; }             //Distribution Channel
+        public string BillingItem { get; set; }
     }
     #endregion
 
@@ -180,6 +183,8 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                         delivery.GoodsMvtHeader = outboundDelivery.GoodsMvtHeader;
                         delivery.GoodsMvtAllItems = outboundDelivery.GoodsMvtAllItems;
                         delivery.GoodsMovementSts = outboundDelivery.GoodsMovementSts;
+                        delivery.BillingHeader = outboundDelivery.BillingHeader;
+                        delivery.BillingAllItems = outboundDelivery.BillingAllItems;
 
 
                         delivery.CreateTime = DateTime.Now;
@@ -230,7 +235,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                 GoodsMvtItem = item.GoodsMvtItem,
                                 GoodsMovementSts = item.GoodsMovementSts,
                                 DistributionChannel = item.DistributionChannel,
-
+                                BillingItem = item.BillingItem,
                             });
 
                         }
@@ -281,7 +286,8 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                         delivery.GoodsMvtAllItems = outboundDelivery.GoodsMvtAllItems;
                         delivery.GoodsMovementSts = outboundDelivery.GoodsMovementSts;
                         delivery.LastEditTime = DateTime.Now;
-
+                        delivery.BillingAllItems = outboundDelivery.BillingAllItems;
+                        delivery.BillingHeader = outboundDelivery.BillingHeader;
                         #endregion
 
                         #region Detail
@@ -334,6 +340,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                     GoodsMvtItem = item.GoodsMvtItem,
                                     GoodsMovementSts = item.GoodsMovementSts,
                                     DistributionChannel = item.DistributionChannel,
+                                    BillingItem = item.BillingItem
                                 });
                             }
                             else
@@ -375,7 +382,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                 detailDelivery.GoodsMvtItem = item.GoodsMvtItem;
                                 detailDelivery.GoodsMovementSts = item.GoodsMovementSts;
                                 detailDelivery.DistributionChannel = item.DistributionChannel;
-
+                                detailDelivery.BillingItem = item.BillingItem;
                             }
                         }
                         #endregion

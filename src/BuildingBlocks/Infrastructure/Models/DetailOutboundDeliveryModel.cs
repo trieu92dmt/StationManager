@@ -97,6 +97,8 @@ namespace Infrastructure.Models
         public string GoodsMovementSts { get; set; }
         [StringLength(50)]
         public string DistributionChannel { get; set; }
+        [StringLength(10)]
+        public string BillingItem { get; set; }
 
         [ForeignKey("OutboundDeliveryId")]
         [InverseProperty("DetailOutboundDeliveryModel")]

@@ -166,6 +166,8 @@ namespace MES.Application.Queries
                 InputWeight = x.InputWeight ?? 0,
                 //Số cân đầu ra
                 OutputWeight = x.OutputWeight ?? 0,
+                //Unit
+                Unit = x.UOM,
                 //Ghi chú
                 Description = x.Description ?? "",
                 //Hình ảnh

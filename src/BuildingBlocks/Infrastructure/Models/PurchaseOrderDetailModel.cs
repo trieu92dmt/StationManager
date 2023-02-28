@@ -13,6 +13,7 @@ namespace Infrastructure.Models
     {
         public PurchaseOrderDetailModel()
         {
+            ComponentExportModel = new HashSet<ComponentExportModel>();
             GoodsReceiptModel = new HashSet<GoodsReceiptModel>();
         }
 
@@ -64,6 +65,8 @@ namespace Infrastructure.Models
         [ForeignKey("PurchaseOrderId")]
         [InverseProperty("PurchaseOrderDetailModel")]
         public virtual PurchaseOrderMasterModel PurchaseOrder { get; set; }
+        [InverseProperty("PurchaseOrderDetail")]
+        public virtual ICollection<ComponentExportModel> ComponentExportModel { get; set; }
         [InverseProperty("PurchaseOrderDetail")]
         public virtual ICollection<GoodsReceiptModel> GoodsReceiptModel { get; set; }
     }

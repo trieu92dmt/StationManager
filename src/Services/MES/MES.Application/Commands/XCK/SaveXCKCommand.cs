@@ -156,11 +156,12 @@ namespace MES.Application.Commands.XCK
                 }
 
                 //Lấy ra detail reservation
-                var detailRes = _detailRsRepo.GetQuery().Include(x => x.Reservation).Where(x => x.Reservation.ReservationCodeInt == long.Parse(item.Reservation) &&
-                                                                                                x.ReservationItem == item.ReservationItem).FirstOrDefault();
+                var detailRes = !string.IsNullOrEmpty(item.Reservation) && !string.IsNullOrEmpty(item.ReservationItem) ?
+                                        _detailRsRepo.GetQuery().Include(x => x.Reservation).Where(x => x.Reservation.ReservationCodeInt == long.Parse(item.Reservation) &&
+                                                                                                x.ReservationItem == item.ReservationItem).FirstOrDefault() : null;
 
                 //Lấy ra cân hiện tại
-                var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
+                var scale = !string.IsNullOrEmpty(item.WeightHeadCode) ? scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode) : null;
 
                 _xckRepo.Add(new WarehouseExportTransferModel
                 {
@@ -225,7 +226,9 @@ namespace MES.Application.Commands.XCK
                                       weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
-                    
+                    //Số xe tải
+                    TruckInfoId = item.TruckInfoId,
+                    TruckNumber = item.TruckNumber,
                     //24  CreateTime
                     CreateTime = DateTime.Now,
                     //25  CreateBy

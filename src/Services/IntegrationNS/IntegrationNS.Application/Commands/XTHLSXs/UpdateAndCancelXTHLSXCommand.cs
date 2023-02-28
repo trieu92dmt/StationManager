@@ -73,6 +73,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     var xthlsxNew = JsonConvert.DeserializeObject<IssueForProductionModel>(serialized);
 
                     xthlsxNew.IssForProductiontId = Guid.NewGuid();
+                    xthlsxNew.Status = "NOT";
                     xthlsxNew.MaterialDocument = null;
                     xthlsxNew.ReverseDocument = null;
 

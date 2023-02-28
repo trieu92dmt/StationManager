@@ -30,6 +30,8 @@ namespace IntegrationNS.Application.DTOs.MES.XCK
         public string ReceivingSlocName { get; set; }
         //Batch
         public string Batch { get; set; }
+        //DocumentDate
+        public DateTime? DocumentDate { get; set; }
         //Sl bao
         public decimal? BagQuantity { get; set; }
         //Đơn trọng

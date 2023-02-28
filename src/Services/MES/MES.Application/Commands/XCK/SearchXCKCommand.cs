@@ -11,8 +11,8 @@ namespace MES.Application.Commands.XCK
         //Plant
         public string Plant { get; set; }
         //Receving Sloc
-        public string RecevingSlocFrom { get; set; }
-        public string RecevingSlocTo { get; set; }
+        public string ReceivingSlocFrom { get; set; }
+        public string ReceivingSlocTo { get; set; }
         //Reservation
         public string ReservationFrom { get; set; }
         public string ReservationTo { get; set; }

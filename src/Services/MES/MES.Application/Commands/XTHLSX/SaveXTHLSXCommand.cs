@@ -38,7 +38,7 @@ namespace MES.Application.Commands.XTHLSX
         //Confỉm Qty
         public decimal? ConfirmQty { get; set; }
         //Số lần cân
-        public int QuantityWeight { get; set; }
+        public int? QuantityWeight { get; set; }
         //SL kèm bao bì
         public decimal? QuantityWithPackaging { get; set; }
         //Ghi chú
@@ -163,7 +163,7 @@ namespace MES.Application.Commands.XTHLSX
                     //6 WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
                     //Batch
-                    Batch = detailWo.Batch,
+                    Batch = detailWo != null ? detailWo.Batch : null,
                     //7   BagQuantity
                     BagQuantity = item.BagQuantity,
                     //8   SingleWeight

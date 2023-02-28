@@ -8,6 +8,8 @@ namespace MES.Application.DTOs.MES.NHLT
 {
     public class GetInputDataResponse
     {
+        //Index key
+        public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }
         //Customer
@@ -44,7 +46,7 @@ namespace MES.Application.DTOs.MES.NHLT
         //Material
         public string Material { get; set; }
         //Material Desc
-        public string MaterialName { get; set; }
+        public string MaterialDesc { get; set; }
         //Customer
         public string Customer { get; set; }
         //Customer Name
@@ -112,6 +114,8 @@ namespace MES.Application.DTOs.MES.NHLT
         public string OutboundDelivery { get; set; }
         //Outbound Delivery Item
         public string OutboundDeliveryItem { get; set; }
+        //Document Date
+        public DateTime? DocumentDate { get; set; }
 
     }
 }

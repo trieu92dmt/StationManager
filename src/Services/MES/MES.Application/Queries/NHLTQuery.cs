@@ -1,9 +1,13 @@
 ﻿using Core.SeedWork.Repositories;
+using Grpc.Core;
 using Infrastructure.Models;
 using MES.Application.Commands.NHLT;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NHLT;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,9 +50,12 @@ namespace MES.Application.Queries
         private readonly IRepository<DetailOutboundDeliveryModel> _dtOdRepo;
         private readonly IRepository<CustmdSaleModel> _cusRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<CatalogModel> _cataRepo;
 
         public NHLTQuery(IRepository<GoodsReceiptTypeTModel> nhltRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prodRepo,
-                         IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<CustmdSaleModel> cusRepo, IRepository<StorageLocationModel> slocRepo)
+                         IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<CustmdSaleModel> cusRepo, IRepository<StorageLocationModel> slocRepo,
+                         IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo)
         {
             _nhltRepo = nhltRepo;
             _plantRepo = plantRepo;
@@ -56,9 +63,11 @@ namespace MES.Application.Queries
             _dtOdRepo = dtOdRepo;
             _cusRepo = cusRepo;
             _slocRepo = slocRepo;
+            _userRepo = userRepo;
+            _cataRepo = cataRepo;
         }
 
-        public Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)
+        public async Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)
         {
             #region Format Day
 
@@ -81,10 +90,19 @@ namespace MES.Application.Queries
             }
             #endregion
 
+            //User Query
+            var user = _userRepo.GetQuery().AsNoTracking();
+
             //Tạo query
             var query = _nhltRepo.GetQuery()
-                                 .Include(x => x.DetailOD).ThenInclude(x => x.DetailOutboundDeliveryId)
+                                 .Include(x => x.DetailOD).ThenInclude(x => x.OutboundDelivery)
                                  .AsNoTracking();
+
+            //Get query customer
+            var customers = _cusRepo.GetQuery().AsNoTracking();
+
+            //Products
+            var prods = _prodRepo.GetQuery().AsNoTracking();
 
             //Get data theo plant
             if (!string.IsNullOrEmpty(command.Plant))
@@ -168,7 +186,87 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
 
-            throw new NotImplementedException();
+            //Catalog Nhập kho mua hàng status
+            var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
+
+            var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNHLTResponse
+            {
+                //Id
+                NHLTId = x.GoodsReceiptTypeTId,
+                //plant
+                Plant = x.PlantCode,
+                //material
+                Material = x.MaterialCodeInt.ToString(),
+                //material desc
+                MaterialDesc = !string.IsNullOrEmpty(x.MaterialCode) ? prods.FirstOrDefault(p => p.ProductCodeInt == x.MaterialCodeInt).ProductName : "",
+                //customer
+                Customer = x.Customer ?? "",
+                CustomerName = !string.IsNullOrEmpty(x.Customer) ? customers.FirstOrDefault(c => c.CustomerNumber == x.Customer).CustomerName : "",
+                //Sloc
+                Sloc = x.SlocCode ?? "",
+                //Batch
+                SlocName = x.SlocName ?? "",
+                //Sl bao
+                BagQuantity = x.BagQuantity ?? 0 ,
+                //Đơn trọng
+                SingleWeight = x.SingleWeight ?? 0,
+                //Đầu cân
+                WeightHeadCode = x.WeightHeadCode ?? "",
+                //Số batch
+                Batch = x.Batch ?? "",
+                //Trọng lượng
+                Weight = x.Weight ?? 0,
+                //Confirm quantity
+                ConfirmQty = x.ConfirmQty ?? 0 ,
+                //SL kèm bao bì
+                QuantityWithPackage = x.QuantityWithPackaging ?? 0,
+                //Số phương tiện
+                VehicleCode = x.VehicleCode ?? "",
+                //Số lần cân
+                QuantityWeight = x.QuantityWeight ?? 0,
+                //Unit
+                Unit = x.UOM ?? "",
+                //Ghi chú
+                Description = x.Description ?? "",
+                //Hình ảnh
+                Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
+                //Status
+                Status = !string.IsNullOrEmpty(x.Status) ? status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi : "",
+                //Số phiếu cân
+                WeightVote = x.WeightVote ?? "",
+                //Thời gian bắt đầu
+                StartTime = x.StartTime ?? null,
+                //Thời gian kết thúc
+                EndTime = x.EndTime ?? null,
+                //Số xe tải
+                TruckInfoId = x.TruckInfoId ?? null,
+                TruckNumber = x.TruckNumber ?? "",
+                //Cân xe đầu vào
+                InputWeight = x.InputWeight ?? 0,
+                //Cân xe đầu ra
+                OutputWeight = x.OutputWeight ?? 0,
+                //od
+                OutboundDelivery = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DeliveryCode : "",
+                OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : "",
+                //31 Create by
+                CreateById = x.CreateBy ?? null,
+                CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",
+                //32 Crete On
+                CreateOn = x.CreateTime ?? null,
+                //33 Change by
+                ChangeById = x.LastEditBy ?? null,
+                ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
+                //34 Material Doc
+                MatDoc = x.MaterialDocument ?? null,
+                //Documentdate
+                DocumentDate = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DocumentDate : null,
+                //35 Reverse Doc
+                RevDoc = x.ReverseDocument ?? null,
+                isDelete = x.Status == "DEL" ? true : false,
+                isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
+            }).ToListAsync();
+
+            return data;
         }
 
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
@@ -283,7 +381,7 @@ namespace MES.Application.Queries
                             //Customer name
                             CustomerName = sales != null ? sales.CustomerName : "",
                             //Material
-                            Material = mtrs != null ? mtrs.PlantCode : "",
+                            Material = mtrs != null ? mtrs.ProductCodeInt.ToString() : "",
                             //Material desc
                             MaterialDesc = mtrs != null ? mtrs.ProductName : "",
                             //UoM
@@ -303,6 +401,13 @@ namespace MES.Application.Queries
                             DocumentDate = dtOds != null ? dtOds.OutboundDelivery.DocumentDate : null
                         }).AsNoTracking().ToListAsync();
 
+
+            var index = 1;
+            foreach (var item in query)
+            {
+                item.IndexKey = index;
+                index++;
+            }
 
             return query;
         }

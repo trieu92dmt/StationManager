@@ -81,7 +81,7 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <param name="plant"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType, string vendorFrom, string vendorTo);
+        Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string type, string poType, string vendorFrom, string vendorTo);
 
         /// <summary>
         /// Dropdown PO Item
@@ -95,7 +95,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse<bool>>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
+        Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
 
         /// <summary>
         /// Dropdown Sloc
@@ -179,7 +179,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownCustomer(string keyword);
+        Task<List<Common3Response>> GetDropdownCustomer(string keyword);
 
         /// <summary>
         /// Get dropdown scale monitor type
@@ -201,7 +201,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetMatDoc(string keyword);
+        Task<List<CommonResponse>> GetMatDoc(string keyword, string plant);
 
         /// <summary>
         /// Get mat doc item
@@ -226,6 +226,15 @@ namespace MES.Application.Queries
         public string Value { get; set; }
         public string Name { get; set; }
         public string Unit { get; set; }
+    }
+
+    public class DropdownWeightHeadResponse
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public bool Data { get; set; }
+        public string Type { get; set; }
+
     }
     #endregion
     public class CommonQuery : ICommonQuery
@@ -380,10 +389,10 @@ namespace MES.Application.Queries
                                     }).ToListAsync();
             }
             #endregion
-            else 
+            else
             {
                 response = await _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
-                                                   (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) && x.ProductName.Contains(keyword) : true))
+                                                   (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) || x.ProductName.Contains(keyword) : true))
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
@@ -491,11 +500,42 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown po
-        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string poType, string vendorFrom, string vendorTo)
+        public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, string type, string poType, string vendorFrom, string vendorTo)
         {
             //Nếu không search vendorto gán vendor to = vendor from
             if (!string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo))
                 vendorTo = vendorFrom;
+
+            if (type == "NKDCNB")
+            {
+                return await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                                                             (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             (x.POType == "Z007") &&
+                                                             (x.ReleaseIndicator == "R") &&
+                                                             (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
+                                        .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
+                                        .OrderBy(x => x.PurchaseOrderCode)
+                                        .Select(x => new CommonResponse
+                                        {
+                                            Key = x.PurchaseOrderCode,
+                                            Value = x.PurchaseOrderCodeInt.ToString()
+                                        }).AsNoTracking().ToListAsync();
+            }   
+            else if (type == "XNVLGC")
+            {
+                return await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                                                             (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             (x.POType == "Z003") &&
+                                                             (x.ReleaseIndicator == "R") &&
+                                                             (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
+                                        .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
+                                        .OrderBy(x => x.PurchaseOrderCode)
+                                        .Select(x => new CommonResponse
+                                        {
+                                            Key = x.PurchaseOrderCode,
+                                            Value = x.PurchaseOrderCodeInt.ToString()
+                                        }).AsNoTracking().ToListAsync();
+            }
 
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
@@ -515,16 +555,17 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<CommonResponse<bool>>> GetDropdownWeightHeadByPlant(string keyword, string plantCode)
+        public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode)
         {
             var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
                                                           (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
                                     .OrderBy(x => x.ScaleCode)
-                                    .Select(x => new CommonResponse<bool>
+                                    .Select(x => new DropdownWeightHeadResponse
                                     {
                                         Key = x.ScaleCode,
                                         Value = x.ScaleName,
-                                        Data = x.ScaleType.Value == true ? true : false
+                                        Data = x.ScaleType.Value == true ? true : false,
+                                        Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
                                     }).AsNoTracking().ToListAsync();
 
             return response;
@@ -600,7 +641,8 @@ namespace MES.Application.Queries
             //Theo plant
             if (!string.IsNullOrEmpty(plant))
             {
-                query = type == "NKDCNB" ? query.Where(x => x.OutboundDelivery.ReceivingPlant == plant) : query.Where(x => x.Plant == plant);
+                query = type == "NKDCNB" ? query.Where(x => x.OutboundDelivery.ReceivingPlant == plant && 
+                                                            (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN")) : query.Where(x => x.Plant == plant);
             }
             //Theo material
             if (!string.IsNullOrEmpty(materialFrom))
@@ -786,13 +828,14 @@ namespace MES.Application.Queries
 
         #endregion
 
-        public async Task<List<CommonResponse>> GetDropdownCustomer(string keyword)
+        public async Task<List<Common3Response>> GetDropdownCustomer(string keyword)
         {
             var response = await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
-                                .Select(x => new CommonResponse
+                                .Select(x => new Common3Response
                                 {
                                     Key = x.CustomerNumber,
-                                    Value = $"{x.CustomerNumber} | {x.CustomerName}"
+                                    Value = $"{x.CustomerNumber} | {x.CustomerName}",
+                                    Name = x.CustomerName
                                 }).AsNoTracking().ToListAsync();
 
             return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
@@ -843,9 +886,13 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown mat doc
-        public async Task<List<CommonResponse>> GetMatDoc(string keyword)
+        public async Task<List<CommonResponse>> GetMatDoc(string keyword, string plant)
         {
-            var response = await _matDocRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.MaterialDocCode.ToLower().Contains(keyword.ToLower().Trim()) : true))
+            var response = await _matDocRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
+                                                           (!string.IsNullOrEmpty(keyword) ? x.MaterialDocCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
+                                                           (x.MovementType == "313") &&
+                                                           (x.ItemAutoCreated == "X") &&
+                                                           (x.MovementType != "315"))
                                 .Select(x => new CommonResponse
                                 {
                                     Key = x.MaterialDocCode,

@@ -10,15 +10,18 @@ namespace MES.Application.Commands.XNVLGC
     {
         //Plant
         public string Plant { get; set; }
-        //Receving Sloc
-        public string RecevingSlocFrom { get; set; }
-        public string RecevingSlocTo { get; set; }
-        //Reservation
-        public string ReservationFrom { get; set; }
-        public string ReservationTo { get; set; }
+        //Vendor
+        public string VendorFrom { get; set; }
+        public string VendorTo { get; set; }
+        //Purchase Order
+        public string PurchaseOrderFrom { get; set; }
+        public string PurchaseOrderTo { get; set; }
         //Material
         public string MaterialFrom { get; set; }
         public string MaterialTo { get; set; }
+        //Component
+        public string ComponentFrom { get; set; }
+        public string ComponentTo { get; set; }
         //Document Date
         public DateTime? DocumentDateFrom { get; set; }
         public DateTime? DocumentDateTo { get; set; }

@@ -34,6 +34,9 @@ using IntegrationNS.Application.DTOs.MES.DTOs;
 using IntegrationNS.Application.Commands.XCKs;
 using IntegrationNS.Application.DTOs.MES.XCK;
 using IntegrationNS.Application.Commands.NCKs;
+using IntegrationNS.Application.Commands.NKs;
+using IntegrationNS.Application.Commands.XKs;
+using IntegrationNS.Application.Commands.XKLXH;
 
 namespace IntegrationNS.API.Controllers
 {
@@ -2392,20 +2395,22 @@ namespace IntegrationNS.API.Controllers
         /// 
         ///             {
         ///               "plant": "string",
+        ///               "slocFrom": "string",
+        ///               "slocTo": "string",
         ///               "recevingSlocFrom": "string",
         ///               "recevingSlocTo": "string",
         ///               "reservationFrom": "string",
         ///               "reservationTo": "string",
         ///               "materialFrom": "string",
         ///               "materialTo": "string",
-        ///               "documentDateFrom": "2023-02-20T06:19:22.053Z",
-        ///               "documentDateTo": "2023-02-20T06:19:22.053Z",
+        ///               "documentDateFrom": "2023-02-27T04:13:54.366Z",
+        ///               "documentDateTo": "2023-02-27T04:13:54.366Z",
         ///               "weightHeadCode": "string",
         ///               "weightVotes": [
         ///                 "string"
         ///               ],
-        ///               "weightDateFrom": "2023-02-20T06:19:22.053Z",
-        ///               "weightDateTo": "2023-02-20T06:19:22.053Z",
+        ///               "weightDateFrom": "2023-02-27T04:13:54.366Z",
+        ///               "weightDateTo": "2023-02-27T04:13:54.366Z",
         ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         ///               "status": "string"
         ///             }
@@ -2416,42 +2421,43 @@ namespace IntegrationNS.API.Controllers
         ///           "code": 200,
         ///           "data": [
         ///             {
-        ///               "xckId": "7ec8a8d6-33a4-40b6-97c2-562ef3338dc8",
+        ///               "xckId": "02e35ef0-f292-48d4-b897-4264060dfb08",
         ///               "plant": "A100",
-        ///               "reservation": "",
-        ///               "reservationItem": "",
-        ///               "material": "2200000003",
+        ///               "reservation": "1235",
+        ///               "reservationItem": "0001",
+        ///               "material": "000000002200000003",
         ///               "materialDesc": "Gạo trắng NL Nếp An Giang 10% vụ ĐX19​ C",
-        ///               "movementType": "",
-        ///               "sloc": "A123",
+        ///               "movementType": "311",
+        ///               "sloc": "",
         ///               "slocName": "",
-        ///               "receivingSloc": "A124",
+        ///               "receivingSloc": "",
         ///               "receivingSlocName": "",
         ///               "batch": "1000000159",
-        ///               "bagQuantity": 3,
-        ///               "singleWeight": 3,
+        ///               "documentDate": "2023-02-03T00:00:00",
+        ///               "bagQuantity": 51,
+        ///               "singleWeight": 1,
         ///               "weightHeadCode": "",
-        ///               "weight": 6,
-        ///               "confirmQty": 9,
+        ///               "weight": 0,
+        ///               "confirmQty": 51,
         ///               "quantityWithPackage": 0,
         ///               "vehicleCode": "",
         ///               "quantityWeight": 0,
-        ///               "totalQty": 0,
+        ///               "totalQty": 1001,
         ///               "deliveredQty": 0,
-        ///               "openQty": 0,
+        ///               "openQty": 1001,
         ///               "unit": "KG",
         ///               "truckNumber": "",
         ///               "inputWeight": 0,
         ///               "outputWeight": 0,
-        ///               "description": "Trieu Test",
+        ///               "description": "",
         ///               "image": "",
         ///               "status": "Chưa tạo giao dịch",
-        ///               "weightVote": "X1000001",
+        ///               "weightVote": "X1000029",
         ///               "startTime": null,
-        ///               "endTime": "2023-02-20T09:31:45.117",
-        ///               "createById": "00000000-0000-0000-0000-000000000000",
-        ///               "createBy": null,
-        ///               "createOn": "2023-02-20T09:31:45.117",
+        ///               "endTime": "2023-02-25T07:56:23.023",
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-25T07:56:23.023",
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "matDoc": null,
@@ -2720,5 +2726,514 @@ namespace IntegrationNS.API.Controllers
         }
         #endregion
 
+        #region Tích hợp NK
+        /// <summary>Get data NK</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nk
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///             {
+        ///               "plant": "string",
+        ///               "customer": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-24T06:22:41.746Z",
+        ///               "weightDateTo": "2023-02-24T06:22:41.746Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "nkid": "1f9f5bcc-f4c4-4986-88f3-7bf437526e38",
+        ///               "plant": "A100",
+        ///               "material": "2000000003",
+        ///               "materialDesc": "Bao xuất khẩu Daily fresh 5kg",
+        ///               "customer": "",
+        ///               "customerFmt": "",
+        ///               "specialStock": "",
+        ///               "sloc": "A131",
+        ///               "slocFmt": "A131 | ÐT.K vật tư",
+        ///               "batch": "",
+        ///               "bagQuantity": 12,
+        ///               "singleWeight": 2,
+        ///               "weightHeadCode": "",
+        ///               "weight": 0,
+        ///               "confirmQuantity": 24,
+        ///               "quantityWithPackage": 0,
+        ///               "vehicleCode": null,
+        ///               "quantityWeight": 0,
+        ///               "unit": "KG",
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "N1000005",
+        ///               "startTime": null,
+        ///               "endTime": "2023-02-24T10:07:33.273",
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-24T10:07:33.273",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "materialDoc": "",
+        ///               "reverseDoc": "",
+        ///               "truckInfoId": null,
+        ///               "truckNumber": null,
+        ///               "inputWeight": 0,
+        ///               "outputWeight": 0,
+        ///               "isDelete": null
+        ///             }
+        ///           ],
+        ///           "message": "\"Get data NK\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("nk")]
+        public async Task<IActionResult> NKIntegration([FromBody] NKIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<NKResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data NK") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy nhập khác
+        /// <summary>Update, cancel phiếu nhập khác</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nk
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nKs": [
+        ///                 {
+        ///                   "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NK MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nKs": [
+        ///                 {
+        ///                   "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nk")]
+        public async Task<IActionResult> UpdateOrCancelNKAsync([FromBody] UpdateAndCancelNKCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NK") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NK")
+            });
+        }
+        #endregion
+
+        #region Tích hợp XK
+        /// <summary>Get data XK</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xk
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///             {
+        ///               "plant": "string",
+        ///               "reservationFrom": "string",
+        ///               "reservationTo": "string",
+        ///               "customerFrom": "string",
+        ///               "customerTo": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "documentDateFrom": "2023-02-25T02:38:55.601Z",
+        ///               "documentDateTo": "2023-02-25T02:38:55.601Z",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-25T02:38:55.601Z",
+        ///               "weightDateTo": "2023-02-25T02:38:55.601Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "xkId": "dbcf0a64-4dcd-4bb7-a014-65637698a16d",
+        ///               "plant": "A100",
+        ///               "reservation": "1235",
+        ///               "reservationItem": "0001",
+        ///               "material": "2000000003",
+        ///               "materialDesc": "Bao xuất khẩu Daily fresh 5kg",
+        ///               "movementType": null,
+        ///               "sloc": "A124",
+        ///               "slocFmt": "A124 | ÐT.K phụ phẩm MN",
+        ///               "receivingSloc": "A124",
+        ///               "receivingSlocFmt": "A124 | ÐT.K phụ phẩm MN",
+        ///               "batch": "",
+        ///               "bagQuantity": 3,
+        ///               "singleWeight": 2,
+        ///               "weightHeadCode": "",
+        ///               "weight": 0,
+        ///               "customer": "",
+        ///               "customerName": "",
+        ///               "specialStock": "",
+        ///               "confirmQty": 6,
+        ///               "qtyWithPackage": 0,
+        ///               "vehicleCode": "",
+        ///               "qtyWeight": 0,
+        ///               "totalQty": 0,
+        ///               "deliveryQty": 0,
+        ///               "openQty": 0,
+        ///               "unit": "KG",
+        ///               "truckInfoId": null,
+        ///               "truckNumber": "",
+        ///               "inputWeight": 0,
+        ///               "outputWeight": 0,
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "X1000006",
+        ///               "startTime": null,
+        ///               "endTime": "2023-02-18T12:13:22.127",
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-18T12:13:22.133",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "matDoc": "",
+        ///               "revDoc": "",
+        ///               "isDelete": false
+        ///             }
+        ///           ],
+        ///           "message": "\"Get data XK\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("xk")]
+        public async Task<IActionResult> XKIntegration([FromBody] XKIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<XKResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data XK") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy xuất khác
+        /// <summary>Update, cancel phiếu xuất khác</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xk
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XK MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XK MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "xKs": [
+        ///                 {
+        ///                   "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID XK MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "xKs": [
+        ///                 {
+        ///                   "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XK MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-xk")]
+        public async Task<IActionResult> UpdateOrCancelXKAsync([FromBody] UpdateAndCancelXKCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu XK") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu XK")
+            });
+        }
+        #endregion
+
+        #region Tích hợp XKLXH
+        /// <summary>Get data XKLXH</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xklxh
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///             {
+        ///               "plant": "string",
+        ///               "deliveryType": "string",
+        ///               "purchaseOrderFrom": "string",
+        ///               "purchaseOrderTo": "string",
+        ///               "salesOrderFrom": "string",
+        ///               "salesOrderTo": "string",
+        ///               "shipToPartyFrom": "string",
+        ///               "shipToPartyTo": "string",
+        ///               "outboundDeliveryFrom": "string",
+        ///               "outboundDeliveryTo": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "documentDateFrom": "2023-02-25T03:11:04.784Z",
+        ///               "documentDateTo": "2023-02-25T03:11:04.784Z",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-25T03:11:04.784Z",
+        ///               "weightDateTo": "2023-02-25T03:11:04.784Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "xklxhId": "8b3ac43b-d2d2-446c-80a0-26f72d7aadb0",
+        ///               "plant": "A100",
+        ///               "shipToPartyName": "",
+        ///               "outboundDelivery": "",
+        ///               "outboundDeliveryItem": "",
+        ///               "material": "2200000005",
+        ///               "materialDesc": "Gạo xô MN Đài Thơm 5% tấm, C, Đ",
+        ///               "sloc": "",
+        ///               "slocName": "",
+        ///               "slocFmt": "",
+        ///               "batch": "",
+        ///               "bagQuantity": 0,
+        ///               "singleWeight": 0,
+        ///               "weightHeadCode": "NHAP01",
+        ///               "weight": 120.456,
+        ///               "confirmQty": 120.456,
+        ///               "quantityWithPackage": 0,
+        ///               "vehicleCode": "",
+        ///               "quantityWeight": 3,
+        ///               "totalQty": 0,
+        ///               "deliveredQty": 0,
+        ///               "openQty": 0,
+        ///               "unit": "KG",
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "X1000009",
+        ///               "startTime": null,
+        ///               "endTime": null,
+        ///               "documentDate": null,
+        ///               "truckInfoId": null,
+        ///               "truckNumber": "",
+        ///               "inputWeight": 0,
+        ///               "outputWeight": 0,
+        ///               "goodsWeight": 0,
+        ///               "myProperty": 0,
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-24T09:10:55.457",
+        ///               "changeById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "changeBy": "admin",
+        ///               "matDoc": null,
+        ///               "revDoc": null,
+        ///               "isDelete": false
+        ///             }
+        ///           ],
+        ///           "message": "\"Get data XKLXH\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("xklxh")]
+        public async Task<IActionResult> XKLXHIntegration([FromBody] XKLXHIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<XKLXHResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data XKLXH") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy xuất kho theo lệnh xuất hàng
+        /// <summary>Update, cancel phiếu xuất kho theo lệnh xuất hàng</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xklxh
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "xklxHs": [
+        ///                 {
+        ///                   "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID XKLXH MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "xklxHs": [
+        ///                 {
+        ///                   "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-xklxh")]
+        public async Task<IActionResult> UpdateOrCancelXKLXHAsync([FromBody] UpdateAndCancelXKLXHCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu XKLXH") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu XKLXH")
+            });
+        }
+        #endregion
     }
 }

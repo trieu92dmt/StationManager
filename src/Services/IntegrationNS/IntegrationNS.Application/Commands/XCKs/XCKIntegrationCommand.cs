@@ -10,6 +10,9 @@ namespace IntegrationNS.Application.Commands.XCKs
     {
         //Plant
         public string Plant { get; set; }
+        //Sloc
+        public string SlocFrom { get; set; }
+        public string SlocTo { get; set; }
         //Receving Sloc
         public string RecevingSlocFrom { get; set; }
         public string RecevingSlocTo { get; set; }
@@ -115,6 +118,17 @@ namespace IntegrationNS.Application.Commands.XCKs
                                                                           x.DetailReservation.Reservation.ReservationCode.CompareTo(command.ReservationTo) <= 0 : false);
             }
 
+            //Theo sloc
+            if (!string.IsNullOrEmpty(command.SlocFrom))
+            {
+                //Không có reveiving sloc to thì search 1
+                if (string.IsNullOrEmpty(command.SlocTo))
+                    command.SlocTo = command.SlocFrom;
+
+                query = query.Where(x => x.DetailReservationId.HasValue ? x.SlocCode.CompareTo(command.SlocFrom) >= 0 &&
+                                                                          x.SlocCode.CompareTo(command.SlocTo) <= 0 : false);
+            }
+
             //Theo Receiving sloc
             if (!string.IsNullOrEmpty(command.RecevingSlocFrom))
             {
@@ -122,8 +136,8 @@ namespace IntegrationNS.Application.Commands.XCKs
                 if (string.IsNullOrEmpty(command.RecevingSlocTo))
                     command.RecevingSlocTo = command.RecevingSlocFrom;
 
-                query = query.Where(x => x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocFrom) >= 0 &&
-                                                                          x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocTo) <= 0 : false);
+                query = query.Where(x => x.DetailReservationId.HasValue ? x.ReceivingSlocCode.CompareTo(command.RecevingSlocFrom) >= 0 &&
+                                                                          x.ReceivingSlocCode.CompareTo(command.RecevingSlocTo) <= 0 : false);
             }
 
             //Theo Material
@@ -176,7 +190,7 @@ namespace IntegrationNS.Application.Commands.XCKs
             //Search Status
             if (!string.IsNullOrEmpty(command.Status))
             {
-                query = query.Where(x => x.Status == command.Status);
+                query = query.Where(x => x.Status == command.Status && x.ReverseDocument == null);
             }
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
@@ -199,12 +213,14 @@ namespace IntegrationNS.Application.Commands.XCKs
                 MovementType = x.DetailReservationId.HasValue ? x.DetailReservation.MovementType : "",
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
-                SlocName = string.IsNullOrEmpty(x.SlocCode) ? $"{x.SlocCode} | {x.SlocName}" : "",
+                SlocName = x.SlocName ?? "",
                 //Receiving Stor.Sloc
                 ReceivingSloc = x.ReceivingSlocCode ?? "",
-                ReceivingSlocName = string.IsNullOrEmpty(x.ReceivingSlocCode) ? $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}" : "",
+                ReceivingSlocName = x.ReceivingSlocName ?? "",
                 //Batch
                 Batch = x.Batch ?? "",
+                //DocumentDate
+                DocumentDate = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementsDate : null,
                 //Sl bao
                 BagQuantity = x.BagQuantity.HasValue ? x.BagQuantity : 0,
                 //Đơn trọng
@@ -222,9 +238,9 @@ namespace IntegrationNS.Application.Commands.XCKs
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght.HasValue ? x.QuantityWeitght : 0,
                 //Total Quantity
-                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
+                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty ?? 0 : 0,
                 //Delivered Quantity
-                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
+                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn ?? 0 : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
                 //Số xe tải

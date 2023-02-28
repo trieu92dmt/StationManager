@@ -86,8 +86,5 @@ namespace Infrastructure.Models
         [ForeignKey("TruckInfoId")]
         [InverseProperty("GoodsReceiptTypeTModel")]
         public virtual TruckInfoModel TruckInfo { get; set; }
-        [ForeignKey("WeightSessionId")]
-        [InverseProperty("GoodsReceiptTypeTModel")]
-        public virtual WeighSessionModel WeightSession { get; set; }
     }
 }

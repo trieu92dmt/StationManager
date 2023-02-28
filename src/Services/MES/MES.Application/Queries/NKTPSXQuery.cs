@@ -252,9 +252,9 @@ namespace MES.Application.Queries
                 ChangeById = x.LastEditBy ?? null,
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //Material Doc
-                MaterialDoc = x.MaterialDocument ?? "",
+                MaterialDoc = x.MaterialDocument ?? null,
                 //Reverse Doc
-                ReverseDoc = x.ReverseDocument ?? "",
+                ReverseDoc = x.ReverseDocument ?? null,
                 isDelete = x.Status == "DEL" ? true : false,
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
                 //isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true

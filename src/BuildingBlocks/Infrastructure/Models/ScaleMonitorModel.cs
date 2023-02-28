@@ -14,7 +14,8 @@ namespace Infrastructure.Models
         [Key]
         public Guid ScaleMonitorId { get; set; }
         public Guid? ScaleId { get; set; }
-        public Guid? WeightSessionId { get; set; }
+        [StringLength(50)]
+        public string WeightSessionCode { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
         [Column(TypeName = "datetime")]
@@ -32,8 +33,5 @@ namespace Infrastructure.Models
         [ForeignKey("ScaleId")]
         [InverseProperty("ScaleMonitorModel")]
         public virtual ScaleModel Scale { get; set; }
-        [ForeignKey("WeightSessionId")]
-        [InverseProperty("ScaleMonitorModel")]
-        public virtual WeighSessionModel WeightSession { get; set; }
     }
 }

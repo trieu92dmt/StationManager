@@ -1,5 +1,8 @@
 ﻿using Core.Models;
+using Core.Properties;
+using MediatR;
 using MES.Application.Commands.NHLT;
+using MES.Application.Commands.OutboundDelivery;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NHLT;
 using MES.Application.Queries;
@@ -13,10 +16,12 @@ namespace MES.API.Controllers
     public class NHLTController : ControllerBase
     {
         private readonly INHLTQuery _query;
+        private readonly IMediator _mediator;
 
-        public NHLTController(INHLTQuery query)
+        public NHLTController(INHLTQuery query, IMediator mediator)
         {
             _query = query;
+            _mediator = mediator;
         }
 
         /// <summary>GET Bảng 1</summary>
@@ -44,6 +49,57 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<GetInputDataResponse>>
             {
                 Data = response
+            });
+        }
+
+        /// <summary>
+        /// Save dữ liệu nhlt
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-nhlt")]
+        public async Task<IActionResult> SaveNHLTAsync([FromBody] SaveNHLTCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu dữ liệu nhập hàng loại T")
+            });
+        }
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu nhập hàng loại T)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-nhlt")]
+        public async Task<IActionResult> GetNHLTAsync([FromBody] SearchNHLTCommand command)
+        {
+            var response = await _query.GetDataNHLT(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchNHLTResponse>>
+            {
+                Data = response
+            });
+        }
+
+        /// <summary>
+        /// Update dữ liệu nhlt
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-nhlt")]
+        public async Task<IActionResult> UpdateGNHLTAsync([FromBody] UpdateNHLTCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
             });
         }
 

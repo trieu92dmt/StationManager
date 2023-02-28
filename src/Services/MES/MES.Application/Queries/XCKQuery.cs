@@ -130,14 +130,14 @@ namespace MES.Application.Queries
             }
 
             //Theo Receiving sloc
-            if (!string.IsNullOrEmpty(command.RecevingSlocFrom))
+            if (!string.IsNullOrEmpty(command.ReceivingSlocFrom))
             {
                 //Không có reveiving sloc to thì search 1
-                if (string.IsNullOrEmpty(command.RecevingSlocTo))
-                    command.RecevingSlocTo = command.RecevingSlocFrom;
+                if (string.IsNullOrEmpty(command.ReceivingSlocTo))
+                    command.ReceivingSlocTo = command.ReceivingSlocFrom;
 
-                query = query.Where(x => x.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocFrom) >= 0 &&
-                                         x.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocTo) <= 0);
+                query = query.Where(x => x.Reservation.ReceivingSloc.CompareTo(command.ReceivingSlocFrom) >= 0 &&
+                                         x.Reservation.ReceivingSloc.CompareTo(command.ReceivingSlocTo) <= 0);
             }
 
             //Theo Material
@@ -199,7 +199,6 @@ namespace MES.Application.Queries
             //Tính open quantity
             foreach (var item in data)
             {
-                item.OpenQty = item.TotalQty - item.DeliveredQty;
                 item.IndexKey = index;
                 index++;
             }
@@ -272,14 +271,14 @@ namespace MES.Application.Queries
             }
 
             //Theo Receiving sloc
-            if (!string.IsNullOrEmpty(command.RecevingSlocFrom))
+            if (!string.IsNullOrEmpty(command.ReceivingSlocFrom))
             {
                 //Không có reveiving sloc to thì search 1
-                if (string.IsNullOrEmpty(command.RecevingSlocTo))
-                    command.RecevingSlocTo = command.RecevingSlocFrom;
+                if (string.IsNullOrEmpty(command.ReceivingSlocTo))
+                    command.ReceivingSlocTo = command.ReceivingSlocFrom;
 
-                query = query.Where(x => x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocFrom) >= 0 &&
-                                                                          x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.RecevingSlocTo) <= 0 : false);
+                query = query.Where(x => x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.ReceivingSlocFrom) >= 0 &&
+                                                                          x.DetailReservation.Reservation.ReceivingSloc.CompareTo(command.ReceivingSlocTo) <= 0 : false);
             }
 
             //Theo Material
@@ -347,7 +346,7 @@ namespace MES.Application.Queries
                 //MaterialDesc
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
                 //MVT
-                MovementType = x.DetailReservationId.HasValue ? x.DetailReservation.MovementType : "",
+                MovementType = x.MovementType ?? "",
                 //Stor.Sloc
                 Sloc = x.SlocCode ?? "",
                 SlocName = !string.IsNullOrEmpty(x.SlocCode) ? x.SlocName : "",
@@ -373,9 +372,9 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght.HasValue ? x.QuantityWeitght : 0,
                 //Total Quantity
-                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
+                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty ?? 0 : 0,
                 //Delivered Quantity
-                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
+                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn  ?? 0 : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
                 //Số xe tải
@@ -414,12 +413,6 @@ namespace MES.Application.Queries
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
                 //isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
             }).ToListAsync();
-
-            //Tính open quantity
-            foreach (var item in data)
-            {
-                item.OpenQty = item.TotalQty - item.DeliveredQty;
-            }
 
             return data;
         }

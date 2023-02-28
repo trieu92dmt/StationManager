@@ -90,7 +90,7 @@ namespace MES.Application.Commands.XTHLSX
             var response = new ApiResponse
             {
                 IsSuccess = true,
-                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nhập kho phụ phẩm phế phẩm")
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật xuất tiêu hao lsx")
             };
 
             //Data nhập kho TP sản xuất
@@ -160,7 +160,7 @@ namespace MES.Application.Commands.XTHLSX
                 if (!string.IsNullOrEmpty(item.WorkOrder) && 
                     !string.IsNullOrEmpty(item.ItemComponent) && 
                     !string.IsNullOrEmpty(item.Component) &&
-                    wo != null)
+                    wo == null)
                 {
                     response.IsSuccess = false;
                     response.Message = "Workorder, Item component và Component không mapping với nhau";

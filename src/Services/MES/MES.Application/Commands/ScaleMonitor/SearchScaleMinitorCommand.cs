@@ -79,7 +79,7 @@ namespace MES.Application.Commands.ScaleMonitor
                 //Mã đầu cân
                 WeightHeadCode = x.Scale.ScaleCode,
                 //Id đợt cân
-                WeightSessionId = x.WeightSessionId.Value,
+                WeightSessionId = x.WeightSessionCode,
                 //Trọng lượng cân
                 Weight = x.Weight,
                 //Plant

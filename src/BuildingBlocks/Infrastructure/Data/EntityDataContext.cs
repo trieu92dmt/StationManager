@@ -70,6 +70,8 @@ namespace Infrastructure.Data
         public virtual DbSet<CommandQCModel> CommandQCModel { get; set; }
         public virtual DbSet<Comment_File_Mapping> Comment_File_Mapping { get; set; }
         public virtual DbSet<CompanyModel> CompanyModel { get; set; }
+        public virtual DbSet<ComponentExportModel> ComponentExportModel { get; set; }
+        public virtual DbSet<ComponentImportModel> ComponentImportModel { get; set; }
         public virtual DbSet<ConfigurationModel> ConfigurationModel { get; set; }
         public virtual DbSet<ConfirmStageModel> ConfirmStageModel { get; set; }
         public virtual DbSet<ConsumableMaterialsDeliveryModel> ConsumableMaterialsDeliveryModel { get; set; }
@@ -409,6 +411,7 @@ namespace Infrastructure.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=192.168.100.233;Initial Catalog=TLG_MES;Persist Security Info=True;User ID=isd;Password=pm123@abcd");
             }
         }
@@ -781,6 +784,31 @@ namespace Infrastructure.Data
             modelBuilder.Entity<CompanyModel>(entity =>
             {
                 entity.Property(e => e.CompanyId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<ComponentExportModel>(entity =>
+            {
+                entity.Property(e => e.ComponentExportId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.PurchaseOrderDetail)
+                    .WithMany(p => p.ComponentExportModel)
+                    .HasForeignKey(d => d.PurchaseOrderDetailId)
+                    .HasConstraintName("FK_ComponentExportModel_PurchaseOrderDetailModel");
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.ComponentExportModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_ComponentExportModel_WeighSessionModel");
+            });
+
+            modelBuilder.Entity<ComponentImportModel>(entity =>
+            {
+                entity.Property(e => e.ComponentImportId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.WeightSession)
+                    .WithMany(p => p.ComponentImportModel)
+                    .HasForeignKey(d => d.WeightSessionId)
+                    .HasConstraintName("FK_ComponentImportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<ConfigurationModel>(entity =>
@@ -1263,11 +1291,6 @@ namespace Infrastructure.Data
                     .WithMany(p => p.ExportByCommandModel)
                     .HasForeignKey(d => d.TruckInfoId)
                     .HasConstraintName("FK_ExportByCommandModel_TruckInfoModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.ExportByCommandModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_ExportByCommandModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<FavoriteReportModel>(entity =>
@@ -1327,11 +1350,6 @@ namespace Infrastructure.Data
                     .WithMany(p => p.GoodsReceiptTypeTModel)
                     .HasForeignKey(d => d.TruckInfoId)
                     .HasConstraintName("FK_GoodsReceiptTypeTModel_TruckInfoModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.GoodsReceiptTypeTModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_GoodsReceiptTypeTModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<GoodsReturnModel>(entity =>
@@ -1726,11 +1744,6 @@ namespace Infrastructure.Data
                     .WithMany(p => p.OtherExportModel)
                     .HasForeignKey(d => d.TruckInfoId)
                     .HasConstraintName("FK_OrderExportModel_TruckInfoModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.OtherExportModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_OrderExportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<OtherImportModel>(entity =>
@@ -1744,11 +1757,6 @@ namespace Infrastructure.Data
                     .WithMany(p => p.OtherImportModel)
                     .HasForeignKey(d => d.TruckInfoId)
                     .HasConstraintName("FK_OrderImportModel_TruckInfoModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.OtherImportModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_OrderImportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<OutboundDeliveryModel>(entity =>
@@ -2691,11 +2699,6 @@ namespace Infrastructure.Data
                     .WithMany(p => p.ScaleMonitorModel)
                     .HasForeignKey(d => d.ScaleId)
                     .HasConstraintName("FK_ScaleMonitorModel_ScaleModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.ScaleMonitorModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_ScaleMonitorModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<Schema>(entity =>
@@ -3540,11 +3543,6 @@ namespace Infrastructure.Data
                     .WithMany(p => p.WarehouseImportTransferModel)
                     .HasForeignKey(d => d.TruckInfoId)
                     .HasConstraintName("FK_WarehouseImportTransferModel_TruckInfoModel");
-
-                entity.HasOne(d => d.WeightNavigation)
-                    .WithMany(p => p.WarehouseImportTransferModel)
-                    .HasForeignKey(d => d.WeightId)
-                    .HasConstraintName("FK_WarehouseImportTransferModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<WarehouseModel>(entity =>

@@ -81,6 +81,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     var nkdcnbNew = JsonConvert.DeserializeObject<InhouseTransferModel>(serialized);
 
                     nkdcnbNew.InhouseTransferId = Guid.NewGuid();
+                    nkdcnbNew.Status = "NOT";
                     nkdcnbNew.MaterialDocument = null;
                     nkdcnbNew.ReverseDocument = null;
 

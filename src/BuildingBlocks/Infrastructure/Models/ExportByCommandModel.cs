@@ -118,8 +118,5 @@ namespace Infrastructure.Models
         [ForeignKey("TruckInfoId")]
         [InverseProperty("ExportByCommandModel")]
         public virtual TruckInfoModel TruckInfo { get; set; }
-        [ForeignKey("WeightSessionId")]
-        [InverseProperty("ExportByCommandModel")]
-        public virtual WeighSessionModel WeightSession { get; set; }
     }
 }

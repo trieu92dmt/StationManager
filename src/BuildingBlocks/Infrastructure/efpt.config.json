@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 2,
-   "ContextClassName": "EntityDataContext",
+   "ContextClassName": "\/\/EntityDataContext",
    "ContextNamespace": "Data",
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,
@@ -152,6 +152,14 @@
       },
       {
          "Name": "[Customer].[SMSModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ComponentExportModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ComponentImportModel]",
          "ObjectType": 0
       },
       {

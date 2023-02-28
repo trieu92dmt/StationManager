@@ -1,9 +1,12 @@
 ﻿using Core.Interfaces.Databases;
 using Core.Models;
+using Core.Properties;
 using Core.SeedWork.Repositories;
 using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +43,7 @@ namespace MES.Application.Commands.NNVL
         //Số phương tiện
         public string VehicleCode { get; set; }
         //Số lần cân
-        public decimal? QuantityWeight { get; set; }
+        public int? QuantityWeight { get; set; }
         //Unit
         public string Unit { get; set; }
         //Số phiếu cân
@@ -89,8 +92,170 @@ namespace MES.Application.Commands.NNVL
             _truckRepo = truckRepo;
         }
 
-        public Task<ApiResponse> Handle(UpdateNNVLCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(UpdateNNVLCommand request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse
+            {
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật xuất nguyên vật liệu gia công")
+            };
+
+            //Data nhập nvl sản xuất
+            var xnvlgcs = _nnvlgcRepo.GetQuery();
+
+            //Data material
+            var material = _prodRepo.GetQuery().AsNoTracking();
+
+            //Query plant
+            var plants = _plantRepo.GetQuery().AsNoTracking();
+
+            //Data sloc
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Check confirm quantity
+            //Lấy ra các phiếu cân cần update
+            var weightVotes = request.UpdateNNVLs.GroupBy(x => x.WeightVote, (k, v) => new { Key = k, Value = v.ToList() })
+                                                 .Select(x => new
+                                                 {
+                                                     WeightVote = x.Key,
+                                                     NNVLGVIds = x.Value.Select(v => v.NNVLGCId).ToList(),
+                                                     ConfirmQty = x.Value.Sum(x => x.ConfirmQty),
+                                                     QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackage)
+                                                 }).ToList();
+            //Duyệt phiếu cân kiểm tra confirm quantity và SL kèm bao bì
+            foreach (var item in weightVotes)
+            {
+                //Tính tổng confirm quantity ban đầu
+                var sumConfirmQty1 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
+                //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
+                var sumConfirmQty2 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote && !item.NNVLGVIds.Contains(x.ComponentImportId)).Sum(x => x.ConfirmQty);
+                //So sánh
+                if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Confirm Quantity ban đầu là {sumConfirmQty1}";
+                }
+
+                //Tính tổng SL kèm bao bì
+                var sumQtyWithPackage1 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
+                //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
+                var sumQtyWithPackage2 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote && !item.NNVLGVIds.Contains(x.ComponentImportId)).Sum(x => x.QuantityWithPackaging);
+                //So sánh
+                if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Vui lòng xem lại số lượng kèm bao bì";
+                }
+            }
+
+
+            foreach (var item in request.UpdateNNVLs)
+            {
+                //Check tồn tại xnvlgc
+                var nnvlgc = await xnvlgcs.FirstOrDefaultAsync(x => x.ComponentImportId == item.NNVLGCId);
+
+
+                var imgPath = string.Empty;
+                //Convert Base64 to Iformfile
+                if (!string.IsNullOrEmpty(item.NewImage))
+                {
+                    byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
+                    MemoryStream stream = new MemoryStream(bytes);
+
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.NNVLGCId.ToString(), $"{item.NNVLGCId.ToString()}.jpg");
+                    //Save image to server
+                    imgPath = await _utilitiesService.UploadFile(file, "NNVLGC");
+                }
+
+
+                //Chưa có thì tạo mới
+                if (nnvlgc == null)
+                {
+                    _nnvlgcRepo.Add(new ComponentImportModel
+                    {
+                        //id
+                        ComponentImportId = item.NNVLGCId,
+                        //Plant
+                        PlantCode = item.Plant,
+                        PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,
+                        //Material
+                        MaterialCode = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
+                        MaterialName = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName : "",
+                        MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,
+                        //Batch
+                        Batch = item.Batch,
+                        //Weight Vote
+                        WeightVote = item.WeightVote,
+                        //Weight Head Code
+                        WeightHeadCode = item.WeightHeadCode,
+                        //Weight
+                        Weight = item.Weight,
+                        //Confirm quantity
+                        ConfirmQty = item.ConfirmQty,
+                        //Unit
+                        UOM = item.Unit,
+                        //Sl kèm bao bì
+                        QuantityWithPackaging = item.QuantityWithPackage,
+                        //Số lần cân
+                        QuantityWeight = item.QuantityWeight,
+                        //Vehicle
+                        VehicleCode = item.VehicleCode,
+                        //Số cân đầu ra
+                        OutputWeight = item.OutputWeight,
+                        Description = item.Description,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        StartTime = item.StartTime,
+                        EndTime = item.EndTime,
+                        //Sloc
+                        SlocCode = item.Sloc,
+                        SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
+                        Status = item.isDelete == true ? "DEL" : "NOT"
+                    });
+                }
+                //Tồn tại thì update
+                else
+                {
+                    //Cập nhật
+                    //Material
+                    nnvlgc.MaterialCode = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "";
+                    nnvlgc.MaterialName = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName : "";
+                    nnvlgc.MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null;
+                    //Storage Location
+                    nnvlgc.SlocCode = item.Sloc;
+                    //Sloc Name
+                    nnvlgc.SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "";
+                    //Batch
+                    nnvlgc.Batch = item.Batch;
+                    //Unit
+                    nnvlgc.UOM = item.Unit;
+                    //Confirm Quantity
+                    nnvlgc.ConfirmQty = item.ConfirmQty;
+                    //Sl kèm bao bì
+                    nnvlgc.QuantityWithPackaging = item.QuantityWithPackage;
+                    //Số phương tiện
+                    nnvlgc.VehicleCode = item.VehicleCode;
+                    //Số cân đầu ra
+                    nnvlgc.OutputWeight = item.OutputWeight;
+                    //Ghi chú
+                    nnvlgc.Description = item.Description;
+                    //Hình ảnh
+                    nnvlgc.Image = string.IsNullOrEmpty(imgPath) ? nnvlgc.Image : imgPath;
+                    //Đánh dấu xóa
+                    if (item.isDelete == true)
+                    {
+                        nnvlgc.Status = "DEL";
+                    }
+                    //Hủy đánh dấu xóa
+                    else// if (item.isDelete == false)
+                    {
+                        nnvlgc.Status = "NOT";
+                    }
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return response;
             throw new NotImplementedException();
         }
     }

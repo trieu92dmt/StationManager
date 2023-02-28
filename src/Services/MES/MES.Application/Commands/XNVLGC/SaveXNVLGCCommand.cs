@@ -203,13 +203,13 @@ namespace MES.Application.Commands.XNVLGC
                     PlantCode = item.Plant,
                     PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,
                     //7. MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
-                    MaterialName = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName,
-                    MaterialCodeInt = long.Parse(item.Material),
+                    MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
+                    MaterialName = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName : "",
+                    MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,
                     //Component
-                    ComponentCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode,
-                    ComponentName = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName,
-                    ComponentCodeInt = long.Parse(item.Material),
+                    ComponentCode = !string.IsNullOrEmpty(item.Component) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "",
+                    ComponentName = !string.IsNullOrEmpty(item.Component) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName : "",
+                    ComponentCodeInt = !string.IsNullOrEmpty(item.Component) ? long.Parse(item.Material) : null,
                     //8. SlocCode
                     SlocCode = item.Sloc,
                     //9. SlocName

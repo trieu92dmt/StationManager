@@ -85,6 +85,24 @@ namespace MES.API.Controllers
             });
         }
 
+        /// <summary>
+        /// Update dữ liệu xnvlgc
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-xnvlgc")]
+        public async Task<IActionResult> UpdateXNVLGCAsync([FromBody] UpdateXNVLGCCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+
         #region Get số phiếu cân
         /// <summary>
         /// Dropdown số phiếu cân

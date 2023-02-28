@@ -2,6 +2,7 @@
 using Core.Properties;
 using MediatR;
 using MES.Application.Commands.NNVL;
+using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NNVL;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
@@ -83,5 +84,19 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+
+        #region Get số phiếu cân
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-weight-vote")]
+        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
+        {
+            var dropdownList = await _query.GetDropDownWeightVote(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

@@ -186,8 +186,8 @@ namespace MES.Application.Commands.NHLT
                         //Plant
                         PlantCode = item.Plant,
                         //Material
-                        MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
-                        MaterialCodeInt = long.Parse(item.Material),
+                        MaterialCode = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
+                        MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,
                         //Batch
                         Batch = item.Batch,
                         //Số phiếu cân

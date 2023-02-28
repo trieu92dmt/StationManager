@@ -171,8 +171,8 @@ namespace MES.Application.Commands.NHLT
                     //3 PlantCode
                     PlantCode = item.Plant,
                     //4   MaterialCode
-                    MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
-                    MaterialCodeInt = long.Parse(item.Material),
+                    MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
+                    MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,
                     //Batch
                     Batch = item.Batch,
                     //Customer
@@ -224,7 +224,7 @@ namespace MES.Application.Commands.NHLT
                     //28  Actived
                     Actived = true
 
-                });
+                });;
 
                 index++;
             }

@@ -256,6 +256,8 @@ namespace IntegrationNS.Application.Commands.XKs
                 OutputWeight = x.OutputWeight ?? 0,
                 //24 UOM
                 Unit = x.UOM ?? "",
+                //Document date
+                DocumentDate = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementsDate : null,
                 //Số xe tải
                 TruckInfoId = x.TruckInfoId ?? null,
                 TruckNumber = x.TruckNumber ?? "",

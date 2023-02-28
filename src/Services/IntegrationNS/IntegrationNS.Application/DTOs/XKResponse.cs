@@ -67,6 +67,8 @@ namespace IntegrationNS.Application.DTOs
         public decimal? InputWeight { get; set; }
         //Số cân đầu ra
         public decimal? OutputWeight { get; set; }
+        //Document Date
+        public DateTime? DocumentDate { get; set; }
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh

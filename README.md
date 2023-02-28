@@ -1,14 +1,16 @@
-﻿#Microservice, DDD(Domain Driven Design), CQRS Pattern
+﻿## IN TOÀN PHÁT - MES - API:
+
+## References URLs
 - Docs: https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture
 - Architecture: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices
 - Templates: https://github.com/yanpitangui/dotnet-api-boilerplate
 
-# Environment, Tool
+## Prepare environment, Tools
 - .NET 6.0
 - Visual Studio 2022
 - SQL server 2017
 
-# This project contains:
+## Pakages References
 - CQRS Pattern 
 - SwaggerUI
 - EntityFramework
@@ -19,7 +21,7 @@
 - Identity server
 - MediatR
 
-# Project Structure
+## Project main structure
 1. Services
 	-Thư mục chức các project chạy chính, đây là tầng cao nhất để giao tiếp trực tiếp với FE
 		+ Controllers: Chứa các controller, các HTTP request
@@ -33,8 +35,11 @@
 		+ Services: Chứa các logic có thể dùng chung giữa các command.
 
 
-# Environment Configuration
-#Development
+## Environment Configuration
+
+---
+
+## Applications URLs - DEVELOPMENT Environment:
 - Authentication Api: https://tlg-auth-api.isdcorp.vn/swagger/index.html
 	+ Folder: D:\WebData\tlg-auth-api.isdcorp.vn
 - MES Api: https://tlg-mes-api.isdcorp.vn/swagger/index.html
@@ -44,6 +49,7 @@
 - Integration Netsuite Api: https://tlg-api.isdcorp.vn/swagger/index.html
 	+ Folder: D:\WebData\tlg-auth-api.isdcorp.vn
 
+## Environment Configuration
 - Database:
 	+ ip = 192.168.100.233
 	+ db = TLG_MES

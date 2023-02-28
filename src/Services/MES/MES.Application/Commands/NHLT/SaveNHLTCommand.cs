@@ -218,6 +218,8 @@ namespace MES.Application.Commands.NHLT
                     InputWeight = item.InputWeight,
                     //số cân đầu ra
                     OutputWeight = item.OutputWeight,
+                    //Số phương tiện
+                    VehicleCode = item.VehicleCode,
                     //21  SlocCode
                     SlocCode = item.Sloc,
                     //Số xe tải

@@ -37,6 +37,7 @@ using IntegrationNS.Application.Commands.NCKs;
 using IntegrationNS.Application.Commands.NKs;
 using IntegrationNS.Application.Commands.XKs;
 using IntegrationNS.Application.Commands.XKLXH;
+using IntegrationNS.Application.Commands.NHLTs;
 
 namespace IntegrationNS.API.Controllers
 {
@@ -3232,6 +3233,175 @@ namespace IntegrationNS.API.Controllers
                 Data = response,
                 Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu XKLXH") :
                                                                                                        string.Format(CommonResource.Msg_Success, "Cập nhật phiếu XKLXH")
+            });
+        }
+        #endregion
+
+        #region Tích hợp NHLT
+        /// <summary>Get data NHLT</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nhlt
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///             {
+        ///               "plant": "string",
+        ///               "customerFrom": "string",
+        ///               "customerTo": "string",
+        ///               "outboundDeliveryFrom": "string",
+        ///               "outboundDeliveryTo": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "documentDateFrom": "2023-02-28T10:31:28.332Z",
+        ///               "documentDateTo": "2023-02-28T10:31:28.332Z",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-02-28T10:31:28.332Z",
+        ///               "weightDateTo": "2023-02-28T10:31:28.332Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {   
+        ///           "code": 200,
+        ///           "data": [
+        ///             {
+        ///               "nhltId": "1c7ae705-17e6-4baa-98aa-bbd07cab80f9",
+        ///               "plant": "A100",
+        ///               "material": "5400000005",
+        ///               "materialDesc": "Gạo trắng TP lài thơm 2% tấm",
+        ///               "customer": "",
+        ///               "customerName": "",
+        ///               "sloc": "A123",
+        ///               "slocName": "ÐT.K gạo MN",
+        ///               "slocFmt": "A123 | ÐT.K gạo MN",
+        ///               "batch": "",
+        ///               "bagQuantity": 2,
+        ///               "singleWeight": 3,
+        ///               "weightHeadCode": "",
+        ///               "weight": 0,
+        ///               "confirmQty": 6,
+        ///               "quantityWithPackage": 0,
+        ///               "vehicleCode": "",
+        ///               "quantityWeight": 0,
+        ///               "unit": "",
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "N1000011",
+        ///               "startTime": null,
+        ///               "endTime": "2023-02-28T16:35:15.813",
+        ///               "createById": "0b581db6-7266-405f-8207-528a53893eec",
+        ///               "createBy": "Sysadmin",
+        ///               "createOn": "2023-02-28T16:35:15.82",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "matDoc": null,
+        ///               "revDoc": null,
+        ///               "isDelete": false,
+        ///               "isEdit": true,
+        ///               "truckInfoId": null,
+        ///               "truckNumber": "",
+        ///               "inputWeight": 0,
+        ///               "outputWeight": 0,
+        ///               "outboundDelivery": "6000000103",
+        ///               "outboundDeliveryItem": "000010",
+        ///               "documentDate": "2023-01-06T00:00:00"
+        ///             }
+        ///           ],
+        ///           "message": "\"nhập hàng loại T\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("nhlt")]
+        public async Task<IActionResult> NHLTIntegration([FromBody] NHLTIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<NHLTResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data nhập hàng loại T") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy nhập hàng loại T
+        /// <summary>Update, cancel phiếu nhập hàng loại T</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nhlt
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nhltId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NHLT MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nhltId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NHLT MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nhlTs": [
+        ///                 {
+        ///                   "nhltId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NHLT MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nhlTs": [
+        ///                 {
+        ///                   "nhltId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NHLT MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nhlt")]
+        public async Task<IActionResult> UpdateOrCancelNHLTAsync([FromBody] UpdateAndCancelNHLTCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NHLT") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NHLT")
             });
         }
         #endregion

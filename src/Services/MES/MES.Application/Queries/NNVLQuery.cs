@@ -74,9 +74,16 @@ namespace MES.Application.Queries
                         //MaterialDesc
                         MaterialDesc = m.ProductName,
                         //Unit
-                        Uint = m.Unit
+                        Unit = m.Unit
                     });
                 }
+            }
+
+            var index = 1;
+            foreach (var item in data)
+            {
+                item.IndexKey = index;
+                index++;
             }
 
             return data;

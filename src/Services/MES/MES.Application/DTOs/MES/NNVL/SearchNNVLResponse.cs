@@ -8,6 +8,7 @@ namespace MES.Application.DTOs.MES.NNVL
 {
     public class GetInputDataResponse
     {
+        public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }
         //Vendor
@@ -19,7 +20,7 @@ namespace MES.Application.DTOs.MES.NNVL
         //Material desc
         public string MaterialDesc { get; set; }
         //UOM
-        public string Uint { get; set; }
+        public string Unit { get; set; }
     }
     public class SearchNNVLResponse
     {

@@ -14,6 +14,9 @@ namespace MES.Application.Commands.NNVL
 
     public class SaveNNVL
     {
-
+        //Plant
+        //Vendor
+        //Material
+        //UOM
     }
 }

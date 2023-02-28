@@ -3,15 +3,17 @@ using Core.Jwt.Models;
 using Core.Models;
 using Infrastructure.Data;
 using Infrastructure.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Data;
-using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Directory = System.IO.Directory;
 
 namespace Infrastructure.Extensions
 {
@@ -21,7 +23,7 @@ namespace Infrastructure.Extensions
         {
             IEnumerable<Claim> claims = new Claim[] {
                 new Claim("Id", account.AccountId.ToString()),
-                new Claim("Permission", JsonConvert.SerializeObject(account.MobilePermission)),
+                new Claim("Permission", JsonConvert.SerializeObject(account.Permission)),
                 new Claim(ClaimTypes.Name, account.UserName),
                 new Claim(ClaimTypes.NameIdentifier, Id.ToString()),
                 new Claim(ClaimTypes.Expiration, DateTime.Now.AddDays(1).ToString("MMM ddd dd yyyy HH:mm:ss tt")),
@@ -48,40 +50,41 @@ namespace Infrastructure.Extensions
             Id = Guid.NewGuid();
             return GetClaims(userAccounts, Id);
         }
-        public static async Task<UserToken> GenUserTokens(AccountModel model, string SaleOrg, JwtSettings jwtSettings)
+        public static async Task<UserToken> GenUserTokens(AccountModel model, string plantCode, JwtSettings jwtSettings)
         {
 
             using (var _context = new EntityDataContext())
             {
                 Guid Id = model.AccountId;
                 DateTime expireTime = DateTime.Now;
-                //Tạo Usertoken
+
+                //Tạo User token
                 var UserToken = new UserToken();
                 UserToken.UserName = model.UserName;
                 UserToken.AccountId = model.AccountId;
                 UserToken.FullName = model.FullName;
                 UserToken.EmployeeCode = model.EmployeeCode;
 
-                #region Plant
-                var plant = await _context.PlantModel.FirstOrDefaultAsync(x => x.PlantCode == SaleOrg);
+                //Plant
+                var plant = await _context.PlantModel.FirstOrDefaultAsync(x => x.PlantCode == plantCode);
                 UserToken.PlantCode = plant?.PlantCode;
                 UserToken.PlantName = plant != null ? $"{plant.PlantCode} | {plant.PlantName}" : "";
-                #endregion
 
-                #region Sale Org
-
-                var saleOrg = await _context.SaleOrgModel.FirstOrDefaultAsync(x => x.SaleOrgCode == SaleOrg);
-                UserToken.SaleOrgCode = SaleOrg;
+                //Sale Org
+                var saleOrg = await _context.SaleOrgModel.FirstOrDefaultAsync(x => x.SaleOrgCode == plant.SaleOrgCode);
+                UserToken.SaleOrgCode = saleOrg.SaleOrgCode;
                 UserToken.SaleOrgName = saleOrg?.SaleOrgName;
 
-                #endregion
 
                 #region Role
+
                 var role = (from p in _context.AccountModel
                             from r in p.Roles
                             where p.AccountId == UserToken.AccountId
                             select r.RolesCode).FirstOrDefault();
                 UserToken.Role = role;
+
+
                 var roleList = (from p in _context.AccountModel
                                 from r in p.Roles
                                 where p.AccountId == UserToken.AccountId
@@ -92,7 +95,20 @@ namespace Infrastructure.Extensions
 
                 #region Permission
 
-                UserToken.MobilePermission = GetMenuMobileList(model.AccountId);
+                // lấy Web permisstion module -> menu -> page -> page permission
+                var sqlQuery = "pms.QTHT_PagePermission_GetPagePermissionByAccountId";
+                var webPermissionDs = SqlProcHelper.GetWebPermissionByAccountId(_context, sqlQuery, new SqlParameter("@AccountId", model.AccountId));
+
+
+                //Convert Dataset -> Json->Object
+                var jsonDt = JsonConvert.SerializeObject(webPermissionDs);
+                UserToken.WebPermission = JsonConvert.DeserializeObject<PermissionWeb>(jsonDt);
+                if (UserToken.WebPermission != null && UserToken.WebPermission.PageModel != null)
+                {
+                    UserToken.WebPermission.PageModel = UserToken.WebPermission.PageModel.DistinctBy(x => x.PageId).ToList();
+                }
+
+                UserToken.Permission = GetMenuMobileList(model.AccountId);
                 //Lấy token
                 var jWtToken = GenJwtToken(UserToken, jwtSettings, out expireTime, out Id);
                 UserToken.Validaty = expireTime.TimeOfDay;

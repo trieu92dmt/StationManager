@@ -17,6 +17,21 @@ namespace MES.Application.Commands.NNVL
         //Plant
         //Vendor
         //Material
+        //Batch
+        //SL bao
+        //Đơn trọng
+        //Đầu cân
+        //Trọng lượng cân
+        //Confirm quantity
+        //Dl kèm bao bì
+        //số phương tiện
+        //Số lần cân
+        //Số xe tải
+        //Số cân đầu vào
+        //Số cân đầu ra
+        //Ghi chú
+        //Hình ảnh
+        //Trạng thái
         //UOM
     }
 }

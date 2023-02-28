@@ -159,6 +159,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[ComponentImportModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[CustmdSaleModel]",
          "ObjectType": 0
       },

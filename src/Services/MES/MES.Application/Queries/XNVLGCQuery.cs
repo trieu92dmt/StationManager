@@ -180,7 +180,7 @@ namespace MES.Application.Queries
                 //Id
                 XNVLGCId = x.ComponentExportId,
                 //Plant
-                Plant = x.PlantName,
+                Plant = x.PlantCode,
                 //Plant name
                 PlantName = x.PlantName,
                 //PO

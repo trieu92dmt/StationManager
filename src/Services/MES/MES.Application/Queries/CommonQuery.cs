@@ -95,7 +95,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse<bool>>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
+        Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
 
         /// <summary>
         /// Dropdown Sloc
@@ -226,6 +226,15 @@ namespace MES.Application.Queries
         public string Value { get; set; }
         public string Name { get; set; }
         public string Unit { get; set; }
+    }
+
+    public class DropdownWeightHeadResponse
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public bool Data { get; set; }
+        public string Type { get; set; }
+
     }
     #endregion
     public class CommonQuery : ICommonQuery
@@ -546,16 +555,17 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<CommonResponse<bool>>> GetDropdownWeightHeadByPlant(string keyword, string plantCode)
+        public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode)
         {
             var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
                                                           (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
                                     .OrderBy(x => x.ScaleCode)
-                                    .Select(x => new CommonResponse<bool>
+                                    .Select(x => new DropdownWeightHeadResponse
                                     {
                                         Key = x.ScaleCode,
                                         Value = x.ScaleName,
-                                        Data = x.ScaleType.Value == true ? true : false
+                                        Data = x.ScaleType.Value == true ? true : false,
+                                        Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
                                     }).AsNoTracking().ToListAsync();
 
             return response;

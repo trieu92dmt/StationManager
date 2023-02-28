@@ -202,6 +202,8 @@ namespace MES.Application.Commands.NNVL
                     QuantityWeight = item.QuantityWeight,
                     //21  Số phương tiện
                     VehicleCode = item.VehicleCode,
+                    //Unit
+                    UOM = item.Unit,
                     //Vendor name
                     VendorCode = item.Vendor,
                     VendorName = !string.IsNullOrEmpty(item.Vendor) ? vendors.FirstOrDefault(x => x.VendorCode == item.Vendor).VendorName : null,

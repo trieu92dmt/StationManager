@@ -2,6 +2,7 @@
 using Core.Properties;
 using MediatR;
 using MES.Application.Commands.NNVL;
+using MES.Application.Commands.XNVLGC;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NNVL;
 using MES.Application.Queries;
@@ -82,6 +83,24 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<SearchNNVLResponse>>
             {
                 Data = response
+            });
+        }
+
+        /// <summary>
+        /// Update dữ liệu nnvlgc
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("update-nnvlgc")]
+        public async Task<IActionResult> UpdateXNVLAsync([FromBody] UpdateNNVLCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response.IsSuccess,
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
             });
         }
 

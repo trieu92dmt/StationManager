@@ -73,19 +73,21 @@ namespace MES.Application.Commands.NHLT
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
+        private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<GoodsReceiptTypeTModel> _nhltRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _odDetailRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
-        public SaveNHLTCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
+        public SaveNHLTCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo, IRepository<TruckInfoModel> truckRepo,
                                       IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
                                       IRepository<ProductModel> prodRepo, IRepository<GoodsReceiptTypeTModel> nhltRepo,
                                       IRepository<DetailOutboundDeliveryModel> odDetailRepo, IRepository<StorageLocationModel> slocRepo)
         {
             _unitOfWork = unitOfWork;
             _weightSsRepo = weightSsRepo;
+            _truckRepo = truckRepo;
             _scaleRepo = scaleRepo;
             _utilitiesService = utilitiesService;
             _prodRepo = prodRepo;
@@ -107,6 +109,9 @@ namespace MES.Application.Commands.NHLT
 
             //Get query sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Get query truck info
+            var truckInfos = _truckRepo.GetQuery().AsNoTracking();
 
             //Danh sách nhập hàng loại T
             var nhlts = await _nhltRepo.GetQuery().ToListAsync();
@@ -213,8 +218,13 @@ namespace MES.Application.Commands.NHLT
                     InputWeight = item.InputWeight,
                     //số cân đầu ra
                     OutputWeight = item.OutputWeight,
+                    //Số phương tiện
+                    VehicleCode = item.VehicleCode,
                     //21  SlocCode
                     SlocCode = item.Sloc,
+                    //Số xe tải
+                    TruckInfoId = item.TruckInfoId,
+                    TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,
                     //22  SlocName
                     SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
                     //24  CreateTime

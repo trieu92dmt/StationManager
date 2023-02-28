@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using static Grpc.Core.Metadata;
 using ZXing.QrCode.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace IntegrationNS.Application.Commands.MaterialDocument
 {
@@ -88,11 +89,13 @@ namespace IntegrationNS.Application.Commands.MaterialDocument
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<MaterialDocumentModel> _mateDoc;
+        private readonly IRepository<ProductModel> _prodRepo;
 
-        public MaterialDocumentIntegrationCommandHandler(IUnitOfWork unitOfWork, IRepository<MaterialDocumentModel> mateDoc)
+        public MaterialDocumentIntegrationCommandHandler(IUnitOfWork unitOfWork, IRepository<MaterialDocumentModel> mateDoc, IRepository<ProductModel> prodRepo)
         {
             _unitOfWork = unitOfWork;
             _mateDoc = mateDoc;
+            _prodRepo = prodRepo;
         }
 
         public async Task<IntegrationNSResponse> Handle(MaterialDocumentIntegrationCommand request, CancellationToken cancellationToken)
@@ -106,14 +109,20 @@ namespace IntegrationNS.Application.Commands.MaterialDocument
 
             var materials = _mateDoc.GetQuery();
 
+            var prods = _prodRepo.GetQuery().AsNoTracking();
+
             foreach (var item in request.MaterialDocs)
             {
                 try
                 {
-                    //Check tồn tại
-                    var material = materials.FirstOrDefault(x => x.MaterialCode == item.MaterialCode);
+                    //Check material
+                    if (prods.FirstOrDefault(x => x.ProductCode == item.MaterialCode) == null)
+                        throw new ISDException(String.Format(CommonResource.Msg_NotFound, "Material"));
 
-                    if (material is null)
+                    //Check tồn tại
+                    var materialDoc = materials.FirstOrDefault(x => (x.MaterialDocCode == item.MaterialDocCode) && (x.MaterialDocItem == item.MaterialDocItem));
+
+                    if (materialDoc is null)
                     {
                         _mateDoc.Add(new MaterialDocumentModel
                         {
@@ -183,64 +192,62 @@ namespace IntegrationNS.Application.Commands.MaterialDocument
                     }
                     else
                     {
-                        material.Identification = item.Identification;
-                        material.ParentLineID = item.ParentLineID;
-                        material.HierarchyLevel = item.HierarchyLevel;
-                        material.OriginalLineItem = item.OriginalLineItem;
-                        material.MovementType = item.MovementType;
-                        material.ItemAutoCreated = item.ItemAutoCreated;
-                        material.MaterialCode = item.MaterialCode;
-                        material.MaterialCodeInt = long.Parse(item.MaterialCode);
-                        material.PlantCode = item.PlantCode;
-                        material.StorageLocation = item.StorageLocation;
-                        material.Batch = item.Batch;
-                        material.StockType = item.StockType;
-                        material.BatchRestricted = item.BatchRestricted;
-                        material.SpecialStock = item.SpecialStock;
-                        material.Supplier = item.Supplier;
-                        material.Customer = item.Customer;
-                        material.SalesOrder = item.SalesOrder;
-                        material.SalesOrderItem = item.SalesOrderItem;
-                        material.SalesOrderSchedule = item.SalesOrderSchedule;
-                        material.DebitCredit = item.DebitCredit;
-                        material.Quantity = item.Quantity;
-                        material.BaseUOM = item.BaseUOM;
-                        material.QtyUnitOfEntry = item.QtyUnitOfEntry;
-                        material.UnitOfEntry = item.UnitOfEntry;
-                        material.QtyOPU = item.QtyOPU;
-                        material.OPUnit = item.OPUnit;
-                        material.PurchaseOrder = item.PurchaseOrder;
-                        material.Item = item.Item;
-                        material.ReferenceDocItem = item.ReferenceDocItem;
-                        material.MaterialDocYear = item.MaterialDocYear;
-                        material.MaterialDoc2 = item.MaterialDoc2;
-                        material.MaterialDocItem2 = item.MaterialDocItem2;
-                        material.DeliveryCompleted = item.DeliveryCompleted;
-                        material.Text = item.Text;
-                        material.Reservation = item.Reservation;
-                        material.ItemReservation = item.ItemReservation;
-                        material.FinalIssue = item.FinalIssue;
-                        material.ReceivingMaterial = item.ReceivingMaterial;
-                        material.ReceivingPlant = item.ReceivingPlant;
-                        material.ReceivingSloc = item.ReceivingSloc;
-                        material.ReceivingBatch = item.ReceivingBatch;
-                        material.MovementIndicator = item.MovementIndicator;
-                        material.ReceiptIndicator = item.ReceiptIndicator;
-                        material.QtyOrderUnit = item.QtyOrderUnit;
-                        material.OrderUnit = item.OrderUnit;
-                        material.Supplier2 = item.Supplier2;
-                        material.SalesOrder2 = item.SalesOrder2;
-                        material.SalesOrderItem2 = item.SalesOrderItem2;
-                        material.PostingDate = item.PostingDate;
-                        material.EntryDateTime = item.EntryDateTime;
-                        material.Reference = item.Reference;
-                        material.TransactionCode = item.TransactionCode;
-                        material.Delivery = item.Delivery;
-                        material.Item2 = item.Item2;
-                        material.CompletedIndicator = item.CompletedIndicator;
-
-                        //Common
-                        material.LastEditTime = DateTime.Now;
+                        materialDoc.Identification = item.Identification;
+                        materialDoc.ParentLineID = item.ParentLineID;
+                        materialDoc.HierarchyLevel = item.HierarchyLevel;
+                        materialDoc.OriginalLineItem = item.OriginalLineItem;
+                        materialDoc.MovementType = item.MovementType;
+                        materialDoc.ItemAutoCreated = item.ItemAutoCreated;
+                        materialDoc.MaterialCode = item.MaterialCode;
+                        materialDoc.MaterialCodeInt = long.Parse(item.MaterialCode);
+                        materialDoc.PlantCode = item.PlantCode;
+                        materialDoc.StorageLocation = item.StorageLocation;
+                        materialDoc.Batch = item.Batch;
+                        materialDoc.StockType = item.StockType;
+                        materialDoc.BatchRestricted = item.BatchRestricted;
+                        materialDoc.SpecialStock = item.SpecialStock;
+                        materialDoc.Supplier = item.Supplier;
+                        materialDoc.Customer = item.Customer;
+                        materialDoc.SalesOrder = item.SalesOrder;
+                        materialDoc.SalesOrderItem = item.SalesOrderItem;
+                        materialDoc.SalesOrderSchedule = item.SalesOrderSchedule;
+                        materialDoc.DebitCredit = item.DebitCredit;
+                        materialDoc.Quantity = item.Quantity;
+                        materialDoc.BaseUOM = item.BaseUOM;
+                        materialDoc.QtyUnitOfEntry = item.QtyUnitOfEntry;
+                        materialDoc.UnitOfEntry = item.UnitOfEntry;
+                        materialDoc.QtyOPU = item.QtyOPU;
+                        materialDoc.OPUnit = item.OPUnit;
+                        materialDoc.PurchaseOrder = item.PurchaseOrder;
+                        materialDoc.Item = item.Item;
+                        materialDoc.ReferenceDocItem = item.ReferenceDocItem;
+                        materialDoc.MaterialDocYear = item.MaterialDocYear;
+                        materialDoc.MaterialDoc2 = item.MaterialDoc2;
+                        materialDoc.MaterialDocItem2 = item.MaterialDocItem2;
+                        materialDoc.DeliveryCompleted = item.DeliveryCompleted;
+                        materialDoc.Text = item.Text;
+                        materialDoc.Reservation = item.Reservation;
+                        materialDoc.ItemReservation = item.ItemReservation;
+                        materialDoc.FinalIssue = item.FinalIssue;
+                        materialDoc.ReceivingMaterial = item.ReceivingMaterial;
+                        materialDoc.ReceivingPlant = item.ReceivingPlant;
+                        materialDoc.ReceivingSloc = item.ReceivingSloc;
+                        materialDoc.ReceivingBatch = item.ReceivingBatch;
+                        materialDoc.MovementIndicator = item.MovementIndicator;
+                        materialDoc.ReceiptIndicator = item.ReceiptIndicator;
+                        materialDoc.QtyOrderUnit = item.QtyOrderUnit;
+                        materialDoc.OrderUnit = item.OrderUnit;
+                        materialDoc.Supplier2 = item.Supplier2;
+                        materialDoc.SalesOrder2 = item.SalesOrder2;
+                        materialDoc.SalesOrderItem2 = item.SalesOrderItem2;
+                        materialDoc.PostingDate = item.PostingDate;
+                        materialDoc.EntryDateTime = item.EntryDateTime;
+                        materialDoc.Reference = item.Reference;
+                        materialDoc.TransactionCode = item.TransactionCode;
+                        materialDoc.Delivery = item.Delivery;
+                        materialDoc.Item2 = item.Item2;
+                        materialDoc.CompletedIndicator = item.CompletedIndicator;
+                        materialDoc.LastEditTime = DateTime.Now;
                     }
 
                     await _unitOfWork.SaveChangesAsync();

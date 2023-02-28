@@ -315,24 +315,12 @@ namespace MES.Application.Queries
                 plants = plants.Where(x => x.PlantCode == command.Plant);
             }    
 
-            //Get data theo material
-            if (!string.IsNullOrEmpty(command.MaterialFrom))
-            {
-                //Nếu ko có to thì search 1
-                if (string.IsNullOrEmpty(command.MaterialTo))
-                {
-                    command.MaterialTo = command.MaterialFrom;
-                }
-
-                materials = materials.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
-                                                 x.ProductCodeInt <= long.Parse(command.MaterialTo));
-            }
 
             //Get data theo customer
             if (!string.IsNullOrEmpty(command.CustomerFrom))
             {
                 //Nếu ko có to thì search 1
-                if (string.IsNullOrEmpty(command.CustomerTo))
+                if (string.IsNullOrEmpty(command.CustomerTo)) 
                 {
                     command.CustomerTo = command.CustomerFrom;
                 }
@@ -352,6 +340,20 @@ namespace MES.Application.Queries
 
                 detailOds = detailOds.Where(x => x.OutboundDelivery.DeliveryCode.CompareTo(command.OutboundDeliveryFrom) >=0 &&
                                                x.OutboundDelivery.DeliveryCode.CompareTo(command.OutboundDeliveryTo) <= 0);
+            }
+
+
+            //Get data theo material
+            if (!string.IsNullOrEmpty(command.MaterialFrom))
+            {
+                //Nếu ko có to thì search 1
+                if (string.IsNullOrEmpty(command.MaterialTo))
+                {
+                    command.MaterialTo = command.MaterialFrom;
+                }
+
+                materials = materials.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                                                 x.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Get data theo document date
@@ -381,9 +383,9 @@ namespace MES.Application.Queries
                             //Customer name
                             CustomerName = sales != null ? sales.CustomerName : "",
                             //Material
-                            Material = mtrs != null ? mtrs.ProductCodeInt.ToString() : "",
+                            Material = dtOds != null ? dtOds.ProductCodeInt.ToString() : mtrs.ProductCodeInt.ToString(),
                             //Material desc
-                            MaterialDesc = mtrs != null ? mtrs.ProductName : "",
+                            MaterialDesc = dtOds != null ? materials.FirstOrDefault(x => x.ProductCode == dtOds.ProductCode).ProductName : mtrs.ProductName,
                             //UoM
                             Unit = mtrs != null ? mtrs.Unit : "",
                             //Outbound Delivery

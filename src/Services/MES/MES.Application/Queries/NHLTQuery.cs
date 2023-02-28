@@ -298,6 +298,7 @@ namespace MES.Application.Queries
             var plants = _plantRepo.GetQuery().AsNoTracking();
 
             //Get query material
+            var materialQuery = _prodRepo.GetQuery().AsNoTracking();
             var materials = _prodRepo.GetQuery(x => string.IsNullOrEmpty(command.MaterialFrom) ? false : true).AsNoTracking();
 
             //Get query detail od
@@ -385,7 +386,7 @@ namespace MES.Application.Queries
                             //Material
                             Material = dtOds != null ? dtOds.ProductCodeInt.ToString() : mtrs.ProductCodeInt.ToString(),
                             //Material desc
-                            MaterialDesc = dtOds != null ? materials.FirstOrDefault(x => x.ProductCode == dtOds.ProductCode).ProductName : mtrs.ProductName,
+                            MaterialDesc = dtOds != null ? materialQuery.FirstOrDefault(x => x.ProductCode == dtOds.ProductCode).ProductName : mtrs.ProductName,
                             //UoM
                             Unit = mtrs != null ? mtrs.Unit : "",
                             //Outbound Delivery

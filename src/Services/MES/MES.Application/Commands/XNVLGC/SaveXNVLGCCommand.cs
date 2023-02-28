@@ -209,7 +209,7 @@ namespace MES.Application.Commands.XNVLGC
                     //Component
                     ComponentCode = !string.IsNullOrEmpty(item.Component) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "",
                     ComponentName = !string.IsNullOrEmpty(item.Component) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName : "",
-                    ComponentCodeInt = !string.IsNullOrEmpty(item.Component) ? long.Parse(item.Material) : null,
+                    ComponentCodeInt = !string.IsNullOrEmpty(item.Component) ? long.Parse(item.Component) : null,
                     //8. SlocCode
                     SlocCode = item.Sloc,
                     //9. SlocName

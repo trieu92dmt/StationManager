@@ -70,7 +70,7 @@ namespace MES.Application.DTOs.MES.XNVLGC
         //Sloc
         public string Sloc { get; set; }
         public string SlocName { get; set; }
-        public string SlocFmt { get; set; }
+        public string SlocFmt => !string.IsNullOrEmpty(Sloc) && !string.IsNullOrEmpty(SlocName) ? $"{Sloc} | {SlocName}" : "";
         //Batch
         public string Batch { get; set; }
         //SL bao
@@ -98,16 +98,27 @@ namespace MES.Application.DTOs.MES.XNVLGC
         //Requirement Unit
         public string RequirementUnit { get; set; }
         //Vendor name
+        public string Vendor { get; set; }
         public string VendorName { get; set; }
         //Số xe tải
+        public Guid? TruckInfoId { get; set; }
+        public string TruckNumber { get; set; }
         //Số cân đầu vào
+        public decimal? InputWeight { get; set; }
         //Số cân đầu ra
+        public decimal? OutputWeight { get; set; }
         //Ghi chú
+        public string Description { get; set; }
         //Hình ảnh
+        public string Image { get; set; }
         //Status
+        public string Status { get; set; }
         //Số phiếu cân
+        public string WeightVote { get; set; }
         //Thời gian bắt đầu
+        public DateTime? StartTime { get; set; }
         //Thời gian kết thúc
+        public DateTime? EndTime { get; set; }
         //Create by
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }

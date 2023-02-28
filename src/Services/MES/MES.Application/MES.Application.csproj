@@ -14,8 +14,4 @@
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Core\Core.csproj" />
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Commands\XNVLGC\" />
-	</ItemGroup>
 </Project>

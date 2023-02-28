@@ -49,8 +49,7 @@ namespace Infrastructure.Models
         public DateTime? StartTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? EndTime { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? QuantityWeight { get; set; }
+        public int? QuantityWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? TotalQuantity { get; set; }
         [StringLength(50)]
@@ -59,12 +58,13 @@ namespace Infrastructure.Models
         public decimal? RequirementQuantity { get; set; }
         [StringLength(50)]
         public string RequirementUnit { get; set; }
+        [StringLength(50)]
+        public string VendorCode { get; set; }
         [StringLength(200)]
         public string VendorName { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? BagQuantity { get; set; }
+        public int? BagQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? SingleWeight { get; set; }
         [StringLength(50)]

@@ -10,6 +10,9 @@ namespace IntegrationNS.Application.Commands.NKs
     {
         //Plant
         public string Plant { get; set; }
+        //sloc
+        public string SlocFrom { get; set; }
+        public string SlocTo { get; set; }
         //Customer
         public string Customer { get; set; }
         //Material
@@ -75,6 +78,16 @@ namespace IntegrationNS.Application.Commands.NKs
                 query = query.Where(x => x.PlantCode == command.Plant);
             }
 
+            //Theo Sloc
+            if (!string.IsNullOrEmpty(command.SlocFrom))
+            {
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(command.SlocTo))
+                    command.SlocTo = command.SlocFrom;
+                query = query.Where(x => x.SlocCode.CompareTo(command.SlocFrom) >= 0 &&
+                                         x.SlocCode.CompareTo(command.SlocTo) <= 0);
+            }
+
             //Theo Customer
             if (!string.IsNullOrEmpty(command.Customer))
             {
@@ -120,7 +133,7 @@ namespace IntegrationNS.Application.Commands.NKs
             //Search Status
             if (!string.IsNullOrEmpty(command.Status))
             {
-                query = query.Where(x => x.Status == command.Status);
+                query = command.Status == "POST" ? query.Where(x => x.Status == "POST" && x.ReverseDocument != null) : query.Where(x => x.Status == command.Status);
             }
 
             //Query Material

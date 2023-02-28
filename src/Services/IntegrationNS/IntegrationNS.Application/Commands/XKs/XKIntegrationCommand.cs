@@ -3,12 +3,6 @@ using Infrastructure.Models;
 using IntegrationNS.Application.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace IntegrationNS.Application.Commands.XKs
 {
@@ -19,6 +13,9 @@ namespace IntegrationNS.Application.Commands.XKs
         //Reservatopm
         public string ReservationFrom { get; set; }
         public string ReservationTo { get; set; }
+        //Sloc
+        public string SlocFrom { get; set; }
+        public string SlocTo { get; set; }
         //Customer
         public string CustomerFrom { get; set; }
         public string CustomerTo { get; set; }
@@ -112,6 +109,16 @@ namespace IntegrationNS.Application.Commands.XKs
                                                                           x.DetailReservation.Reservation.ReservationCodeInt <= long.Parse(command.ReservationTo) : false);
             }
 
+            //Theo Sloc
+            if (!string.IsNullOrEmpty(command.SlocFrom))
+            {
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(command.SlocTo))
+                    command.SlocTo = command.SlocFrom;
+                query = query.Where(x => x.SlocCode.CompareTo(command.SlocFrom) >= 0 &&
+                                         x.SlocCode.CompareTo(command.SlocTo) <= 0);
+            }
+
             //Theo Customer
             if (!string.IsNullOrEmpty(command.CustomerFrom))
             {
@@ -172,7 +179,7 @@ namespace IntegrationNS.Application.Commands.XKs
             //Search Status
             if (!string.IsNullOrEmpty(command.Status))
             {
-                query = query.Where(x => x.Status == command.Status);
+                query = command.Status == "POST" ? query.Where(x => x.Status == "POST" && x.ReverseDocument != null) : query.Where(x => x.Status == command.Status);
             }
 
             //Query Material

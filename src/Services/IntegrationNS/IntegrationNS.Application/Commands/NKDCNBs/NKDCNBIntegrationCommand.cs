@@ -215,7 +215,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
             //Search Status
             if (!string.IsNullOrEmpty(command.Status))
             {
-                query = query.Where(x => x.Status == command.Status);
+                query = command.Status == "POST" ? query.Where(x => x.Status == "POST" && x.ReverseDocument != null) : query.Where(x => x.Status == command.Status);
             }
 
             //Get data

@@ -170,9 +170,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
             //}
 
             //Search Status
-            if (!string.IsNullOrEmpty(request.Status))
+            if (!string.IsNullOrEmpty(command.Status))
             {
-                query = query.Where(x => x.Status == request.Status).ToList();
+                query = command.Status == "POST" ? query.Where(x => x.Status == "POST" && x.ReverseDocument != null) : query.Where(x => x.Status == command.Status);
             }
 
             //Lấy ra dòng không có reverseDoc

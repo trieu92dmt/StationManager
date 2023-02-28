@@ -1,6 +1,9 @@
 ﻿using Core.Models;
+using Core.Properties;
 using MediatR;
+using MES.Application.Commands.XKLXH;
 using MES.Application.Commands.XNVLGC;
+using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.XNVLGC;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -48,5 +51,52 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+
+        /// <summary>
+        /// Bảng 2 (Dữ liệu xuất nvl gia công)
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-xnvlgc")]
+        public async Task<IActionResult> GetXNVLGCAsync([FromBody] SearchXNVLGCCommand command)
+        {
+            var response = await _query.GetDataXNVLGC(command);
+
+            return Ok(new ApiSuccessResponse<List<SearchXNVLGCResponse>>
+            {
+                Data = response
+            });
+        }
+
+        /// <summary>
+        /// Save dữ liệu xnvlgc
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("save-xnvlgc")]
+        public async Task<IActionResult> SaveXNVLGCAsync([FromBody] SaveXNVLGCCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu xuất nguyên vật liệu gia công")
+            });
+        }
+
+        #region Get số phiếu cân
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        [HttpGet("list-weight-vote")]
+        public async Task<IActionResult> GetWeightVoteAsync(string keyword)
+        {
+            var dropdownList = await _query.GetDropDownWeightVote(keyword);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

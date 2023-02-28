@@ -34,6 +34,12 @@ namespace MES.Application.Commands.XNVLGC
         public string WeightHeadCode { get; set; }
         //Trọng lượng cân
         public decimal? Weight { get; set; }
+        //Batch
+        public string Batch { get; set; }
+        //SL bao
+        public int? BagQuantity { get; set; }
+        //Đơn trọng
+        public decimal? SingleWeight { get; set; }
         //Số lần cân
         public int? QuantityWeight { get; set; }
         //Requirement unit
@@ -70,10 +76,11 @@ namespace MES.Application.Commands.XNVLGC
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
         private readonly IUtilitiesService _utilitiesService;
-        private readonly IRepository<DetailWorkOrderModel> _woRepo;
+        private readonly IRepository<PlantModel> _plantRepo;
+
         public UpdateXNVLGCCommandHandler(IUnitOfWork unitOfWork, IRepository<ComponentExportModel> xnvlgcRepo, IRepository<ProductModel> prdRepo,
                                           IRepository<StorageLocationModel> slocRepo, IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService,
-                                          IRepository<DetailWorkOrderModel> woRepo)
+                                          IRepository<PlantModel> plantRepo)
         {
             _unitOfWork = unitOfWork;
             _xnvlgcRepo = xnvlgcRepo;
@@ -81,10 +88,10 @@ namespace MES.Application.Commands.XNVLGC
             _slocRepo = slocRepo;
             _dimDateRepo = dimDateRepo;
             _utilitiesService = utilitiesService;
-            _woRepo = woRepo;
+            _plantRepo = plantRepo;
         }
 
-        public Task<ApiResponse> Handle(UpdateXNVLGCCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(UpdateXNVLGCCommand request, CancellationToken cancellationToken)
         {
             //var response = new ApiResponse
             //{
@@ -93,13 +100,13 @@ namespace MES.Application.Commands.XNVLGC
             //};
 
             ////Data xuất nvl sản xuất
-            //var xnvlgc = _xnvlgcRepo.GetQuery();
-
-            ////Data work order
-            //var wos = _woRepo.GetQuery().Include(x => x.WorkOrder).AsNoTracking();
+            //var xnvlgcs = _xnvlgcRepo.GetQuery();
 
             ////Data material
             //var material = _prdRepo.GetQuery().AsNoTracking();
+
+            ////Query plant
+            //var plants = _plantRepo.GetQuery().AsNoTracking();
 
             ////Data sloc
             //var slocs = _slocRepo.GetQuery().AsNoTracking();
@@ -113,17 +120,17 @@ namespace MES.Application.Commands.XNVLGC
             //                                     .Select(x => new
             //                                     {
             //                                         WeightVote = x.Key,
-            //                                         XNVLGC = x.Value.Select(v => v.I).ToList(),
-            //                                         ConfirmQty = x.Value.Sum(x => x.ConfirmQty),
-            //                                         QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackaging)
+            //                                         XNVLGCIds = x.Value.Select(v => v.XNVLGCId).ToList(),
+            //                                         ConfirmQty = x.Value.Sum(x => x.ConfirmQuantity),
+            //                                         QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackage)
             //                                     }).ToList();
             ////Duyệt phiếu cân kiểm tra confirm quantity và SL kèm bao bì
             //foreach (var item in weightVotes)
             //{
             //    //Tính tổng confirm quantity ban đầu
-            //    var sumConfirmQty1 = xthlsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
+            //    var sumConfirmQty1 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
             //    //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
-            //    var sumConfirmQty2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.XTHLSXs.Contains(x.IssForProductiontId)).Sum(x => x.ConfirmQty);
+            //    var sumConfirmQty2 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote && !item.XNVLGCIds.Contains(x.ComponentExportId)).Sum(x => x.ConfirmQty);
             //    //So sánh
             //    if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
             //    {
@@ -132,9 +139,9 @@ namespace MES.Application.Commands.XNVLGC
             //    }
 
             //    //Tính tổng SL kèm bao bì
-            //    var sumQtyWithPackage1 = xthlsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
+            //    var sumQtyWithPackage1 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
             //    //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
-            //    var sumQtyWithPackage2 = xthlsxs.Where(x => x.WeightVote == item.WeightVote && !item.XTHLSXs.Contains(x.IssForProductiontId)).Sum(x => x.QuantityWithPackaging);
+            //    var sumQtyWithPackage2 = xnvlgcs.Where(x => x.WeightVote == item.WeightVote && !item.XNVLGCIds.Contains(x.ComponentExportId)).Sum(x => x.QuantityWithPackaging);
             //    //So sánh
             //    if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
             //    {
@@ -144,28 +151,10 @@ namespace MES.Application.Commands.XNVLGC
             //}
 
 
-            //foreach (var item in request.UpdateXTHLSXs)
+            //foreach (var item in request.UpdateXNVLGCs)
             //{
-            //    //Check tồn tại nktpsx
-            //    var xthlsx = await xthlsxs.FirstOrDefaultAsync(x => x.IssForProductiontId == item.XTHLSXId);
-
-            //    //Lấy ra workorder detail
-            //    var wo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ?
-            //                        wos.FirstOrDefault(d => d.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) &&
-            //                                                 d.WorkOrderItem == item.ItemComponent &&
-            //                                                 d.ProductCodeInt == long.Parse(item.Component)) : null;
-
-            //    //Check wo, woitem có mapping với component
-            //    if (!string.IsNullOrEmpty(item.WorkOrder) &&
-            //        !string.IsNullOrEmpty(item.ItemComponent) &&
-            //        !string.IsNullOrEmpty(item.Component) &&
-            //        wo == null)
-            //    {
-            //        response.IsSuccess = false;
-            //        response.Message = "Workorder, Item component và Component không mapping với nhau";
-
-            //        return response;
-            //    }
+            //    //Check tồn tại xnvlgc
+            //    var xnvlgc = await xnvlgcs.FirstOrDefaultAsync(x => x.ComponentExportId == item.XNVLGCId);
 
 
             //    var imgPath = string.Empty;
@@ -175,64 +164,83 @@ namespace MES.Application.Commands.XNVLGC
             //        byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
             //        MemoryStream stream = new MemoryStream(bytes);
 
-            //        IFormFile file = new FormFile(stream, 0, bytes.Length, item.XTHLSXId.ToString(), $"{item.XTHLSXId.ToString()}.jpg");
+            //        IFormFile file = new FormFile(stream, 0, bytes.Length, item.XNVLGCId.ToString(), $"{item.XNVLGCId.ToString()}.jpg");
             //        //Save image to server
-            //        imgPath = await _utilitiesService.UploadFile(file, "XTHLSX");
+            //        imgPath = await _utilitiesService.UploadFile(file, "XNVLGC");
             //    }
 
 
             //    //Chưa có thì tạo mới
-            //    if (xthlsx == null)
+            //    if (xnvlgc == null)
             //    {
-            //        _xthlsxRepo.Add(new IssueForProductionModel
+            //        _xnvlgcRepo.Add(new ComponentExportModel
             //        {
-            //            IssForProductiontId = item.XTHLSXId,
-            //            DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null,
+            //            //id
+            //            ComponentExportId = item.XNVLGCId,
+            //            //Plant
             //            PlantCode = item.Plant,
+            //            PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,
+            //            //Component
             //            ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode,
+            //            ComponentName = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName,
             //            ComponentCodeInt = long.Parse(item.Component),
+            //            //Batch
             //            Batch = item.Batch,
-            //            BagQuantity = item.BagQuantity,
-            //            SingleWeight = item.SingleWeight,
+            //            //Weight Vote
             //            WeightVote = item.WeightVote,
+            //            //Weight Head Code
             //            WeightHeadCode = item.WeightHeadCode,
+            //            //Weight
             //            Weight = item.Weight,
-            //            ConfirmQty = item.ConfirmQty,
-            //            QuantityWithPackaging = item.QuantityWithPackaging,
-            //            QuantityWeitght = item.QuantityWeight,
+            //            //Confirm quantity
+            //            ConfirmQty = item.ConfirmQuantity,
+            //            //SL bao
+            //            BagQuantity = item.BagQuantity,
+            //            //Đơn trọng
+            //            SingleWeight = item.SingleWeight,
+            //            //Sl kèm bao bì
+            //            QuantityWithPackaging = item.QuantityWithPackage,
+            //            //Số lần cân
+            //            QuantityWeight = item.QuantityWeight,
+            //            //RequirementUnit
+            //            RequirementUnit = item.RequirementUnit,
+            //            //Vehicle
+            //            VehicleCode = item.VehicleCode,
+            //            //Số cân đầu ra
+            //            OutputWeight = item.OutputWeight,
             //            Description = item.Description,
             //            Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
             //            StartTime = item.StartTime,
             //            EndTime = item.EndTime,
-            //            SlocCode = item.StorageLocation,
-            //            SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
+            //            //Sloc
+            //            SlocCode = item.Sloc,
+            //            SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
             //            Status = item.isDelete == true ? "DEL" : "NOT"
-            //        });
+            //        });;
             //    }
             //    //Tồn tại thì update
             //    else
             //    {
             //        //Cập nhật
-            //        //Detail wo id
-            //        xthlsx.DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null;
             //        //Component Code
-            //        xthlsx.ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode;
+            //        xnvlgc.ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode;
+            //        xnvlgc.ComponentName = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName;
             //        //Component Code Int
-            //        xthlsx.ComponentCodeInt = long.Parse(item.Component);
+            //        xnvlgc.ComponentCodeInt = long.Parse(item.Component);
             //        //Storage Location
-            //        xthlsx.SlocCode = item.StorageLocation;
+            //        xnvlgc.SlocCode = item.Sloc;
             //        //Sloc Name
-            //        xthlsx.SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "";
+            //        xnvlgc.SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "";
             //        //Batch
-            //        xthlsx.Batch = item.Batch;
+            //        xnvlgc.Batch = item.Batch;
             //        //Sl bao
-            //        xthlsx.BagQuantity = item.BagQuantity;
+            //        xnvlgc.BagQuantity = item.BagQuantity;
             //        //Đơn trọng
-            //        xthlsx.SingleWeight = item.SingleWeight;
+            //        xnvlgc.SingleWeight = item.SingleWeight;
             //        //Confirm Quantity
-            //        xthlsx.ConfirmQty = item.ConfirmQty;
+            //        xnvlgc.ConfirmQty = item.ConfirmQuantity;
             //        //Sl kèm bao bì
-            //        xthlsx.QuantityWithPackaging = item.QuantityWithPackaging;
+            //        xnvlgc.QuantityWithPackaging = item.QuantityWithPackaging;
             //        //Ghi chú
             //        xthlsx.Description = item.Description;
             //        //Hình ảnh

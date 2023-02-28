@@ -172,7 +172,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
             //Search Status
             if (!string.IsNullOrEmpty(request.Status))
             {
-                query = request.Status == "POST" ? query.Where(x => x.Status == "POST" && x.ReverseDocument != null).ToList() : query.Where(x => x.Status == request.Status).ToList();
+                query = query.Where(x => x.Status == request.Status && x.ReverseDocument == null).ToList();
             }
 
             //Lấy ra dòng không có reverseDoc

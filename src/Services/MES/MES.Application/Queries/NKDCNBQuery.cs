@@ -314,15 +314,15 @@ namespace MES.Application.Queries
                                         .Where(x => x.DetailODId.HasValue ?
                                                     (x.DetailOD.OutboundDelivery.DeliveryType == "ZNLC" || x.DetailOD.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                     //Lấy delivery đã hoàn tất giao dịch
-                                                    x.DetailOD.OutboundDelivery.GoodsMovementSts == "C" &&
-                                                    x.DetailOD.GoodsMovementSts == "C" : true)
+                                                    (x.DetailOD.OutboundDelivery.GoodsMovementSts == "C") &&
+                                                    (x.DetailOD.GoodsMovementSts == "C") : true)
                                         .AsNoTracking();
 
             //Check điều kiện 3
             //Loại trừ các delivery có po đã hoàn tất nhập kho
-            query = query.Where(x => poQuery.FirstOrDefault(p => p.POLine == x.DetailOD.ReferenceItem && p.PurchaseOrder.PurchaseOrderCode == x.DetailOD.ReferenceDocument1).DeliveryCompleted != "X" &&
-                                     //Loại trừ các delivery đã đánh dấu xóa
-                                     poQuery.FirstOrDefault(p => p.POLine == x.DetailOD.ReferenceItem && p.PurchaseOrder.PurchaseOrderCode == x.DetailOD.ReferenceDocument1).DeletionInd != "L");
+            query = query.Where(x => x.DetailODId.HasValue ? poQuery.FirstOrDefault(p => p.POLine == x.DetailOD.ReferenceItem && p.PurchaseOrder.PurchaseOrderCode == x.DetailOD.ReferenceDocument1).DeliveryCompleted != "X" &&
+                                                             //Loại trừ các delivery đã đánh dấu xóa
+                                                             poQuery.FirstOrDefault(p => p.POLine == x.DetailOD.ReferenceItem && p.PurchaseOrder.PurchaseOrderCode == x.DetailOD.ReferenceDocument1).DeletionInd != "L" : true);
 
 
             //Products

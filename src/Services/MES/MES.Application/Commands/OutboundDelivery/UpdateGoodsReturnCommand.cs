@@ -235,8 +235,9 @@ namespace MES.Application.Commands.OutboundDelivery
                         SlocCode = item.StorageLocation,
                         DocumentDate = item.DocumentDate,
                         CreateBy = item.CreateBy,
-                        CreateTime = item.CreateOn,
+                        CreateTime = DateTime.Now,
                         LastEditBy = item.ChangeBy,
+                        Actived = true,
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }
@@ -271,6 +272,8 @@ namespace MES.Application.Commands.OutboundDelivery
                     nkht.Description = item.Description;
                     //Hình ảnh
                     nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : imgPath;
+
+                    nkht.LastEditBy = item.ChangeBy;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkht.Status = "DEL";

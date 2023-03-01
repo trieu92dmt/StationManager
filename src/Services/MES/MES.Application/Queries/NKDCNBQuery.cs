@@ -311,10 +311,10 @@ namespace MES.Application.Queries
             var query = _nkdcnbRepo.GetQuery()
                                         .Include(x => x.DetailOD).ThenInclude(x => x.OutboundDelivery)
                                         //Lọc delivery type
-                                        .Where(x => (x.DetailOD.OutboundDelivery.DeliveryType == "ZNLC" || x.DetailOD.OutboundDelivery.DeliveryType == "ZNLN") &&
-                                                    //Lấy delivery đã hoàn tất giao dịch
-                                                    x.DetailOD.OutboundDelivery.GoodsMovementSts == "C" &&
-                                                    x.DetailOD.GoodsMovementSts == "C")
+                                        //.Where(x => (x.DetailOD.OutboundDelivery.DeliveryType == "ZNLC" || x.DetailOD.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                        //            //Lấy delivery đã hoàn tất giao dịch
+                                        //            x.DetailOD.OutboundDelivery.GoodsMovementSts == "C" &&
+                                        //            x.DetailOD.GoodsMovementSts == "C")
                                         .AsNoTracking();
 
             //Check điều kiện 3

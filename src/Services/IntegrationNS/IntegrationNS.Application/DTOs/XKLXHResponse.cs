@@ -12,6 +12,11 @@ namespace IntegrationNS.Application.DTOs
         public Guid XKLXHId { get; set; }
         //Plant
         public string Plant { get; set; }
+        //PO
+        public string PurchaseOrder { get; set; }
+        //SO
+        public string SalesOrder { get; set; }
+        public string ShipToParty { get; set; }
         //Ship to party name
         public string ShipToPartyName { get; set; }
         //Outbound delivery

@@ -128,8 +128,8 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 if (string.IsNullOrEmpty(command.SalesOrderTo))
                     command.SalesOrderTo = command.SalesOrderFrom;
 
-                query = query.Where(x => x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument2.CompareTo(command.SalesOrderFrom) >= 0 &&
-                                                                 x.DetailOD.ReferenceDocument2.CompareTo(command.SalesOrderTo) <= 0 : false);
+                query = query.Where(x => x.DetailODId.HasValue ? x.DetailOD.SalesOrder.CompareTo(command.SalesOrderFrom) >= 0 &&
+                                                                 x.DetailOD.SalesOrder.CompareTo(command.SalesOrderTo) <= 0 : false);
             }
 
             //Theo outbound deliver
@@ -213,6 +213,12 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 XKLXHId = x.ExportByCommandId,
                 //Plant
                 Plant = x.PlantCode,
+                //PO
+                PurchaseOrder = x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument1 : "",
+                //SO
+                SalesOrder = x.DetailODId.HasValue ? x.DetailOD.SalesOrder : "",
+                //Ship to party
+                ShipToParty = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoParty : "",
                 //Ship to party name
                 ShipToPartyName = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoPartyName : "",
                 //Od

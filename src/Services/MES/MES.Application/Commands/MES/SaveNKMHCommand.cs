@@ -138,6 +138,8 @@ namespace MES.Application.Commands.MES
                 }
                 #endregion
 
+                var GoodsReceiptId = Guid.NewGuid();
+
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)
                                                .FirstOrDefaultAsync();
@@ -149,7 +151,7 @@ namespace MES.Application.Commands.MES
                     byte[] bytes = Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, poLine.PurchaseOrderDetailId.ToString(), $"{poLine.PurchaseOrderDetailId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, GoodsReceiptId.ToString(), $"{GoodsReceiptId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKMH");
                 }
@@ -160,7 +162,7 @@ namespace MES.Application.Commands.MES
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
                 {
-                    GoodsReceiptId = Guid.NewGuid(),
+                    GoodsReceiptId = GoodsReceiptId,
                     //Số lô
                     Batch = x.Batch,
                     //POLine

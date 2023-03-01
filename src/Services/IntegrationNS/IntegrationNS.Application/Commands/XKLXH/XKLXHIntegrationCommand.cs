@@ -273,6 +273,14 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 OutputWeight = x.OutputWeight ?? 0,
                 //Trọng lượng hàng hóa
                 GoodsWeight = x.GoodsWeight ?? 0,
+                //số lượng bao 2
+                BagQuantity2 = x.BagQuantity2 ?? 0,
+                //Đơn trọng 2
+                SingleWeight2 = x.SingleWeight2 ?? 0,
+                //Thời gian ghi nhận 2
+                RecordTime2 = x.RecordTime2,
+                //Thời gian ghi nhận 3
+                RecordTime3 = x.RecordTime3,
                 //Create by
                 CreateById = x.CreateBy,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",

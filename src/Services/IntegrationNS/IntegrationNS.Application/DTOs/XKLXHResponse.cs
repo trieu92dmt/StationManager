@@ -75,8 +75,14 @@ namespace IntegrationNS.Application.DTOs
         public decimal? OutputWeight { get; set; }
         //Trọng lượng hàng hóa
         public decimal? GoodsWeight { get; set; }
-        //Create by
-        public int MyProperty { get; set; }
+        //SL bao 2
+        public int? BagQuantity2 { get; set; }
+        //Đơn trọng 2
+        public decimal? SingleWeight2 { get; set; }
+        //Thời gian ghi nhận 2
+        public DateTime? RecordTime2 { get; set; }
+        //Thời gian ghi nhận 3
+        public DateTime? RecordTime3 { get; set; }
         //Create by
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }

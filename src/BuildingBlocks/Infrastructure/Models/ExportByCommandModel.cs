@@ -82,8 +82,7 @@ namespace Infrastructure.Models
         public decimal? OutputWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? GoodsWeight { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? BagQuantity2 { get; set; }
+        public int? BagQuantity2 { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? SingleWeight2 { get; set; }
         [StringLength(50)]
@@ -100,9 +99,9 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string TruckNumber { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? RecordTime1 { get; set; }
-        [Column(TypeName = "datetime")]
         public DateTime? RecordTime2 { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? RecordTime3 { get; set; }
         public bool? IsReverse { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }

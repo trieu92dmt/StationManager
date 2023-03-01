@@ -22,6 +22,8 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string Reservation { get; set; }
         [StringLength(50)]
+        public string ReservationItem { get; set; }
+        [StringLength(50)]
         public string Customer { get; set; }
         [StringLength(50)]
         public string MaterialCode { get; set; }

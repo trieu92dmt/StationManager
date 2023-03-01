@@ -495,7 +495,7 @@ namespace MES.Application.Queries
                                         .Select(x => new CommonResponse
                                         {
                                             Key = x.POType,
-                                            Value = $"{x.POType} | {orderType.FirstOrDefault(o => o.OrderTypeCode == x.POType).ShortText}"
+                                            Value = $"{x.POType} | {orderType.FirstOrDefault(o => o.OrderTypeCode == x.POType && o.Category == "01").ShortText}"
                                         }).AsNoTracking().ToListAsync();
 
             return response.DistinctBy(x => x.Key).ToList();

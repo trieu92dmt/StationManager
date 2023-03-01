@@ -486,13 +486,16 @@ namespace MES.Application.Queries
         #region Dropdown po type
         public async Task<List<CommonResponse>> GetDropdownPOType(string keyword)
         {
+            //Get query order type
+            var orderType = _oTypeRep.GetQuery().AsNoTracking();
+
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.POType.Contains(keyword) : true) &&
                                                              (x.POType != null) &&
                                                              (x.POType != ""))
                                         .Select(x => new CommonResponse
                                         {
                                             Key = x.POType,
-                                            Value = x.POType
+                                            Value = $"{x.POType} | {orderType.FirstOrDefault(o => o.OrderTypeCode == x.POType).ShortText}"
                                         }).AsNoTracking().ToListAsync();
 
             return response.DistinctBy(x => x.Key).ToList();

@@ -492,6 +492,7 @@ namespace MES.Application.Queries
             var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.POType.Contains(keyword) : true) &&
                                                              (x.POType != null) &&
                                                              (x.POType != ""))
+                                        .OrderBy(x => x.POType)
                                         .Select(x => new CommonResponse
                                         {
                                             Key = x.POType,

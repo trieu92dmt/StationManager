@@ -38,6 +38,8 @@ using IntegrationNS.Application.Commands.NKs;
 using IntegrationNS.Application.Commands.XKs;
 using IntegrationNS.Application.Commands.XKLXH;
 using IntegrationNS.Application.Commands.NHLTs;
+using IntegrationNS.Application.Commands.NNVLGCs;
+using IntegrationNS.Application.Commands.XNVLGCs;
 
 namespace IntegrationNS.API.Controllers
 {
@@ -3402,6 +3404,291 @@ namespace IntegrationNS.API.Controllers
                 Data = response,
                 Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NHLT") :
                                                                                                        string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NHLT")
+            });
+        }
+        #endregion
+
+        #region Tích hợp NNVLGC
+        /// <summary>Get data NNVLGC</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nnvlgc
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///
+        /// OUTPUT
+        /// 
+        ///         {   
+        ///           "code": 200,
+        ///           "data": [
+        ///           ],
+        ///           "message": "\"nhập NVL GC\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("nnvlgc")]
+        public async Task<IActionResult> NNVLGCIntegration([FromBody] NNVLGCIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<NNVLGCResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data nhập NVL GC") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy nhập NVL GC
+        /// <summary>Update, cancel phiếu nhập NVL GC</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/nnvlgc
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "nnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NNVLGC MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "nnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NNVLGC MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "nnvlgCs": [
+        ///                 {
+        ///                   "nnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID NNVLGC MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "nnvlgCs": [
+        ///                 {
+        ///                   "nnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NNVLGC MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-nnvlgc")]
+        public async Task<IActionResult> UpdateOrCancelNNVLGCAsync([FromBody] UpdateAndCancelNNVLGCCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu NNVLGC") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu NNVLGC")
+            });
+        }
+        #endregion
+
+        #region Tích hợp XNVLGC
+        /// <summary>Get data XNVLGC</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xnvlgc
+        ///     Params: 
+        ///             + version : 1
+        ///     Body:         
+        /// 
+        ///         {
+        ///           "plant": "string",
+        ///           "vendorFrom": "string",
+        ///           "vendorTo": "string",
+        ///           "poTypeFrom": "string",
+        ///           "poTypeTo": "string",
+        ///           "purchaseOrderFrom": "string",
+        ///           "purchaseOrderTo": "string",
+        ///           "materialFrom": "string",
+        ///           "materialTo": "string",
+        ///           "componentFrom": "string",
+        ///           "componentTo": "string",
+        ///           "documentDateFrom": "2023-02-28T13:58:29.310Z",
+        ///           "documentDateTo": "2023-02-28T13:58:29.310Z",
+        ///           "weightHeadCode": "string",
+        ///           "weightVotes": [
+        ///             "string"
+        ///           ],
+        ///           "weightDateFrom": "2023-02-28T13:58:29.310Z",
+        ///           "weightDateTo": "2023-02-28T13:58:29.310Z",
+        ///           "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///           "status": "string"
+        ///         }
+        ///
+        /// OUTPUT
+        /// 
+        ///         {   
+        ///           "code": 200,
+        ///           "data": [
+        ///           {
+        ///               "xnvlgcId": "35cef998-7263-4163-8afe-497da500c00f",
+        ///               "plant": "A100",
+        ///               "plantName": "Nhà máy Ðồng Tháp",
+        ///               "purchaseOrder": "4030000029",
+        ///               "purchaseOrderItem": "00010",
+        ///               "material": "5210000007",
+        ///               "materialDesc": "Gạo lứt 504 25% tấm ĐX22",
+        ///               "component": "2200000003",
+        ///               "componentDesc": "Gạo trắng NL Nếp An Giang 10% vụ ĐX19​ C",
+        ///               "sloc": "A123",
+        ///               "slocName": "ÐT.K gạo MN",
+        ///               "slocFmt": "A123 | ÐT.K gạo MN",
+        ///               "batch": "TAL2208002",
+        ///               "bagQuantity": 12,
+        ///               "singleWeight": 68,
+        ///               "weightHeadCode": "",
+        ///               "weight": 0,
+        ///               "confirmQty": 816,
+        ///               "quantityWithPackage": 52,
+        ///               "vehicleCode": "66X2929",
+        ///               "quantityWeight": 0,
+        ///               "orderQuantity": 100,
+        ///               "orderUnit": "KG",
+        ///               "requirementQuantity": 1065,
+        ///               "requirementUnit": "KG",
+        ///               "vendor": "2100000006",
+        ///               "vendorName": "Công ty TNHH Huệ Tâm",
+        ///               "truckInfoId": "4e0c42f5-daa7-4168-9a88-a9d6f909e275",
+        ///               "truckNumber": "a262dsf6ds",
+        ///               "inputWeight": 20,
+        ///               "outputWeight": 22,
+        ///               "description": "Thêm mới",
+        ///               "image": "https://itp-mes.isdcorp.vn/Upload/XNVLGC/202302/2023-02-28T13-28-3135cef998-7263-4163-8afe-497da500c00f.jpg",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "X1000002",
+        ///               "startTime": null,
+        ///               "endTime": "2023-02-28T13:28:32.103",
+        ///               "createById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-02-28T13:28:32.11",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "changeOn": null,
+        ///               "materialDoc": null,
+        ///               "reverseDoc": null,
+        ///               "isDelete": false
+        ///             }
+        ///           ],
+        ///           "message": "\"xuất NVL GC\" thành công.",
+        ///           "isSuccess": true,
+        ///           "resultsCount": null,
+        ///           "recordsTotal": null,
+        ///           "pagesCount": null
+        ///         }
+        /// 
+        /// </remarks>
+        [HttpPost("xnvlgc")]
+        public async Task<IActionResult> XNVLGCIntegration([FromBody] XNVLGCIntegrationCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<IList<XNVLGCResponse>> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data xuất NVL GC") });
+        }
+        #endregion
+
+        #region Update phiếu và hủy xuất NVL GC
+        /// <summary>Update, cancel phiếu xuất NVL GC</summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Mẫu request
+        /// 
+        /// POST
+        /// 
+        ///     Url: /api/v{version}/MasterDataIntegration/xnvlgc
+        ///     Params: 
+        ///             + version : 1
+        ///     Body: 
+        ///
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,                                        
+        ///               "xnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XNVLGC MES
+        ///               "reverseDocument": ""                                    
+        ///             }
+        ///             -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,                                        
+        ///               "xnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XNVLGC MES
+        ///               "batch": "string",
+        ///               "materialDocument": "string",
+        ///             }  
+        ///             
+        ///             -- Hủy phiếu
+        ///             {
+        ///               "isCancel": true,
+        ///               "xnvlgCs": [
+        ///                 {
+        ///                   "xnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",     - ID XNVLGC MES
+        ///                   "reverseDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///              -- Cập nhật phiếu
+        ///             {
+        ///               "isCancel": false,
+        ///               "xnvlgCs": [
+        ///                 {
+        ///                   "xnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XNVLGC MES
+        ///                   "batch": "",
+        ///                   "materialDocument": ""
+        ///                 }
+        ///               ]
+        ///             }
+        ///             
+        ///     OUT PUT
+        ///             {
+        ///               "code": 200,
+        ///               "data": true
+        ///             }
+        /// </remarks>
+        [HttpPut("update-xnvlgc")]
+        public async Task<IActionResult> UpdateOrCancelXNVLGCAsync([FromBody] UpdateAndCancelXNVLGCCommand req)
+        {
+            var response = await _mediator.Send(req);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = req.IsCancel == true ? string.Format(CommonResource.Msg_Success, "Hủy phiếu XNVLGC") :
+                                                                                                       string.Format(CommonResource.Msg_Success, "Cập nhật phiếu XNVLGC")
             });
         }
         #endregion

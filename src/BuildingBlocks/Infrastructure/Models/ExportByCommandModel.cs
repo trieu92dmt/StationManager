@@ -22,34 +22,12 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]
-        public string SOType { get; set; }
-        [StringLength(50)]
-        public string SalesOrg { get; set; }
-        [StringLength(50)]
-        public string DistributionChannel { get; set; }
-        [StringLength(50)]
-        public string Division { get; set; }
-        [StringLength(50)]
-        public string SalesOrder { get; set; }
-        [StringLength(50)]
-        public string ShipToParty { get; set; }
-        [StringLength(50)]
-        public string ShipToPartyName { get; set; }
-        [StringLength(50)]
         public string MaterialCode { get; set; }
         public long? MaterialCodeInt { get; set; }
-        [StringLength(50)]
-        public string PurchaseOrderCode { get; set; }
         [StringLength(50)]
         public string SlocCode { get; set; }
         [StringLength(200)]
         public string SlocName { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveredQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OpenQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }
         [StringLength(50)]

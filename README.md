@@ -1,4 +1,4 @@
-﻿## IN TOÀN PHÁT - MES - API:
+﻿## TLG - MES - API:
 
 ## References URLs
 - Docs: https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture

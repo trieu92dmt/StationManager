@@ -69,7 +69,7 @@ namespace Core.Implements
                 }
             }
 
-            return String.Format("/{0}/{1}", folderPath, fileName);
+            return folderPath + "/" + fileName;
         }
         #endregion
 

@@ -204,7 +204,7 @@ namespace MES.Application.Commands.MES
                     Description = x.Description,
                     //Hình ảnh
                     //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
-                    Img = string.IsNullOrEmpty(imgPath) ? "" : imgPath,
+                    Img = string.IsNullOrEmpty(imgPath) ? "" : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                     //document date = document date po
                     DocumentDate = x.PoDetailId.HasValue && x.PoDetailId != Guid.Empty ? poLine.PurchaseOrder.DocumentDate : null,
                     //Số phiếu cân

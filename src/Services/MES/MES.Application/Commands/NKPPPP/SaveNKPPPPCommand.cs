@@ -184,7 +184,7 @@ namespace MES.Application.Commands.NKPPPP
                     //14  Description
                     Description = item.Description,
                     //15  Image
-                    Image = !string.IsNullOrEmpty(imgPath) ? imgPath : null,
+                    Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                     //16  Status
                     Status = "NOT",
                     //17  StartTime

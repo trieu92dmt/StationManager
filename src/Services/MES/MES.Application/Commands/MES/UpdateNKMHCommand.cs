@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -228,7 +229,7 @@ namespace MES.Application.Commands.MES
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Img = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Img = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -271,7 +272,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? nkmh.Img : imgPath;
+                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? nkmh.Img : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkmh.Status = "DEL";

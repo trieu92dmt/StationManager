@@ -222,7 +222,7 @@ namespace MES.Application.Commands.NCK
                     //21  Description
                     Description = item.Description,
                     //21  Image
-                    Image = !string.IsNullOrEmpty(imgPath) ? imgPath : null,
+                    Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                     //16  Status
                     Status = "NOT",
                     //17  StartTime

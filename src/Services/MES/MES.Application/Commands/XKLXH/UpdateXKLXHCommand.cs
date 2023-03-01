@@ -224,6 +224,8 @@ namespace MES.Application.Commands.XKLXH
                         QuantityWithPackaging = item.QuantityWithPackage,
                         //Số phương tiện
                         VehicleCode = item.VehicleCode,
+                        //Image
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         //Số lần cân
                         QuantityWeight = item.QuantityWeight,
                         //Unit
@@ -271,7 +273,7 @@ namespace MES.Application.Commands.XKLXH
                     //Ghi chú
                     xklxh.Description = item.Description;
                     //Hình ảnh
-                    xklxh.Image = string.IsNullOrEmpty(imgPath) ? xklxh.Image : imgPath;
+                    xklxh.Image = string.IsNullOrEmpty(imgPath) ? xklxh.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Change by
                     xklxh.LastEditBy = TokenExtensions.GetAccountId();
                     xklxh.LastEditTime = DateTime.Now;

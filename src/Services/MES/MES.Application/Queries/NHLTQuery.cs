@@ -229,7 +229,7 @@ namespace MES.Application.Queries
                 //Ghi chú
                 Description = x.Description ?? "",
                 //Hình ảnh
-                Image = !string.IsNullOrEmpty(x.Image) ? $"https://tlg-mes.isdcorp.vn/{x.Image}" : "",
+                Image = !string.IsNullOrEmpty(x.Image) ? x.Image : "",
                 //Status
                 Status = !string.IsNullOrEmpty(x.Status) ? status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi : "",
                 //Số phiếu cân

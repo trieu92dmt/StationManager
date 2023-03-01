@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -229,7 +230,7 @@ namespace MES.Application.Commands.OutboundDelivery
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -271,7 +272,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //Ghi chú
                     nkht.Description = item.Description;
                     //Hình ảnh
-                    nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : imgPath;
+                    nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
 
                     nkht.LastEditBy = item.ChangeBy;
                     //Đánh dấu xóa

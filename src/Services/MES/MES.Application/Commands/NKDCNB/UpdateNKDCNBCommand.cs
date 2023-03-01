@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -214,7 +215,7 @@ namespace MES.Application.Commands.NKDCNB
                         //Ghi chú
                         Description = item.Description,
                         //Hình ảnh
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         //Thời gian bắt đầu
                         StartTime = item.StartTime,
                         //Thời gian kết thúc
@@ -251,7 +252,7 @@ namespace MES.Application.Commands.NKDCNB
                     //Ghi chú
                     nkdcnb.Description = item.Description;
                     //Hình ảnh
-                    nkdcnb.Image = string.IsNullOrEmpty(imgPath) ? nkdcnb.Image : imgPath;
+                    nkdcnb.Image = string.IsNullOrEmpty(imgPath) ? nkdcnb.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                     {

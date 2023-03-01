@@ -1,4 +1,5 @@
 ﻿using Core.Exceptions;
+using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
@@ -254,7 +255,7 @@ namespace MES.Application.Commands.XK
                         //Ghi chú
                         Description = item.Description,
                         //Hình ảnh
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         //Thời gian bắt đầu
                         StartTime = item.StartTime,
                         //Thời gian kết thúc
@@ -295,7 +296,7 @@ namespace MES.Application.Commands.XK
                     //Ghi chú
                     xk.Description = item.Description;
                     //Hình ảnh
-                    xk.Image = string.IsNullOrEmpty(imgPath) ? xk.Image : imgPath;
+                    xk.Image = string.IsNullOrEmpty(imgPath) ? xk.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                     {

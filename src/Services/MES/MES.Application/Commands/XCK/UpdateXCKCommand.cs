@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -212,7 +213,7 @@ namespace MES.Application.Commands.XCK
                         //Ghi chú
                         Description = item.Description,
                         //Hình ảnh
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         //Start time
                         StartTime = item.StartTime,
                         //End time
@@ -255,7 +256,7 @@ namespace MES.Application.Commands.XCK
                     //Ghi chú
                     xck.Description = item.Description;
                     //Hình ảnh
-                    xck.Image = string.IsNullOrEmpty(imgPath) ? xck.Image : imgPath;
+                    xck.Image = string.IsNullOrEmpty(imgPath) ? xck.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         xck.Status = "DEL";

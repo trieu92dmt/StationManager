@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -207,7 +208,7 @@ namespace MES.Application.Commands.NHLT
                         //Số lần cân
                         QuantityWeight = item.QuantityWeight,
                         Description = item.Description,
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         //Thời gian bd
                         StartTime = item.StartTime,
                         //Thời gian kết thúc
@@ -245,7 +246,7 @@ namespace MES.Application.Commands.NHLT
                     //Ghi chú
                     nhlt.Description = item.Description;
                     //Hình ảnh
-                    nhlt.Image = string.IsNullOrEmpty(imgPath) ? nhlt.Image : imgPath;
+                    nhlt.Image = string.IsNullOrEmpty(imgPath) ? nhlt.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nhlt.Status = "DEL";

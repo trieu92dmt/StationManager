@@ -214,7 +214,7 @@ namespace MES.Application.Commands.NNVL
                     //Output weight
                     OutputWeight = item.OutputWeight,
                     //21  Image
-                    Image = !string.IsNullOrEmpty(imgPath) ? imgPath : null,
+                    Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                     //16  Status
                     Status = "NOT",
                     //17  StartTime

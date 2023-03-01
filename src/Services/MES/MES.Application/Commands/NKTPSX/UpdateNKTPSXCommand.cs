@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -193,7 +194,7 @@ namespace MES.Application.Commands.NKTPSX
                         BagQuantity= item.BagQuantity,
                         SingleWeight = item.SingleWeight,
                         Description = item.Description,
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -228,7 +229,7 @@ namespace MES.Application.Commands.NKTPSX
                     //Ghi chú
                     nktpsx.Description = item.Description;
                     //Hình ảnh
-                    nktpsx.Image = string.IsNullOrEmpty(imgPath) ? nktpsx.Image : imgPath;
+                    nktpsx.Image = string.IsNullOrEmpty(imgPath) ? nktpsx.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nktpsx.Status = "DEL";

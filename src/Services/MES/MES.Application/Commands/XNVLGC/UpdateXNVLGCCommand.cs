@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -209,7 +210,7 @@ namespace MES.Application.Commands.XNVLGC
                         //Số cân đầu ra
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         //Sloc
@@ -248,7 +249,7 @@ namespace MES.Application.Commands.XNVLGC
                     //Ghi chú
                     xnvlgc.Description = item.Description;
                     //Hình ảnh
-                    xnvlgc.Image = string.IsNullOrEmpty(imgPath) ? xnvlgc.Image : imgPath;
+                    xnvlgc.Image = string.IsNullOrEmpty(imgPath) ? xnvlgc.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                     {

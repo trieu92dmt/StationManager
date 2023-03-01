@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Extensions;
+using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -189,7 +190,7 @@ namespace MES.Application.Commands.NKPPPP
                         QuantityWithPackaging = item.QuantityWithPackaging,
                         QuantityWeitght = item.QuantityWeight,
                         Description = item.Description,
-                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -224,7 +225,7 @@ namespace MES.Application.Commands.NKPPPP
                     //Ghi chú
                     nkpppp.Description = item.Description;
                     //Hình ảnh
-                    nkpppp.Image = string.IsNullOrEmpty(imgPath) ? nkpppp.Image : imgPath;
+                    nkpppp.Image = string.IsNullOrEmpty(imgPath) ? nkpppp.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkpppp.Status = "DEL";

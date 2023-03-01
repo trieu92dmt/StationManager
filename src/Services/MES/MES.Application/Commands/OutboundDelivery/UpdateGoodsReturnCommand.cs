@@ -222,6 +222,7 @@ namespace MES.Application.Commands.OutboundDelivery
                         ConfirmQty = item.ConfirmQty,
                         QuantityWithPackaging = item.QuantityWithPackaging,
                         VehicleCode = item.VehicleCode,
+                        Batch = item.Batch,
                         QuantityWeitght = item.QuantityWeight,
                         TruckInfoId = item.TruckInfoId.HasValue ? item.TruckInfoId : null,
                         TruckNumber = item.TruckQty,
@@ -251,6 +252,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     nkht.MaterialCodeInt = long.Parse(item.Material);
                     //Storage Location
                     nkht.SlocCode = item.StorageLocation;
+                    nkht.Batch = item.Batch;
                     //Sloc Name
                     //nkmh.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName;
                     //Confirm Quantity

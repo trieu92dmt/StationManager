@@ -472,7 +472,7 @@ namespace MES.Application.Queries
                 //UoM
                 Unit = x.UOM ?? "",
                 //Purchase Order
-                PurchaseOrder = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DeliveryCode : "",
+                PurchaseOrder = x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument1 : "",
                 //Số xe tải
                 TruckNumber = x.TruckNumber ?? "",
                 //Số cân đầu vào

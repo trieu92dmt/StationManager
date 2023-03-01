@@ -228,7 +228,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                 //Shipping point
                 ShippingPoint = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShippingPoint : "",
                 //OD
-                OutboundDelivery = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DeliveryCodeInt.ToString() : "",
+                OutboundDelivery = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DeliveryCode : "",
                 //OD item
                 OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : "",
                 //Material
@@ -263,7 +263,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                 //UoM
                 Unit = x.UOM ?? "",
                 //Purchase Order
-                PurchaseOrder = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.DeliveryCode : "",
+                PurchaseOrder = x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument1 : "",
                 //Số xe tải
                 TruckNumber = x.TruckNumber ?? "",
                 //Số cân đầu vào

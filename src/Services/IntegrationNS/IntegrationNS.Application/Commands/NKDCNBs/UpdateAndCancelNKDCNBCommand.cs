@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,8 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNKDCNBCommand request, CancellationToken cancellationToken)
         {
+            //Tạo query oubound delivery
+            var nkdcnbs = _nkdcnbRep.GetQuery().AsNoTracking();
             if (request.IsCancel == true)
             {
 
@@ -82,6 +85,9 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
 
                     nkdcnbNew.InhouseTransferId = Guid.NewGuid();
                     nkdcnbNew.Status = "NOT";
+                    nkdcnbNew.TotalQuantity = 0;
+                    nkdcnbNew.DeliveredQuantity = 0;
+                    nkdcnbNew.OpenQuantity = 0;
                     nkdcnbNew.MaterialDocument = null;
                     nkdcnbNew.ReverseDocument = null;
 
@@ -131,7 +137,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                 foreach (var item in request.NKDCNBs)
                 {
                     //Phiếu nhập kho điều chuyển nội bộ
-                    var nkdcnb = await _nkdcnbRep.FindOneAsync(x => x.InhouseTransferId == item.NkdcnbId);
+                    var nkdcnb = await _nkdcnbRep.GetQuery().Include(x => x.DetailOD).FirstOrDefaultAsync(x => x.InhouseTransferId == item.NkdcnbId);
 
                     //Check
                     if (nkdcnb is null)
@@ -140,6 +146,9 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     //Cập nhật Batch và MaterialDocument
                     nkdcnb.Batch = item.Batch;
                     nkdcnb.MaterialDocument = item.MaterialDocument;
+                    nkdcnb.TotalQuantity = nkdcnb.DetailODId.HasValue ? nkdcnb.DetailOD.DeliveryQuantity : 0;
+                    nkdcnb.DeliveredQuantity = nkdcnb.DetailODId.HasValue ? nkdcnbs.Where(n => n.DetailODId == nkdcnb.DetailODId).Sum(n => n.ConfirmQty.Value) : 0;
+                    nkdcnb.OpenQuantity = nkdcnb.TotalQuantity - nkdcnb.DeliveredQuantity;
                     if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument))// && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
                         nkdcnb.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))

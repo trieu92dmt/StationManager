@@ -466,9 +466,9 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QtyWeight = x.QuantityWeitght ?? 0,
                 //Total quantity
-                TotalQty = x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity : 0,
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity : 0,
                 //Delivery Quantity
-                DeliveryQty = nkdcnbs.Where(n => n.DetailODId == x.DetailODId).Sum(n => n.ConfirmQty) ?? 0,
+                DeliveryQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveredQuantity : nkdcnbs.Where(n => n.DetailODId == x.DetailODId).Sum(n => n.ConfirmQty) ?? 0,
                 //UoM
                 Unit = x.UOM ?? "",
                 //Purchase Order

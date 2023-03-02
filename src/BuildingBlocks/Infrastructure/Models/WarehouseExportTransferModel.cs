@@ -50,12 +50,6 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string TruckNumber { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveryQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OpenQuantity { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }
         [StringLength(50)]
         public string Unit { get; set; }
@@ -76,6 +70,12 @@ namespace Infrastructure.Models
         public int? QuantityWeitght { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal TotalQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal DeliveredQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal OpenQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? InputWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

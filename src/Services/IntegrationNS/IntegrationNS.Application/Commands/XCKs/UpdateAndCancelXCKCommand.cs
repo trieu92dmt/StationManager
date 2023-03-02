@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -79,6 +80,9 @@ namespace IntegrationNS.Application.Commands.XCKs
 
                     xckNew.WarehouseTransferId = Guid.NewGuid();
                     xckNew.Status = "NOT";
+                    xckNew.TotalQuantity = 0;
+                    xckNew.DeliveredQuantity = 0;
+                    xckNew.OpenQuantity = 0;
                     xckNew.MaterialDocument = null;
                     xckNew.ReverseDocument = null;
 
@@ -136,7 +140,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                 foreach (var item in request.XCKs)
                 {
                     //Phiếu xuất chuyển kho
-                    var xck = await _xckRep.FindOneAsync(x => x.WarehouseTransferId == item.XckId);
+                    var xck = await _xckRep.GetQuery().Include(x => x.DetailReservation).FirstOrDefaultAsync(x => x.WarehouseTransferId == item.XckId);
 
                     //Check
                     if (xck is null)
@@ -145,6 +149,9 @@ namespace IntegrationNS.Application.Commands.XCKs
                     //Cập nhật Batch và MaterialDocument
                     xck.Batch = item.Batch;
                     xck.MaterialDocument = item.MaterialDocument;
+                    xck.TotalQuantity = xck.DetailReservationId.HasValue ? xck.DetailReservation.RequirementQty : 0;
+                    xck.DeliveredQuantity = xck.DetailReservationId.HasValue ? xck.DetailReservation.QtyWithdrawn : 0;
+                    xck.OpenQuantity = xck.TotalQuantity - xck.DeliveredQuantity;
                     if (!string.IsNullOrEmpty(xck.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
                         xck.Status = "POST";
                     //else if (!string.IsNullOrEmpty(xck.ReverseDocument))

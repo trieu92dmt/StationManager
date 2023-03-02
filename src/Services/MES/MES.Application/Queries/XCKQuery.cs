@@ -372,9 +372,9 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght.HasValue ? x.QuantityWeitght : 0,
                 //Total Quantity
-                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
                 //Delivered Quantity
-                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
+                DeliveredQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveredQuantity : x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
                 //Số xe tải

@@ -203,9 +203,9 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                 Plant = item.Plant,
                                 StorageLocation = item.StorageLocation,
                                 Batch = item.Batch,
-                                DeliveryQuantity = item.DeliveryQuantity,
+                                DeliveryQuantity = item.DeliveryQuantity ?? 0,
                                 Unit = item.Unit,
-                                PickedQuantityPUoM = item.PickedQuantityPUoM,
+                                PickedQuantityPUoM = item.PickedQuantityPUoM ?? 0,
                                 SalesUnit = item.SalesUnit,
                                 NetWeight = item.NetWeight,
                                 GrossWeight = item.GrossWeight,
@@ -308,9 +308,9 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                     Plant = item.Plant,
                                     StorageLocation = item.StorageLocation,
                                     Batch = item.Batch,
-                                    DeliveryQuantity = item.DeliveryQuantity,
+                                    DeliveryQuantity = item.DeliveryQuantity ?? 0,
                                     Unit = item.Unit,
-                                    PickedQuantityPUoM = item.PickedQuantityPUoM,
+                                    PickedQuantityPUoM = item.PickedQuantityPUoM ?? 0,
                                     SalesUnit = item.SalesUnit,
                                     NetWeight = item.NetWeight,
                                     GrossWeight = item.GrossWeight,
@@ -350,9 +350,9 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                 detailDelivery.Plant = item.Plant;
                                 detailDelivery.StorageLocation = item.StorageLocation;
                                 detailDelivery.Batch = item.Batch;
-                                detailDelivery.DeliveryQuantity = item.DeliveryQuantity;
+                                detailDelivery.DeliveryQuantity = item.DeliveryQuantity ?? 0;
                                 detailDelivery.Unit = item.Unit;
-                                detailDelivery.PickedQuantityPUoM = item.PickedQuantityPUoM;
+                                detailDelivery.PickedQuantityPUoM = item.PickedQuantityPUoM ?? 0;
                                 detailDelivery.SalesUnit = item.SalesUnit;
                                 detailDelivery.NetWeight = item.NetWeight;
                                 detailDelivery.GrossWeight = item.GrossWeight;

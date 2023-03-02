@@ -87,9 +87,9 @@ namespace IntegrationNS.Application.Commands.NCKs
                     var nckNew = JsonConvert.DeserializeObject<WarehouseImportTransferModel>(serialized);
 
                     nckNew.WarehouseImportTransferId = Guid.NewGuid();
-                    nckNew.TotalQuantity = null;
-                    nckNew.DeliveryQuantity = null;
-                    nckNew.OpenQuantity = null;
+                    nckNew.TotalQuantity = 0;
+                    nckNew.DeliveryQuantity = 0;
+                    nckNew.OpenQuantity = 0;
                     nckNew.Status = "NOT";
                     nckNew.MaterialDocument = null;
                     nckNew.ReverseDocument = null;
@@ -115,7 +115,7 @@ namespace IntegrationNS.Application.Commands.NCKs
                     //Cập nhật Batch và MaterialDocument
                     nck.Batch = item.Batch;
                     nck.MaterialDocument = item.MaterialDocument;
-                    nck.TotalQuantity = nck.MaterialDocId.HasValue ? nck.MaterialDoc.Quantity ?? 0 : 0;
+                    nck.TotalQuantity = nck.MaterialDocId.HasValue ? nck.MaterialDoc.Quantity : 0;
                     nck.DeliveryQuantity = nck.MaterialDocId.HasValue ? 
                                            matDoc313Query.Where(x => x.MaterialDocCode == nck.MaterialDoc.MaterialDocCode).Sum(x => x.Quantity)
                                            - matDoc315Query.Where(x => x.MaterialDocCode == nck.MaterialDoc.MaterialDocCode).Sum(x => x.Quantity) : 0;

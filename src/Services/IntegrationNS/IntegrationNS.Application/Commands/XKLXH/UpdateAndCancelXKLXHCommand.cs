@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,9 @@ namespace IntegrationNS.Application.Commands.XKLXH
 
                     xklxhNew.ExportByCommandId = Guid.NewGuid();
                     xklxhNew.Status = "NOT";
+                    xklxhNew.TotalQuantity = 0;
+                    xklxhNew.DeliveryQuantity = 0;
+                    xklxhNew.OpenQuantity = 0;
                     xklxhNew.MaterialDocument = null;
                     xklxhNew.ReverseDocument = null;
 
@@ -92,7 +96,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 foreach (var item in request.XKLXHs)
                 {
                     //Phiếu xuất kho theo lệnh xuất hàng
-                    var xklxh = await _xklxhRep.FindOneAsync(x => x.ExportByCommandId == item.XklxhId);
+                    var xklxh = await _xklxhRep.GetQuery().Include(x => x.DetailOD).FirstOrDefaultAsync(x => x.ExportByCommandId == item.XklxhId);
 
                     //Check
                     if (xklxh is null)
@@ -101,6 +105,9 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     //Cập nhật Batch và MaterialDocument
                     xklxh.Batch = item.Batch;
                     xklxh.MaterialDocument = item.MaterialDocument;
+                    xklxh.TotalQuantity = xklxh.DetailODId.HasValue ? xklxh.DetailOD.DeliveryQuantity : 0;
+                    xklxh.DeliveryQuantity = xklxh.DetailODId.HasValue ? xklxh.DetailOD.PickedQuantityPUoM : 0;
+                    xklxh.OpenQuantity = xklxh.TotalQuantity - xklxh.OpenQuantity;
                     if (!string.IsNullOrEmpty(xklxh.MaterialDocument))
                         xklxh.Status = "POST";
                 }

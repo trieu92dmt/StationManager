@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.NKMHs
@@ -74,6 +75,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //Khác id
                     nkmhNew.GoodsReceiptId = Guid.NewGuid();
                     nkmhNew.Status = "NOT";
+                    nkmhNew.TotalQuantity = 0;
+                    nkmhNew.DeliveryQuantity = 0;
+                    nkmhNew.OpenQuantity = 0;
                     nkmhNew.MaterialDocument = null;
                     nkmhNew.ReverseDocument = null;
 
@@ -124,7 +128,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                 foreach (var item in request.NKMHs)
                 {
                     //Phiếu nhập kho mua hàng
-                    var nkmh = await _nkmhRep.FindOneAsync(x => x.GoodsReceiptId == item.NkmhId);
+                    var nkmh = await _nkmhRep.GetQuery().Include(x => x.PurchaseOrderDetail).FirstOrDefaultAsync(x => x.GoodsReceiptId == item.NkmhId);
 
                     //Check
                     if (nkmh is null)
@@ -133,6 +137,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //Cập nhật Batch và MaterialDocument
                     nkmh.Batch = item.Batch;
                     nkmh.MaterialDocument = item.MaterialDocument;
+                    nkmh.TotalQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.OrderQuantity : 0;
+                    nkmh.DeliveryQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.QuantityReceived : 0;
+                    nkmh.OpenQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.OpenQuantity : 0;
                     if (!string.IsNullOrEmpty(nkmh.MaterialDocument))// && string.IsNullOrEmpty(nkmh.ReverseDocument))
                         nkmh.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nkmh.ReverseDocument))

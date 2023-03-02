@@ -88,7 +88,7 @@ namespace MES.Application.Queries
             //NKDCNB
             var nkdcnbs = _nkdcnbRepo.GetQuery().AsNoTracking();
 
-            var totalQuantity = odDetails.DeliveryQuantity.HasValue ? odDetails.DeliveryQuantity : 0;
+            var totalQuantity = odDetails.DeliveryQuantity;
             var deliveryQuantity = nkdcnbs.Where(n => n.DetailODId == odDetails.DetailOutboundDeliveryId).Sum(n => n.ConfirmQty) ?? 0;
             var openQuantity = totalQuantity - deliveryQuantity;
 
@@ -248,7 +248,7 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = x.Batch ?? "",
                 //Total quantity
-                TotalQty = x.DeliveryQuantity.HasValue ? x.DeliveryQuantity : 0,
+                TotalQty = x.DeliveryQuantity,
                 //Delivery Quantity
                 DeliveryQty = nkdcnbs.Where(n => n.DetailODId == x.DetailOutboundDeliveryId).Sum(n => n.ConfirmQty) ?? 0,
                 //UoM

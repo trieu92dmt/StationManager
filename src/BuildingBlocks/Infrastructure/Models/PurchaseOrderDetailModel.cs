@@ -31,11 +31,11 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string Batch { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OrderQuantity { get; set; }
+        public decimal OrderQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? QuantityReceived { get; set; }
+        public decimal QuantityReceived { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OpenQuantity { get; set; }
+        public decimal OpenQuantity { get; set; }
         [StringLength(50)]
         public string Unit { get; set; }
         [StringLength(50)]

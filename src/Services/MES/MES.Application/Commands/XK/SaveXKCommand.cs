@@ -12,10 +12,10 @@ namespace MES.Application.Commands.XK
 {
     public class SaveXKCommand : IRequest<bool>
     {
-        public List<DataSaveNK> DataSaveNKs { get; set; } = new List<DataSaveNK>();
+        public List<DataSaveXK> DataSaveXKs { get; set; } = new List<DataSaveXK>();
     }
 
-    public class DataSaveNK 
+    public class DataSaveXK 
     {
         //Plant
         public string Plant { get; set; }
@@ -29,6 +29,8 @@ namespace MES.Application.Commands.XK
         public string Unit { get; set; }
         //Sloc
         public string Sloc { get; set; }
+        //Rec Sloc
+        public string ReceivingSloc { get; set; }
         //Batch
         public string Batch { get; set; }
         //SL bao
@@ -116,7 +118,7 @@ namespace MES.Application.Commands.XK
             var lastIndex = xks.Count() > 0 ? xks.OrderBy(x => x.WeightVote).LastOrDefault().WeightVote.Substring(1) : "1000000";
 
             var index = 1;
-            foreach (var item in request.DataSaveNKs)
+            foreach (var item in request.DataSaveXKs)
             {
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -222,6 +224,9 @@ namespace MES.Application.Commands.XK
                     SlocCode = item.Sloc,
                     //22  SlocName
                     SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
+                    //Rec sloc
+                    ReceivingSlocCode = item.ReceivingSloc,
+                    ReceivingSlocName = !string.IsNullOrEmpty(item.ReceivingSloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.ReceivingSloc).StorageLocationName : "",
                     //Truckinfo
                     TruckInfoId = item.TruckInfoId,
                     //TruckNumber

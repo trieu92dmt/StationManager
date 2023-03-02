@@ -36,7 +36,7 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         //Delivered Quantity
         public decimal? DeliveryQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveryQty;
         //Units of Measure
         public string Unit { get; set; }
         //Document Date
@@ -91,7 +91,7 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         //Delivered Quantity
         public decimal? DeliveryQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveryQty;
         //UoM
         public string UOM { get; set; }
         //Ghi chú

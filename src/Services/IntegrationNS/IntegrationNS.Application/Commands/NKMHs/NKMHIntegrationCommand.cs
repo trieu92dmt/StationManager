@@ -204,9 +204,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Số lần cân
                                 QuantityWeitght = x.QuantityWeitght,
                                 //Total Quantity
-                                TotalQuantity = x.PurchaseOrderDetail?.OrderQuantity,
+                                TotalQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail?.OrderQuantity,
                                 //Delivered Quantity
-                                DeliveredQuantity = x.PurchaseOrderDetail?.QuantityReceived,
+                                DeliveredQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveryQuantity : x.PurchaseOrderDetail?.QuantityReceived,
                                 //Số xe tải
                                 TruckQuantity = x.TruckQuantity,
                                 //Số cân đầu vào
@@ -250,8 +250,8 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 VehicleCode = x.VehicleCode,
 
                                 //Số lượng đặt hàng
-                                OrderQuantity = x.PurchaseOrderDetail?.OrderQuantity,
-                                OpenQuantity = x.PurchaseOrderDetail?.OpenQuantity,
+                                OrderQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail?.OrderQuantity,
+                                OpenQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.OpenQuantity : x.PurchaseOrderDetail?.OpenQuantity,
                                 //Mat Doc
                                 MaterialDocument = x.MaterialDocument,
                                 //Reverse Doc

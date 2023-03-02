@@ -51,7 +51,7 @@ namespace IntegrationNS.Application.DTOs
         //Delivered Quantity
         public decimal? DeliveryQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveryQty;
         //UoM
         public string UOM { get; set; }
         //Ghi chú

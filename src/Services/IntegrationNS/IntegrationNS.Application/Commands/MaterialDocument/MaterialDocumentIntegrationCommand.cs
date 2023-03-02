@@ -149,7 +149,7 @@ namespace IntegrationNS.Application.Commands.MaterialDocument
                             SalesOrderItem = item.SalesOrderItem,
                             SalesOrderSchedule = item.SalesOrderSchedule,
                             DebitCredit = item.DebitCredit,
-                            Quantity = item.Quantity,
+                            Quantity = item.Quantity ?? 0,
                             BaseUOM = item.BaseUOM,
                             QtyUnitOfEntry = item.QtyUnitOfEntry,
                             UnitOfEntry = item.UnitOfEntry,
@@ -212,7 +212,7 @@ namespace IntegrationNS.Application.Commands.MaterialDocument
                         materialDoc.SalesOrderItem = item.SalesOrderItem;
                         materialDoc.SalesOrderSchedule = item.SalesOrderSchedule;
                         materialDoc.DebitCredit = item.DebitCredit;
-                        materialDoc.Quantity = item.Quantity;
+                        materialDoc.Quantity = item.Quantity ?? 0;
                         materialDoc.BaseUOM = item.BaseUOM;
                         materialDoc.QtyUnitOfEntry = item.QtyUnitOfEntry;
                         materialDoc.UnitOfEntry = item.UnitOfEntry;

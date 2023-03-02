@@ -85,7 +85,7 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = matDoc.Batch ?? "",
                 //Total Quantity
-                TotalQty = matDoc.Quantity ?? 0,
+                TotalQty = matDoc.Quantity,
                 //Delivered Quantity
                 DeliveredQty = matDocs.Where(m => m.Reservation == matDoc.Reservation && (m.MovementType == "313" || m.MovementType == "315")).Any() ?
                                matDocs.Where(m => m.Reservation == matDoc.Reservation && m.MovementType == "313").Sum(m => m.Quantity)
@@ -444,7 +444,7 @@ namespace MES.Application.Queries
                 //9. Batch
                 Batch = x.Batch,
                 //10. Total Quantity
-                TotalQty = x.Quantity ?? 0,
+                TotalQty = x.Quantity,
                 //11. Delivered Quantity
                 DeliveredQty = !string.IsNullOrEmpty(x.Reservation) && matDocs.Where(m => m.Reservation == x.Reservation && (m.MovementType == "313" || m.MovementType =="315")).Any() ? 
                                                                        matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "313").Sum(m => m.Quantity) 

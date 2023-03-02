@@ -29,6 +29,10 @@ namespace Infrastructure.Models
         [StringLength(200)]
         public string SlocName { get; set; }
         [StringLength(50)]
+        public string ReceivingSlocCode { get; set; }
+        [StringLength(200)]
+        public string ReceivingSlocName { get; set; }
+        [StringLength(50)]
         public string Batch { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }

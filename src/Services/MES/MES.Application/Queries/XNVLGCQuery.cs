@@ -402,7 +402,7 @@ namespace MES.Application.Queries
                             //Số phương tiện
                             VehicleCode = po.VehicleCode ?? "",
                             //Order quantity
-                            OrderQuantity = po.OrderQuantity ?? 0,
+                            OrderQuantity = po.OrderQuantity,
                             //Order unit
                             OrderUnit = po.Unit ?? "",
                             //Requirement Qty

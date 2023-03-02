@@ -62,7 +62,7 @@ namespace Infrastructure.Models
         [StringLength(20)]
         public string DebitCredit { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? Quantity { get; set; }
+        public decimal Quantity { get; set; }
         [StringLength(20)]
         public string BaseUOM { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

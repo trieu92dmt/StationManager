@@ -89,9 +89,9 @@ namespace MES.Application.Queries
                 //Số phương tiện
                 VehicleCode = odDetails.OutboundDelivery.VehicleCode,
                 //Total Quantity
-                TotalQty = odDetails.DeliveryQuantity.HasValue ? odDetails.DeliveryQuantity : 0,
+                TotalQty = odDetails.DeliveryQuantity,
                 //Delivered Quantity
-                DeliveryQty = odDetails.PickedQuantityPUoM.HasValue ? odDetails.PickedQuantityPUoM : 0,
+                DeliveryQty = odDetails.PickedQuantityPUoM,
                 //DocumentDate
                 DocumentDate = odDetails.OutboundDelivery.DocumentDate
             };
@@ -467,9 +467,9 @@ namespace MES.Application.Queries
                 //Số phương tiện
                 VehicleCode = x.OutboundDelivery.VehicleCode ?? "",
                 //Total quantity
-                TotalQty = x.DeliveryQuantity ?? 0,
+                TotalQty = x.DeliveryQuantity,
                 //Delivered quantity
-                DeliveredQty = x.PickedQuantityPUoM ?? 0,
+                DeliveredQty = x.PickedQuantityPUoM,
                 //UOM
                 Unit = x.SalesUnit ?? "",
                 //Document date

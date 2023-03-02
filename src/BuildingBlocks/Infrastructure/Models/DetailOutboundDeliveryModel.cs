@@ -34,11 +34,11 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string Batch { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveryQuantity { get; set; }
+        public decimal DeliveryQuantity { get; set; }
         [StringLength(50)]
         public string Unit { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? PickedQuantityPUoM { get; set; }
+        public decimal PickedQuantityPUoM { get; set; }
         [StringLength(50)]
         public string SalesUnit { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

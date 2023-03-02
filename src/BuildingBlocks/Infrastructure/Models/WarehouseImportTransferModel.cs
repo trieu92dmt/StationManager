@@ -52,11 +52,11 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string TruckNumber { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantity { get; set; }
+        public decimal TotalQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveryQuantity { get; set; }
+        public decimal DeliveryQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OpenQuantity { get; set; }
+        public decimal OpenQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }
         [StringLength(50)]

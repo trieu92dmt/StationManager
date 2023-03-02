@@ -189,8 +189,8 @@ namespace IntegrationNS.Application.Queries
                 QtyWithPackage = x.QuantityWithPackaging,
                 VehicleCode = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.VehicleCode : "",
                 QtyWeight = x.QuantityWeitght,
-                TotalQty = x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity : 0,
-                DeliveryQty = x.DetailODId.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity ?? 0 : 0,
+                DeliveryQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveredQuantity : x.DetailODId.HasValue ? x.DetailOD.PickedQuantityPUoM ?? 0 : 0,
                 UOM = x.UOM,
                 Description = x.Description,
                 Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
@@ -208,12 +208,6 @@ namespace IntegrationNS.Application.Queries
                 isDelete = x.Status == "DEL" ? true : false
 
             }).ToListAsync();
-
-            //Tính open quantity
-            foreach (var item in data)
-            {
-                item.OpenQty = item.TotalQty - item.DeliveryQty;
-            }
 
             return data;
 

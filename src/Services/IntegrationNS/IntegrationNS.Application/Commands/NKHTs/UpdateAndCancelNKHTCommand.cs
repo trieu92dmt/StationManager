@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,9 @@ namespace IntegrationNS.Application.Commands.NKHTs
 
                     nkhtNew.GoodsReturnId = Guid.NewGuid();
                     nkhtNew.Status = "NOT";
+                    nkhtNew.TotalQuantity = 0;
+                    nkhtNew.DeliveredQuantity = 0;
+                    nkht.OpenQuantity = 0;
                     nkhtNew.MaterialDocument = null;
                     nkhtNew.ReverseDocument = null;
                     #region code cũ
@@ -130,7 +134,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
                 foreach (var item in request.NKHTs)
                 {
                     //Phiếu nhập kho mua hàng
-                    var nkht = await _nkhtRep.FindOneAsync(x => x.GoodsReturnId == item.NkhtId);
+                    var nkht = await _nkhtRep.GetQuery().Include(x => x.DetailOD).FirstOrDefaultAsync(x => x.GoodsReturnId == item.NkhtId);
 
                     //Check
                     if (nkht is null)
@@ -139,6 +143,9 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     //Cập nhật Batch và MaterialDocument
                     nkht.Batch = item.Batch;
                     nkht.MaterialDocument = item.MaterialDocument;
+                    nkht.TotalQuantity = nkht.DetailODId.HasValue ? nkht.DetailOD.DeliveryQuantity : 0;
+                    nkht.DeliveredQuantity = nkht.DetailODId.HasValue ? nkht.DetailOD.PickedQuantityPUoM : 0;
+                    nkht.OpenQuantity = nkht.TotalQuantity - nkht.DeliveredQuantity;
                     if (!string.IsNullOrEmpty(nkht.MaterialDocument))// && string.IsNullOrEmpty(nkht.ReverseDocument))
                         nkht.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nkht.ReverseDocument))

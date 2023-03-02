@@ -237,11 +237,11 @@ namespace MES.Application.Queries
                 //Số phiếu cân
                 WeightVote = x.WeitghtVote,
                 //Total Quantity
-                TotalQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.OrderQuantity : 0,
+                TotalQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.OrderQuantity : 0,
                 //Open quantity
-                OpenQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.OpenQuantity : 0,
+                OpenQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.OpenQuantity : x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.OpenQuantity : 0,
                 //Delivery Quantity
-                DeliveredQuantity = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.QuantityReceived : 0,
+                DeliveredQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveryQuantity : x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.QuantityReceived : 0,
                 //Unit
                 Unit = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.Unit : product.FirstOrDefault(p => p.ProductCode == x.MaterialCode).Unit,
                 //Id sô xe tải

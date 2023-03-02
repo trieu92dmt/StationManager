@@ -251,9 +251,9 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 //Số lần cân
                 QuantityWeight = x.QuantityWeight ?? 0,
                 //Total quantity
-                TotalQty = x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity : 0,
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity : 0,
                 //Delivered quantity
-                DeliveredQty = x.DetailODId.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
+                DeliveredQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveryQuantity : x.DetailODId.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
                 //UoM
                 Unit = x.UOM ?? "",
                 //Ghi chú

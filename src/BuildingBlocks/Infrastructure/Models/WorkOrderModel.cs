@@ -34,7 +34,7 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string Batch { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TargetQuantity { get; set; }
+        public decimal TargetQuantity { get; set; }
         [StringLength(50)]
         public string Unit { get; set; }
         [Column(TypeName = "datetime")]
@@ -44,7 +44,7 @@ namespace Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? ScheduledStartDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveredQuantity { get; set; }
+        public decimal DeliveredQuantity { get; set; }
         [StringLength(50)]
         public string SalesOrder { get; set; }
         [StringLength(50)]

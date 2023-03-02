@@ -33,11 +33,11 @@ namespace Infrastructure.Models
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantity { get; set; }
+        public decimal TotalQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveryQuantity { get; set; }
+        public decimal DeliveryQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OpenQuantity { get; set; }
+        public decimal OpenQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

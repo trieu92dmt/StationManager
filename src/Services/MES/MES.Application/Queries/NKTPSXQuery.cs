@@ -216,9 +216,9 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
                 //Total quantity
-                TotalQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.TargetQuantity ?? 0 : 0,
+                TotalQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.WorkOrderId.HasValue ? x.WorkOrder.TargetQuantity : 0,
                 //Delivery Quantity
-                DeliveryQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.DeliveredQuantity ?? 0 : 0,
+                DeliveryQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveryQuantity : x.WorkOrderId.HasValue ? x.WorkOrder.DeliveredQuantity : 0,
                 //UOM
                 Unit = x.WorkOrderId.HasValue ? x.WorkOrder.Unit : "",
                 //Ghi chú
@@ -363,9 +363,9 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = x.Batch ?? "",
                 //Total Quantity
-                TotalQuantity = x.TargetQuantity ?? 0,
+                TotalQuantity = x.TargetQuantity,
                 //Delivery Quantity
-                DeliveryQuantity = x.DeliveredQuantity ?? 0,
+                DeliveryQuantity = x.DeliveredQuantity,
                 //UoM
                 Unit = x.Unit ?? "",
                 //Order Type
@@ -394,8 +394,8 @@ namespace MES.Application.Queries
             //Danh sách product
             var prods = _prodRepo.GetQuery().AsNoTracking();
 
-            var totalQuantity = wo.TargetQuantity.HasValue ? wo.TargetQuantity : 0;
-            var deliveryQuantity = wo.DeliveredQuantity.HasValue ? wo.DeliveredQuantity : 0;
+            var totalQuantity = wo.TargetQuantity;
+            var deliveryQuantity = wo.DeliveredQuantity;
             var openQuantity = totalQuantity - deliveryQuantity;
 
             var response = new GetDataByWoResponse

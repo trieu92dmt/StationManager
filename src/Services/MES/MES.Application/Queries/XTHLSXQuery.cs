@@ -91,7 +91,7 @@ namespace MES.Application.Queries
                 RequiremenQty = woDetail.RequirementQuantiy.HasValue ? Math.Abs(woDetail.RequirementQuantiy.Value) : 0,
                 //Số lượng nhập đã thu hồi
                 WithdrawnQty = woDetail.QuantityWithdrawn.HasValue ? Math.Abs(woDetail.QuantityWithdrawn.Value) : 0,
-                TotalQty = woDetail.WorkOrder.TargetQuantity.HasValue ? Math.Abs(woDetail.WorkOrder.TargetQuantity.Value) : 0,
+                TotalQty = Math.Abs(woDetail.WorkOrder.TargetQuantity),
                 //Scheduled Start Date
                 ScheduledStartDate = woDetail.WorkOrder.ScheduledStartDate,
                 //Scheduled Finish Date
@@ -238,7 +238,7 @@ namespace MES.Application.Queries
                 //Withdraw Qty
                 WithdrawQty = x.QuantityWithdrawn.HasValue ? Math.Abs(x.QuantityWithdrawn.Value) : 0,
                 //Total quantity
-                TotalQty = x.WorkOrder.TargetQuantity.HasValue ? Math.Abs(x.WorkOrder.TargetQuantity.Value) : 0
+                TotalQty = Math.Abs(x.WorkOrder.TargetQuantity)
             }).ToListAsync();
 
             var index = 1;
@@ -432,7 +432,7 @@ namespace MES.Application.Queries
                 //21 Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
                 //Total Quantity
-                TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity.Value) : 0,
+                TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity) : 0,
                 //22 Số lượng yêu cầu
                 RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy.Value) : 0,
                 //23 Số lượng đã nhập thu hồi

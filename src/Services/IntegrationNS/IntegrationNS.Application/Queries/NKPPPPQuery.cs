@@ -217,7 +217,7 @@ namespace IntegrationNS.Application.Queries
                 RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy.Value) : 0,
                 //23 Số lượng đã nhập thu hồi
                 WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn.Value) : 0,
-                TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity.Value) : 0,
+                TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity) : 0,
                 //24 UOM
                 Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : "",
                 //25 Ghi chú

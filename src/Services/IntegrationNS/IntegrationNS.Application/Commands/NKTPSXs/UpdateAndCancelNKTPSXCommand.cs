@@ -85,6 +85,9 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
 
                     nktpsxNew.RcFromProductiontId = Guid.NewGuid();
                     nktpsxNew.Status = "NOT";
+                    nktpsxNew.TotalQuantity = 0;
+                    nktpsxNew.DeliveryQuantity = 0;
+                    nktpsxNew.OpenQuantity = 0;
                     nktpsxNew.MaterialDocument = null;
                     nktpsxNew.ReverseDocument = null;
 
@@ -131,7 +134,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                 foreach (var item in request.NKTPSXs)
                 {
                     //Phiếu nhập kho mua hàng
-                    var nktpsx = await _nktpsxRep.FindOneAsync(x => x.RcFromProductiontId == item.NktpsxId);
+                    var nktpsx = await _nktpsxRep.GetQuery().Include(x => x.WorkOrder).FirstOrDefaultAsync(x => x.RcFromProductiontId == item.NktpsxId);
 
                     //Check
                     if (nktpsx is null)
@@ -140,6 +143,9 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     //Cập nhật Batch và MaterialDocument
                     nktpsx.Batch = item.Batch;
                     nktpsx.MaterialDocument = item.MaterialDocument;
+                    nktpsx.TotalQuantity = nktpsx.WorkOrderId.HasValue ? nktpsx.WorkOrder.TargetQuantity : 0;
+                    nktpsx.DeliveryQuantity = nktpsx.WorkOrderId.HasValue ? nktpsx.WorkOrder.DeliveredQuantity : 0;
+                    nktpsx.OpenQuantity = nktpsx.TotalQuantity - nktpsx.DeliveryQuantity;
                     if (!string.IsNullOrEmpty(nktpsx.MaterialDocument))// && string.IsNullOrEmpty(nktpsx.ReverseDocument))
                         nktpsx.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nktpsx.ReverseDocument))

@@ -230,11 +230,12 @@ namespace IntegrationNS.Application.Commands.NCKs
                 VehicleCode = x.VehicleCode ?? "",
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght.HasValue ? x.QuantityWeitght : 0,
-                //Total Quantity
-                TotalQty = x.MaterialDocId.HasValue ? x.MaterialDoc.Quantity : 0,
-                //Delivered Quantity
-                DeliveredQty = !string.IsNullOrEmpty(x.Reservation) ? matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "313").Sum(m => m.Quantity)
-                                                                      - matDocs.Where(m => m.Reservation == x.Reservation && m.MovementType == "315").Sum(m => m.Quantity) : 0,
+                //Total Quantity => nếu có mat doc thì lấy table nghiệp vụ, không có thì lấy theo chứng từ
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : (x.MaterialDocId.HasValue ? x.MaterialDoc.Quantity : 0),
+                //Delivered Quantity => nếu có mat doc thì lấy table nghiệp vụ, không có thì lấy theo chứng từ
+                DeliveredQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveryQuantity : 
+                               x.MaterialDocId.HasValue ? matDocs.Where(m => m.MaterialDocCode == x.MaterialDoc.MaterialDocCode && m.MovementType == "313").Sum(m => m.Quantity)
+                                                          - matDocs.Where(m => m.MaterialDocCode == x.MaterialDoc.MaterialDocCode && m.MovementType == "315").Sum(m => m.Quantity) : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
                 //Document date

@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -33,11 +34,13 @@ namespace IntegrationNS.Application.Commands.NCKs
     {
         private readonly IRepository<WarehouseImportTransferModel> _nckRep;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<MaterialDocumentModel> _matDocRepo;
 
-        public UpdateAndCancelNCKCommandHandler(IRepository<WarehouseImportTransferModel> nckRep, IUnitOfWork unitOfWork)
+        public UpdateAndCancelNCKCommandHandler(IRepository<WarehouseImportTransferModel> nckRep, IUnitOfWork unitOfWork, IRepository<MaterialDocumentModel> matDocRepo)
         {
             _nckRep = nckRep;
             _unitOfWork = unitOfWork;
+            _matDocRepo = matDocRepo;
         }
 
         /// <summary>
@@ -49,6 +52,12 @@ namespace IntegrationNS.Application.Commands.NCKs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNCKCommand request, CancellationToken cancellationToken)
         {
+            //Tạo query material doc với MVT = 313
+            var matDoc313Query = _matDocRepo.GetQuery(x => x.MovementType == "313").AsNoTracking();
+
+            //Tạo query material doc với MVT = 315
+            var matDoc315Query = _matDocRepo.GetQuery(x => x.MovementType == "315").AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -106,6 +115,11 @@ namespace IntegrationNS.Application.Commands.NCKs
                     //Cập nhật Batch và MaterialDocument
                     nck.Batch = item.Batch;
                     nck.MaterialDocument = item.MaterialDocument;
+                    nck.TotalQuantity = nck.MaterialDocId.HasValue ? nck.MaterialDoc.Quantity ?? 0 : 0;
+                    nck.DeliveryQuantity = nck.MaterialDocId.HasValue ? 
+                                           matDoc313Query.Where(x => x.MaterialDocCode == nck.MaterialDoc.MaterialDocCode).Sum(x => x.Quantity)
+                                           - matDoc315Query.Where(x => x.MaterialDocCode == nck.MaterialDoc.MaterialDocCode).Sum(x => x.Quantity) : 0;
+                    nck.OpenQuantity = nck.TotalQuantity - nck.DeliveryQuantity;
                     if (!string.IsNullOrEmpty(nck.MaterialDocument))// && string.IsNullOrEmpty(nck.ReverseDocument))
                         nck.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nck.ReverseDocument))

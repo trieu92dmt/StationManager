@@ -178,7 +178,7 @@ namespace IntegrationNS.Application.Queries
                 Material = x.MaterialCode,
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
                 Sloc = x.SlocCode,
-                SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName}",
+                SlocName = !string.IsNullOrEmpty(x.SlocCode) ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : "",
                 Batch = x.Batch,
                 SalesOrder = x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument1 : "",
                 BagQuantity = x.BagQuantity,

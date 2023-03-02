@@ -42,7 +42,7 @@ namespace MES.Application.DTOs.MES.NKTPSX
         //Delivery Quantity
         public decimal? DeliveryQuantity { get; set; }
         //Open Quantity
-        public decimal? OpenQuantity { get; set; }
+        public decimal? OpenQuantity => TotalQuantity - DeliveryQuantity;
         //UOM
         public string Unit { get; set; }
         //Ghi chú

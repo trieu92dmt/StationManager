@@ -219,8 +219,6 @@ namespace MES.Application.Queries
                 TotalQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.TargetQuantity : 0,
                 //Delivery Quantity
                 DeliveryQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.DeliveredQuantity : 0,
-                //Open Quantity
-                OpenQuantity = 0,
                 //UOM
                 Unit = x.WorkOrderId.HasValue ? x.WorkOrder.Unit : "",
                 //Ghi chú
@@ -259,12 +257,6 @@ namespace MES.Application.Queries
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
                 //isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
             }).ToListAsync();
-
-            //Tính open quantity
-            foreach (var item in data)
-            {
-                item.OpenQuantity = item.TotalQuantity - item.DeliveryQuantity;
-            }
 
             return data;
         }

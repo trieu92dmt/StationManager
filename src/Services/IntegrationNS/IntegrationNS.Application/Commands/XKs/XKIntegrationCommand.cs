@@ -245,11 +245,9 @@ namespace IntegrationNS.Application.Commands.XKs
                 //21 Số lần cân
                 QtyWeight = x.QuantityWeight ?? 0,
                 //Total qty
-                TotalQty = x.TotalQty ?? 0,
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
                 //Delivered qty
-                DeliveryQty = x.DeliveredQty ?? 0,
-                //Open qty
-                OpenQty = x.OpenQty ?? 0,
+                DeliveryQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveredQuantity : x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
                 //Số cân đầu vào
                 InputWeight = x.InputWeight ?? 0,
                 //Số cân đầu ra

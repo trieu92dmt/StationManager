@@ -81,9 +81,9 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = woDetail.Batch,
                 //Số lượng yêu cầu
-                RequiremenQty = woDetail.RequirementQuantiy.HasValue ? Math.Abs(woDetail.RequirementQuantiy.Value) : 0,
+                RequiremenQty = Math.Abs(woDetail.RequirementQuantiy),
                 //Số lượng nhập đã thu hồi
-                WithdrawnQty = woDetail.QuantityWithdrawn.HasValue ? Math.Abs(woDetail.QuantityWithdrawn.Value) : 0,
+                WithdrawnQty = Math.Abs(woDetail.QuantityWithdrawn),
                 //Total quantity
                 TotalQty = Math.Abs(woDetail.WorkOrder.TargetQuantity),
                 //Scheduled Start Date
@@ -231,9 +231,9 @@ namespace MES.Application.Queries
                 //ToTal Qty
                 TotalQty = Math.Abs(x.WorkOrder.TargetQuantity),
                 //Requirement Qty
-                RequirementQty = x.RequirementQuantiy.HasValue ? Math.Abs(x.RequirementQuantiy.Value) : 0,
+                RequirementQty = Math.Abs(x.RequirementQuantiy),
                 //Withdraw Qty
-                WithdrawQty = x.QuantityWithdrawn.HasValue ? Math.Abs(x.QuantityWithdrawn.Value) : 0,
+                WithdrawQty = Math.Abs(x.QuantityWithdrawn),
             }).ToListAsync();
 
             var index = 1;
@@ -418,9 +418,9 @@ namespace MES.Application.Queries
                 //Total qty
                 TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity) : 0,
                 //22 Số lượng yêu cầu
-                RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy.Value) : 0,
+                RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy) : 0,
                 //23 Số lượng đã nhập thu hồi
-                WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn.Value) : 0,
+                WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn) : 0,
                 //24 UOM
                 Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : "",
                 //25 Ghi chú

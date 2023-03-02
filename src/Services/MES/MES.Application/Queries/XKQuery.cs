@@ -229,11 +229,9 @@ namespace MES.Application.Queries
                 //21 Số lần cân
                 QtyWeight = x.QuantityWeight ?? 0,
                 //Total qty
-                TotalQty = x.TotalQty ?? 0,
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
                 //Delivered qty
-                DeliveryQty = x.DeliveredQty ?? 0,
-                //Open qty
-                OpenQty = x.OpenQty ?? 0,
+                DeliveryQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveredQuantity : x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
                 //Số cân đầu vào
                 InputWeight = x.InputWeight ?? 0,
                 //Số cân đầu ra
@@ -397,9 +395,9 @@ namespace MES.Application.Queries
                 //UoM
                 Unit = x.BaseUnit ?? "",
                 //ToTal Qty
-                TotalQuantity = x.RequirementQty.HasValue ? Math.Abs(x.RequirementQty.Value) : 0,
+                TotalQuantity = Math.Abs(x.RequirementQty),
                 //Delivered Qty
-                DeliveredQuantity = x.QtyWithdrawn.HasValue ? Math.Abs(x.QtyWithdrawn.Value) : 0
+                DeliveredQuantity =Math.Abs(x.QtyWithdrawn)
             }).ToListAsync();
 
             var index = 1;
@@ -453,9 +451,9 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = detailRes.Batch ?? "",
                 //Total Quantity
-                TotalQty = detailRes.RequirementQty ?? 0,
+                TotalQty = detailRes.RequirementQty,
                 //Delivered Quantity
-                DeliveryQty = detailRes.QtyWithdrawn ?? 0,
+                DeliveryQty = detailRes.QtyWithdrawn,
                 //Unit
                 Unit = detailRes.BaseUnit
             };

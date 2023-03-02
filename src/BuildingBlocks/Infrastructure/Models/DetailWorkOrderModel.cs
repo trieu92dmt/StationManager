@@ -28,9 +28,9 @@ namespace Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? RequirementDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? RequirementQuantiy { get; set; }
+        public decimal RequirementQuantiy { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? QuantityWithdrawn { get; set; }
+        public decimal QuantityWithdrawn { get; set; }
         [StringLength(50)]
         public string BaseUnit1 { get; set; }
         [StringLength(50)]

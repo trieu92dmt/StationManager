@@ -182,8 +182,8 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 ProductCode = item.ProductCode,
                                 ProductCodeInt = long.Parse(item.ProductCode),
                                 RequirementDate = item.RequirementDate,
-                                RequirementQuantiy = item.RequirementQuantiy,
-                                QuantityWithdrawn = item.QuantityWithdrawn,
+                                RequirementQuantiy = item.RequirementQuantiy ?? 0,
+                                QuantityWithdrawn = item.QuantityWithdrawn ?? 0,
                                 BaseUnit1 = item.BaseUnit1,
                                 BaseUnit2 = item.BaseUnit2,
                                 Batch = item.Batch,
@@ -259,8 +259,8 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                     ProductCode = item.ProductCode,
                                     ProductCodeInt = long.Parse(item.ProductCode),
                                     RequirementDate = item.RequirementDate,
-                                    RequirementQuantiy = item.RequirementQuantiy,
-                                    QuantityWithdrawn = item.QuantityWithdrawn,
+                                    RequirementQuantiy = item.RequirementQuantiy ?? 0,
+                                    QuantityWithdrawn = item.QuantityWithdrawn ?? 0,
                                     BaseUnit1 = item.BaseUnit1,
                                     BaseUnit2 = item.BaseUnit2,
                                     Batch = item.Batch,
@@ -288,8 +288,8 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 detailWO.ProductCode = item.ProductCode;
                                 detailWO.ProductCodeInt = long.Parse(item.ProductCode);
                                 detailWO.RequirementDate = item.RequirementDate;
-                                detailWO.RequirementQuantiy = item.RequirementQuantiy;
-                                detailWO.QuantityWithdrawn = item.QuantityWithdrawn;
+                                detailWO.RequirementQuantiy = item.RequirementQuantiy ?? 0;
+                                detailWO.QuantityWithdrawn = item.QuantityWithdrawn ?? 0;
                                 detailWO.BaseUnit1 = item.BaseUnit1;
                                 detailWO.BaseUnit2 = item.BaseUnit2;
                                 detailWO.Batch = item.Batch;

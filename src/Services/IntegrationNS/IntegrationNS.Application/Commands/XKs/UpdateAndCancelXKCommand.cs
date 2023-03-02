@@ -79,6 +79,9 @@ namespace IntegrationNS.Application.Commands.XKs
 
                     xkNew.OtherExportId = Guid.NewGuid();
                     xkNew.Status = "NOT";
+                    xkNew.TotalQuantity = 0;
+                    xkNew.DeliveredQuantity = 0;
+                    xkNew.OpenQuantity = 0;
                     xkNew.MaterialDocument = null;
                     xkNew.ReverseDocument = null;
 

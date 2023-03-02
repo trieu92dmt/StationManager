@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.XTHLSXs
@@ -74,6 +75,9 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
 
                     xthlsxNew.IssForProductiontId = Guid.NewGuid();
                     xthlsxNew.Status = "NOT";
+                    xthlsxNew.TotalQuantity = 0;
+                    xthlsxNew.RequirementQuantiy = 0;
+                    xthlsxNew.QuantityWithdrawn = 0;
                     xthlsxNew.MaterialDocument = null;
                     xthlsxNew.ReverseDocument = null;
 
@@ -117,7 +121,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                 foreach (var item in request.XTHLSXs)
                 {
                     //Phiếu xuất tiêu hao lsx
-                    var xthlsx = await _xthlsxRepo.FindOneAsync(x => x.IssForProductiontId == item.XthlsxId);
+                    var xthlsx = await _xthlsxRepo.GetQuery().Include(x => x.DetailWorkOrder).ThenInclude(x => x.WorkOrder).FirstOrDefaultAsync(x => x.IssForProductiontId == item.XthlsxId);
 
                     //Check
                     if (xthlsx is null)
@@ -126,6 +130,9 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     //Cập nhật Batch và MaterialDocument
                     xthlsx.Batch = item.Batch;
                     xthlsx.MaterialDocument = item.MaterialDocument;
+                    xthlsx.TotalQuantity = xthlsx.DetailWorkOrder.WorkOrder.TargetQuantity;
+                    xthlsx.RequirementQuantiy = xthlsx.RequirementQuantiy;
+                    xthlsx.QuantityWithdrawn = xthlsx.QuantityWithdrawn;
                     if (!string.IsNullOrEmpty(xthlsx.MaterialDocument))// && string.IsNullOrEmpty(xthlsx.ReverseDocument))
                         xthlsx.Status = "POST";
                     //else if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))

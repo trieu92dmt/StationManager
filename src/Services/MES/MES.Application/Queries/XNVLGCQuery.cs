@@ -406,7 +406,7 @@ namespace MES.Application.Queries
                             //Order unit
                             OrderUnit = po.Unit ?? "",
                             //Requirement Qty
-                            RequirementQuantity = res.RequirementQty ?? 0,
+                            RequirementQuantity = res.RequirementQty,
                             //Requirement unit
                             RequirementUnit = res.BaseUnit
                         }).ToListAsync();

@@ -36,12 +36,6 @@ namespace Infrastructure.Models
         public string Batch { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? ConfirmQty { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQty { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? DeliveredQty { get; set; }
-        [Column(TypeName = "decimal(18, 3)")]
-        public decimal? OpenQty { get; set; }
         [StringLength(50)]
         public string UOM { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -63,6 +57,12 @@ namespace Infrastructure.Models
         public int? QuantityWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal TotalQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal DeliveredQuantity { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal OpenQuantity { get; set; }
         public int? BagQuantity { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? SingleWeight { get; set; }

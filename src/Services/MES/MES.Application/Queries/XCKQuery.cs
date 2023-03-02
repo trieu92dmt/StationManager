@@ -187,9 +187,9 @@ namespace MES.Application.Queries
                 //9. Batch
                 Batch = x.Batch,
                 //10. Total Quantity
-                TotalQty = x.RequirementQty ?? 0,
+                TotalQty = x.RequirementQty,
                 //11. Delivered Quantity
-                DeliveredQty = x.QtyWithdrawn ?? 0,
+                DeliveredQty = x.QtyWithdrawn,
                 //13. UoM
                 Unit = x.BaseUnit
 
@@ -372,9 +372,9 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght.HasValue ? x.QuantityWeitght : 0,
                 //Total Quantity
-                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty ?? 0 : 0,
+                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
                 //Delivered Quantity
-                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn  ?? 0 : 0,
+                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
                 //Số xe tải
@@ -443,9 +443,9 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = detailRes.Batch ?? "",
                 //Total Quantity
-                TotalQty = detailRes.RequirementQty ?? 0,
+                TotalQty = detailRes.RequirementQty,
                 //Delivered Quantity
-                DeliveredQty = detailRes.QtyWithdrawn ?? 0,
+                DeliveredQty = detailRes.QtyWithdrawn,
                 //Unit
                 Unit = detailRes.BaseUnit
             };

@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.NKPPPPs
@@ -74,6 +75,9 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
 
                     nkppppNew.ScFromProductiontId = Guid.NewGuid();
                     nkppppNew.Status = "NOT";
+                    nkppppNew.TotalQuantity = 0;
+                    nkppppNew.RequirementQuantiy = 0;
+                    nkppppNew.QuantityWithdrawn = 0;
                     nkppppNew.MaterialDocument = null;
                     nkppppNew.ReverseDocument = null;
 
@@ -118,7 +122,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                 foreach (var item in request.NKPPPPs)
                 {
                     //Phiếu nhập kho phụ phẩm phế phẩm
-                    var nkpppp = await _nkppppRepo.FindOneAsync(x => x.ScFromProductiontId == item.NkppppId);
+                    var nkpppp = await _nkppppRepo.GetQuery().Include(x => x.DetailWorkOrder).ThenInclude(x => x.WorkOrder).FirstOrDefaultAsync(x => x.ScFromProductiontId == item.NkppppId);
 
                     //Check
                     if (nkpppp is null)
@@ -127,6 +131,9 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     //Cập nhật Batch và MaterialDocument
                     nkpppp.Batch = item.Batch;
                     nkpppp.MaterialDocument = item.MaterialDocument;
+                    nkpppp.TotalQuantity = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.WorkOrder.TargetQuantity : 0;
+                    nkpppp.RequirementQuantiy = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.RequirementQuantiy : 0;
+                    nkpppp.QuantityWithdrawn = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.QuantityWithdrawn : 0;
                     if (!string.IsNullOrEmpty(nkpppp.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
                         nkpppp.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))

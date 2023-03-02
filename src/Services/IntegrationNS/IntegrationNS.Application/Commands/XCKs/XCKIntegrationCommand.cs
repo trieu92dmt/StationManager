@@ -238,9 +238,9 @@ namespace IntegrationNS.Application.Commands.XCKs
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght.HasValue ? x.QuantityWeitght : 0,
                 //Total Quantity
-                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty ?? 0 : 0,
+                TotalQty = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementQty : 0,
                 //Delivered Quantity
-                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn ?? 0 : 0,
+                DeliveredQty = x.DetailReservationId.HasValue ? x.DetailReservation.QtyWithdrawn : 0,
                 //UoM
                 Unit = prods.FirstOrDefault(x => x.ProductCode == x.ProductCode).Unit,
                 //Số xe tải

@@ -38,13 +38,13 @@ namespace Infrastructure.Models
         [Column(TypeName = "datetime")]
         public DateTime? RequirementsDate { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? RequirementQty { get; set; }
+        public decimal RequirementQty { get; set; }
         [StringLength(50)]
         public string BaseUnit { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? QtyIsFixed { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? QtyWithdrawn { get; set; }
+        public decimal QtyWithdrawn { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? QtyInUnitOfEntry { get; set; }
         [StringLength(50)]

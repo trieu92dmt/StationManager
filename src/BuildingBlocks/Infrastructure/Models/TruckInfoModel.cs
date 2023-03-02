@@ -26,7 +26,7 @@ namespace Infrastructure.Models
         public string TruckInfoCode { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }
-        [StringLength(10)]
+        [StringLength(50)]
         public string TruckNumber { get; set; }
         [StringLength(50)]
         public string Driver { get; set; }

@@ -216,9 +216,9 @@ namespace MES.Application.Queries
                 //Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
                 //Total quantity
-                TotalQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.TargetQuantity : 0,
+                TotalQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.TargetQuantity ?? 0 : 0,
                 //Delivery Quantity
-                DeliveryQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.DeliveredQuantity : 0,
+                DeliveryQuantity = x.WorkOrderId.HasValue ? x.WorkOrder.DeliveredQuantity ?? 0 : 0,
                 //UOM
                 Unit = x.WorkOrderId.HasValue ? x.WorkOrder.Unit : "",
                 //Ghi chú

@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -34,13 +35,15 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
         private readonly IRepository<ComponentExportModel> _xnvlgcRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<DetailOutboundDeliveryModel> _obDetailRepo;
+        private readonly IRepository<DetailReservationModel> _dtResRepo;
 
         public UpdateAndCancelXNVLGCCommandHandler(IRepository<ComponentExportModel> xnvlgcRep, IUnitOfWork unitOfWork,
-                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo)
+                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo, IRepository<DetailReservationModel> dtResRepo)
         {
             _xnvlgcRep = xnvlgcRep;
             _unitOfWork = unitOfWork;
             _obDetailRepo = obDetailRepo;
+            _dtResRepo = dtResRepo;
         }
 
         /// <summary>
@@ -52,6 +55,8 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelXNVLGCCommand request, CancellationToken cancellationToken)
         {
+            //Get query reservation
+            var reservations = _dtResRepo.GetQuery().AsNoTracking();
             if (request.IsCancel == true)
             {
 
@@ -82,6 +87,8 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
 
                     xnvlgcNew.ComponentExportId = Guid.NewGuid();
                     xnvlgcNew.Status = "NOT";
+                    xnvlgcNew.TotalQuantity = 0;
+                    xnvlgcNew.RequirementQuantity = 0;
                     xnvlgcNew.MaterialDocument = null;
                     xnvlgcNew.ReverseDocument = null;
 
@@ -97,7 +104,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                 foreach (var item in request.XNVLGCs)
                 {
                     //Phiếu xuất nguyên vật liệu gia công
-                    var xnvlgc = await _xnvlgcRep.FindOneAsync(x => x.ComponentExportId == item.XnvlgcId);
+                    var xnvlgc = await _xnvlgcRep.GetQuery().Include(x => x.PurchaseOrderDetail).FirstOrDefaultAsync(x => x.ComponentExportId == item.XnvlgcId);
 
                     //Check
                     if (xnvlgc is null)
@@ -106,6 +113,9 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     //Cập nhật Batch và MaterialDocument
                     xnvlgc.Batch = item.Batch;
                     xnvlgc.MaterialDocument = item.MaterialDocument;
+                    xnvlgc.TotalQuantity = xnvlgc.PurchaseOrderDetailId.HasValue ? xnvlgc.PurchaseOrderDetail.OrderQuantity : 0;
+                    xnvlgc.RequirementQuantity = xnvlgc.PurchaseOrderDetailId.HasValue ? reservations.FirstOrDefault(x => x.PurchasingDoc == xnvlgc.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode &&
+                                                                                                                          x.Item == xnvlgc.PurchaseOrderDetail.POLine).RequirementQty : 0;
                     if (!string.IsNullOrEmpty(xnvlgc.MaterialDocument))// && string.IsNullOrEmpty(xnvlgc.ReverseDocument))
                         xnvlgc.Status = "POST";
                     //else if (!string.IsNullOrEmpty(xnvlgc.ReverseDocument))

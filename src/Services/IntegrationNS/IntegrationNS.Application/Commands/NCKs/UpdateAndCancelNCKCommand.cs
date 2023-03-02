@@ -106,7 +106,7 @@ namespace IntegrationNS.Application.Commands.NCKs
                 foreach (var item in request.NCKs)
                 {
                     //Phiếu nhập chuyển kho
-                    var nck = await _nckRep.FindOneAsync(x => x.WarehouseImportTransferId == item.NckId);
+                    var nck = await _nckRep.GetQuery().Include(x => x.MaterialDoc).FirstOrDefaultAsync(x => x.WarehouseImportTransferId == item.NckId);
 
                     //Check
                     if (nck is null)

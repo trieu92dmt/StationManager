@@ -2747,15 +2747,16 @@ namespace IntegrationNS.API.Controllers
         ///               "plant": "string",
         ///               "slocFrom": "string",
         ///               "slocTo": "string",
-        ///               "customer": "string",
+        ///               "customerFrom": "string",
+        ///               "customerTo": "string",
         ///               "materialFrom": "string",
         ///               "materialTo": "string",
         ///               "weightHeadCode": "string",
         ///               "weightVotes": [
         ///                 "string"
         ///               ],
-        ///               "weightDateFrom": "2023-03-03T03:00:49.422Z",
-        ///               "weightDateTo": "2023-03-03T03:00:49.422Z",
+        ///               "weightDateFrom": "2023-03-03T06:10:17.481Z",
+        ///               "weightDateTo": "2023-03-03T06:10:17.481Z",
         ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         ///               "status": "string"
         ///             }

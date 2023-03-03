@@ -388,7 +388,7 @@ namespace MES.Application.Queries
                             //Material desc
                             MaterialDesc = dtOds != null ? materialQuery.FirstOrDefault(x => x.ProductCode == dtOds.ProductCode).ProductName : mtrs.ProductName,
                             //UoM
-                            Unit = mtrs != null ? mtrs.Unit : "",
+                            Unit = mtrs != null ? mtrs.Unit : materialQuery.FirstOrDefault(x => x.ProductCode == dtOds.ProductCode).Unit,
                             //Outbound Delivery
                             OutboundDelivery = dtOds != null ? dtOds.OutboundDelivery.DeliveryCode : "",
                             //Outbound Delivery Item

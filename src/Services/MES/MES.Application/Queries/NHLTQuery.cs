@@ -39,7 +39,15 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command);  
+        Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command);
+
+        /// <summary>
+        /// Lấy data theo od và od item
+        /// </summary>
+        /// <param name="od"></param>
+        /// <param name="odItem"></param>
+        /// <returns></returns>
+        Task<GetDataByOdAndOdItemResponse> GetDataByOdAndOdItem(string od, string odItem);
     }
 
     public class NHLTQuery : INHLTQuery
@@ -65,6 +73,35 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _userRepo = userRepo;
             _cataRepo = cataRepo;
+        }
+
+        public async Task<GetDataByOdAndOdItemResponse> GetDataByOdAndOdItem(string od, string odItem)
+        {
+            //Lấy ra od
+            var odDetails = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                              .FirstOrDefaultAsync(x => x.OutboundDeliveryItem == odItem && x.OutboundDelivery.DeliveryCodeInt == long.Parse(od));
+
+            if (odDetails == null)
+                return null;
+
+            //Danh sách product
+            var prods = _prodRepo.GetQuery().AsNoTracking();
+
+            var response = new GetDataByOdAndOdItemResponse
+            {
+                //Material
+                Material = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductCodeInt.ToString(),
+                //Material Desc
+                MaterialDesc = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductName,
+                //Batch
+                Batch = odDetails.Batch,
+                //Số phương tiện
+                VehicleCode = odDetails.OutboundDelivery.VehicleCode,
+                //DocumentDate
+                DocumentDate = odDetails.OutboundDelivery.DocumentDate
+            };
+
+            return response;
         }
 
         public async Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)

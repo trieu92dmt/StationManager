@@ -116,5 +116,24 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
+
+        /// <summary>
+        /// Lấy dữ liệu theo od và od item
+        /// </summary>
+        /// <param name="od"></param>
+        /// <param name="odItem"></param>
+        /// <returns></returns>
+        [HttpGet("get-data-by-od-oditem")]
+        public async Task<IActionResult> GetDataByODAndODItem(string od, string odItem)
+        {
+            var response = await _query.GetDataByOdAndOdItem(od, odItem);
+
+            return Ok(new ApiSuccessResponse<GetDataByOdAndOdItemResponse>
+            {
+                Data = response,
+                IsSuccess = true,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy data")
+            });
+        }
     }
 }

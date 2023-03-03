@@ -79,10 +79,12 @@ namespace MES.Application.Commands.XCK
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<PlantModel> _plantRepo;
+        private readonly IRepository<TruckInfoModel> _truckRepo;
 
         public SaveXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseExportTransferModel> xckRepo, IRepository<WeighSessionModel> weightSsRepo,
                                      IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<DetailReservationModel> detailRsRepo,
-                                     IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo)
+                                     IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo,
+                                     IRepository<TruckInfoModel> truckRepo)
         {
             _unitOfWork = unitOfWork;
             _xckRepo = xckRepo;
@@ -93,6 +95,7 @@ namespace MES.Application.Commands.XCK
             _prodRepo = prodRepo;
             _slocRepo = slocRepo;
             _plantRepo = plantRepo;
+            _truckRepo = truckRepo;
         }
 
         public async Task<bool> Handle(SaveXCKCommand request, CancellationToken cancellationToken)
@@ -108,6 +111,9 @@ namespace MES.Application.Commands.XCK
 
             //Get query sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Get query truck info
+            var truckInfos = _truckRepo.GetQuery().AsNoTracking();
 
             //Get query Plant
             var plants = _plantRepo.GetQuery().AsNoTracking();
@@ -228,7 +234,7 @@ namespace MES.Application.Commands.XCK
                     EndTime = DateTime.Now,
                     //Số xe tải
                     TruckInfoId = item.TruckInfoId,
-                    TruckNumber = item.TruckNumber,
+                    TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,
                     //24  CreateTime
                     CreateTime = DateTime.Now,
                     //25  CreateBy

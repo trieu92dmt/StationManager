@@ -171,7 +171,7 @@ namespace MES.Application.Commands.XCK
 
                 //Lấy ra detail reservation
                 var rsDetail = !string.IsNullOrEmpty(item.Reservation) && !string.IsNullOrEmpty(item.ReservationItem) ?
-                               reserDetails.FirstOrDefault(x => x.Reservation.ReservationCode == item.Reservation && x.ReservationItem == item.ReservationItem &&
+                               reserDetails.FirstOrDefault(x => x.Reservation.ReservationCodeInt == long.Parse(item.Reservation) && x.ReservationItem == item.ReservationItem &&
                                                                 x.Reservation.Plant == item.Plant) : null;
 
                 //Chưa có thì tạo mới

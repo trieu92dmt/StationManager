@@ -68,6 +68,10 @@ namespace MES.Application.Commands.NHLT
         public string NewImage { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
     }
 
     public class UpdateNHLTCommandHandler : IRequestHandler<UpdateNHLTCommand, ApiResponse>
@@ -217,7 +221,11 @@ namespace MES.Application.Commands.NHLT
                         SlocCode = item.Sloc,
                         //Sloc
                         SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
-                        Status = item.isDelete == true ? "DEL" : "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = item.CreateOn,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now
                     });
                 }
                 //Tồn tại thì update
@@ -247,6 +255,8 @@ namespace MES.Application.Commands.NHLT
                     nhlt.Description = item.Description;
                     //Hình ảnh
                     nhlt.Image = string.IsNullOrEmpty(imgPath) ? nhlt.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nhlt.LastEditBy = TokenExtensions.GetAccountId();
+                    nhlt.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nhlt.Status = "DEL";

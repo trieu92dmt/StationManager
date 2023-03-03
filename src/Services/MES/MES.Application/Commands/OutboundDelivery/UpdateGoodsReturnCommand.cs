@@ -1,5 +1,6 @@
 ﻿using Core.Extensions;
 using Core.Interfaces.Databases;
+using Core.Jwt.Models;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
@@ -68,8 +69,6 @@ namespace MES.Application.Commands.OutboundDelivery
         public Guid? CreateBy { get; set; }
         //Create On
         public DateTime? CreateOn { get; set; }
-        //Change By
-        public Guid? ChangeBy { get; set; }
         //Ghi chú
         public string Description { get; set; }
         //Hình ảnh
@@ -237,7 +236,8 @@ namespace MES.Application.Commands.OutboundDelivery
                         DocumentDate = item.DocumentDate,
                         CreateBy = item.CreateBy,
                         CreateTime = DateTime.Now,
-                        LastEditBy = item.ChangeBy,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now,
                         Actived = true,
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
@@ -274,7 +274,8 @@ namespace MES.Application.Commands.OutboundDelivery
                     //Hình ảnh
                     nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
 
-                    nkht.LastEditBy = item.ChangeBy;
+                    nkht.LastEditBy = TokenExtensions.GetAccountId();
+                    nkht.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nkht.Status = "DEL";

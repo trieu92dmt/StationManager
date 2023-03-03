@@ -68,6 +68,10 @@ namespace MES.Application.Commands.XK
         public string NewImage { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
     }
 
     public class UpdateXKCommandHandler : IRequestHandler<UpdateXKCommand, ApiResponse>
@@ -264,8 +268,12 @@ namespace MES.Application.Commands.XK
                         SlocCode = item.Sloc,
                         SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
                         //Đánh dấu xóa
-                        Status = item.isDelete == true ? "DEL" : "NOT"
-                    });;
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = DateTime.Now,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now,
+                    });
                 }
                 //Tồn tại thì update
                 else
@@ -297,6 +305,8 @@ namespace MES.Application.Commands.XK
                     xk.Description = item.Description;
                     //Hình ảnh
                     xk.Image = string.IsNullOrEmpty(imgPath) ? xk.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xk.LastEditBy = TokenExtensions.GetAccountId();
+                    xk.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                     {

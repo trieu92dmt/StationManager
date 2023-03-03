@@ -59,6 +59,10 @@ namespace MES.Application.Commands.NKTPSX
         public string NewImage { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
     }
 
     public class UpdateNKTPSXCommandHandler : IRequestHandler<UpdateNKTPSXCommand, ApiResponse>
@@ -199,7 +203,11 @@ namespace MES.Application.Commands.NKTPSX
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
                         SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
-                        Status = item.isDelete == true ? "DEL" : "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = item.CreateOn,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now
                     });
                 }
                 //Tồn tại thì update
@@ -230,6 +238,8 @@ namespace MES.Application.Commands.NKTPSX
                     nktpsx.Description = item.Description;
                     //Hình ảnh
                     nktpsx.Image = string.IsNullOrEmpty(imgPath) ? nktpsx.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nktpsx.LastEditBy = TokenExtensions.GetAccountId();
+                    nktpsx.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nktpsx.Status = "DEL";

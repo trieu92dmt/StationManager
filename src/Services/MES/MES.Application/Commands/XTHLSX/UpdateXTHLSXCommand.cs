@@ -61,6 +61,10 @@ namespace MES.Application.Commands.XTHLSX
         public string NewImage { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
     }
 
     public class UpdateXTHLSXCommandHandler : IRequestHandler<UpdateXTHLSXCommand, ApiResponse>
@@ -208,7 +212,11 @@ namespace MES.Application.Commands.XTHLSX
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
                         SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
-                        Status = item.isDelete == true ? "DEL" : "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = DateTime.Now,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now,
                     });
                 }
                 //Tồn tại thì update
@@ -239,6 +247,8 @@ namespace MES.Application.Commands.XTHLSX
                     xthlsx.Description = item.Description;
                     //Hình ảnh
                     xthlsx.Image = string.IsNullOrEmpty(imgPath) ? xthlsx.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xthlsx.LastEditBy = TokenExtensions.GetAccountId();
+                    xthlsx.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                     {

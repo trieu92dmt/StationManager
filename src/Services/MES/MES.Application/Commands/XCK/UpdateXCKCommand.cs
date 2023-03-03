@@ -67,6 +67,10 @@ namespace MES.Application.Commands.XCK
         public string NewImage { get; set; }
         //19. Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
     }
 
     public class UpdateXCKCommandHandler : IRequestHandler<UpdateXCKCommand, ApiResponse>
@@ -231,7 +235,11 @@ namespace MES.Application.Commands.XCK
                         SlocCode = item.Sloc,
                         SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc)?.StorageLocationName,
                         //Trạng thái
-                        Status = item.isDelete == true ? "DEL" : "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = DateTime.Now,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now,
                     });
                 }
                 //Tồn tại thì update
@@ -266,6 +274,8 @@ namespace MES.Application.Commands.XCK
                     xck.Description = item.Description;
                     //Hình ảnh
                     xck.Image = string.IsNullOrEmpty(imgPath) ? xck.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xck.LastEditBy = TokenExtensions.GetAccountId();
+                    xck.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         xck.Status = "DEL";

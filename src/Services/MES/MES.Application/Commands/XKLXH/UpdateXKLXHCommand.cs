@@ -68,6 +68,10 @@ namespace MES.Application.Commands.XKLXH
         public string NewImage { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
     }
 
     public class UpdateXKLXHCommandHandler : IRequestHandler<UpdateXKLXHCommand, ApiResponse>
@@ -243,7 +247,11 @@ namespace MES.Application.Commands.XKLXH
                         //Ghi chú
                         Description = item.Description,
                         //Trạng thái
-                        Status = item.isDelete == true ? "DEL" : "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = DateTime.Now,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now,
                     });
                 }
                 //Tồn tại thì update

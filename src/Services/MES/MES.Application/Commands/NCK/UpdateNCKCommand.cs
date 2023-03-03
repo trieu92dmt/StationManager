@@ -73,6 +73,10 @@ namespace MES.Application.Commands.NCK
         public string NewImage { get; set; }
         //19. Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
     }
 
     public class UpdateNCKCommandHandler : IRequestHandler<UpdateNCKCommand, ApiResponse>
@@ -240,9 +244,13 @@ namespace MES.Application.Commands.NCK
                         SlocCode = item.Sloc,
                         SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc)?.StorageLocationName,
                         //Trạng thái
-                        Status = item.isDelete == true ? "DEL" : "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = item.CreateOn,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now
                     });
-                }
+                } 
                 //Tồn tại thì update
                 else
                 {
@@ -275,6 +283,8 @@ namespace MES.Application.Commands.NCK
                     nck.Description = item.Description;
                     //Hình ảnh
                     nck.Image = string.IsNullOrEmpty(imgPath) ? nck.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nck.LastEditBy = TokenExtensions.GetAccountId();
+                    nck.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                         nck.Status = "DEL";

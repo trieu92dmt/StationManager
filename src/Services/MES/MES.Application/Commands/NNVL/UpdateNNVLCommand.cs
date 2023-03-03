@@ -62,6 +62,10 @@ namespace MES.Application.Commands.NNVL
         public string NewImage { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Create By
+        public Guid? CreateBy { get; set; }
+        //Create On
+        public DateTime? CreateOn { get; set; }
 
     }
 
@@ -210,7 +214,11 @@ namespace MES.Application.Commands.NNVL
                         //Sloc
                         SlocCode = item.Sloc,
                         SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
-                        Status = item.isDelete == true ? "DEL" : "NOT"
+                        Status = item.isDelete == true ? "DEL" : "NOT",
+                        CreateBy = item.CreateBy,
+                        CreateTime = item.CreateOn,
+                        LastEditBy = TokenExtensions.GetAccountId(),
+                        LastEditTime = DateTime.Now
                     });
                 }
                 //Tồn tại thì update
@@ -241,6 +249,8 @@ namespace MES.Application.Commands.NNVL
                     nnvlgc.Description = item.Description;
                     //Hình ảnh
                     nnvlgc.Image = string.IsNullOrEmpty(imgPath) ? nnvlgc.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nnvlgc.LastEditBy = TokenExtensions.GetAccountId();
+                    nnvlgc.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa
                     if (item.isDelete == true)
                     {

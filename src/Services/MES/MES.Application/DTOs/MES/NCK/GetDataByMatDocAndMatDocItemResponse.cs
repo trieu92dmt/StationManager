@@ -8,6 +8,8 @@ namespace MES.Application.DTOs.MES.NCK
 {
     public class GetDataByMatDocAndMatDocItemResponse
     {
+        //Reservation
+        public string Reservation { get; set; }
         //Material
         public string Material { get; set; }
         //Material name

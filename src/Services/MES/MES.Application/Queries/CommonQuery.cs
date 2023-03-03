@@ -914,6 +914,7 @@ namespace MES.Application.Queries
         {
             return  await _matDocRepo.GetQuery(x =>(!string.IsNullOrEmpty(matdoc) ? x.MaterialDocCode == matdoc : false) &&
                                                    (!string.IsNullOrEmpty(keyword) ? x.MaterialDocItem.ToLower().Contains(keyword.ToLower().Trim()) : true))
+                                .OrderBy(x => x.MaterialDocItem)
                                 .Select(x => new CommonResponse
                                 {
                                     Key = x.MaterialDocItem,

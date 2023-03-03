@@ -78,6 +78,8 @@ namespace MES.Application.Queries
 
             var response = new GetDataByMatDocAndMatDocItemResponse
             {
+                //Reservation
+                Reservation = matDoc.Reservation,
                 //Material
                 Material = prods.FirstOrDefault(p => p.ProductCodeInt == matDoc.MaterialCodeInt).ProductCodeInt.ToString(),
                 //Material Desc

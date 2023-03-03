@@ -802,6 +802,7 @@ namespace MES.Application.Queries
         {
             return await _rsRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true))
+                                .OrderBy(x => x.ReservationCodeInt)
                                 .Select(x => new CommonResponse
                                 {
                                     Key = x.ReservationCode,

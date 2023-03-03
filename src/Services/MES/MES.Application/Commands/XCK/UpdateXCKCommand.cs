@@ -174,6 +174,15 @@ namespace MES.Application.Commands.XCK
                                reserDetails.FirstOrDefault(x => x.Reservation.ReservationCodeInt == long.Parse(item.Reservation) && x.ReservationItem == item.ReservationItem &&
                                                                 x.Reservation.Plant == item.Plant) : null;
 
+                //Check reservation có khớp với material
+                if (rsDetail != null && rsDetail.MaterialCodeInt != long.Parse(item.Material))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Reservation và Material Không mapping với nhau";
+
+                    return response;
+                }
+
                 //Chưa có thì tạo mới
                 if (xck == null)
                 {

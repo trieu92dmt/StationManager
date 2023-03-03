@@ -237,11 +237,11 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                 //Số lần cân
                 QuantityWeight = x.QuantityWeight ?? 0,
                 //Order quantity
-                OrderQuantity = x.TotalQuantity ?? 0,
+                OrderQuantity = x.TotalQuantity,
                 //Order unit
                 OrderUnit = x.OrderUnit ?? "",
                 //Requirement quantity
-                RequirementQuantity = x.RequirementQuantity ?? 0,
+                RequirementQuantity = x.RequirementQuantity,
                 //Requirement unit
                 RequirementUnit = x.RequirementUnit ?? "",
                 //Document Date

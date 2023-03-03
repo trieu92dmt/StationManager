@@ -94,9 +94,9 @@ namespace MES.Application.Queries
                 //Material Desc
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCodeInt == long.Parse(odDetails.ProductCode)).ProductName,
                 //Batch
-                Batch = odDetails.Batch,
+                Batch = odDetails.Batch ?? "",
                 //Số phương tiện
-                VehicleCode = odDetails.OutboundDelivery.VehicleCode,
+                VehicleCode = odDetails.OutboundDelivery.VehicleCode ?? "",
                 //DocumentDate
                 DocumentDate = odDetails.OutboundDelivery.DocumentDate
             };

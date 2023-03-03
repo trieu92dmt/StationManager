@@ -240,11 +240,11 @@ namespace MES.Application.Commands.XNVLGC
                     //Output weight
                     OutputWeight = item.OutputWeight,
                     //Order quantity
-                    TotalQuantity = item.OrderQuantity,
+                    TotalQuantity = item.OrderQuantity ?? 0,
                     //Order unit
                     OrderUnit = item.OrderUnit,
                     //Requirement quantity
-                    RequirementQuantity = item.RequirementQuantity,
+                    RequirementQuantity = item.RequirementQuantity ?? 0,
                     //Requirement Unit
                     RequirementUnit = item.RequirementUnit,
                     //21  Image

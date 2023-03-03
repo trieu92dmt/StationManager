@@ -647,7 +647,7 @@ namespace MES.Application.Queries
             {
                 query = type == "NKDCNB" ? query.Where(x => x.OutboundDelivery.ReceivingPlant == plant && 
                                                             (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN")) 
-                                         : type == "NHLT" ? query.Where(x => x.OutboundDelivery.BillingAllItems == "A") : query.Where(x => x.Plant == plant);
+                                         : type == "NHLT" ? (query.Where(x => x.OutboundDelivery.BillingAllItems == "A" && x.BillingItem == "A")) : query.Where(x => x.Plant == plant);
             }
             //Theo material
             if (!string.IsNullOrEmpty(materialFrom))

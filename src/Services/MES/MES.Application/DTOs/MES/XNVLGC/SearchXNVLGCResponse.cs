@@ -119,6 +119,8 @@ namespace MES.Application.DTOs.MES.XNVLGC
         public DateTime? StartTime { get; set; }
         //Thời gian kết thúc
         public DateTime? EndTime { get; set; }
+        //Document Date
+        public DateTime? DocumentDate { get; set; }
         //Create by
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }

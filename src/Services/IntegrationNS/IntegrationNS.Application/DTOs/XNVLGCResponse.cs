@@ -55,6 +55,8 @@ namespace IntegrationNS.Application.DTOs
         public decimal? RequirementQuantity { get; set; }
         //Requirement Unit
         public string RequirementUnit { get; set; }
+        //Document date
+        public DateTime? DocumentDate { get; set; }
         //Vendor name
         public string Vendor { get; set; }
         public string VendorName { get; set; }

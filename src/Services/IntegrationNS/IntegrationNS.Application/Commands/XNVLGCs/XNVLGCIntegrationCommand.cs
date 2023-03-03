@@ -244,6 +244,8 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                 RequirementQuantity = x.RequirementQuantity ?? 0,
                 //Requirement unit
                 RequirementUnit = x.RequirementUnit ?? "",
+                //Document Date
+                DocumentDate = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.DocumentDate : null,
                 //VendorName
                 Vendor = x.VendorCode ?? "",
                 VendorName = x.VendorName ?? "",

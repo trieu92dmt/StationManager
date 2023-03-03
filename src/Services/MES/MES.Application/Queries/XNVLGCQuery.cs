@@ -246,6 +246,7 @@ namespace MES.Application.Queries
                 StartTime = x.StartTime ?? null,
                 //30 Thời gian kết thúc
                 EndTime = x.EndTime ?? null,
+                DocumentDate = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.DocumentDate : null,
                 //31 Create by
                 CreateById = x.CreateBy ?? null,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",

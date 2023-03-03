@@ -2745,6 +2745,8 @@ namespace IntegrationNS.API.Controllers
         /// 
         ///             {
         ///               "plant": "string",
+        ///               "slocFrom": "string",
+        ///               "slocTo": "string",
         ///               "customer": "string",
         ///               "materialFrom": "string",
         ///               "materialTo": "string",
@@ -2752,8 +2754,8 @@ namespace IntegrationNS.API.Controllers
         ///               "weightVotes": [
         ///                 "string"
         ///               ],
-        ///               "weightDateFrom": "2023-02-24T06:22:41.746Z",
-        ///               "weightDateTo": "2023-02-24T06:22:41.746Z",
+        ///               "weightDateFrom": "2023-03-03T03:00:49.422Z",
+        ///               "weightDateTo": "2023-03-03T03:00:49.422Z",
         ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         ///               "status": "string"
         ///             }
@@ -2907,18 +2909,20 @@ namespace IntegrationNS.API.Controllers
         ///               "plant": "string",
         ///               "reservationFrom": "string",
         ///               "reservationTo": "string",
+        ///               "slocFrom": "string",
+        ///               "slocTo": "string",
         ///               "customerFrom": "string",
         ///               "customerTo": "string",
         ///               "materialFrom": "string",
         ///               "materialTo": "string",
-        ///               "documentDateFrom": "2023-02-25T02:38:55.601Z",
-        ///               "documentDateTo": "2023-02-25T02:38:55.601Z",
+        ///               "documentDateFrom": "2023-03-03T03:02:55.710Z",
+        ///               "documentDateTo": "2023-03-03T03:02:55.710Z",
         ///               "weightHeadCode": "string",
         ///               "weightVotes": [
         ///                 "string"
         ///               ],
-        ///               "weightDateFrom": "2023-02-25T02:38:55.601Z",
-        ///               "weightDateTo": "2023-02-25T02:38:55.601Z",
+        ///               "weightDateFrom": "2023-03-03T03:02:55.710Z",
+        ///               "weightDateTo": "2023-03-03T03:02:55.710Z",
         ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         ///               "status": "string"
         ///             }

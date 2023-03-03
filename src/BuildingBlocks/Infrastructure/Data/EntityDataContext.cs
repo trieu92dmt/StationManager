@@ -299,6 +299,8 @@ namespace Infrastructure.Data
         public virtual DbSet<ScaleMonitorModel> ScaleMonitorModel { get; set; }
         public virtual DbSet<Schema> Schema { get; set; }
         public virtual DbSet<ScrapFromProductionModel> ScrapFromProductionModel { get; set; }
+        public virtual DbSet<ScreenModel> ScreenModel { get; set; }
+        public virtual DbSet<Screen_Scale_MappingModel> Screen_Scale_MappingModel { get; set; }
         public virtual DbSet<SearchResultDetailTemplateModel> SearchResultDetailTemplateModel { get; set; }
         public virtual DbSet<SearchResultTemplateModel> SearchResultTemplateModel { get; set; }
         public virtual DbSet<SearchTemplateModel> SearchTemplateModel { get; set; }
@@ -2716,6 +2718,26 @@ namespace Infrastructure.Data
                     .WithMany(p => p.ScrapFromProductionModel)
                     .HasForeignKey(d => d.DetailWorkOrderId)
                     .HasConstraintName("FK_ScrapFromProductionModel_WorkOrderModel");
+            });
+
+            modelBuilder.Entity<ScreenModel>(entity =>
+            {
+                entity.Property(e => e.ScreenId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<Screen_Scale_MappingModel>(entity =>
+            {
+                entity.Property(e => e.Screen_Scale_Mapping_Id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Scale)
+                    .WithMany(p => p.Screen_Scale_MappingModel)
+                    .HasForeignKey(d => d.ScaleId)
+                    .HasConstraintName("FK_Screen_Scale_MappingModel_ScaleModel");
+
+                entity.HasOne(d => d.Screen)
+                    .WithMany(p => p.Screen_Scale_MappingModel)
+                    .HasForeignKey(d => d.ScreenId)
+                    .HasConstraintName("FK_Screen_Scale_MappingModel_ScreenModel");
             });
 
             modelBuilder.Entity<SearchResultDetailTemplateModel>(entity =>

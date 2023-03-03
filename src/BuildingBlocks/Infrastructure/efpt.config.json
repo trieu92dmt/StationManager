@@ -303,6 +303,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[Screen_Scale_MappingModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[DataCollection].[ScreenModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[ShippingPointModel]",
          "ObjectType": 0
       },

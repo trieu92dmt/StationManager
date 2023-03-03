@@ -21,6 +21,7 @@ namespace Infrastructure.Models
         public Guid? MaterialDocId { get; set; }
         [StringLength(50)]
         public string Reservation { get; set; }
+        public long? ReservationInt { get; set; }
         [StringLength(50)]
         public string ReservationItem { get; set; }
         [StringLength(50)]

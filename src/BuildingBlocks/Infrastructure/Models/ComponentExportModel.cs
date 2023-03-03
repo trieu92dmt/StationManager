@@ -51,11 +51,11 @@ namespace Infrastructure.Models
         public DateTime? EndTime { get; set; }
         public int? QuantityWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? TotalQuantity { get; set; }
+        public decimal TotalQuantity { get; set; }
         [StringLength(50)]
         public string OrderUnit { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
-        public decimal? RequirementQuantity { get; set; }
+        public decimal RequirementQuantity { get; set; }
         [StringLength(50)]
         public string RequirementUnit { get; set; }
         [StringLength(50)]

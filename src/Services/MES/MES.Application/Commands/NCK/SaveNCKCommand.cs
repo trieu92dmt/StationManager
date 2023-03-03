@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -77,11 +78,12 @@ namespace MES.Application.Commands.NCK
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
+        private readonly IRepository<ReservationModel> _resRepo;
 
         public SaveNCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseImportTransferModel> nckRepo, IRepository<WeighSessionModel> weightSsRepo,
                                      IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<MaterialDocumentModel> matDocRepo,
                                      IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo,
-                                     IRepository<TruckInfoModel> truckRepo)
+                                     IRepository<TruckInfoModel> truckRepo, IRepository<ReservationModel> resRepo)
         {
             _unitOfWork = unitOfWork;
             _nckRepo = nckRepo;
@@ -93,6 +95,7 @@ namespace MES.Application.Commands.NCK
             _slocRepo = slocRepo;
             _plantRepo = plantRepo;
             _truckRepo = truckRepo;
+            _resRepo = resRepo;
         }
 
         public async Task<bool> Handle(SaveNCKCommand request, CancellationToken cancellationToken)
@@ -117,6 +120,9 @@ namespace MES.Application.Commands.NCK
 
             //Get query mat doc
             var matDocs = _matDocRepo.GetQuery().AsNoTracking();
+
+            //Get quert reservation
+            var reservations = _resRepo.GetQuery().AsNoTracking();  
 
             //Danh sách nhập kho nck
             var ncks = await _nckRepo.GetQuery().ToListAsync();
@@ -182,7 +188,8 @@ namespace MES.Application.Commands.NCK
                     //Material Doc id
                     MaterialDocId = matDoc != null ? matDoc.MaterialDocId : null,
                     //5. Reservation
-                    Reservation = item.Reservation,
+                    Reservation = string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null,
+                    ReservationInt = string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null,
                     //6. PlantCode
                     PlantCode = item.Plant,
                     PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,

@@ -39,6 +39,7 @@ namespace MES.API.Controllers
         }
         #endregion
 
+        #region Bảng 1
         /// <summary>GET Bảng 1</summary>
         /// <returns></returns>
         /// <remarks>
@@ -66,7 +67,9 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+        #endregion
 
+        #region Save bảng 1
         /// <summary>
         /// Save dữ liệu xklxh
         /// </summary>
@@ -83,8 +86,9 @@ namespace MES.API.Controllers
                 Message = string.Format(CommonResource.Msg_Success, "Lưu xuất kho theo lệnh xuất hàng")
             });
         }
+        #endregion
 
-
+        #region Bảng 2
         /// <summary>
         /// Bảng 2 (Dữ liệu xuất kho theo lệnh xuất hàng)
         /// </summary>
@@ -100,7 +104,9 @@ namespace MES.API.Controllers
                 Data = response
             });
         }
+        #endregion
 
+        #region Update bảng 2
         /// <summary>
         /// Update dữ liệu xklxh
         /// </summary>
@@ -118,7 +124,9 @@ namespace MES.API.Controllers
                 Message = response.Message
             });
         }
+        #endregion
 
+        #region Get data by od and od item
         /// <summary>
         /// Lấy dữ liệu theo od và od item
         /// </summary>
@@ -137,5 +145,112 @@ namespace MES.API.Controllers
                 Message = string.Format(CommonResource.Msg_Success, "Lấy data")
             });
         }
+        #endregion
+
+        #region Ghi nhận cân xe tải
+        /// <summary>
+        /// Get data ghi nhận cân xe tải
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-truck-weigh-info")]
+        public async Task<IActionResult> GetTruckWeighInfoAsync([FromBody] SearchTruckWeighRecordCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<GetListTruckWeighInfoResponse>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Get TruckWeigh info")
+            });
+        }
+
+        /// <summary>
+        /// Save dữ liệu ghi nhận cân xe tải
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPut("save-truck-weigh-info")]
+        public async Task<IActionResult> SaveTruckWeighInfoAsync([FromBody] SaveTruckWeighInfoCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu ghi nhận cân xe tải")
+            });
+        }
+
+        /// <summary>
+        /// Get data đã lưu ghi nhận cân xe tải
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-saved-truck-weigh")]
+        public async Task<IActionResult> GetSavedTruckWeighAsync([FromBody] SearchSavedDataTruckWeighCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<ListSavedDataTruckWeighResponse>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Get Saved Data TruckWeigh Record")
+            });
+        }
+        #endregion
+
+        #region Thông tin xuất kho
+        /// <summary>
+        /// Get data thông tin xuất kho
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-warehouse-export")]
+        public async Task<IActionResult> GetWarehouseExportInfoAsync([FromBody] SearchWarehouseExportCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<ListWarehouseExportResponse>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Get Warehouse Export Info")
+            });
+        }
+
+        /// <summary>
+        /// Save dữ liệu thông tin xuất kho
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPut("save-warehouse-export")]
+        public async Task<IActionResult> SaveWarehouseExportAsync([FromBody] SaveWarehouseExportCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lưu thông tin xuất kho")
+            });
+        }
+
+        /// <summary>
+        /// Get data đã lưu thông tin xuất kho
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("get-saved-warehouse-export")]
+        public async Task<IActionResult> GetSavedWarehouseExportAsync([FromBody] SearchSavedWarehouseExportCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<ListSavedWarehouseExportResponse>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Get Saved Data Warehouse Export")
+            });
+        }
+        #endregion
     }
 }

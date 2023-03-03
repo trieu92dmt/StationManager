@@ -262,6 +262,7 @@ namespace MES.Application.Queries
         private readonly IRepository<MaterialDocumentModel> _matDocRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _dtOdRepo;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
+        private readonly IRepository<ExportByCommandModel> _xklxhRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -270,7 +271,7 @@ namespace MES.Application.Queries
                            IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
-                           IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo)
+                           IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo, IRepository<ExportByCommandModel> xklxhRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -295,6 +296,7 @@ namespace MES.Application.Queries
             _matDocRepo = matDocRepo;
             _dtOdRepo = dtOdRepo;
             _poDetailRepo = poDetailRepo;
+            _xklxhRepo = xklxhRepo;
         }
 
         #region Get DropdownMaterial
@@ -635,6 +637,9 @@ namespace MES.Application.Queries
         #region Dropdown Outbound Delivery
         public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string materialFrom, string materialTo, string keyword)
         {
+            //Khai bao mảng chức delivery type
+            var deliveryType = new List<string>();
+
             //Ở màn hình nhập kho hàng trả
             var query = _dtOdRepo.GetQuery()
                                        .Include(x => x.OutboundDelivery)
@@ -642,13 +647,42 @@ namespace MES.Application.Queries
                                        .AsNoTracking();
 
             //Lọc điều kiện
-            //Theo plant
-            if (!string.IsNullOrEmpty(plant))
+            //Màn hình nhập kho điều chuyển nội bộ
+            if (type == "NKDCNB")
             {
-                query = type == "NKDCNB" ? query.Where(x => x.OutboundDelivery.ReceivingPlant == plant && 
-                                                            (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN")) 
-                                         : type == "NHLT" ? (query.Where(x => x.OutboundDelivery.BillingAllItems == "A" && x.BillingItem == "A")) : query.Where(x => x.Plant == plant);
-            }
+                query = query.Where(x => x.OutboundDelivery.ReceivingPlant == plant &&
+                                                        (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN"));
+            }    
+            //Màn hình nhập hàng loại T
+            else if (type == "NHLT")
+            {
+                query = query.Where(x => x.OutboundDelivery.ReceivingPlant == plant && 
+                                         x.OutboundDelivery.BillingAllItems == "A" && 
+                                         x.BillingItem == "A");
+            } 
+            //Ở màn hình ghi nhận cân xe tải không lấy dropdown theo master data => lấy theo dữ liệu đã lưu
+            else if (type == "GNCXT")
+            {
+                //Gán giá trị cho biến deliveryType khi searh màn hình GNCXT
+                deliveryType = new List<string>(){ "ZLF1","ZLF2","ZLF3","ZLF4","ZLF5","ZLF6","ZLF7","ZLF8","ZLF9","ZLFA","ZNLC","ZNLN","ZXDH"};
+
+                var xklxhQuery = await _xklxhRepo.GetQuery().Include(x => x.DetailOD).ThenInclude(x => x.OutboundDelivery)
+                                 .Where(x => x.PlantCode == plant &&
+                                             //Lọc các dòng có deliveryType thuộc biến deliveryType
+                                             deliveryType.Contains(x.DetailOD.OutboundDelivery.DeliveryType))
+                                 .OrderBy(x => x.DetailOD.OutboundDelivery.DeliveryCodeInt)
+                                 .Select(x => new CommonResponse
+                                 {
+                                     Key = x.DetailOD.OutboundDelivery.DeliveryCode,
+                                     Value = x.DetailOD.OutboundDelivery.DeliveryCodeInt.ToString()
+                                 })
+                                 .AsNoTracking().ToListAsync();
+
+                return xklxhQuery.DistinctBy(x => x.Key).Take(10).ToList();
+            }    
+            else query = query.Where(x => x.Plant == plant);
+
+
             //Theo material
             if (!string.IsNullOrEmpty(materialFrom))
             {
@@ -662,7 +696,7 @@ namespace MES.Application.Queries
                                .Select(x => new CommonResponse
                                {
                                    Key = x.OutboundDelivery.DeliveryCode,
-                                   Value = x.OutboundDelivery.DeliveryCode
+                                   Value = x.OutboundDelivery.DeliveryCodeInt.ToString()
                                }).ToListAsync();
 
             return data.DistinctBy(x => x.Key).Take(10).ToList();

@@ -14,7 +14,8 @@ namespace IntegrationNS.Application.Commands.NKs
         public string SlocFrom { get; set; }
         public string SlocTo { get; set; }
         //Customer
-        public string Customer { get; set; }
+        public string CustomerFrom { get; set; }
+        public string CustomerTo { get; set; }
         //Material
         public string MaterialFrom { get; set; }
         public string MaterialTo { get; set; }
@@ -89,9 +90,13 @@ namespace IntegrationNS.Application.Commands.NKs
             }
 
             //Theo Customer
-            if (!string.IsNullOrEmpty(command.Customer))
+            if (!string.IsNullOrEmpty(command.CustomerFrom))
             {
-                query = query.Where(x => x.Customer == command.Customer);
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(command.CustomerTo))
+                    command.CustomerTo = command.CustomerFrom;
+                query = query.Where(x => x.Customer.CompareTo(command.CustomerFrom) >= 0 &&
+                                         x.Customer.CompareTo(command.CustomerTo) <= 0);
             }
 
             //Theo Material

@@ -68,7 +68,7 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<bool>
             {
                 Data = response,
-                Message = string.Format(CommonResource.Msg_Success, "Lưu dữ liệu xuất khac")
+                Message = string.Format(CommonResource.Msg_Success, "Lưu dữ liệu xuất khác")
             });
         }
 

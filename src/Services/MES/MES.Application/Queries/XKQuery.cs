@@ -201,9 +201,8 @@ namespace MES.Application.Queries
                 Sloc = x.SlocCode ?? "",
                 SlocFmt = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
                 //Receiving sloc
-                ReceivingSloc = x.DetailReservationId.HasValue ? x.DetailReservation.Reservation.ReceivingSloc : "",
-                ReceivingSlocFmt = x.DetailReservationId.HasValue ?
-                                   $"{x.DetailReservation.Reservation.ReceivingSloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.DetailReservation.Reservation.ReceivingSloc).StorageLocationName}" : "",
+                ReceivingSloc = x.ReceivingSlocCode ?? "",
+                ReceivingSlocFmt = string.IsNullOrEmpty(x.ReceivingSlocCode) ? "" : $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}",
                 //14 Batch
                 Batch = x.Batch ?? "",
                 //Special Stock

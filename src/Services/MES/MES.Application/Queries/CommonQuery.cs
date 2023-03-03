@@ -705,13 +705,14 @@ namespace MES.Application.Queries
                                                                                        x.CreateTime.Value.Month == DateTime.Now.Month &&
                                                                                        x.CreateTime.Value.Year == DateTime.Now.Year: false))
                                   .OrderBy(x => x.TruckNumber).ThenByDescending(x => x.CreateTime)
+                                  .GroupBy(x => x.TruckNumber, (k,v) => new {Key = k, Value = v.ToList()})
                                   .Select(x => new Common2Response
                                   {
-                                      Key = x.TruckInfoId,
-                                      Value = x.TruckNumber
+                                      Key =  x.Value.First().TruckInfoId,
+                                      Value = x.Key
                                   }).AsNoTracking().ToListAsync();
 
-            return response.DistinctBy(x => x.Key).ToList();
+            return response;
         }
         #endregion
 

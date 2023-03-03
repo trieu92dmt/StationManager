@@ -8,6 +8,7 @@ using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,6 +181,15 @@ namespace MES.Application.Commands.NCK
                 var matdoc = !string.IsNullOrEmpty(item.MaterialDoc) && !string.IsNullOrEmpty(item.MaterialDocItem) ?
                                matdocs.FirstOrDefault(x => x.MaterialDocCode == item.MaterialDoc && x.MaterialDocItem == item.MaterialDocItem &&
                                                                 x.PlantCode == item.Plant) : null;
+
+                //Check material doc có khớp với material
+                if (matdoc != null && matdoc.MaterialCodeInt != long.Parse(item.Material))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Reservation và Material Không mapping với nhau";
+
+                    return response;
+                }
 
                 //Chưa có thì tạo mới
                 if (nck == null)

@@ -88,7 +88,7 @@ namespace MES.Application.DTOs.MES.NKDCNB
         //Delivered Quantity
         public decimal? DeliveryQty { get; set; }
         //Open Quantity
-        public decimal? OpenQty { get; set; }
+        public decimal? OpenQty => TotalQty - DeliveryQty;
         //UoM
         public string Unit { get; set; }
         //Purchase Order

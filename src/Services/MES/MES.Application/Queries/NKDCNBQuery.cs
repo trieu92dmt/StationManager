@@ -501,6 +501,7 @@ namespace MES.Application.Queries
                 //Change by
                 ChangeById = x.LastEditBy ?? null,
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
+                ChangeOn = x.LastEditTime,
                 //Material Doc
                 MatDoc = x.MaterialDocument ?? null,
                 //Reverse Doc

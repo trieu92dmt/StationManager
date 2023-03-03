@@ -108,6 +108,8 @@ namespace MES.Application.DTOs.MES.NKPPPP
         //Change by
         public Guid? ChangeById { get; set; }
         public string ChangeBy { get; set; }
+        public DateTime? ChangeOn { get; set; }
+
         //Material Doc
         public string MaterialDoc { get; set; }
         //Reverse Doc

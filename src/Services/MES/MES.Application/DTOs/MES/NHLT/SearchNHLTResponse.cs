@@ -95,6 +95,7 @@ namespace MES.Application.DTOs.MES.NHLT
         //Change by
         public Guid? ChangeById { get; set; }
         public string ChangeBy { get; set; }
+        public DateTime? ChangeOn { get; set; }
         //Material doc
         public string MatDoc { get; set; }
         //Reverse doc

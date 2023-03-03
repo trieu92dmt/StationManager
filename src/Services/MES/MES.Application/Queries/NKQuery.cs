@@ -247,6 +247,7 @@ namespace MES.Application.Queries
                 //33 Change by
                 ChangeById = x.LastEditBy ?? null,
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
+                ChangeOn = x.LastEditTime,
                 //34 Material Doc
                 MaterialDoc = x.MaterialDocument ?? null,
                 //35 Reverse Doc

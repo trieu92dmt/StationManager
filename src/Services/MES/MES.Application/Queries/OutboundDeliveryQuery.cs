@@ -343,6 +343,7 @@ namespace MES.Application.Queries
                 CreateOn = x.CreateTime,
                 ChangeById = x.LastEditBy,
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
+                ChangeOn = x.LastEditTime,
                 MatDoc = x.MaterialDocument,
                 ReverseDoc = x.ReverseDocument,
                 isDelete = x.Status == "DEL" ? true : false,

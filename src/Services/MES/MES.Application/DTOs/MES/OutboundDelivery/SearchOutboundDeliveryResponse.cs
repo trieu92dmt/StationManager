@@ -116,6 +116,8 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         //Chamge By
         public Guid? ChangeById { get; set; }
         public string ChangeBy { get; set; }
+        public DateTime? ChangeOn { get; set; }
+
         //Material Doc
         public string MatDoc { get; set; }
         //Reverse Doc

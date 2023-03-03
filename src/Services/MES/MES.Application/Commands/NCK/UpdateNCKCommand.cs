@@ -91,10 +91,12 @@ namespace MES.Application.Commands.NCK
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
+        private readonly IRepository<ReservationModel> _resRepo;
+
         public UpdateNCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseImportTransferModel> nckRepo, IRepository<WeighSessionModel> weightSsRepo,
                                      IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<MaterialDocumentModel> matDocRepo,
                                      IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo,
-                                     IRepository<TruckInfoModel> truckRepo)
+                                     IRepository<TruckInfoModel> truckRepo, IRepository<ReservationModel> resRepo)
         {
             _unitOfWork = unitOfWork;
             _nckRepo = nckRepo;
@@ -106,6 +108,7 @@ namespace MES.Application.Commands.NCK
             _slocRepo = slocRepo;
             _plantRepo = plantRepo;
             _truckRepo = truckRepo;
+            _resRepo = resRepo;
         }
 
         public async Task<ApiResponse> Handle(UpdateNCKCommand request, CancellationToken cancellationToken)
@@ -127,6 +130,10 @@ namespace MES.Application.Commands.NCK
 
             //Data sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
+
+            //Get quert reservation
+            var reservations = _resRepo.GetQuery().AsNoTracking();
+
             //Check confirm quantity
             //Lấy ra các phiếu cân cần update
             var weightVotes = request.UpdateNCKs.GroupBy(x => x.WeightVote, (k, v) => new { Key = k, Value = v.ToList() })
@@ -211,7 +218,8 @@ namespace MES.Application.Commands.NCK
                         MaterialCodeInt = long.Parse(item.Material),
                         MaterialName = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName,
                         //Reservation
-                        Reservation = item.Reservation,
+                        Reservation = string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null,
+                        ReservationInt = string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null,
                         //Batch
                         Batch = item.Batch,
                         //UoM
@@ -262,7 +270,8 @@ namespace MES.Application.Commands.NCK
                     nck.MaterialCodeInt = long.Parse(item.Material);
                     nck.MaterialName = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName;
                     //Reservation
-                    nck.Reservation = item.Reservation;
+                    nck.Reservation = string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null;
+                    nck.ReservationInt = string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null;
                     //Storage Location
                     nck.SlocCode = item.Sloc;
                     //Sloc Name

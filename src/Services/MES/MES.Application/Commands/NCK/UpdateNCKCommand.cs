@@ -270,8 +270,8 @@ namespace MES.Application.Commands.NCK
                     nck.MaterialCodeInt = long.Parse(item.Material);
                     nck.MaterialName = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName;
                     //Reservation
-                    nck.Reservation = string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null;
-                    nck.ReservationInt = string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null;
+                    nck.Reservation = !string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null;
+                    nck.ReservationInt = !string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null;
                     //Storage Location
                     nck.SlocCode = item.Sloc;
                     //Sloc Name

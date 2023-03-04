@@ -187,9 +187,9 @@ namespace MES.Application.Commands.NHLT
                     //Customer
                     Customer = item.Customer,
                     //2 WeightSession
-                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null ?
                                weightSession.OrderIndex : null,
                     //6 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
@@ -216,7 +216,7 @@ namespace MES.Application.Commands.NHLT
                     //Unit
                     UOM = item.Unit,
                     //17  StartTime
-                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,

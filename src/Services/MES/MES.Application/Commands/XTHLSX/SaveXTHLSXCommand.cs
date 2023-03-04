@@ -162,9 +162,9 @@ namespace MES.Application.Commands.XTHLSX
                     ComponentCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode,
                     ComponentCodeInt = long.Parse(item.Component),
                     //2 WeightSession
-                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null ?
                                weightSession.OrderIndex : null,
                     //6 WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
@@ -191,7 +191,7 @@ namespace MES.Application.Commands.XTHLSX
                     //16  Status
                     Status = "NOT",
                     //17  StartTime
-                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    StartTime = weightSession != null ?
                                 weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,

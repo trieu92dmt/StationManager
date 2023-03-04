@@ -164,9 +164,9 @@ namespace MES.Application.Commands.OutboundDelivery
                     GoodsReturnId = GoodsReturnId,
                     //3 WeightHeadCode
                     WeightHeadCode = item.WeightHeadCode,
-                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null ?
                                weightSession.OrderIndex : null,
                     //4 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
@@ -218,7 +218,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //25  QuantityWithPackaging
                     QuantityWithPackaging = item.QuantityWithPackaging,
                     //26  StartTime
-                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //27  EndTime
                     EndTime = DateTime.Now,

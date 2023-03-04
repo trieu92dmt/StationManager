@@ -181,9 +181,9 @@ namespace MES.Application.Commands.XK
                     //Batch
                     Batch = item.Batch,
                     //2 WeightSession
-                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null ?
                                weightSession.OrderIndex : null,
                     //6 WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
@@ -202,7 +202,7 @@ namespace MES.Application.Commands.XK
                     //VehicleCode
                     VehicleCode = item.VehicleCode,
                     //Số lần cân
-                    QuantityWeight = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    QuantityWeight = weightSession != null ?
                                weightSession.TotalNumberOfWeigh : null,
                     //UOM
                     UOM = item.Unit,
@@ -221,7 +221,7 @@ namespace MES.Application.Commands.XK
                     //16  Status
                     Status = "NOT",
                     //17  StartTime
-                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,

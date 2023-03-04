@@ -175,9 +175,9 @@ namespace MES.Application.Commands.MES
                     PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
                     //Mã đầu cân
                     WeightHeadCode = x.WeightHeadCode,
-                    DateKey = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null && scale != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null && scale != null ?
                                weightSession.OrderIndex : null,
                     //PlantCode
                     PlantCode = x.PlantCode,
@@ -224,9 +224,9 @@ namespace MES.Application.Commands.MES
                     //Status
                     Status = "NOT",
                     //Start Time - End Time
-                    StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSession.StartTime : DateTime.Now,
+                    StartTime = weightSession != null ? weightSession.StartTime : DateTime.Now,
                     EndTime = DateTime.Now,
-                });
+                });;
 
                 index++;
             }

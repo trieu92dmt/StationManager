@@ -419,9 +419,10 @@ namespace MES.Application.Queries
             //Lấy đầu cân
             var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == weightHeadCode);
 
+            var Now = DateTime.Now.ToString("yyyyMMdd");
 
             //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
-            var weighSs = _weighSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault();
+            var weighSs = _weighSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode && x.DateKey == Now).OrderByDescending(x => x.OrderIndex).FirstOrDefault();
 
 
             var result = new GetWeighNumResponse

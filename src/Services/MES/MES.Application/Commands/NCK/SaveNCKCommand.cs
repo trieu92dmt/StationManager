@@ -185,9 +185,9 @@ namespace MES.Application.Commands.NCK
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
                     //2 WeightSession
-                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null ?
                                weightSession.OrderIndex : null,
                     //4. WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
@@ -221,7 +221,7 @@ namespace MES.Application.Commands.NCK
                     //19  QuantityWithPackaging - ZSLCOBAOBI
                     QuantityWithPackaging = item.QuantityWithPackage,
                     //20  QuantityWeitght - ZSOLANCAN
-                    QuantityWeitght = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    QuantityWeitght = weightSession != null ?
                                weightSession.TotalNumberOfWeigh : null,
                     //Số xe tải
                     TruckInfoId = item.TruckInfoId,
@@ -239,7 +239,7 @@ namespace MES.Application.Commands.NCK
                     //16  Status
                     Status = "NOT",
                     //17  StartTime
-                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,

@@ -174,13 +174,13 @@ namespace MES.Application.Commands.XKLXH
                     //1 Export by command id
                     ExportByCommandId = ExportByCommandÍd,
                     //2 WeightSession
-                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null ?
                                weightSession.OrderIndex : null,
                     //3 WeightHeadCode
                     WeightHeadCode = item.WeightHeadCode,
-                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     EndTime = DateTime.Now,
                     //Material

@@ -181,9 +181,9 @@ namespace MES.Application.Commands.XCK
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
                     //2 WeightSession
-                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    DateKey = weightSession != null ?
                                weightSession.DateKey : null,
-                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    OrderIndex = weightSession != null ?
                                weightSession.OrderIndex : null,
                     //4. WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
@@ -235,7 +235,7 @@ namespace MES.Application.Commands.XCK
                     //16  Status
                     Status = "NOT",
                     //17  StartTime
-                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                    StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,

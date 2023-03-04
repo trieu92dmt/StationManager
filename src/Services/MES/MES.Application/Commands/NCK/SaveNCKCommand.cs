@@ -188,8 +188,8 @@ namespace MES.Application.Commands.NCK
                     //Material Doc id
                     MaterialDocId = matDoc != null ? matDoc.MaterialDocId : null,
                     //5. Reservation
-                    Reservation = string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null,
-                    ReservationInt = string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null,
+                    Reservation = !string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null,
+                    ReservationInt = !string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null,
                     //6. PlantCode
                     PlantCode = item.Plant,
                     PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,

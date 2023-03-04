@@ -218,8 +218,8 @@ namespace MES.Application.Commands.NCK
                         MaterialCodeInt = long.Parse(item.Material),
                         MaterialName = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName,
                         //Reservation
-                        Reservation = string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null,
-                        ReservationInt = string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null,
+                        Reservation = !string.IsNullOrEmpty(item.Reservation) ? reservations.FirstOrDefault(x => x.ReservationCodeInt == long.Parse(item.Reservation)).ReservationCode : null,
+                        ReservationInt = !string.IsNullOrEmpty(item.Reservation) ? long.Parse(item.Reservation) : null,
                         //Batch
                         Batch = item.Batch,
                         //UoM

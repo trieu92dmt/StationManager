@@ -472,6 +472,7 @@ namespace MES.Application.Queries
             {
                 data.Add(new GetInputDataResponse
                 {
+                    Id = Guid.NewGuid(),
                     Plant = command.Plant,
                     Material = long.Parse(command.MaterialFrom).ToString(),
                     MaterialDesc = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,

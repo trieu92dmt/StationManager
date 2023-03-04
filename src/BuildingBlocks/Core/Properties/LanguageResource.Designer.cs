@@ -2608,6 +2608,15 @@ namespace Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vui lòng chọn nhà máy!.
+        /// </summary>
+        public static string Chose_Plant {
+            get {
+                return ResourceManager.GetString("Chose_Plant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chọn mô-đun.
         /// </summary>
         public static string ChoseModule {

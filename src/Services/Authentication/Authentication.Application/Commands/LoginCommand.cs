@@ -44,7 +44,7 @@ namespace Authentication.Application.Commands
 
             //Kiểm tra nếu không phải sysadmin thì bắt buộc nhập SaleOrg
             if (string.IsNullOrEmpty(request.PlantCode) && request.UserName != "sysadmin")
-                throw new ISDException(LanguageResource.Choose_Store);
+                throw new ISDException(LanguageResource.Chose_Plant);
 
             //Encrypt passwork
             var passwordEncrypt = _service.GetMd5Sum(request.Password);

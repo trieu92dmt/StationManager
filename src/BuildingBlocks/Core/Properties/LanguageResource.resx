@@ -969,6 +969,9 @@
   <data name="ChoseModule" xml:space="preserve">
     <value>Chọn mô-đun</value>
   </data>
+  <data name="Chose_Plant" xml:space="preserve">
+    <value>Vui lòng chọn nhà máy!</value>
+  </data>
   <data name="ChoXacNhan" xml:space="preserve">
     <value>Chờ xác nhận</value>
   </data>

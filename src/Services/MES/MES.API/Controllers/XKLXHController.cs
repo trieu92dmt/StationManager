@@ -161,7 +161,10 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<GetListTruckWeighInfoResponse>
             {
                 Data = response,
-                Message = string.Format(CommonResource.Msg_Success, "Get TruckWeigh info")
+                Message = string.Format(CommonResource.Msg_Success, "Get TruckWeigh info"),
+                RecordsTotal = response.PagingRep.TotalResultsCount,
+                ResultsCount = response.PagingRep.FilterResultsCount,
+                PagesCount = response.PagingRep.TotalPagesCount
             });
         }
 
@@ -195,7 +198,10 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<ListSavedDataTruckWeighResponse>
             {
                 Data = response,
-                Message = string.Format(CommonResource.Msg_Success, "Get Saved Data TruckWeigh Record")
+                Message = string.Format(CommonResource.Msg_Success, "Get Saved Data TruckWeigh Record"),
+                RecordsTotal = response.PagingRep.TotalResultsCount,
+                ResultsCount = response.PagingRep.FilterResultsCount,
+                PagesCount = response.PagingRep.TotalPagesCount
             });
         }
         #endregion
@@ -214,7 +220,10 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<ListWarehouseExportResponse>
             {
                 Data = response,
-                Message = string.Format(CommonResource.Msg_Success, "Get Warehouse Export Info")
+                Message = string.Format(CommonResource.Msg_Success, "Get Warehouse Export Info"),
+                RecordsTotal = response.PagingRep.TotalResultsCount,
+                ResultsCount = response.PagingRep.FilterResultsCount,
+                PagesCount = response.PagingRep.TotalPagesCount
             });
         }
 
@@ -248,7 +257,10 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<ListSavedWarehouseExportResponse>
             {
                 Data = response,
-                Message = string.Format(CommonResource.Msg_Success, "Get Saved Data Warehouse Export")
+                Message = string.Format(CommonResource.Msg_Success, "Get Saved Data Warehouse Export"),
+                RecordsTotal = response.PagingRep.TotalResultsCount,
+                ResultsCount = response.PagingRep.FilterResultsCount,
+                PagesCount = response.PagingRep.TotalPagesCount
             });
         }
         #endregion

@@ -160,6 +160,10 @@ namespace MES.Application.Commands.XKLXH
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+
                 //Lấy ra outbound detail
                 var detailOb = !string.IsNullOrEmpty(item.OutboundDelivery) ?
                                detailODs.FirstOrDefault(d => d.OutboundDelivery.DeliveryCodeInt == long.Parse(item.OutboundDelivery) && d.OutboundDeliveryItem == item.OutboundDeliveryItem) : null;
@@ -169,11 +173,16 @@ namespace MES.Application.Commands.XKLXH
                 {
                     //1 Export by command id
                     ExportByCommandId = ExportByCommandÍd,
-                    //2 WeightSession Id
-                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
+                    //2 WeightSession
+                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //3 WeightHeadCode
                     WeightHeadCode = item.WeightHeadCode,
+                    StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.StartTime : null,
+                    EndTime = DateTime.Now,
                     //Material
                     MaterialCode = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
                     MaterialCodeInt = long.Parse(item.Material),

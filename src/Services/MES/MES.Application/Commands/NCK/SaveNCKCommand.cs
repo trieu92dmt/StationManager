@@ -170,6 +170,10 @@ namespace MES.Application.Commands.NCK
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+
                 //Lấy material doc
                 var matDoc = !string.IsNullOrEmpty(item.MaterialDoc) && !string.IsNullOrEmpty(item.MaterialDocItem) ?
                                     matDocs.FirstOrDefault(m => m.MaterialDocCode == item.MaterialDoc && m.MaterialDocItem == item.MaterialDocItem) : null;
@@ -180,9 +184,11 @@ namespace MES.Application.Commands.NCK
                     WarehouseImportTransferId = WarehouseImportTranferId,
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
-                    //3. WeightId
-                    WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
+                    //2 WeightSession
+                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //4. WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
                     //Material Doc id
@@ -216,7 +222,7 @@ namespace MES.Application.Commands.NCK
                     QuantityWithPackaging = item.QuantityWithPackage,
                     //20  QuantityWeitght - ZSOLANCAN
                     QuantityWeitght = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.TotalNumberOfWeigh : null,
+                               weightSession.TotalNumberOfWeigh : null,
                     //Số xe tải
                     TruckInfoId = item.TruckInfoId,
                     TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,
@@ -234,7 +240,7 @@ namespace MES.Application.Commands.NCK
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
+                               weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
 

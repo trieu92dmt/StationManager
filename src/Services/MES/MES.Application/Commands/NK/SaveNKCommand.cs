@@ -150,6 +150,9 @@ namespace MES.Application.Commands.NK
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
                 _nkRepo.Add(new OtherImportModel
                 {
@@ -161,10 +164,12 @@ namespace MES.Application.Commands.NK
                     Customer = item.Customer, 
                     //4 MaterialCode
                     MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
-                    MaterialCodeInt = long.Parse(item.Material), 
-                    //5   WeightId
-                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
+                    MaterialCodeInt = long.Parse(item.Material),
+                    //2 WeightSession
+                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //6 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //7   BagQuantity
@@ -185,7 +190,7 @@ namespace MES.Application.Commands.NK
                     SpecialStock = item.SpecialStock,
                     //Số lần cân
                     QuantityWeight = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.TotalNumberOfWeigh : null,
+                               weightSession.TotalNumberOfWeigh : null,
                     //UOM
                     UOM = item.Unit,
                     //Số cân đầu vào
@@ -200,7 +205,7 @@ namespace MES.Application.Commands.NK
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
+                               weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //21  SlocCode

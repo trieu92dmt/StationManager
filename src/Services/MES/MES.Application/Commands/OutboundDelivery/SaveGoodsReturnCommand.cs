@@ -148,6 +148,11 @@ namespace MES.Application.Commands.OutboundDelivery
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+
+
                 //Lấy ra outbound detail
                 var detailOb = !string.IsNullOrEmpty(item.ODCode) ?
                                detailODs.FirstOrDefault(d => d.OutboundDelivery.DeliveryCodeInt == long.Parse(item.ODCode) && d.OutboundDeliveryItem == item.ODItem) : null;
@@ -157,11 +162,12 @@ namespace MES.Application.Commands.OutboundDelivery
                 {
                     //1 GoodsReturnId
                     GoodsReturnId = GoodsReturnId,
-                    //2 WeightSession Id
-                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //3 WeightHeadCode
                     WeightHeadCode = item.WeightHeadCode,
+                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //4 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //5   DetailODId
@@ -213,7 +219,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     QuantityWithPackaging = item.QuantityWithPackaging,
                     //26  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
+                               weightSession.StartTime : null,
                     //27  EndTime
                     EndTime = DateTime.Now,
                     //28  QuantityWeitght

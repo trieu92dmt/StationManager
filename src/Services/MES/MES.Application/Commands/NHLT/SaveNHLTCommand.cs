@@ -162,6 +162,10 @@ namespace MES.Application.Commands.NHLT
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+
                 //Lấy ra component
                 //Lấy ra outbound detail
                 var detailOd = !string.IsNullOrEmpty(item.OutboundDelivery) ?
@@ -182,9 +186,11 @@ namespace MES.Application.Commands.NHLT
                     Batch = item.Batch,
                     //Customer
                     Customer = item.Customer,
-                    //5   WeightId
-                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
+                    //2 WeightSession
+                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //6 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //7   BagQuantity
@@ -211,7 +217,7 @@ namespace MES.Application.Commands.NHLT
                     UOM = item.Unit,
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
+                               weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //số cân đầu vào

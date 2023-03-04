@@ -139,6 +139,10 @@ namespace MES.Application.Commands.OutboundDelivery
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+
                 //Lấy product
                 var material = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode)).ProductCode;
 
@@ -156,9 +160,11 @@ namespace MES.Application.Commands.OutboundDelivery
                     //4   MaterialCode
                     MaterialCode = material,
                     MaterialCodeInt = long.Parse(material),
-                    //5   WeightId
-                    WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
+                    //2 WeightSession
+                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //6 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //7   BagQuantity
@@ -183,7 +189,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
+                               weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //21  SlocCode

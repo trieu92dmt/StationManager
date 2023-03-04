@@ -175,9 +175,6 @@ namespace MES.Application.Commands.MES
                     PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
                     //Mã đầu cân
                     WeightHeadCode = x.WeightHeadCode,
-                    //Id đợt cân
-                    WeightId = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
-                               weightSession.WeighSessionID : null,
                     DateKey = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
                                weightSession.DateKey : null,
                     OrderIndex = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?

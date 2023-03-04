@@ -186,15 +186,21 @@ namespace MES.Application.Commands.XNVLGC
                 //Lấy ra cân hiện tại
                 var scale = !string.IsNullOrEmpty(item.WeightHeadCode) ? scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode) : null;
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+
                 _xnvlgcRepo.Add(new ComponentExportModel
                 {
                     //1. ID
                     ComponentExportId = ComponentExportId,
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
-                    //3. WeightId
-                    WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
+                    //2 WeightSession
+                    DateKey = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //4. WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
                     //5. Detail Reservation Id
@@ -253,7 +259,7 @@ namespace MES.Application.Commands.XNVLGC
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
+                               weightSession.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //Số xe tải

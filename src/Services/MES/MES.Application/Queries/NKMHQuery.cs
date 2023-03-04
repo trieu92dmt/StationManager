@@ -53,11 +53,12 @@ namespace MES.Application.Queries
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weighSsChoseRepo;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
                          IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
                          IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo, IRepository<CatalogModel> cataRepo,
-                         IRepository<StorageLocationModel> slocRepo, IRepository<TruckInfoModel> truckInfoRepo)
+                         IRepository<StorageLocationModel> slocRepo, IRepository<TruckInfoModel> truckInfoRepo, IRepository<WeighSessionChoseModel> weighSsChoseRepo)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -70,6 +71,7 @@ namespace MES.Application.Queries
             _cataRepo = cataRepo;
             _slocRepo = slocRepo;
             _truckInfoRepo = truckInfoRepo;
+            _weighSsChoseRepo = weighSsChoseRepo;
         }
 
 
@@ -368,6 +370,7 @@ namespace MES.Application.Queries
             //Data PO
             var dataPO = await queryPO.Select(x => new PuchaseOrderNKMHResponse
             {
+                Id = Guid.NewGuid(),
                 //ID
                 PoDetailId = x.PurchaseOrderDetailId,
                 StorageLocation = x.StorageLocation,
@@ -424,13 +427,16 @@ namespace MES.Application.Queries
             //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
             var weighSs = _weighSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode && x.DateKey == Now).OrderByDescending(x => x.OrderIndex).FirstOrDefault();
 
+            //Check đầu đã được chọn
+            var weighSsChose = _weighSsChoseRepo.FindOneAsync(x => x.ScaleCode == weighSs.ScaleCode && x.DateKey == Now && x.OrderIndex == weighSs.OrderIndex);
 
             var result = new GetWeighNumResponse
             {
                 Weight = weighSs != null ? weighSs.TotalWeight : 0,
                 WeightQuantity = weighSs != null ? weighSs.TotalNumberOfWeigh : 0,
                 StartTime = weighSs != null ? weighSs.StartTime : null,
-                Status = weighSs != null ? weighSs.Status : ""
+                Status = weighSs != null ? weighSs.Status : "",
+                isSuccess = weighSsChose != null ? true : false
             };
 
             return result;

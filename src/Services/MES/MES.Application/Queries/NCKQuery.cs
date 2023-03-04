@@ -233,7 +233,7 @@ namespace MES.Application.Queries
                 //Plant
                 Plant = x.PlantCode,
                 //Reservation
-                Reservation = x.Reservation ?? "",
+                Reservation = !string.IsNullOrEmpty(x.Reservation) ? x.ReservationInt.ToString() : "",
                 //Material Doc
                 MaterialDoc = x.MaterialDocId.HasValue ? x.MaterialDoc.MaterialDocCode : "",
                 //Material Doc Item

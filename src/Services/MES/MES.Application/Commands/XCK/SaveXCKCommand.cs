@@ -177,7 +177,7 @@ namespace MES.Application.Commands.XCK
                     WeightHeadCode = item.WeightHeadCode,
                     //3. WeightId
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //4. WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
                     //5. Detail Reservation Id
@@ -229,7 +229,7 @@ namespace MES.Application.Commands.XCK
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //Số xe tải

@@ -251,7 +251,7 @@ namespace MES.Application.Commands.XK
                         VehicleCode = item.VehicleCode,
                         //Số lần cân
                         QuantityWeight = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.TotalNumberOfWeigh : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.TotalNumberOfWeigh : null,
                         //UOM
                         UOM = item.Unit,
                         //Số cân đàu ra

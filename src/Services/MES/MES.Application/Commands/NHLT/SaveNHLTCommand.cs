@@ -184,7 +184,7 @@ namespace MES.Application.Commands.NHLT
                     Customer = item.Customer,
                     //5   WeightId
                     WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //6 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //7   BagQuantity
@@ -211,7 +211,7 @@ namespace MES.Application.Commands.NHLT
                     UOM = item.Unit,
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //số cân đầu vào

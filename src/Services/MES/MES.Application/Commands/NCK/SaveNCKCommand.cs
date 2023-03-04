@@ -182,7 +182,7 @@ namespace MES.Application.Commands.NCK
                     WeightHeadCode = item.WeightHeadCode,
                     //3. WeightId
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //4. WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
                     //Material Doc id
@@ -216,7 +216,7 @@ namespace MES.Application.Commands.NCK
                     QuantityWithPackaging = item.QuantityWithPackage,
                     //20  QuantityWeitght - ZSOLANCAN
                     QuantityWeitght = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.TotalNumberOfWeigh : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.TotalNumberOfWeigh : null,
                     //Số xe tải
                     TruckInfoId = item.TruckInfoId,
                     TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,
@@ -234,7 +234,7 @@ namespace MES.Application.Commands.NCK
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
 

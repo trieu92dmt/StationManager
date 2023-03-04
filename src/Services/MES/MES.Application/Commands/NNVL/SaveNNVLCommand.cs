@@ -172,7 +172,7 @@ namespace MES.Application.Commands.NNVL
                     WeightHeadCode = item.WeightHeadCode,
                     //3. WeightId
                     WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //4. WeightVote
                     WeightVote = $"X{long.Parse(lastIndex) + index}",
                     //6. PlantCode
@@ -219,7 +219,7 @@ namespace MES.Application.Commands.NNVL
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //Số xe tải

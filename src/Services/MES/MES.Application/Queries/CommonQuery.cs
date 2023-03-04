@@ -96,6 +96,7 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
+        //Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type);
 
         /// <summary>
         /// Dropdown Sloc
@@ -263,6 +264,7 @@ namespace MES.Application.Queries
         private readonly IRepository<DetailOutboundDeliveryModel> _dtOdRepo;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
         private readonly IRepository<ExportByCommandModel> _xklxhRepo;
+        private readonly IRepository<ScreenModel> _screenRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -271,7 +273,8 @@ namespace MES.Application.Queries
                            IRepository<CustmdSaleModel> custRepo, IRepository<AccountModel> accRepo, IRepository<TruckInfoModel> truckInfoRepo, 
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
-                           IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo, IRepository<ExportByCommandModel> xklxhRepo)
+                           IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo, IRepository<ExportByCommandModel> xklxhRepo,
+                           IRepository<ScreenModel> screenRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -297,6 +300,7 @@ namespace MES.Application.Queries
             _dtOdRepo = dtOdRepo;
             _poDetailRepo = poDetailRepo;
             _xklxhRepo = xklxhRepo;
+            _screenRepo = screenRepo;
         }
 
         #region Get DropdownMaterial
@@ -576,6 +580,28 @@ namespace MES.Application.Queries
 
             return response;
         }
+
+        //public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
+        //{
+        //    //Lấy danh sách id cân theo màn hình
+        //    var scaleIds = !string.IsNullOrEmpty(type) ? _screenRepo.GetQuery().Include(x => x.Screen_Scale_MappingModel)
+        //                                                .FirstOrDefault(x => x.ScreenCode == type).Screen_Scale_MappingModel.Select(x => x.ScaleId) : null;
+                                      
+
+        //    var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
+        //                                                  (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true) &&
+        //                                                  (!string.IsNullOrEmpty(type) ? scaleIds.Contains(x.ScaleId) : true))
+        //                            .OrderBy(x => x.ScaleCode)
+        //                            .Select(x => new DropdownWeightHeadResponse
+        //                            {
+        //                                Key = x.ScaleCode,
+        //                                Value = x.ScaleName,
+        //                                Data = x.ScaleType.Value == true ? true : false,
+        //                                Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
+        //                            }).AsNoTracking().ToListAsync();
+
+        //    return response;
+        //}
 
         public async Task<List<Common3Response>> GetDropdownSloc(string keyword, string plant)
         {

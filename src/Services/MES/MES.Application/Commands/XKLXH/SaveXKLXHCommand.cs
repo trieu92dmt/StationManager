@@ -171,7 +171,7 @@ namespace MES.Application.Commands.XKLXH
                     ExportByCommandId = ExportByCommandÍd,
                     //2 WeightSession Id
                     WeightSessionId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //3 WeightHeadCode
                     WeightHeadCode = item.WeightHeadCode,
                     //Material

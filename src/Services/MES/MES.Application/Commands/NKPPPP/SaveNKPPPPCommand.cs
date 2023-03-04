@@ -164,7 +164,7 @@ namespace MES.Application.Commands.NKPPPP
                     Batch = item.Batch,
                     //5   WeightId
                     WeightId = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                               weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.WeighSessionID : null,
                     //6 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
                     //7   BagQuantity
@@ -189,7 +189,7 @@ namespace MES.Application.Commands.NKPPPP
                     Status = "NOT",
                     //17  StartTime
                     StartTime = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                      weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.StartTime : null,
+                                      weightSs.FirstOrDefault(x => x.ScaleCode == scale.ScaleCode && x.Status == "DANGCAN")?.StartTime : null,
                     //18  EndTime
                     EndTime = DateTime.Now,
                     //21  SlocCode

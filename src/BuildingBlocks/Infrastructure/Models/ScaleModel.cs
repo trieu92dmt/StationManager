@@ -15,7 +15,6 @@ namespace Infrastructure.Models
         {
             ScaleMonitorModel = new HashSet<ScaleMonitorModel>();
             Screen_Scale_MappingModel = new HashSet<Screen_Scale_MappingModel>();
-            WeighSessionModel = new HashSet<WeighSessionModel>();
         }
 
         [Key]
@@ -40,7 +39,5 @@ namespace Infrastructure.Models
         public virtual ICollection<ScaleMonitorModel> ScaleMonitorModel { get; set; }
         [InverseProperty("Scale")]
         public virtual ICollection<Screen_Scale_MappingModel> Screen_Scale_MappingModel { get; set; }
-        [InverseProperty("Scale")]
-        public virtual ICollection<WeighSessionModel> WeighSessionModel { get; set; }
     }
 }

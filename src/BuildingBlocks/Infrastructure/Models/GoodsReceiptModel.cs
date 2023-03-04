@@ -28,6 +28,9 @@ namespace Infrastructure.Models
         public decimal? SingleWeight { get; set; }
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
+        [StringLength(50)]
+        public string DateKey { get; set; }
+        public int? OrderIndex { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
@@ -62,7 +65,6 @@ namespace Infrastructure.Models
         public DateTime? EndTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DocumentDate { get; set; }
-        public int? DateKey { get; set; }
         [StringLength(50)]
         public string SlocCode { get; set; }
         [StringLength(50)]
@@ -78,10 +80,10 @@ namespace Infrastructure.Models
         public Guid? CreateBy { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
-        public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
         [StringLength(2000)]
         public string Img { get; set; }
+        public Guid? LastEditBy { get; set; }
 
         [ForeignKey("PurchaseOrderDetailId")]
         [InverseProperty("GoodsReceiptModel")]

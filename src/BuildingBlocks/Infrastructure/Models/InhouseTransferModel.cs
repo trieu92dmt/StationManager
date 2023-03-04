@@ -17,6 +17,9 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
         [StringLength(50)]
+        public string DateKey { get; set; }
+        public int? OrderIndex { get; set; }
+        [StringLength(50)]
         public string WeightVote { get; set; }
         public Guid? DetailODId { get; set; }
         [StringLength(50)]

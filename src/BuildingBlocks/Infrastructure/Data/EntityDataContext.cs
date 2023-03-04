@@ -3595,12 +3595,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<WeighSessionModel>(entity =>
             {
                 entity.Property(e => e.WeighSessionID).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Scale)
-                    .WithMany(p => p.WeighSessionModel)
-                    .HasForeignKey(d => d.ScaleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WeighSessionModel_ScaleModel");
             });
 
             modelBuilder.Entity<WeighingSessionDetailModel>(entity =>

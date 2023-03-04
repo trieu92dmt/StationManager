@@ -15,6 +15,9 @@ namespace Infrastructure.Models
         public Guid WarehouseImportTransferId { get; set; }
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
+        [StringLength(50)]
+        public string DateKey { get; set; }
+        public int? OrderIndex { get; set; }
         public Guid? WeightId { get; set; }
         [StringLength(50)]
         public string WeightVote { get; set; }

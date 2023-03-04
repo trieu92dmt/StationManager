@@ -368,6 +368,8 @@ namespace MES.Application.Queries
             //Data PO
             var dataPO = await queryPO.Select(x => new PuchaseOrderNKMHResponse
             {
+                //ID
+                Id = Guid.NewGuid(),
                 PoDetailId = x.PurchaseOrderDetailId,
                 StorageLocation = x.StorageLocation,
                 //Plant
@@ -402,6 +404,8 @@ namespace MES.Application.Queries
 
                 dataPO.Add(new PuchaseOrderNKMHResponse
                 {
+                    //ID
+                    Id = Guid.NewGuid(),
                     Plant = request.Plant,
                     Material = material.ProductCodeInt.ToString(),
                     MaterialName = material?.ProductName,
@@ -419,7 +423,7 @@ namespace MES.Application.Queries
 
 
             //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
-            var weighSs = _weighSsRepo.GetQuery(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN").FirstOrDefault();
+            var weighSs = _weighSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault();
 
 
             var result = new GetWeighNumResponse

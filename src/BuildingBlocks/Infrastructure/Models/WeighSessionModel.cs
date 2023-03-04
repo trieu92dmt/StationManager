@@ -22,7 +22,11 @@ namespace Infrastructure.Models
         public Guid WeighSessionID { get; set; }
         [StringLength(50)]
         public string WeighSessionCode { get; set; }
-        public Guid ScaleId { get; set; }
+        [StringLength(50)]
+        public string ScaleCode { get; set; }
+        [StringLength(50)]
+        public string DateKey { get; set; }
+        public int? OrderIndex { get; set; }
         public int? TotalNumberOfWeigh { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? TotalWeight { get; set; }
@@ -40,9 +44,6 @@ namespace Infrastructure.Models
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
 
-        [ForeignKey("ScaleId")]
-        [InverseProperty("WeighSessionModel")]
-        public virtual ScaleModel Scale { get; set; }
         [InverseProperty("WeightSession")]
         public virtual ICollection<ComponentExportModel> ComponentExportModel { get; set; }
         [InverseProperty("WeightSession")]

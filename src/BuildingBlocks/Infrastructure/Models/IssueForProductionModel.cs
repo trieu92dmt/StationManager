@@ -30,6 +30,9 @@ namespace Infrastructure.Models
         public decimal? SingleWeight { get; set; }
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
+        [StringLength(50)]
+        public string DateKey { get; set; }
+        public int? OrderIndex { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

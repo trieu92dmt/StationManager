@@ -16,5 +16,7 @@ namespace MES.Application.DTOs.MES.NKMH
         public DateTime? StartTime { get; set; }
         //Trạng thái
         public string Status { get; set; }
+        //Is success
+        public bool isSuccess { get; set; }
     }
 }

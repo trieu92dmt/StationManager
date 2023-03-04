@@ -369,7 +369,6 @@ namespace MES.Application.Queries
             var dataPO = await queryPO.Select(x => new PuchaseOrderNKMHResponse
             {
                 //ID
-                Id = Guid.NewGuid(),
                 PoDetailId = x.PurchaseOrderDetailId,
                 StorageLocation = x.StorageLocation,
                 //Plant
@@ -405,7 +404,6 @@ namespace MES.Application.Queries
                 dataPO.Add(new PuchaseOrderNKMHResponse
                 {
                     //ID
-                    Id = Guid.NewGuid(),
                     Plant = request.Plant,
                     Material = material.ProductCodeInt.ToString(),
                     MaterialName = material?.ProductName,

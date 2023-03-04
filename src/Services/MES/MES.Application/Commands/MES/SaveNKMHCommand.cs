@@ -105,7 +105,7 @@ namespace MES.Application.Commands.MES
             var lastIndex = nkmh.Count >0 ? nkmh.OrderBy(x => x.WeitghtVote).LastOrDefault().WeitghtVote.Substring(1) : "1000000";
 
             //Dữ liệu đợt cân
-            var weightSs = _weightSsRepo.GetQuery().Include(x => x.Scale).AsNoTracking();
+            var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
             //Danh sách material
             var materials = _prdRepo.GetQuery().AsNoTracking();
@@ -117,6 +117,8 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
+
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -138,11 +140,11 @@ namespace MES.Application.Commands.MES
                 }
                 #endregion
 
-                var GoodsReceiptId = Guid.NewGuid();
-
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)
                                                .FirstOrDefaultAsync();
+                var GoodsReceiptId = Guid.NewGuid();
+
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(x.Image))
@@ -159,6 +161,10 @@ namespace MES.Application.Commands.MES
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
+                //Lấy ra đợt cân
+                var weightSession = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+
                 //Save data nhập kho mua hàng
                 _nkRep.Add(new GoodsReceiptModel
                 {
@@ -171,7 +177,11 @@ namespace MES.Application.Commands.MES
                     WeightHeadCode = x.WeightHeadCode,
                     //Id đợt cân
                     WeightId = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
-                               weightSs.FirstOrDefault(x => x.ScaleId == scale.ScaleId && x.Status == "DANGCAN")?.WeighSessionID : null,
+                               weightSession.WeighSessionID : null,
+                    DateKey = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                               weightSession.OrderIndex : null,
                     //PlantCode
                     PlantCode = x.PlantCode,
                     //Material Desc
@@ -210,15 +220,14 @@ namespace MES.Application.Commands.MES
                     //Số phiếu cân
                     WeitghtVote = $"N{long.Parse(lastIndex) + index}",
                     //Common
-                    DateKey = int.Parse(DateTime.Now.ToString(DateTimeFormat.DateKey)),
-
+                    
                     CreateTime = DateTime.Now,
                     CreateBy = TokenExtensions.GetAccountId(),
                     Actived = true,
                     //Status
                     Status = "NOT",
                     //Start Time - End Time
-                    StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSs.FirstOrDefault(w => w.Scale.ScaleCode == x.WeightHeadCode)?.StartTime : DateTime.Now,
+                    StartTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? weightSession.StartTime : DateTime.Now,
                     EndTime = DateTime.Now,
                 });
 

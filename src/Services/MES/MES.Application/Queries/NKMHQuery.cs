@@ -370,7 +370,7 @@ namespace MES.Application.Queries
             //Data PO
             var dataPO = await queryPO.Select(x => new PuchaseOrderNKMHResponse
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 //ID
                 PoDetailId = x.PurchaseOrderDetailId,
                 StorageLocation = x.StorageLocation,

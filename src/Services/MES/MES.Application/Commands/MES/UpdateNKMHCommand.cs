@@ -234,7 +234,6 @@ namespace MES.Application.Commands.MES
                         SlocCode = item.StorageLocation,
                         SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
                         DocumentDate = item.DocumentDate,
-                        DateKey = dimDate.FirstOrDefault(x => x.Date.Value.Date == item.DocumentDate.Value.Date && x.Date.Value.Month == item.DocumentDate.Value.Month && x.Date.Value.Year == item.DocumentDate.Value.Year).DateKey,
                         Batch = item.Batch,
                         CreateBy = item.CreateBy,
                         CreateTime = item.CreateOn,

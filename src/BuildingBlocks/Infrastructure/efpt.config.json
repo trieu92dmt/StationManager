@@ -335,6 +335,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[WeighSessionChoseModel]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[WeighSessionDetailModel]",
          "ObjectType": 0
       },

@@ -393,6 +393,7 @@ namespace Infrastructure.Data
         public virtual DbSet<WarehouseModel> WarehouseModel { get; set; }
         public virtual DbSet<WarrantyModel> WarrantyModel { get; set; }
         public virtual DbSet<WeighModel> WeighModel { get; set; }
+        public virtual DbSet<WeighSessionChoseModel> WeighSessionChoseModel { get; set; }
         public virtual DbSet<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
         public virtual DbSet<WeighSessionModel> WeighSessionModel { get; set; }
         public virtual DbSet<WeighingSessionDetailModel> WeighingSessionDetailModel { get; set; }
@@ -3579,6 +3580,11 @@ namespace Infrastructure.Data
             modelBuilder.Entity<WeighModel>(entity =>
             {
                 entity.Property(e => e.WeighId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<WeighSessionChoseModel>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<WeighSessionDetailModel>(entity =>

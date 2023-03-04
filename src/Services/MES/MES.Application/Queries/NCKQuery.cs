@@ -284,7 +284,7 @@ namespace MES.Application.Queries
                 Description = x.Description ?? "",
                 //Hình ảnh
                 Image = !string.IsNullOrEmpty(x.Image) ? x.Image : "",
-                //Status
+                //Status 
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //Số phiếu cân
                 WeightVote = x.WeightVote,
@@ -428,6 +428,7 @@ namespace MES.Application.Queries
             //Data 
             var data = await query.Select(x => new GetInputDataResponse
             {
+                Id = Guid.NewGuid(),
                 //1. Plant
                 Plant = x.PlantCode,
                 PlantName = plants.FirstOrDefault(p => p.PlantCode == x.PlantCode).PlantName,

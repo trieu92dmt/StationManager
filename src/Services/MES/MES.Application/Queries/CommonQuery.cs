@@ -905,7 +905,7 @@ namespace MES.Application.Queries
 
                 response = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder)
                                         .Where(x => (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true) &&                                   //Lọc plant
-                                                    (x.WorkOrder.WorkOrderCode.CompareTo(woFrom) >= 0 && x.WorkOrder.WorkOrderCode.CompareTo(woTo) <= 0))   //Lọc from to
+                                                    (!string.IsNullOrEmpty(woFrom) ? x.WorkOrder.WorkOrderCode.CompareTo(woFrom) >= 0 && x.WorkOrder.WorkOrderCode.CompareTo(woTo) <= 0 : true))   //Lọc from to
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {

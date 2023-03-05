@@ -428,7 +428,7 @@ namespace MES.Application.Queries
             var weighSs = _weighSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode && x.DateKey == Now).OrderByDescending(x => x.OrderIndex).FirstOrDefault();
 
             //Check đầu đã được chọn
-            var weighSsChose = _weighSsChoseRepo.FindOneAsync(x => x.ScaleCode == weighSs.ScaleCode && x.DateKey == Now && x.OrderIndex == weighSs.OrderIndex);
+            var weighSsChose = weighSs != null ? _weighSsChoseRepo.FindOneAsync(x => x.ScaleCode == weighSs.ScaleCode && x.DateKey == Now && x.OrderIndex == weighSs.OrderIndex) : null;
 
             var result = new GetWeighNumResponse
             {

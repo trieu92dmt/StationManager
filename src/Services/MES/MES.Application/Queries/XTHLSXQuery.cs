@@ -203,7 +203,7 @@ namespace MES.Application.Queries
             //Get data
             var data = await query.Select(x => new GetDataInputResponse
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 //Plant
                 Plant = x.WorkOrder.Plant ?? "",
                 //Production Order

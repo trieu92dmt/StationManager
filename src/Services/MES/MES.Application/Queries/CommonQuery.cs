@@ -930,7 +930,7 @@ namespace MES.Application.Queries
                                     }).ToListAsync();
             }
 
-            return response;
+            return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
         }
 
         public async Task<List<CommonResponse>> GetReservation(string keyword, string plant)

@@ -159,7 +159,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetOrderType(string plant, string keyword);
+        Task<List<CommonResponse>> GetOrderType(string plant, string keyword, string type);
 
         /// <summary>
         /// Get WorkOrder
@@ -798,8 +798,27 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        public async Task<List<CommonResponse>> GetOrderType(string plant, string keyword)
+        public async Task<List<CommonResponse>> GetOrderType(string plant, string keyword, string type)
         {
+            //Khai bao mảng chức delivery type
+            var deliveryType = new List<string>();
+
+            if (type == "XKLXH")
+            {
+                //Gán giá trị cho biến deliveryType khi searh màn hình GNCXT
+                deliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
+
+                return await _oTypeRep.GetQuery(x => x.Plant == plant &&
+                                                    (!string.IsNullOrEmpty(keyword) ? x.OrderTypeCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
+                                                    deliveryType.Contains(x.OrderTypeCode))
+                                  .OrderBy(x => x.OrderTypeCode)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.OrderTypeCode,
+                                      Value = $"{x.OrderTypeCode} | {x.ShortText}"
+                                  }).Take(20).ToListAsync();
+            }    
+
             var result = await _oTypeRep.GetQuery(x => x.Plant == plant && 
                                                     (!string.IsNullOrEmpty(keyword) ? x.OrderTypeCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
                                   .OrderBy(x => x.OrderTypeCode)

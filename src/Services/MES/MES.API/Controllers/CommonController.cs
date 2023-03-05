@@ -321,9 +321,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-order-type")]
-        public async Task<IActionResult> GetOrderTypeAsync([Required]string plant, string keyword)
+        public async Task<IActionResult> GetOrderTypeAsync([Required]string plant, string keyword, string type)
         {
-            var dropdownList = await _commonQuery.GetOrderType(plant, keyword);
+            var dropdownList = await _commonQuery.GetOrderType(plant, keyword, type);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion

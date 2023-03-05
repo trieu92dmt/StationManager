@@ -57,6 +57,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
         public string GoodsMovementSts { get; set; }    //Goods Movement Sts
         public string BillingHeader { get; set; }
         public string BillingAllItems { get; set; }
+        public string PODStatus { get; set; }
 
         public List<OutboundDeliveryDetailIntegration> OutboundDeliveryDetails { get; set; } = new List<OutboundDeliveryDetailIntegration>();
 
@@ -185,6 +186,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                         delivery.GoodsMovementSts = outboundDelivery.GoodsMovementSts;
                         delivery.BillingHeader = outboundDelivery.BillingHeader;
                         delivery.BillingAllItems = outboundDelivery.BillingAllItems;
+                        delivery.PODStatus = outboundDelivery.PODStatus;
 
 
                         delivery.CreateTime = DateTime.Now;
@@ -288,6 +290,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                         delivery.LastEditTime = DateTime.Now;
                         delivery.BillingAllItems = outboundDelivery.BillingAllItems;
                         delivery.BillingHeader = outboundDelivery.BillingHeader;
+                        delivery.PODStatus = outboundDelivery.PODStatus;
                         #endregion
 
                         #region Detail

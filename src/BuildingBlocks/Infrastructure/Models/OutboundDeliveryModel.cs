@@ -103,6 +103,8 @@ namespace Infrastructure.Models
         public string BillingHeader { get; set; }
         [StringLength(10)]
         public string BillingAllItems { get; set; }
+        [StringLength(50)]
+        public string PODStatus { get; set; }
 
         [InverseProperty("OutboundDelivery")]
         public virtual ICollection<DetailOutboundDeliveryModel> DetailOutboundDeliveryModel { get; set; }

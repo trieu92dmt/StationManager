@@ -414,7 +414,7 @@ namespace MES.Application.Queries
             var query = await (from p in plants
                         join m in materials on p.PlantCode equals m.PlantCode into mtr
                         from mtrs in mtr.DefaultIfEmpty()
-                        join d in detailOds on p.PlantCode equals d.Plant into dtOd
+                        join d in detailOds on p.PlantCode equals d.OutboundDelivery.ReceivingPlant into dtOd
                         from dtOds in dtOd.DefaultIfEmpty()
                         join c in customers on p.SaleOrgCode equals c.SaleOrgCode into saleOrg
                         from sales in saleOrg.DefaultIfEmpty()

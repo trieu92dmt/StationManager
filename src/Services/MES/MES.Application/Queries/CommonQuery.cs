@@ -3,6 +3,8 @@ using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
 namespace MES.Application.Queries
 {
@@ -45,7 +47,10 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<Common2Response<string>>> GetDropdownComponent(string workorder);
+        Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
+                                                                 string poFrom, string poTo,
+                                                                 string woFrom, string woTo,
+                                                                 string type);
 
         /// <summary>
         /// Dropdown Item Component by wo
@@ -265,6 +270,7 @@ namespace MES.Application.Queries
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
         private readonly IRepository<ExportByCommandModel> _xklxhRepo;
         private readonly IRepository<ScreenModel> _screenRepo;
+        private readonly IRepository<DetailWorkOrderModel> _dtWoRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -274,7 +280,7 @@ namespace MES.Application.Queries
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
                            IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo, IRepository<ExportByCommandModel> xklxhRepo,
-                           IRepository<ScreenModel> screenRepo)
+                           IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -301,6 +307,7 @@ namespace MES.Application.Queries
             _poDetailRepo = poDetailRepo;
             _xklxhRepo = xklxhRepo;
             _screenRepo = screenRepo;
+            _dtWoRepo = dtWoRepo;
         }
 
         #region Get DropdownMaterial
@@ -856,24 +863,73 @@ namespace MES.Application.Queries
             return result;
         }
 
-        public async Task<List<Common2Response<string>>> GetDropdownComponent(string workorder)
+        public async Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
+                                                                              string poFrom, string poTo,
+                                                                              string woFrom, string woTo,
+                                                                              string type)
         {
-            var wo = await _workOrderRep.GetQuery().Include(x => x.DetailWorkOrderModel).FirstOrDefaultAsync(x => x.WorkOrderCodeInt == long.Parse(workorder));
+            var response = new List<DropdownMaterialResponse>();
 
-            var productQuery = _prodRepo.GetQuery().AsNoTracking();
+            //Get query product
+            var products = _prodRepo.GetQuery().AsNoTracking();
 
-            var response = new List<Common2Response<string>>();
-
-            if (wo != null)
+            #region po
+            if (type == "XNVLGC")
             {
-                return wo.DetailWorkOrderModel
-                    .Select(x => new Common2Response<string>
-                    {
-                        Key = x.DetailWorkOrderId,
-                        Value = $"{x.WorkOrderItem} | {x.ProductCodeInt} | {productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}", 
-                        Data = productQuery.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName
-                    }).OrderBy(x => x.Key).DistinctBy(x => x.Key).ToList();
+                if (!string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo))
+                {
+                    //Check nếu ko search field to thì gán to = from
+                    poTo = poFrom;
+                }
+
+                response = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
+                                          .Where(x => (!string.IsNullOrEmpty(plant) ? x.Reservation.Plant == plant : true) &&                                                    //Lọc plant
+                                                      (!string.IsNullOrEmpty(poFrom) ? x.PurchasingDoc.CompareTo(poFrom) >= 0 && x.PurchasingDoc.CompareTo(poTo) <= 0 : true))   //Lọc po from to
+                                        .OrderBy(x => x.MaterialCodeInt)
+                                        .Select(x => new DropdownMaterialResponse
+                                        {
+                                            Key = x.MaterialCodeInt.ToString(),
+                                            Value = $"{x.MaterialCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                            Name = products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName,
+                                            Unit = products.FirstOrDefault(p => p.ProductCode == x.Material).Unit
+                                        }).ToListAsync();
+                
             }
+            #endregion
+            #region wo
+            else if (type == "XTHLSX")
+            {
+                //Check nếu ko search field to thì gán to = from
+                if (!string.IsNullOrEmpty(woFrom) && string.IsNullOrEmpty(woTo))
+                    woTo = woFrom;
+
+                response = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder)
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true) &&                                   //Lọc plant
+                                                    (x.WorkOrder.WorkOrderCode.CompareTo(woFrom) >= 0 && x.WorkOrder.WorkOrderCode.CompareTo(woTo) <= 0))   //Lọc from to
+                                    .OrderBy(x => x.ProductCode)
+                                    .Select(x => new DropdownMaterialResponse
+                                    {
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                    }).ToListAsync();
+            }
+            #endregion
+            else
+            {
+                response = await _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
+                                                   (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) || x.ProductName.Contains(keyword) : true))
+                                    .OrderBy(x => x.ProductCode)
+                                    .Select(x => new DropdownMaterialResponse
+                                    {
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {x.ProductName}",
+                                        Name = x.ProductName,
+                                        Unit = x.Unit
+                                    }).ToListAsync();
+            }
+
             return response;
         }
 

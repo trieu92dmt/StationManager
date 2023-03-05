@@ -203,6 +203,7 @@ namespace MES.Application.Queries
             //Get data
             var data = await query.Select(x => new GetDataInputResponse
             {
+                Id = Guid.NewGuid(),
                 //Plant
                 Plant = x.WorkOrder.Plant ?? "",
                 //Production Order
@@ -439,6 +440,10 @@ namespace MES.Application.Queries
                 WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn) : 0,
                 //24 UOM
                 Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : "",
+                //Schedule Start Time
+                ScheduleStartTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledStartDate : null,
+                //Schedule Finish Time
+                ScheduleFinishTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledFinishDate : null,
                 //25 Ghi chú
                 Description = x.Description ?? "",
                 //26 Hình ảnh

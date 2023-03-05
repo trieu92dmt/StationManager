@@ -64,19 +64,19 @@ namespace MES.API.Controllers
         }
         #endregion
 
-        //#region Lấy dropdown Component
-        ///// <summary>
-        ///// Lấy dropdown Component
-        ///// </summary>
-        ///// <param name="keyword"></param>
-        ///// <returns></returns>
+        #region Lấy dropdown Component
+        /// <summary>
+        /// Lấy dropdown Component
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
         //[HttpGet("list-dropdown-component")]
         //public async Task<IActionResult> GetListComponent(string wo)
         //{
         //    var dropdownList = await _commonQuery.GetDropdownComponent(wo);
         //    return Ok(new ApiSuccessResponse<List<Common2Response<string>>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách component") });
         //}
-        //#endregion
+        #endregion
 
         #region Lấy dropdown Item Component
         /// <summary>

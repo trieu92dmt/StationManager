@@ -683,8 +683,7 @@ namespace MES.Application.Queries
             else if (type == "NHLT")
             {
                 query = query.Where(x => x.OutboundDelivery.ReceivingPlant == plant && 
-                                         x.OutboundDelivery.BillingAllItems == "A" && 
-                                         x.BillingItem == "A");
+                                         x.OutboundDelivery.BillingAllItems == "A");
             } 
             //Ở màn hình ghi nhận cân xe tải không lấy dropdown theo master data => lấy theo dữ liệu đã lưu
             else if (type == "GNCXT")

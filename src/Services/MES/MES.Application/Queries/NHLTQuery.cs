@@ -331,6 +331,7 @@ namespace MES.Application.Queries
             }
             #endregion
 
+            var deliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9" };
 
             //Get query plant
             var plants = _plantRepo.GetQuery().AsNoTracking();
@@ -340,7 +341,10 @@ namespace MES.Application.Queries
             var materials = _prodRepo.GetQuery(x => string.IsNullOrEmpty(command.MaterialFrom) ? false : true).AsNoTracking();
 
             //Get query detail od
-            var detailOds = _dtOdRepo.GetQuery(x => string.IsNullOrEmpty(command.OutboundDeliveryFrom) ? false : true).Include(x => x.OutboundDelivery).AsNoTracking();
+            var detailOds = _dtOdRepo.GetQuery(x => string.IsNullOrEmpty(command.OutboundDeliveryFrom) ? false : true)
+                                     .Include(x => x.OutboundDelivery)
+                                     .Where(x => deliveryType.Contains(x.OutboundDelivery.DeliveryType) &&
+                                                 x.OutboundDelivery.PODStatus == "A").AsNoTracking();
 
             //Get query customer
             var customers = _cusRepo.GetQuery(x => string.IsNullOrEmpty(command.CustomerFrom) ? false : true).AsNoTracking();
@@ -415,6 +419,7 @@ namespace MES.Application.Queries
                         from sales in saleOrg.DefaultIfEmpty()
                         select new GetInputDataResponse
                         {
+                            //Id = Guid.NewGuid(),
                             //Plant
                             Plant = p.PlantCode,
                             //Customer

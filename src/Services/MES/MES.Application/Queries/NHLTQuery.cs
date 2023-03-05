@@ -344,7 +344,8 @@ namespace MES.Application.Queries
             var detailOds = _dtOdRepo.GetQuery(x => string.IsNullOrEmpty(command.OutboundDeliveryFrom) ? false : true)
                                      .Include(x => x.OutboundDelivery)
                                      .Where(x => deliveryType.Contains(x.OutboundDelivery.DeliveryType) &&
-                                                 x.OutboundDelivery.PODStatus == "A").AsNoTracking();
+                                                 x.OutboundDelivery.PODStatus == "A" &&
+                                                 x.OutboundDelivery.ReceivingPlant == command.Plant).AsNoTracking();
 
             //Get query customer
             var customers = _cusRepo.GetQuery(x => string.IsNullOrEmpty(command.CustomerFrom) ? false : true).AsNoTracking();

@@ -122,7 +122,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string materialFrom, string materialTo, string keyword);
+        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string salesOrderFrom, string salesOrderTo, string materialFrom, string materialTo, string keyword);
 
         /// <summary>
         /// Dropdown Outbound Delivery Item
@@ -668,15 +668,19 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Outbound Delivery
-        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string materialFrom, string materialTo, string keyword)
+        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string salesOrderFrom, string salesOrderTo, string materialFrom, string materialTo, string keyword)
         {
             //Khai bao mảng chức delivery type
             var deliveryType = new List<string>();
 
+            if (!string.IsNullOrEmpty(salesOrderFrom) && string.IsNullOrEmpty(salesOrderTo))
+                salesOrderTo = salesOrderFrom;
+
             //Ở màn hình nhập kho hàng trả
             var query = _dtOdRepo.GetQuery()
                                        .Include(x => x.OutboundDelivery)
-                                       .Where(x =>string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+                                       .Where(x => (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                   (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 && x.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true))
                                        .AsNoTracking();
 
             //Lọc điều kiện

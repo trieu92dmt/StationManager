@@ -254,9 +254,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-outbound-delivery")]
-        public async Task<IActionResult> GetListOutboundDelivery(string type, string plant, string materialFrom, string materialTo, string keyword)
+        public async Task<IActionResult> GetListOutboundDelivery(string type, string plant, string salesOrderFrom, string salesOrderTo, string materialFrom, string materialTo, string keyword)
         {
-            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(type, plant, materialFrom, materialTo, keyword);
+            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(type, plant, salesOrderFrom, salesOrderTo, materialFrom, materialTo, keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách outbound delivery") });
         }
         #endregion

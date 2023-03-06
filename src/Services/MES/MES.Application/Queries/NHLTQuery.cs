@@ -331,7 +331,7 @@ namespace MES.Application.Queries
             }
             #endregion
 
-            var deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZLR7", "ZLR8", "ZLR9" };
+            var deliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9" };
 
             //Get query plant
             var plants = _plantRepo.GetQuery().AsNoTracking();

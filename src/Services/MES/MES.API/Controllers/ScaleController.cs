@@ -30,7 +30,13 @@ namespace MES.API.Controllers
         {
             var response = await _mediator.Send(request);
 
-            return Ok(new ApiSuccessResponse<ScaleListResponse> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Get data scale") });
+            return Ok(new ApiSuccessResponse<ScaleListResponse> { 
+                Data = response, 
+                Message = string.Format(CommonResource.Msg_Success, "Get data scale"),
+                RecordsTotal = response.PagingRep.TotalResultsCount,
+                ResultsCount = response.PagingRep.FilterResultsCount,
+                PagesCount = response.PagingRep.TotalPagesCount
+            });
         }
         #endregion
 

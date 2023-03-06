@@ -17,6 +17,7 @@ namespace MES.Application.Commands.XKLXH
 
     public class SaveXKLXH
     {
+        public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Outbound delivery
@@ -75,11 +76,12 @@ namespace MES.Application.Commands.XKLXH
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveXKLXHCommandHandler(IUnitOfWork unitOfWork, IRepository<ExportByCommandModel> xklxhRepo, IRepository<WeighSessionModel> weightSsRepo,
                                        IRepository<ScaleModel> scaleRepo, IRepository<DetailOutboundDeliveryModel> detailODRepo, IRepository<StorageLocationModel> slocRepo,
                                        IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService, IRepository<ProductModel> prodRepo,
-                                       IRepository<TruckInfoModel> truckInfoRepo)
+                                       IRepository<TruckInfoModel> truckInfoRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _xklxhRepo = xklxhRepo;
@@ -91,6 +93,7 @@ namespace MES.Application.Commands.XKLXH
             _utilitiesService = utilitiesService;
             _prodRepo = prodRepo;
             _truckInfoRepo = truckInfoRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveXKLXHCommand request, CancellationToken cancellationToken)
@@ -122,6 +125,27 @@ namespace MES.Application.Commands.XKLXH
             var index = 1;
             foreach (var item in request.SaveXKLXHs)
             {
+                var ExportByCommandId = Guid.NewGuid();
+
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _xklxhRepo.FindOneAsync(n => n.ExportByCommandId == item.Id);
+
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
+
+                //    _weightSsChoseRepo.Remove(weightSsChose);
+
+                //    _xklxhRepo.Remove(record);
+
+                //    await _unitOfWork.SaveChangesAsync();
+
+                //    continue;
+                //}
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -143,7 +167,7 @@ namespace MES.Application.Commands.XKLXH
                 }
                 #endregion
 
-                var ExportByCommandÍd = Guid.NewGuid();
+                //var ExportByCommandÍd = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -152,7 +176,7 @@ namespace MES.Application.Commands.XKLXH
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, ExportByCommandÍd.ToString(), $"{ExportByCommandÍd.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, ExportByCommandId.ToString(), $"{ExportByCommandId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "XKLXH");
                 }
@@ -168,11 +192,25 @@ namespace MES.Application.Commands.XKLXH
                 var detailOb = !string.IsNullOrEmpty(item.OutboundDelivery) ?
                                detailODs.FirstOrDefault(d => d.OutboundDelivery.DeliveryCodeInt == long.Parse(item.OutboundDelivery) && d.OutboundDeliveryItem == item.OutboundDeliveryItem) : null;
 
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
+
 
                 _xklxhRepo.Add(new ExportByCommandModel
                 {
                     //1 Export by command id
-                    ExportByCommandId = ExportByCommandÍd,
+                    ExportByCommandId = ExportByCommandId,
                     //2 WeightSession
                     DateKey = weightSession != null ?
                                weightSession.DateKey : null,

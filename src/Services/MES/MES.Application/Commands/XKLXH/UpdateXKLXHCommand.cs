@@ -103,7 +103,7 @@ namespace MES.Application.Commands.XKLXH
             var response = new ApiResponse
             {
                 IsSuccess = true,
-                Message = string.Format(CommonResource.Msg_Success, "Cập nhật nhập kho hàng trả")
+                Message = string.Format(CommonResource.Msg_Success, "Cập nhật xuất kho theo lệnh xuất hàng")
             };
 
             //Data xuất kho theo lệnh xuất hàng

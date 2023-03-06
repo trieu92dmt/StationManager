@@ -243,7 +243,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //DocumentDate
                                 DocumentDate = x.PurchaseOrderDetail?.PurchaseOrder?.DocumentDate,
                                 //Storage Location
-                                StorageLocation = x.PurchaseOrderDetail?.StorageLocation,
+                                StorageLocation = x.SlocCode,
                                 //Số lô
                                 Batch = x.Batch,
                                 //Số phương tiện

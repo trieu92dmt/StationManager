@@ -696,7 +696,8 @@ namespace MES.Application.Queries
                 //Gán giá trị cho biến deliveryType khi searh màn hình NHLT
                 deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZLR7", "ZLR8", "ZLR9" };
                 query = query.Where(x => x.Plant == plant && 
-                                         x.OutboundDelivery.PODStatus == "A");
+                                         x.OutboundDelivery.PODStatus == "A" &&
+                                         deliveryType.Contains(x.OutboundDelivery.DeliveryType));
             } 
             //Ở màn hình ghi nhận cân xe tải không lấy dropdown theo master data => lấy theo dữ liệu đã lưu
             else if (type == "GNCXT")

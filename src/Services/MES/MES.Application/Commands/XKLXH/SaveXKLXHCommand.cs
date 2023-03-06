@@ -206,6 +206,8 @@ namespace MES.Application.Commands.XKLXH
                 //        });
                 //}
 
+                var inputWeight = item.InputWeight ?? 0;
+                var outputWeight = item.OutputWeight ?? 0;
 
                 _xklxhRepo.Add(new ExportByCommandModel
                 {
@@ -256,11 +258,11 @@ namespace MES.Application.Commands.XKLXH
                     //6   PlantCode
                     PlantCode = item.Plant,
                     //Input weight
-                    InputWeight = item.InputWeight,
+                    InputWeight = inputWeight,
                     //Output weight
-                    OutputWeight = item.OutputWeight,
+                    OutputWeight = outputWeight,
                     //Trọng lượng hàng hóa
-                    GoodsWeight = item.GoodsWeight,
+                    GoodsWeight = Math.Abs(inputWeight - outputWeight),
                     //40  Description
                     Description = item.Description,
                     //41  Image

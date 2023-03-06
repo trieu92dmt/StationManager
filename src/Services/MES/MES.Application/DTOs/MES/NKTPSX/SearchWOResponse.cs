@@ -8,6 +8,8 @@ namespace MES.Application.DTOs.MES.NKTPSX
 {
     public class SearchWOResponse
     {
+        //Id
+        public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Production Order

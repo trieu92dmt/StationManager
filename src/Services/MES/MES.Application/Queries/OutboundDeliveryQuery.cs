@@ -151,6 +151,7 @@ namespace MES.Application.Queries
             //Data NKHT
             var data = await query.Select(x => new OutboundDeliveryResponse
             {
+                Id = Guid.NewGuid(),
                 Plant = x.Plant,
                 PlantName = plants.FirstOrDefault(p => p.PlantCode == x.Plant).PlantName,
                 ShipToParty = x.OutboundDelivery.ShiptoParty,

@@ -372,6 +372,7 @@ namespace MES.Application.Queries
                         new { PO = po.PurchaseOrder.PurchaseOrderCode, POLine = po.POLine }
                         select new GetInputDataResponse
                         {
+                            Id = Guid.NewGuid(),
                             //Plant
                             Plant = po.PurchaseOrder.Plant,
                             //Plant name

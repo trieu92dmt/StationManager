@@ -335,10 +335,10 @@ namespace MES.Application.Queries
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
-                                        Key = x.ProductCodeInt.ToString(),
-                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
-                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
-                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                        Key = x.PurchaseOrder.ProductCodeInt.ToString(),
+                                        Value = $"{x.PurchaseOrder.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.PurchaseOrder.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(p => p.ProductCode == x.PurchaseOrder.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.PurchaseOrder.ProductCode).Unit
                                     }).ToListAsync();
             }
             #endregion
@@ -544,7 +544,7 @@ namespace MES.Application.Queries
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
                                                              (x.POType == "Z003") &&
                                                              (x.ReleaseIndicator == "R") &&
-                                                             (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
+                                                             (x.DeletionInd != "L")).Include(x => x.PurchaseOrderDetailModel)
                                         .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
                                         .OrderBy(x => x.PurchaseOrderCode)
                                         .Select(x => new CommonResponse

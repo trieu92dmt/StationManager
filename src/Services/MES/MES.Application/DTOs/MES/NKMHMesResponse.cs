@@ -8,6 +8,8 @@
     }
     public class PuchaseOrderNKMHResponse
     {
+        //Id
+        public Guid Id { get; set; }
         //PO
         public Guid PoDetailId { get; set; }
         public string Plant { get; set; }

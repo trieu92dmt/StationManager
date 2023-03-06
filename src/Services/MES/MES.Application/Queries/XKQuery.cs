@@ -369,6 +369,7 @@ namespace MES.Application.Queries
             //Get data
             var data = await query.Select(x => new GetInputDataResponse
             {
+                Id = Guid.NewGuid(),
                 //Plant
                 Plant = x.Reservation.Plant ?? "",
                 //Reservatiom

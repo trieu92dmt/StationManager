@@ -350,6 +350,7 @@ namespace MES.Application.Queries
             //Get data
             var data = await query.OrderByDescending(x => x.WorkOrderCode).Select(x => new SearchWOResponse
             {
+                Id = Guid.NewGuid(),
                 //Plant
                 Plant = x.Plant ?? "",
                 //Production Order

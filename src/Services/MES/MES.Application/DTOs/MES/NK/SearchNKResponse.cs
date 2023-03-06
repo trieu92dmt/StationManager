@@ -9,6 +9,8 @@ namespace MES.Application.DTOs.MES.NK
 {
     public class GetInputDataResponse
     {
+        //Id
+        public Guid Id { get; set; }
         //Indexkey
         public int IndexKey { get; set; }
         //Plant

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.WebSockets;
+using System.Reflection.Metadata;
 
 namespace MES.Application.Commands.MES
 {
@@ -20,6 +21,7 @@ namespace MES.Application.Commands.MES
 
     public class NKMHRequest
     {
+        public Guid Id { get; set; }
         //Plant
         public string PlantCode { get; set; }
         //Material
@@ -72,11 +74,12 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<TruckInfoModel> _truckRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
                                       IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                      IUtilitiesService utilitiesService, IRepository<TruckInfoModel> truckRepo)
+                                      IUtilitiesService utilitiesService, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
@@ -87,6 +90,7 @@ namespace MES.Application.Commands.MES
             _weightSsRepo = weightSsRepo;
             _utilitiesService = utilitiesService;
             _truckRepo = truckRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -117,7 +121,24 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
+                //Lấy ra dòng dữ liệu đã lưu
+                var record = await _nkRep.FindOneAsync(n => n.GoodsReceiptId == x.Id);
 
+                //Lấy ra dòng dữ liệu mapping với đợt cân
+                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == x.Id);
+
+                //Check status
+                if (x.Status == "DAXOA")
+                {
+
+                    _weightSsChoseRepo.Remove(weightSsChose);
+
+                    _nkRep.Remove(record);
+
+                    await _unitOfWork.SaveChangesAsync();
+
+                    continue;
+                }
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -143,7 +164,7 @@ namespace MES.Application.Commands.MES
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)
                                                .FirstOrDefaultAsync();
-                var GoodsReceiptId = Guid.NewGuid();
+                //var GoodsReceiptId = Guid.NewGuid();
 
 
                 var imgPath = "";
@@ -153,7 +174,7 @@ namespace MES.Application.Commands.MES
                     byte[] bytes = Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, GoodsReceiptId.ToString(), $"{GoodsReceiptId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, x.Id.ToString(), $"{x.Id.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKMH");
                 }
@@ -165,68 +186,109 @@ namespace MES.Application.Commands.MES
                 var weightSession = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
-                //Save data nhập kho mua hàng
-                _nkRep.Add(new GoodsReceiptModel
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                if (weightSession != null)
                 {
-                    GoodsReceiptId = GoodsReceiptId,
-                    //Số lô
-                    Batch = x.Batch,
-                    //POLine
-                    PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
-                    //Mã đầu cân
-                    WeightHeadCode = x.WeightHeadCode,
-                    DateKey = weightSession != null && scale != null ?
-                               weightSession.DateKey : null,
-                    OrderIndex = weightSession != null && scale != null ?
-                               weightSession.OrderIndex : null,
-                    //PlantCode
-                    PlantCode = x.PlantCode,
-                    //Material Desc
-                    MaterialCode = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductCode,
-                    MaterialCodeInt = long.Parse(x.MaterialCode),
+                    if (weightSsChose != null)
+                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                        {
+                            Id = Guid.NewGuid(),
+                            DateKey = weightSession.DateKey,
+                            OrderIndex = weightSession.OrderIndex,
+                            ScaleCode = weightSession.ScaleCode,
+                            RecordId = x.Id
+                        });
+                }
+
+                //Nếu đã tồn tại dữ liệu đã lưu thi update
+                if (record != null)
+                {
                     //Sloc code
-                    SlocCode = x.SlocCode,
+                    record.SlocCode = x.SlocCode;
                     //Sloc Name
-                    SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null,
-                    //SL bao
-                    BagQuantity = x.BagQuantity,
-                    //Đơn trọng
-                    SingleWeight = x.SingleWeight,
+                    record.SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null;
+                    //Số lô
+                    record.Batch = x.Batch;
                     //Trọng lượng cân
-                    Weight = x.Weight,
-                    //Confirm Qty
-                    ConfirmQty = x.ConfirmQty,
-                    //Số lần cân
-                    QuantityWeitght = x.QuantityWeight,
-                    //Sl kèm bao bì
-                    QuantityWithPackaging = x.QuantityWithPackaging,
+                    record.Weight = x.Weight;
+                    //Confirm quantity
+                    record.ConfirmQty = x.ConfirmQty;
+                    //SL kèm bao bì
+                    record.QuantityWithPackaging = x.QuantityWithPackaging;
                     //Số phương tiện
-                    VehicleCode = x.VehicleCode,
-                    //Id cân xe tải
-                    TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,
+                    record.VehicleCode = x.VehicleCode;
+                    //Số lần cân
+                    record.QuantityWeitght = x.QuantityWeight;
                     //Số cân đầu vào
-                    InputWeight = x.InputWeight,
-                    OutputWeight = x.OutputWeight,
+                    record.InputWeight = x.InputWeight;
+                    //Số cân đầu ra
+                    record.OutputWeight = x.OutputWeight;
                     //Ghi chú
-                    Description = x.Description,
-                    //Hình ảnh
-                    //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
-                    Img = string.IsNullOrEmpty(imgPath) ? "" : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
-                    //document date = document date po
-                    DocumentDate = x.PoDetailId.HasValue && x.PoDetailId != Guid.Empty ? poLine.PurchaseOrder.DocumentDate : null,
-                    //Số phiếu cân
-                    WeitghtVote = $"N{long.Parse(lastIndex) + index}",
-                    //Common
-                    
-                    CreateTime = DateTime.Now,
-                    CreateBy = TokenExtensions.GetAccountId(),
-                    Actived = true,
-                    //Status
-                    Status = "NOT",
-                    //Start Time - End Time
-                    StartTime = weightSession != null ? weightSession.StartTime : DateTime.Now,
-                    EndTime = DateTime.Now,
-                });;
+                    record.Description = x.Description;
+                }
+                else
+                    //Save data nhập kho mua hàng
+                    _nkRep.Add(new GoodsReceiptModel
+                    {
+                        GoodsReceiptId = x.Id,
+                        //Số lô
+                        Batch = x.Batch,
+                        //POLine
+                        PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
+                        //Mã đầu cân
+                        WeightHeadCode = x.WeightHeadCode,
+                        DateKey = weightSession != null && scale != null ?
+                                   weightSession.DateKey : null,
+                        OrderIndex = weightSession != null && scale != null ?
+                                   weightSession.OrderIndex : null,
+                        //PlantCode
+                        PlantCode = x.PlantCode,
+                        //Material Desc
+                        MaterialCode = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductCode,
+                        MaterialCodeInt = long.Parse(x.MaterialCode),
+                        //Sloc code
+                        SlocCode = x.SlocCode,
+                        //Sloc Name
+                        SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null,
+                        //SL bao
+                        BagQuantity = x.BagQuantity,
+                        //Đơn trọng
+                        SingleWeight = x.SingleWeight,
+                        //Trọng lượng cân
+                        Weight = x.Weight,
+                        //Confirm Qty
+                        ConfirmQty = x.ConfirmQty,
+                        //Số lần cân
+                        QuantityWeitght = x.QuantityWeight,
+                        //Sl kèm bao bì
+                        QuantityWithPackaging = x.QuantityWithPackaging,
+                        //Số phương tiện
+                        VehicleCode = x.VehicleCode,
+                        //Id cân xe tải
+                        TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,
+                        //Số cân đầu vào
+                        InputWeight = x.InputWeight,
+                        OutputWeight = x.OutputWeight,
+                        //Ghi chú
+                        Description = x.Description,
+                        //Hình ảnh
+                        //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
+                        Img = string.IsNullOrEmpty(imgPath) ? "" : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                        //document date = document date po
+                        DocumentDate = x.PoDetailId.HasValue && x.PoDetailId != Guid.Empty ? poLine.PurchaseOrder.DocumentDate : null,
+                        //Số phiếu cân
+                        WeitghtVote = $"N{long.Parse(lastIndex) + index}",
+                        //Common
+                        
+                        CreateTime = DateTime.Now,
+                        CreateBy = TokenExtensions.GetAccountId(),
+                        Actived = true,
+                        //Status
+                        Status = "NOT",
+                        //Start Time - End Time
+                        StartTime = weightSession != null ? weightSession.StartTime : DateTime.Now,
+                        EndTime = DateTime.Now,
+                    });
 
                 index++;
             }

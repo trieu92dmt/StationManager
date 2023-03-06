@@ -17,6 +17,7 @@ namespace MES.Application.Commands.XCK
 
     public class SaveXCK
     {
+        public Guid Id { get; set; }
         //1. Plant
         public string Plant { get; set; }
         //2. Reservation
@@ -80,11 +81,12 @@ namespace MES.Application.Commands.XCK
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseExportTransferModel> xckRepo, IRepository<WeighSessionModel> weightSsRepo,
                                      IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<DetailReservationModel> detailRsRepo,
                                      IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo,
-                                     IRepository<TruckInfoModel> truckRepo)
+                                     IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _xckRepo = xckRepo;
@@ -96,6 +98,7 @@ namespace MES.Application.Commands.XCK
             _slocRepo = slocRepo;
             _plantRepo = plantRepo;
             _truckRepo = truckRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveXCKCommand request, CancellationToken cancellationToken)
@@ -126,6 +129,26 @@ namespace MES.Application.Commands.XCK
             var index = 1;
             foreach (var item in request.SaveXCKs)
             {
+
+                //Lấy ra dòng dữ liệu đã lưu
+                var record = await _xckRepo.FindOneAsync(n => n.WarehouseTransferId == item.Id);
+
+                //Lấy ra dòng dữ liệu mapping với đợt cân
+                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                //Check status
+                if (item.Status == "DAXOA")
+                {
+
+                    _weightSsChoseRepo.Remove(weightSsChose);
+
+                    _xckRepo.Remove(record);
+
+                    await _unitOfWork.SaveChangesAsync();
+
+                    continue;
+                }
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -147,7 +170,7 @@ namespace MES.Application.Commands.XCK
                 }
                 #endregion
 
-                var WarehouseTranferId = Guid.NewGuid();
+                //var WarehouseTranferId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -156,7 +179,7 @@ namespace MES.Application.Commands.XCK
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, WarehouseTranferId.ToString(), $"{WarehouseTranferId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "XCK");
                 }
@@ -173,11 +196,25 @@ namespace MES.Application.Commands.XCK
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                if (weightSession != null)
+                {
+                    if (weightSsChose != null)
+                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                        {
+                            Id = Guid.NewGuid(),
+                            DateKey = weightSession.DateKey,
+                            OrderIndex = weightSession.OrderIndex,
+                            ScaleCode = weightSession.ScaleCode,
+                            RecordId = item.Id
+                        });
+                }
+
 
                 _xckRepo.Add(new WarehouseExportTransferModel
                 {
                     //1. Warehouse Tranfer ID
-                    WarehouseTransferId = WarehouseTranferId,
+                    WarehouseTransferId = item.Id,
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
                     //2 WeightSession

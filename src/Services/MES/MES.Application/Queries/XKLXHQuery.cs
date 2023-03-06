@@ -446,6 +446,7 @@ namespace MES.Application.Queries
             //Data input
             var data = await query.Select(x => new GetInputDataResponse
             {
+                Id = Guid.NewGuid(),
                 //Plant
                 Plant = x.Plant,
                 PlantName = plants.FirstOrDefault(p => p.PlantCode == x.Plant).PlantName,

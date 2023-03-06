@@ -8,6 +8,8 @@ namespace MES.Application.DTOs.MES.NKPPPP
 {
     public class GetDataInputResponse
     {
+        //Id
+        public Guid Id { get; set; }
         public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }

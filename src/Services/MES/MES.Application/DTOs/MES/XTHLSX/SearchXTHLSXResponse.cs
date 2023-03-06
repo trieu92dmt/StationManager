@@ -8,6 +8,8 @@ namespace MES.Application.DTOs.MES.XTHLSX
 {
     public class GetDataInputResponse
     {
+        //Id
+        public Guid Id { get; set; }
         public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }

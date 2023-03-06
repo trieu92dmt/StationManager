@@ -9,6 +9,8 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
     //Bảng 1
     public class OutboundDeliveryResponse
     {
+        //Id
+        public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Plant name

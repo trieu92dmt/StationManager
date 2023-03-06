@@ -85,14 +85,15 @@ namespace MES.Application.Queries
             var materials = await _prdRepo.GetQuery(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
                                                          x.ProductCodeInt <= long.Parse(command.MaterialTo) &&
                                                          x.PlantCode == command.Plant).Select(x => new GetInputDataResponse
-                                                   {
-                                                       Plant = plant.PlantCode,
-                                                       Customer = customer != null ? customer.CustomerNumber : "",
-                                                       CustomerName = customer != null ? customer.CustomerName : "",
-                                                       Material = x.ProductCodeInt.ToString(),
-                                                       MaterialDesc = x.ProductName,
-                                                       Unit = x.Unit
-                                                   }).AsNoTracking().ToListAsync();
+                                                         {
+                                                             Id = Guid.NewGuid(),
+                                                             Plant = plant.PlantCode,
+                                                             Customer = customer != null ? customer.CustomerNumber : "",
+                                                             CustomerName = customer != null ? customer.CustomerName : "",
+                                                             Material = x.ProductCodeInt.ToString(),
+                                                             MaterialDesc = x.ProductName,
+                                                             Unit = x.Unit
+                                                         }).AsNoTracking().ToListAsync();
 
             //Tạo key
             var index = 1;

@@ -17,6 +17,7 @@ namespace MES.Application.Commands.NKPPPP
 
     public class SaveNKPPPP
     {
+        public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Production Order
@@ -63,11 +64,13 @@ namespace MES.Application.Commands.NKPPPP
         private readonly IRepository<ScrapFromProductionModel> _nkppppRepo;
         private readonly IRepository<DetailWorkOrderModel> _woDetailRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNKPPPPCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
                                              IRepository<ProductModel> prodRepo, IRepository<ScrapFromProductionModel> nkppppRepo,
-                                             IRepository<DetailWorkOrderModel> woDetailRepo, IRepository<StorageLocationModel> slocRepo)
+                                             IRepository<DetailWorkOrderModel> woDetailRepo, IRepository<StorageLocationModel> slocRepo,
+                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _weightSsRepo = weightSsRepo;
@@ -77,6 +80,7 @@ namespace MES.Application.Commands.NKPPPP
             _nkppppRepo = nkppppRepo;
             _woDetailRepo = woDetailRepo;
             _slocRepo = slocRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveNKPPPPCommand request, CancellationToken cancellationToken)
@@ -104,6 +108,26 @@ namespace MES.Application.Commands.NKPPPP
             var index = 1;
             foreach (var item in request.SaveNKPPPPs)
             {
+
+                //Lấy ra dòng dữ liệu đã lưu
+                var record = await _nkppppRepo.FindOneAsync(n => n.ScFromProductiontId == item.Id);
+
+                //Lấy ra dòng dữ liệu mapping với đợt cân
+                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                //Check status
+                if (item.Status == "DAXOA")
+                {
+
+                    _weightSsChoseRepo.Remove(weightSsChose);
+
+                    _nkppppRepo.Remove(record);
+
+                    await _unitOfWork.SaveChangesAsync();
+
+                    continue;
+                }
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -125,7 +149,7 @@ namespace MES.Application.Commands.NKPPPP
                 }
                 #endregion
 
-                var ScFromProductiontId = Guid.NewGuid();
+                //var ScFromProductiontId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -134,7 +158,7 @@ namespace MES.Application.Commands.NKPPPP
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, ScFromProductiontId.ToString(), $"{ScFromProductiontId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKPPPP");
                 }
@@ -153,10 +177,24 @@ namespace MES.Application.Commands.NKPPPP
                                                              d.WorkOrderItem == item.ItemComponent &&
                                                              d.ProductCodeInt == long.Parse(item.Component)) : null;
 
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                if (weightSession != null)
+                {
+                    if (weightSsChose != null)
+                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                        {
+                            Id = Guid.NewGuid(),
+                            DateKey = weightSession.DateKey,
+                            OrderIndex = weightSession.OrderIndex,
+                            ScaleCode = weightSession.ScaleCode,
+                            RecordId = item.Id
+                        });
+                }
+
                 _nkppppRepo.Add(new ScrapFromProductionModel
                 {
                     //1 ScFromProductiontId
-                    ScFromProductiontId = ScFromProductiontId,
+                    ScFromProductiontId = item.Id,
                     //2 DetailWorkOrderId
                     DetailWorkOrderId = detailWo != null ? detailWo.DetailWorkOrderId : null,
                     //3 PlantCode

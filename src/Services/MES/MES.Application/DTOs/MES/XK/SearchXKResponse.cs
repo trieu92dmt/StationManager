@@ -8,6 +8,8 @@ namespace MES.Application.DTOs.MES.XK
 {
     public class GetInputDataResponse
     {
+        //Id
+        public Guid Id { get; set; }
         //IKey
         public int IndexKey { get; set; }
         //Plant

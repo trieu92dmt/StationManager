@@ -240,6 +240,7 @@ namespace MES.Application.Queries
                 {
                     data.Add(new GetInputDataResponse
                     {
+                        Id = Guid.NewGuid(),
                         //Plant
                         Plant = m.PlantCode,
                         //Vendor

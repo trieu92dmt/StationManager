@@ -9,6 +9,8 @@ namespace MES.Application.DTOs.MES.NKDCNB
     //Bảng 1
     public class GetInputDataResponse
     {
+        //Id
+        public Guid Id { get; set; }
         public int IndexKey { get; set; }
         //Plant
         public string Plant { get; set; }

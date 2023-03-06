@@ -22,6 +22,7 @@ namespace MES.Application.Commands.NKDCNB
 
     public class SaveNKDCNB
     {
+        public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Shipping point
@@ -80,10 +81,11 @@ namespace MES.Application.Commands.NKDCNB
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _detailOdRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNKDCNBCommandHandler(IUnitOfWork unitOfWork, IRepository<InhouseTransferModel> nkdcnbRepo, IUtilitiesService utilitiesService, IRepository<ScaleModel> scaleRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                        IRepository<DetailOutboundDeliveryModel> detailOdRepo, IRepository<TruckInfoModel> truckRepo)
+                                        IRepository<DetailOutboundDeliveryModel> detailOdRepo, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _nkdcnbRepo = nkdcnbRepo;
@@ -94,6 +96,7 @@ namespace MES.Application.Commands.NKDCNB
             _weightSsRepo = weightSsRepo;
             _detailOdRepo = detailOdRepo;
             _truckRepo = truckRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveNKDCNBCommand request, CancellationToken cancellationToken)
@@ -124,6 +127,26 @@ namespace MES.Application.Commands.NKDCNB
             var index = 1;
             foreach (var item in request.SaveNKDCNBs)
             {
+
+                //Lấy ra dòng dữ liệu đã lưu
+                var record = await _nkdcnbRepo.FindOneAsync(n => n.InhouseTransferId == item.Id);
+
+                //Lấy ra dòng dữ liệu mapping với đợt cân
+                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                //Check status
+                if (item.Status == "DAXOA")
+                {
+
+                    _weightSsChoseRepo.Remove(weightSsChose);
+
+                    _nkdcnbRepo.Remove(record);
+
+                    await _unitOfWork.SaveChangesAsync();
+
+                    continue;
+                }
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -145,7 +168,7 @@ namespace MES.Application.Commands.NKDCNB
                 }
                 #endregion
 
-                var InhouseTranferId = Guid.NewGuid();
+                //var InhouseTranferId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -154,7 +177,7 @@ namespace MES.Application.Commands.NKDCNB
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, InhouseTranferId.ToString(), $"{InhouseTranferId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKDCNB");
                 }
@@ -171,10 +194,24 @@ namespace MES.Application.Commands.NKDCNB
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                if (weightSession != null)
+                {
+                    if (weightSsChose != null)
+                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                        {
+                            Id = Guid.NewGuid(),
+                            DateKey = weightSession.DateKey,
+                            OrderIndex = weightSession.OrderIndex,
+                            ScaleCode = weightSession.ScaleCode,
+                            RecordId = item.Id
+                        });
+                }
+
                 _nkdcnbRepo.Add(new InhouseTransferModel
                 {
                     //1 NKDCNB Id
-                    InhouseTransferId = InhouseTranferId,
+                    InhouseTransferId = item.Id,
                     //2 Detail outbound delivery id
                     DetailODId = detailOd != null ? detailOd.DetailOutboundDeliveryId : null,
                     //3 PlantCode

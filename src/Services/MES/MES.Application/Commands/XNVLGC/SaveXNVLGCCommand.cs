@@ -25,6 +25,7 @@ namespace MES.Application.Commands.XNVLGC
 
     public class SaveXNVLGC
     {
+        public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //po
@@ -93,11 +94,12 @@ namespace MES.Application.Commands.XNVLGC
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<VendorModel> _vendorRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveXNVLGCCommandHandler(IUnitOfWork unitOfWork, IRepository<ComponentExportModel> xnvlgcRepo, IRepository<WeighSessionModel> weightSsRepo,
                                         IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<PurchaseOrderDetailModel> detailPoRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo, IRepository<TruckInfoModel> truckRepo,
-                                        IRepository<VendorModel> vendorRepo)
+                                        IRepository<VendorModel> vendorRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _xnvlgcRepo = xnvlgcRepo;
@@ -110,6 +112,7 @@ namespace MES.Application.Commands.XNVLGC
             _plantRepo = plantRepo;
             _truckRepo = truckRepo;
             _vendorRepo = vendorRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveXNVLGCCommand request, CancellationToken cancellationToken)
@@ -143,6 +146,26 @@ namespace MES.Application.Commands.XNVLGC
             var index = 1;
             foreach (var item in request.SaveXNVLGCs)
             {
+
+                //Lấy ra dòng dữ liệu đã lưu
+                var record = await _xnvlgcRepo.FindOneAsync(n => n.ComponentExportId == item.Id);
+
+                //Lấy ra dòng dữ liệu mapping với đợt cân
+                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                //Check status
+                if (item.Status == "DAXOA")
+                {
+
+                    _weightSsChoseRepo.Remove(weightSsChose);
+
+                    _xnvlgcRepo.Remove(record);
+
+                    await _unitOfWork.SaveChangesAsync();
+
+                    continue;
+                }
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -164,7 +187,7 @@ namespace MES.Application.Commands.XNVLGC
                 }
                 #endregion
 
-                var ComponentExportId = Guid.NewGuid();
+                //var ComponentExportId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -173,7 +196,7 @@ namespace MES.Application.Commands.XNVLGC
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, ComponentExportId.ToString(), $"{ComponentExportId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "XNVLGC");
                 }
@@ -190,10 +213,24 @@ namespace MES.Application.Commands.XNVLGC
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                if (weightSession != null)
+                {
+                    if (weightSsChose != null)
+                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                        {
+                            Id = Guid.NewGuid(),
+                            DateKey = weightSession.DateKey,
+                            OrderIndex = weightSession.OrderIndex,
+                            ScaleCode = weightSession.ScaleCode,
+                            RecordId = item.Id
+                        });
+                }
+
                 _xnvlgcRepo.Add(new ComponentExportModel
                 {
                     //1. ID
-                    ComponentExportId = ComponentExportId,
+                    ComponentExportId = item.Id,
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
                     //2 WeightSession

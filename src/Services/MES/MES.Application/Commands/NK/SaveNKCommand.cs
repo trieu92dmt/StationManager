@@ -23,6 +23,7 @@ namespace MES.Application.Commands.NK
 
     public class SaveNKData
     {
+        public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Customer
@@ -71,10 +72,11 @@ namespace MES.Application.Commands.NK
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherImportModel> nkRepo, IUtilitiesService utilitiesService, 
                                     IRepository<ScaleModel> scaleRepo, IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, 
-                                    IRepository<WeighSessionModel> weightSsRepo,IRepository<TruckInfoModel> truckRepo)
+                                    IRepository<WeighSessionModel> weightSsRepo,IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _nkRepo = nkRepo;
@@ -84,6 +86,7 @@ namespace MES.Application.Commands.NK
             _slocRepo = slocRepo;
             _weightSsRepo = weightSsRepo;
             _truckRepo = truckRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveNKCommand request, CancellationToken cancellationToken)
@@ -112,6 +115,26 @@ namespace MES.Application.Commands.NK
             var index = 1;
             foreach (var item in request.SaveNKDatas)
             {
+
+                //Lấy ra dòng dữ liệu đã lưu
+                var record = await _nkRepo.FindOneAsync(n => n.OtherImportId == item.Id);
+
+                //Lấy ra dòng dữ liệu mapping với đợt cân
+                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                //Check status
+                if (item.Status == "DAXOA")
+                {
+
+                    _weightSsChoseRepo.Remove(weightSsChose);
+
+                    _nkRepo.Remove(record);
+
+                    await _unitOfWork.SaveChangesAsync();
+
+                    continue;
+                }
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -133,7 +156,7 @@ namespace MES.Application.Commands.NK
                 }
                 #endregion
 
-                var OtherImportId = Guid.NewGuid();
+                //var OtherImportId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -142,7 +165,7 @@ namespace MES.Application.Commands.NK
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, OtherImportId.ToString(), $"{OtherImportId.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NK");
                 }
@@ -154,10 +177,24 @@ namespace MES.Application.Commands.NK
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                if (weightSession != null)
+                {
+                    if (weightSsChose != null)
+                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                        {
+                            Id = Guid.NewGuid(),
+                            DateKey = weightSession.DateKey,
+                            OrderIndex = weightSession.OrderIndex,
+                            ScaleCode = weightSession.ScaleCode,
+                            RecordId = item.Id
+                        });
+                }
+
                 _nkRepo.Add(new OtherImportModel
                 {
                     //1 NK Id
-                    OtherImportId = OtherImportId,
+                    OtherImportId = item.Id,
                     //3 PlantCode
                     PlantCode = item.Plant,
                     //Customer

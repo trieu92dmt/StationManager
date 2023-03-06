@@ -17,6 +17,7 @@ namespace MES.Application.Commands.XTHLSX
 
     public class SaveXTHLSX
     {
+        //public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Production Order
@@ -61,11 +62,13 @@ namespace MES.Application.Commands.XTHLSX
         private readonly IRepository<IssueForProductionModel> _xthlsxRepo;
         private readonly IRepository<DetailWorkOrderModel> _woDetailRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveXTHLSXCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
                                              IRepository<ProductModel> prodRepo, IRepository<IssueForProductionModel> xthlsxRepo,
-                                             IRepository<DetailWorkOrderModel> woDetailRepo, IRepository<StorageLocationModel> slocRepo)
+                                             IRepository<DetailWorkOrderModel> woDetailRepo, IRepository<StorageLocationModel> slocRepo,
+                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _weightSsRepo = weightSsRepo;
@@ -75,6 +78,7 @@ namespace MES.Application.Commands.XTHLSX
             _xthlsxRepo = xthlsxRepo;
             _woDetailRepo = woDetailRepo;
             _slocRepo = slocRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveXTHLSXCommand request, CancellationToken cancellationToken)
@@ -102,6 +106,25 @@ namespace MES.Application.Commands.XTHLSX
             var index = 1;
             foreach (var item in request.SaveXTHLSXs)
             {
+
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _xthlsxRepo.FindOneAsync(n => n.IssForProductiontId == item.Id);
+
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
+
+                //    _weightSsChoseRepo.Remove(weightSsChose);
+
+                //    _xthlsxRepo.Remove(record);
+
+                //    await _unitOfWork.SaveChangesAsync();
+
+                //    continue;
+                //}
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -149,6 +172,20 @@ namespace MES.Application.Commands.XTHLSX
                                     detailWos.FirstOrDefault(d => d.WorkOrder.WorkOrderCodeInt == long.Parse(item.WorkOrder) &&
                                                              d.WorkOrderItem == item.ItemComponent &&
                                                              d.ProductCodeInt == long.Parse(item.Component)) : null;
+
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
 
                 _xthlsxRepo.Add(new IssueForProductionModel
                 {

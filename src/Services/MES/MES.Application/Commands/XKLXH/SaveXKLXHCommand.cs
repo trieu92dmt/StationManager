@@ -223,7 +223,7 @@ namespace MES.Application.Commands.XKLXH
                     EndTime = DateTime.Now,
                     //Material
                     MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : null,
-                    MaterialCodeInt = long.Parse(item.Material),
+                    MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,
                     //Số phương tiện
                     VehicleCode = item.VehicleCode,
                     //UOM

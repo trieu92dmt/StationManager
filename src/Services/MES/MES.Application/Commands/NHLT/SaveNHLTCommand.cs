@@ -23,7 +23,7 @@ namespace MES.Application.Commands.NHLT
 
     public class SaveNHLT
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Od
@@ -130,24 +130,24 @@ namespace MES.Application.Commands.NHLT
             foreach (var item in request.SaveNHLTs)
             {
 
-                //Lấy ra dòng dữ liệu đã lưu
-                var record = await _nhltRepo.FindOneAsync(n => n.GoodsReceiptTypeTId == item.Id);
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _nhltRepo.FindOneAsync(n => n.GoodsReceiptTypeTId == item.Id);
 
-                //Lấy ra dòng dữ liệu mapping với đợt cân
-                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
 
-                //Check status
-                if (item.Status == "DAXOA")
-                {
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
 
-                    _weightSsChoseRepo.Remove(weightSsChose);
+                //    _weightSsChoseRepo.Remove(weightSsChose);
 
-                    _nhltRepo.Remove(record);
+                //    _nhltRepo.Remove(record);
 
-                    await _unitOfWork.SaveChangesAsync();
+                //    await _unitOfWork.SaveChangesAsync();
 
-                    continue;
-                }
+                //    continue;
+                //}
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -170,7 +170,7 @@ namespace MES.Application.Commands.NHLT
                 }
                 #endregion
 
-                //var GoodsReceiptTypeTId = Guid.NewGuid();
+                var GoodsReceiptTypeTId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -179,7 +179,7 @@ namespace MES.Application.Commands.NHLT
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, GoodsReceiptTypeTId.ToString(), $"{GoodsReceiptTypeTId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NHLT");
                 }
@@ -196,24 +196,24 @@ namespace MES.Application.Commands.NHLT
                 var detailOd = !string.IsNullOrEmpty(item.OutboundDelivery) ?
                                detailOds.FirstOrDefault(d => d.OutboundDelivery.DeliveryCodeInt == long.Parse(item.OutboundDelivery) && d.OutboundDeliveryItem == item.OutboundDeliveryItem) : null;
 
-                //Nếu có đợt cân thì lưu vào bảng mapping
-                if (weightSession != null)
-                {
-                    if (weightSsChose != null)
-                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
-                        {
-                            Id = Guid.NewGuid(),
-                            DateKey = weightSession.DateKey,
-                            OrderIndex = weightSession.OrderIndex,
-                            ScaleCode = weightSession.ScaleCode,
-                            RecordId = item.Id
-                        });
-                }
+                ////Nếu có đợt cân thì lưu vào bảng mapping
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
 
                 _nhltRepo.Add(new GoodsReceiptTypeTModel
                 {
                     //1 GoodsReceiptTypeTId
-                    GoodsReceiptTypeTId = item.Id,
+                    GoodsReceiptTypeTId = GoodsReceiptTypeTId,
                     //2 Detail Od
                     DetailODId = detailOd != null ? detailOd.DetailOutboundDeliveryId : null,
                     //3 PlantCode

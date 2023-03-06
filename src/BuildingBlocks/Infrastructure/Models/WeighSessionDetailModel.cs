@@ -13,7 +13,9 @@ namespace Infrastructure.Models
     {
         [Key]
         public Guid WeighSessionDetailID { get; set; }
-        public Guid WeighSessionID { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string WeighSessionCode { get; set; }
         public int? NumberOfWeigh { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? DetailWeight { get; set; }
@@ -26,9 +28,5 @@ namespace Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
-
-        [ForeignKey("WeighSessionID")]
-        [InverseProperty("WeighSessionDetailModel")]
-        public virtual WeighSessionModel WeighSession { get; set; }
     }
 }

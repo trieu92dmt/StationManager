@@ -51,7 +51,6 @@ namespace Infrastructure.Data
         public virtual DbSet<BOM_Item_InventorModel> BOM_Item_InventorModel { get; set; }
         public virtual DbSet<BangTinModel> BangTinModel { get; set; }
         public virtual DbSet<BannerModel> BannerModel { get; set; }
-        public virtual DbSet<BookingModel> BookingModel { get; set; }
         public virtual DbSet<CampaignModel> CampaignModel { get; set; }
         public virtual DbSet<CapacityRegisterModel> CapacityRegisterModel { get; set; }
         public virtual DbSet<CareerModel> CareerModel { get; set; }
@@ -644,13 +643,6 @@ namespace Infrastructure.Data
                 entity.Property(e => e.BannerId).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<BookingModel>(entity =>
-            {
-                entity.Property(e => e.BookingModelId).ValueGeneratedNever();
-
-                entity.Property(e => e.BookingCode).ValueGeneratedOnAdd();
-            });
-
             modelBuilder.Entity<CampaignModel>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -796,21 +788,11 @@ namespace Infrastructure.Data
                     .WithMany(p => p.ComponentExportModel)
                     .HasForeignKey(d => d.PurchaseOrderDetailId)
                     .HasConstraintName("FK_ComponentExportModel_PurchaseOrderDetailModel");
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.ComponentExportModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_ComponentExportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<ComponentImportModel>(entity =>
             {
                 entity.Property(e => e.ComponentImportId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.WeightSession)
-                    .WithMany(p => p.ComponentImportModel)
-                    .HasForeignKey(d => d.WeightSessionId)
-                    .HasConstraintName("FK_ComponentImportModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<ConfigurationModel>(entity =>
@@ -3590,12 +3572,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<WeighSessionDetailModel>(entity =>
             {
                 entity.Property(e => e.WeighSessionDetailID).ValueGeneratedNever();
-
-                entity.HasOne(d => d.WeighSession)
-                    .WithMany(p => p.WeighSessionDetailModel)
-                    .HasForeignKey(d => d.WeighSessionID)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WeighSessionDetailModel_WeighSessionModel");
             });
 
             modelBuilder.Entity<WeighSessionModel>(entity =>

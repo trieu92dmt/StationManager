@@ -13,7 +13,6 @@ namespace Infrastructure.Models
     {
         [Key]
         public Guid ComponentExportId { get; set; }
-        public Guid? WeightSessionId { get; set; }
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
         [StringLength(50)]
@@ -101,8 +100,5 @@ namespace Infrastructure.Models
         [ForeignKey("PurchaseOrderDetailId")]
         [InverseProperty("ComponentExportModel")]
         public virtual PurchaseOrderDetailModel PurchaseOrderDetail { get; set; }
-        [ForeignKey("WeightSessionId")]
-        [InverseProperty("ComponentExportModel")]
-        public virtual WeighSessionModel WeightSession { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace Infrastructure.Models
     {
         [Key]
         public Guid ComponentImportId { get; set; }
-        public Guid? WeightSessionId { get; set; }
+        [Required]
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
         [StringLength(50)]
@@ -89,9 +89,5 @@ namespace Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
-
-        [ForeignKey("WeightSessionId")]
-        [InverseProperty("ComponentImportModel")]
-        public virtual WeighSessionModel WeightSession { get; set; }
     }
 }

@@ -11,13 +11,6 @@ namespace Infrastructure.Models
     [Table("WeighSessionModel", Schema = "DataCollection")]
     public partial class WeighSessionModel
     {
-        public WeighSessionModel()
-        {
-            ComponentExportModel = new HashSet<ComponentExportModel>();
-            ComponentImportModel = new HashSet<ComponentImportModel>();
-            WeighSessionDetailModel = new HashSet<WeighSessionDetailModel>();
-        }
-
         [Key]
         public Guid WeighSessionID { get; set; }
         [StringLength(50)]
@@ -43,12 +36,5 @@ namespace Infrastructure.Models
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
-
-        [InverseProperty("WeightSession")]
-        public virtual ICollection<ComponentExportModel> ComponentExportModel { get; set; }
-        [InverseProperty("WeightSession")]
-        public virtual ICollection<ComponentImportModel> ComponentImportModel { get; set; }
-        [InverseProperty("WeighSession")]
-        public virtual ICollection<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
     }
 }

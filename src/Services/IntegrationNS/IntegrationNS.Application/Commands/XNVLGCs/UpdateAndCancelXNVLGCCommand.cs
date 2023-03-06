@@ -104,7 +104,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                 foreach (var item in request.XNVLGCs)
                 {
                     //Phiếu xuất nguyên vật liệu gia công
-                    var xnvlgc = await _xnvlgcRep.GetQuery().Include(x => x.PurchaseOrderDetail).FirstOrDefaultAsync(x => x.ComponentExportId == item.XnvlgcId);
+                    var xnvlgc = await _xnvlgcRep.GetQuery().Include(x => x.PurchaseOrderDetail).ThenInclude(x => x.PurchaseOrder).FirstOrDefaultAsync(x => x.ComponentExportId == item.XnvlgcId);
 
                     //Check
                     if (xnvlgc is null)

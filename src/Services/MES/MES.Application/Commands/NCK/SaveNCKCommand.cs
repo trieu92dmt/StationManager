@@ -23,7 +23,7 @@ namespace MES.Application.Commands.NCK
 
     public class SaveNCK
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Reservation
@@ -135,24 +135,24 @@ namespace MES.Application.Commands.NCK
             var index = 1;
             foreach (var item in request.SaveNCKs)
             {
-                //Lấy ra dòng dữ liệu đã lưu
-                var record = await _nckRepo.FindOneAsync(n => n.WarehouseImportTransferId == item.Id);
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _nckRepo.FindOneAsync(n => n.WarehouseImportTransferId == item.Id);
 
-                //Lấy ra dòng dữ liệu mapping với đợt cân
-                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
 
-                //Check status
-                if (item.Status == "DAXOA")
-                {
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
                   
-                    _weightSsChoseRepo.Remove(weightSsChose);
+                //    _weightSsChoseRepo.Remove(weightSsChose);
 
-                    _nckRepo.Remove(record);
+                //    _nckRepo.Remove(record);
 
-                    await _unitOfWork.SaveChangesAsync();
+                //    await _unitOfWork.SaveChangesAsync();
 
-                    continue;
-                }
+                //    continue;
+                //}
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -175,7 +175,7 @@ namespace MES.Application.Commands.NCK
                 }
                 #endregion
 
-                //var WarehouseImportTranferId = Guid.NewGuid();
+                var WarehouseImportTranferId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -184,7 +184,7 @@ namespace MES.Application.Commands.NCK
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, WarehouseImportTranferId.ToString(), $"{WarehouseImportTranferId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NCK");
                 }
@@ -201,54 +201,54 @@ namespace MES.Application.Commands.NCK
                                     matDocs.FirstOrDefault(m => m.MaterialDocCode == item.MaterialDoc && m.MaterialDocItem == item.MaterialDocItem) : null;
 
                 //Nếu có đợt cân thì lưu vào bảng mapping
-                if (weightSession != null)
-                {
-                    if (weightSsChose != null)
-                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
-                        {
-                            Id = Guid.NewGuid(),
-                            DateKey = weightSession.DateKey,
-                            OrderIndex = weightSession.OrderIndex,
-                            ScaleCode = weightSession.ScaleCode,
-                            RecordId = item.Id
-                        });
-                }
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
 
                 //Nếu đã tồn tại dữ liệu đã lưu thi update
-                if (record != null)
-                {
-                    //Sloc code
-                    record.SlocCode = item.Sloc;
-                    //Sloc Name
-                    record.SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "";
-                    //Số lô
-                    record.Batch = item.Batch;
-                    //Trọng lượng cân
-                    record.Weight = item.Weight;
-                    //Confirm quantity
-                    record.ConfirmQty = item.ConfirmQty;
-                    //SL kèm bao bì
-                    record.QuantityWithPackaging = item.QuantityWithPackage;
-                    //Số phương tiện
-                    record.VehicleCode = item.VehicleCode;
-                    //Số xe tải
-                    record.TruckInfoId = item.TruckInfoId;
-                    record.TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null;
-                    //Số lần cân
-                    record.QuantityWeitght = weightSession != null ?
-                               weightSession.TotalNumberOfWeigh : null;
-                    //Số cân đầu vào
-                    record.InputWeight = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(x => x.TruckInfoId == item.TruckInfoId).InputWeight : null;
-                    //Số cân đầu ra
-                    record.OutputWeight = item.OutputWeight;
-                    //Ghi chú
-                    record.Description = item.Description;
-                }
-                else
+                //if (record != null)
+                //{
+                //    //Sloc code
+                //    record.SlocCode = item.Sloc;
+                //    //Sloc Name
+                //    record.SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "";
+                //    //Số lô
+                //    record.Batch = item.Batch;
+                //    //Trọng lượng cân
+                //    record.Weight = item.Weight;
+                //    //Confirm quantity
+                //    record.ConfirmQty = item.ConfirmQty;
+                //    //SL kèm bao bì
+                //    record.QuantityWithPackaging = item.QuantityWithPackage;
+                //    //Số phương tiện
+                //    record.VehicleCode = item.VehicleCode;
+                //    //Số xe tải
+                //    record.TruckInfoId = item.TruckInfoId;
+                //    record.TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null;
+                //    //Số lần cân
+                //    record.QuantityWeitght = weightSession != null ?
+                //               weightSession.TotalNumberOfWeigh : null;
+                //    //Số cân đầu vào
+                //    record.InputWeight = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(x => x.TruckInfoId == item.TruckInfoId).InputWeight : null;
+                //    //Số cân đầu ra
+                //    record.OutputWeight = item.OutputWeight;
+                //    //Ghi chú
+                //    record.Description = item.Description;
+                //}
+                //else
                     _nckRepo.Add(new WarehouseImportTransferModel
                 {
                     //1. Warehouse import Tranfer ID
-                    WarehouseImportTransferId = item.Id,
+                    WarehouseImportTransferId = WarehouseImportTranferId,
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
                     //2 WeightSession

@@ -17,7 +17,7 @@ namespace MES.Application.Commands.XK
 
     public class DataSaveXK 
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Reservation
@@ -124,24 +124,24 @@ namespace MES.Application.Commands.XK
             foreach (var item in request.DataSaveXKs)
             {
 
-                //Lấy ra dòng dữ liệu đã lưu
-                var record = await _xkRepo.FindOneAsync(n => n.OtherExportId == item.Id);
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _xkRepo.FindOneAsync(n => n.OtherExportId == item.Id);
 
-                //Lấy ra dòng dữ liệu mapping với đợt cân
-                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
 
-                //Check status
-                if (item.Status == "DAXOA")
-                {
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
 
-                    _weightSsChoseRepo.Remove(weightSsChose);
+                //    _weightSsChoseRepo.Remove(weightSsChose);
 
-                    _xkRepo.Remove(record);
+                //    _xkRepo.Remove(record);
 
-                    await _unitOfWork.SaveChangesAsync();
+                //    await _unitOfWork.SaveChangesAsync();
 
-                    continue;
-                }
+                //    continue;
+                //}
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -164,7 +164,7 @@ namespace MES.Application.Commands.XK
                 }
                 #endregion
 
-                //var OtherExportId = Guid.NewGuid();
+                var OtherExportId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -173,7 +173,7 @@ namespace MES.Application.Commands.XK
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, OtherExportId.ToString(), $"{OtherExportId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "XK");
                 }
@@ -190,24 +190,24 @@ namespace MES.Application.Commands.XK
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
-                //Nếu có đợt cân thì lưu vào bảng mapping
-                if (weightSession != null)
-                {
-                    if (weightSsChose != null)
-                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
-                        {
-                            Id = Guid.NewGuid(),
-                            DateKey = weightSession.DateKey,
-                            OrderIndex = weightSession.OrderIndex,
-                            ScaleCode = weightSession.ScaleCode,
-                            RecordId = item.Id
-                        });
-                }
+                ////Nếu có đợt cân thì lưu vào bảng mapping
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
 
                 _xkRepo.Add(new OtherExportModel
                 {
                     //1 XK Id
-                    OtherExportId = item.Id,
+                    OtherExportId = OtherExportId,
                     //2 Detail reservation id
                     DetailReservationId = detailRes != null ? detailRes.DetailReservationId : null,
                     //3 PlantCode

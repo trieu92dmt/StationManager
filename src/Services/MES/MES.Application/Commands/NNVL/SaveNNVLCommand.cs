@@ -22,7 +22,7 @@ namespace MES.Application.Commands.NNVL
 
     public class SaveNNVL
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Vendor
@@ -130,24 +130,24 @@ namespace MES.Application.Commands.NNVL
             foreach (var item in request.SaveNNVLs)
             {
 
-                //Lấy ra dòng dữ liệu đã lưu
-                var record = await _nnvlgcRepo.FindOneAsync(n => n.ComponentImportId == item.Id);
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _nnvlgcRepo.FindOneAsync(n => n.ComponentImportId == item.Id);
 
-                //Lấy ra dòng dữ liệu mapping với đợt cân
-                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
 
-                //Check status
-                if (item.Status == "DAXOA")
-                {
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
 
-                    _weightSsChoseRepo.Remove(weightSsChose);
+                //    _weightSsChoseRepo.Remove(weightSsChose);
 
-                    _nnvlgcRepo.Remove(record);
+                //    _nnvlgcRepo.Remove(record);
 
-                    await _unitOfWork.SaveChangesAsync();
+                //    await _unitOfWork.SaveChangesAsync();
 
-                    continue;
-                }
+                //    continue;
+                //}
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -170,7 +170,7 @@ namespace MES.Application.Commands.NNVL
                 }
                 #endregion
 
-                //var ComponentImportId = Guid.NewGuid();
+                var ComponentImportId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -179,7 +179,7 @@ namespace MES.Application.Commands.NNVL
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, ComponentImportId.ToString(), $"{ComponentImportId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NNVLGC");
                 }
@@ -191,24 +191,24 @@ namespace MES.Application.Commands.NNVL
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
-                //Nếu có đợt cân thì lưu vào bảng mapping
-                if (weightSession != null)
-                {
-                    if (weightSsChose != null)
-                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
-                        {
-                            Id = Guid.NewGuid(),
-                            DateKey = weightSession.DateKey,
-                            OrderIndex = weightSession.OrderIndex,
-                            ScaleCode = weightSession.ScaleCode,
-                            RecordId = item.Id
-                        });
-                }
+                ////Nếu có đợt cân thì lưu vào bảng mapping
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
 
                 _nnvlgcRepo.Add(new ComponentImportModel
                 {
                     //1. ID
-                    ComponentImportId = item.Id,
+                    ComponentImportId = ComponentImportId,
                     //2. Đầu cân
                     WeightHeadCode = item.WeightHeadCode,
                     //2 WeightSession

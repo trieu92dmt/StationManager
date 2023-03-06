@@ -18,7 +18,7 @@ namespace MES.Application.Commands.OutboundDelivery
 
     public class SaveNKTPSX
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         //Plant
         public string Plant { get; set; }
         //Production Order
@@ -106,24 +106,24 @@ namespace MES.Application.Commands.OutboundDelivery
             foreach (var item in request.SaveNKTPSXs)
             {
 
-                //Lấy ra dòng dữ liệu đã lưu
-                var record = await _nktpsxRepo.FindOneAsync(n => n.RcFromProductiontId == item.Id);
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _nktpsxRepo.FindOneAsync(n => n.RcFromProductiontId == item.Id);
 
-                //Lấy ra dòng dữ liệu mapping với đợt cân
-                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
 
-                //Check status
-                if (item.Status == "DAXOA")
-                {
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
 
-                    _weightSsChoseRepo.Remove(weightSsChose);
+                //    _weightSsChoseRepo.Remove(weightSsChose);
 
-                    _nktpsxRepo.Remove(record);
+                //    _nktpsxRepo.Remove(record);
 
-                    await _unitOfWork.SaveChangesAsync();
+                //    await _unitOfWork.SaveChangesAsync();
 
-                    continue;
-                }
+                //    continue;
+                //}
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -146,7 +146,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 }
                 #endregion
 
-                //var RcFromProductiontId = Guid.NewGuid();
+                var RcFromProductiontId = Guid.NewGuid();
 
                 var imgPath = "";
                 if (!string.IsNullOrEmpty(item.Image))
@@ -155,7 +155,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.Id.ToString(), $"{item.Id.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, RcFromProductiontId.ToString(), $"{RcFromProductiontId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKTPSX");
                 }
@@ -174,23 +174,23 @@ namespace MES.Application.Commands.OutboundDelivery
                 var wo = !string.IsNullOrEmpty(item.WorkOrder) ? wos.FirstOrDefault(d => d.WorkOrderCodeInt == long.Parse(item.WorkOrder)) : null;
 
                 //Nếu có đợt cân thì lưu vào bảng mapping
-                if (weightSession != null)
-                {
-                    if (weightSsChose != null)
-                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
-                        {
-                            Id = Guid.NewGuid(),
-                            DateKey = weightSession.DateKey,
-                            OrderIndex = weightSession.OrderIndex,
-                            ScaleCode = weightSession.ScaleCode,
-                            RecordId = item.Id
-                        });
-                }
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
 
                 _nktpsxRepo.Add(new ReceiptFromProductionModel
                 {
                     //1 RcFromProductiontId
-                    RcFromProductiontId = item.Id,
+                    RcFromProductiontId = RcFromProductiontId,
                     //2 WorkOrderId
                     WorkOrderId = wo != null ? wo.WorkOrderId : null,
                     //3 PlantCode

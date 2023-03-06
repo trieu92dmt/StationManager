@@ -345,7 +345,7 @@ namespace MES.Application.Queries
                                      .Include(x => x.OutboundDelivery)
                                      .Where(x => deliveryType.Contains(x.OutboundDelivery.DeliveryType) &&
                                                  x.OutboundDelivery.PODStatus == "A" &&
-                                                 x.OutboundDelivery.ReceivingPlant == command.Plant).AsNoTracking();
+                                                 x.Plant == command.Plant).AsNoTracking();
 
             //Get query customer
             var customers = _cusRepo.GetQuery(x => string.IsNullOrEmpty(command.CustomerFrom) ? false : true).AsNoTracking();

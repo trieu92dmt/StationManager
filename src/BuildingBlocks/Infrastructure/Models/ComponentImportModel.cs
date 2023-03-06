@@ -13,7 +13,6 @@ namespace Infrastructure.Models
     {
         [Key]
         public Guid ComponentImportId { get; set; }
-        [Required]
         [StringLength(50)]
         public string WeightHeadCode { get; set; }
         [StringLength(50)]

@@ -18,6 +18,7 @@ namespace MES.Application.Commands.OutboundDelivery
 
     public class SaveGoodsReturn
     {
+        public Guid Id { get; set; }
         //Plant
         public string PlantCode { get; set; }
         //Od code
@@ -72,10 +73,12 @@ namespace MES.Application.Commands.OutboundDelivery
         private readonly IRepository<OutboundDeliveryModel> _obRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
+        private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveGoodsReturnCommandHandler(IUnitOfWork unitOfWork, IRepository<GoodsReturnModel> nkhtRepo, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, IRepository<DetailOutboundDeliveryModel> detailODRepo,
-                                             IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService, IRepository<ProductModel> prodRepo)
+                                             IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService, IRepository<ProductModel> prodRepo,
+                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;
             _nkhtRepo = nkhtRepo;
@@ -85,6 +88,7 @@ namespace MES.Application.Commands.OutboundDelivery
             _obRepo = obRepo;
             _utilitiesService = utilitiesService;
             _prodRepo = prodRepo;
+            _weightSsChoseRepo = weightSsChoseRepo;
         }
 
         public async Task<bool> Handle(SaveGoodsReturnCommand request, CancellationToken cancellationToken)
@@ -110,6 +114,26 @@ namespace MES.Application.Commands.OutboundDelivery
             var index = 1;
             foreach (var item in request.SaveGoodsReturns)
             {
+
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _nkhtRepo.FindOneAsync(n => n.GoodsReturnId == item.Id);
+
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == item.Id);
+
+                ////Check status
+                //if (item.Status == "DAXOA")
+                //{
+
+                //    _weightSsChoseRepo.Remove(weightSsChose);
+
+                //    _nkhtRepo.Remove(record);
+
+                //    await _unitOfWork.SaveChangesAsync();
+
+                //    continue;
+                //}
+
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
 
@@ -157,6 +181,19 @@ namespace MES.Application.Commands.OutboundDelivery
                 var detailOb = !string.IsNullOrEmpty(item.ODCode) ?
                                detailODs.FirstOrDefault(d => d.OutboundDelivery.DeliveryCodeInt == long.Parse(item.ODCode) && d.OutboundDeliveryItem == item.ODItem) : null;
 
+                //Nếu có đợt cân thì lưu vào bảng mapping
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = item.Id
+                //        });
+                //}
 
                 _nkhtRepo.Add(new GoodsReturnModel
                 {
@@ -204,8 +241,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //20  ConfirmQty
                     ConfirmQty = item.ConfirmQty,
                     //21  UOM
-                    UOM = !string.IsNullOrEmpty(item.ODCode) ?
-                          detailOb.Unit : null,
+                    UOM = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode)).Unit,
                     //22  NetWeight
                     NetWeight = !string.IsNullOrEmpty(item.ODCode) ?
                           detailOb.NetWeight : null,

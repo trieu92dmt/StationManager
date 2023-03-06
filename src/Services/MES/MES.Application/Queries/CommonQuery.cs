@@ -813,18 +813,21 @@ namespace MES.Application.Queries
 
             if (type == "XKLXH")
             {
-                //Gán giá trị cho biến deliveryType khi searh màn hình GNCXT
+                //Gán giá trị cho biến deliveryType khi searh màn hình XKLXH
                 deliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
-                return await _oTypeRep.GetQuery(x => x.Plant == plant &&
-                                                    (!string.IsNullOrEmpty(keyword) ? x.OrderTypeCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
-                                                    deliveryType.Contains(x.OrderTypeCode))
-                                  .OrderBy(x => x.OrderTypeCode)
+                var res = await _obDeliveryRepo.GetQuery(x => x.ShippingPoint == plant &&
+                                                    (!string.IsNullOrEmpty(keyword) ? x.DeliveryType.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) &&
+                                                                                      x.DeliveryTypeDescription.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
+                                                    deliveryType.Contains(x.DeliveryType))
+                                  .OrderBy(x => x.DeliveryType)
                                   .Select(x => new CommonResponse
                                   {
-                                      Key = x.OrderTypeCode,
-                                      Value = $"{x.OrderTypeCode} | {x.ShortText}"
-                                  }).Take(20).ToListAsync();
+                                      Key = x.DeliveryType,
+                                      Value = $"{x.DeliveryType} | {x.DeliveryTypeDescription}"
+                                  }).ToListAsync();
+
+                return res.DistinctBy(x => x.Key).Take(10).ToList();
             }    
 
             var result = await _oTypeRep.GetQuery(x => x.Plant == plant && 

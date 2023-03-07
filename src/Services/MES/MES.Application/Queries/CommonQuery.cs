@@ -986,9 +986,13 @@ namespace MES.Application.Queries
 
             if (type == "NHLT")
             {
+                if (!string.IsNullOrEmpty(odFrom) && string.IsNullOrEmpty(odTo))
+                    odTo = odFrom;
+
                 response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
                                         .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                                                          //Lọc plant
-                                                    (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 && x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0))    //Lọc od from to
+                                                    //Lọc od from
+                                                    (!string.IsNullOrEmpty(odFrom) ? (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 && x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0) : true))   
                                         .Select(x => new Common3Response
                                         {
                                             Key = x.OutboundDelivery.ShiptoParty,

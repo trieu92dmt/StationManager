@@ -231,7 +231,12 @@ namespace IntegrationNS.Application.Queries
                 //29 Thời gian bắt đầu
                 StartTime = x.StartTime ?? null,
                 //30 Thời gian kết thúc
-                EndTime = x.EndTime ?? null,
+                EndTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? x.EndTime : null,
+                
+                //Schedule start time
+                ScheduleStartTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledStartDate : null,
+                //Schedule finish time
+                ScheduleFinishTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledFinishDate : null, 
                 //31 Create by
                 CreateById = x.CreateBy ?? null,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",

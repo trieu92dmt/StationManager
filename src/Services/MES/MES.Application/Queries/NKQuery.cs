@@ -231,7 +231,7 @@ namespace MES.Application.Queries
                 //25 Ghi chú
                 Description = x.Description ?? "",
                 //26 Hình ảnh
-                Image = !string.IsNullOrEmpty(x.Image) ? x.Image : "",
+                Image = !string.IsNullOrEmpty(x.Image) ? $"itp-mes.isdcorp.vn/{x.Image}" : "",
                 //27 Status
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //28 Số phiếu cân

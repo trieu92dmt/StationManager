@@ -252,7 +252,7 @@ namespace MES.Application.Commands.NK
                     //Ghi chú
                     nk.Description = item.Description;
                     //Hình ảnh
-                    nk.Image = string.IsNullOrEmpty(imgPath) ? nk.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nk.Image = string.IsNullOrEmpty(imgPath) ? nk.Image : imgPath;
                     nk.LastEditBy = TokenExtensions.GetAccountId();
                     nk.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

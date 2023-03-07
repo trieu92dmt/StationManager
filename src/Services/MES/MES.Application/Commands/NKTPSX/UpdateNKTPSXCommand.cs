@@ -237,7 +237,7 @@ namespace MES.Application.Commands.NKTPSX
                     //Ghi chú
                     nktpsx.Description = item.Description;
                     //Hình ảnh
-                    nktpsx.Image = string.IsNullOrEmpty(imgPath) ? nktpsx.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nktpsx.Image = string.IsNullOrEmpty(imgPath) ? nktpsx.Image : imgPath;
                     nktpsx.LastEditBy = TokenExtensions.GetAccountId();
                     nktpsx.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

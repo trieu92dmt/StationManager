@@ -271,7 +271,7 @@ namespace MES.Application.Commands.MES
                     //Ghi chú
                     nkmh.Description = item.Description;
                     //Hình ảnh
-                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? nkmh.Img : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nkmh.Img = string.IsNullOrEmpty(imgPath) ? nkmh.Img : imgPath;
                     nkmh.LastEditBy = TokenExtensions.GetAccountId();
                     nkmh.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

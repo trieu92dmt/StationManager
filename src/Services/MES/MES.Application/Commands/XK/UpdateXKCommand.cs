@@ -304,7 +304,7 @@ namespace MES.Application.Commands.XK
                     //Ghi chú
                     xk.Description = item.Description;
                     //Hình ảnh
-                    xk.Image = string.IsNullOrEmpty(imgPath) ? xk.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xk.Image = string.IsNullOrEmpty(imgPath) ? xk.Image : imgPath;
                     xk.LastEditBy = TokenExtensions.GetAccountId();
                     xk.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

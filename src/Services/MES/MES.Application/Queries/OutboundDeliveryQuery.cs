@@ -333,7 +333,7 @@ namespace MES.Application.Queries
                 DeliveryQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveredQuantity : x.DetailODId.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
                 UOM = x.UOM,
                 Description = x.Description,
-                Image = !string.IsNullOrEmpty(x.Image) ? x.Image : "",
+                Image = !string.IsNullOrEmpty(x.Image) ? $"itp-mes.isdcorp.vn/{x.Image}" : "",
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 WeightVote = x.WeightVote,
                 StartTime = x.StartTime,

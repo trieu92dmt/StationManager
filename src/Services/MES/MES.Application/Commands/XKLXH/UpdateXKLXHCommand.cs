@@ -281,7 +281,7 @@ namespace MES.Application.Commands.XKLXH
                     //Ghi chú
                     xklxh.Description = item.Description;
                     //Hình ảnh
-                    xklxh.Image = string.IsNullOrEmpty(imgPath) ? xklxh.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xklxh.Image = string.IsNullOrEmpty(imgPath) ? xklxh.Image : imgPath;
                     //Change by
                     xklxh.LastEditBy = TokenExtensions.GetAccountId();
                     xklxh.LastEditTime = DateTime.Now;

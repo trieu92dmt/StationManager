@@ -260,7 +260,7 @@ namespace MES.Application.Commands.NKDCNB
                     //Ghi chú
                     nkdcnb.Description = item.Description;
                     //Hình ảnh
-                    nkdcnb.Image = string.IsNullOrEmpty(imgPath) ? nkdcnb.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nkdcnb.Image = string.IsNullOrEmpty(imgPath) ? nkdcnb.Image : imgPath;
                     nkdcnb.LastEditBy = TokenExtensions.GetAccountId();
                     nkdcnb.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

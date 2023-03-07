@@ -254,7 +254,7 @@ namespace MES.Application.Commands.NHLT
                     //Ghi chú
                     nhlt.Description = item.Description;
                     //Hình ảnh
-                    nhlt.Image = string.IsNullOrEmpty(imgPath) ? nhlt.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nhlt.Image = string.IsNullOrEmpty(imgPath) ? nhlt.Image : imgPath;
                     nhlt.LastEditBy = TokenExtensions.GetAccountId();
                     nhlt.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

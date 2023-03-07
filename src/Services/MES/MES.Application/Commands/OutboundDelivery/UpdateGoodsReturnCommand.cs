@@ -272,7 +272,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //Ghi chú
                     nkht.Description = item.Description;
                     //Hình ảnh
-                    nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : imgPath;
 
                     nkht.LastEditBy = TokenExtensions.GetAccountId();
                     nkht.LastEditTime = DateTime.Now;

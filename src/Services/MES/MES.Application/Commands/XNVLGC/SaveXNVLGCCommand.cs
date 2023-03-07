@@ -291,7 +291,7 @@ namespace MES.Application.Commands.XNVLGC
                     //Requirement Unit
                     RequirementUnit = item.RequirementUnit,
                     //21  Image
-                    Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                    Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                     //16  Status
                     Status = "NOT",
                     //17  StartTime

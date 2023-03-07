@@ -266,7 +266,7 @@ namespace MES.Application.Commands.XKLXH
                     //40  Description
                     Description = item.Description,
                     //41  Image
-                    Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                    Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                     //42  Status
                     Status = "NOT",
                     //48  CreateTime

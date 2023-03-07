@@ -483,7 +483,7 @@ namespace MES.Application.Queries
                 //Ghi chú
                 Description = x.Description ?? "",
                 //Hình ảnh
-                Image = !string.IsNullOrEmpty(x.Image) ? x.Image : "",
+                Image = !string.IsNullOrEmpty(x.Image) ? $"itp-mes.isdcorp.vn/{x.Image}" : "",
                 //Status
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //Số phiếu cân

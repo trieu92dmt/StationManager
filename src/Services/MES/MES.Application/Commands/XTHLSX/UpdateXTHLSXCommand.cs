@@ -246,7 +246,7 @@ namespace MES.Application.Commands.XTHLSX
                     //Ghi chú
                     xthlsx.Description = item.Description;
                     //Hình ảnh
-                    xthlsx.Image = string.IsNullOrEmpty(imgPath) ? xthlsx.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xthlsx.Image = string.IsNullOrEmpty(imgPath) ? xthlsx.Image : imgPath;
                     xthlsx.LastEditBy = TokenExtensions.GetAccountId();
                     xthlsx.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

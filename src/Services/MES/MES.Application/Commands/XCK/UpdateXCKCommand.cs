@@ -273,7 +273,7 @@ namespace MES.Application.Commands.XCK
                     //Ghi chú
                     xck.Description = item.Description;
                     //Hình ảnh
-                    xck.Image = string.IsNullOrEmpty(imgPath) ? xck.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xck.Image = string.IsNullOrEmpty(imgPath) ? xck.Image : imgPath;
                     xck.LastEditBy = TokenExtensions.GetAccountId();
                     xck.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

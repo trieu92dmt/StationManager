@@ -233,7 +233,7 @@ namespace MES.Application.Commands.NKPPPP
                     //Ghi chú
                     nkpppp.Description = item.Description;
                     //Hình ảnh
-                    nkpppp.Image = string.IsNullOrEmpty(imgPath) ? nkpppp.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nkpppp.Image = string.IsNullOrEmpty(imgPath) ? nkpppp.Image : imgPath;
                     nkpppp.LastEditBy = TokenExtensions.GetAccountId();
                     nkpppp.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

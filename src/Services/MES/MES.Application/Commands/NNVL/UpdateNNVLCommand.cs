@@ -248,7 +248,7 @@ namespace MES.Application.Commands.NNVL
                     //Ghi chú
                     nnvlgc.Description = item.Description;
                     //Hình ảnh
-                    nnvlgc.Image = string.IsNullOrEmpty(imgPath) ? nnvlgc.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nnvlgc.Image = string.IsNullOrEmpty(imgPath) ? nnvlgc.Image : imgPath;
                     nnvlgc.LastEditBy = TokenExtensions.GetAccountId();
                     nnvlgc.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

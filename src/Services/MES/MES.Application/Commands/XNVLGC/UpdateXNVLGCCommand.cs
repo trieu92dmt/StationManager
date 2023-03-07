@@ -257,7 +257,7 @@ namespace MES.Application.Commands.XNVLGC
                     //Ghi chú
                     xnvlgc.Description = item.Description;
                     //Hình ảnh
-                    xnvlgc.Image = string.IsNullOrEmpty(imgPath) ? xnvlgc.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    xnvlgc.Image = string.IsNullOrEmpty(imgPath) ? xnvlgc.Image : imgPath;
                     xnvlgc.LastEditBy = TokenExtensions.GetAccountId();
                     xnvlgc.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

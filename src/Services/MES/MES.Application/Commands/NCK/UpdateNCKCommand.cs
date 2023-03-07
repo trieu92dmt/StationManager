@@ -291,7 +291,7 @@ namespace MES.Application.Commands.NCK
                     //Ghi chú
                     nck.Description = item.Description;
                     //Hình ảnh
-                    nck.Image = string.IsNullOrEmpty(imgPath) ? nck.Image : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath);
+                    nck.Image = string.IsNullOrEmpty(imgPath) ? nck.Image : imgPath;
                     nck.LastEditBy = TokenExtensions.GetAccountId();
                     nck.LastEditTime = DateTime.Now;
                     //Đánh dấu xóa

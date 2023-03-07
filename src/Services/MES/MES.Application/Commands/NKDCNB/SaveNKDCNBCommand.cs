@@ -255,7 +255,7 @@ namespace MES.Application.Commands.NKDCNB
                     //14  Description
                     Description = item.Description,
                     //15  Image
-                    Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                    Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                     //16  Status
                     Status = "NOT",
                     //17  StartTime

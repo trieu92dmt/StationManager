@@ -400,7 +400,7 @@ namespace MES.Application.Queries
 
             }).OrderBy(x => x.PurchaseOrderCode).ThenBy(x => x.POItem).ToListAsync();
 
-            if (!string.IsNullOrEmpty(request.MaterialFrom))
+            if (!string.IsNullOrEmpty(request.MaterialFrom) && dataPO.Count == 0)
             {
                 var material = await _prdRep.FindOneAsync(x => x.ProductCodeInt == long.Parse(request.MaterialFrom));
 

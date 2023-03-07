@@ -250,7 +250,7 @@ namespace MES.Application.Queries
             }
 
             //Thêm dòng trống nếu search theo component
-            if (!string.IsNullOrEmpty(command.Component))
+            if (!string.IsNullOrEmpty(command.Component) && data.Count == 0)
             {
                 data.Add(new GetDataInputResponse
                 {

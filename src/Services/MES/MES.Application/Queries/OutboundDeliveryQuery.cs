@@ -172,7 +172,7 @@ namespace MES.Application.Queries
                 
             }).ToListAsync();
 
-            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo)
+            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo && data.Count == 0)
             {
                 data.Add(new OutboundDeliveryResponse
                 {

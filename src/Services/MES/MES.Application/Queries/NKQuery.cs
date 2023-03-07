@@ -203,6 +203,8 @@ namespace MES.Application.Queries
                 //Số xe tải
                 TruckInfoId = x.TruckInfoId,
                 TruckNumber = x.TruckNumber,
+                //Số phương tiện
+                VehicleCode = x.VehicleCode ?? "",
                 //13 Stor.Loc
                 Sloc = x.SlocCode ?? "",
                 SlocFmt = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",

@@ -335,10 +335,10 @@ namespace MES.Application.Queries
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
-                                        Key = x.PurchaseOrder.ProductCodeInt.ToString(),
-                                        Value = $"{x.PurchaseOrder.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.PurchaseOrder.ProductCode).ProductName}",
-                                        Name = products.FirstOrDefault(p => p.ProductCode == x.PurchaseOrder.ProductCode).ProductName,
-                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.PurchaseOrder.ProductCode).Unit
+                                        Key = x.ProductCodeInt.ToString(),
+                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
             }
             #endregion

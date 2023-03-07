@@ -228,6 +228,10 @@ namespace IntegrationNS.Application.Queries
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //28 Số phiếu cân
                 WeightVote = x.WeightVote ?? "",
+                //Schedule Start Time
+                ScheduleStartTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledStartDate : null,
+                //Schedule Finish Time
+                ScheduleFinishTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledFinishDate : null,
                 //29 Thời gian bắt đầu
                 StartTime = x.StartTime ?? null,
                 //30 Thời gian kết thúc

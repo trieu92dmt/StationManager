@@ -435,7 +435,7 @@ namespace MES.Application.Queries
                 //29 Thời gian bắt đầu
                 StartTime = x.StartTime ?? null,
                 //30 Thời gian kết thúc
-                EndTime = x.EndTime ?? null,
+                EndTime = !string.IsNullOrEmpty(x.WeightHeadCode) ? x.EndTime : null,
                 //Schedule start time
                 ScheduleStartTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledStartDate : null,
                 //Schedule finish time

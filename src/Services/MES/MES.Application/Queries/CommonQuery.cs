@@ -1002,7 +1002,7 @@ namespace MES.Application.Queries
             }
             else
             {
-                response = await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
+                response = await _custRepo.GetQuery()
                                    .Select(x => new Common3Response
                                    {
                                        Key = x.CustomerNumber,
@@ -1011,7 +1011,8 @@ namespace MES.Application.Queries
                                    }).AsNoTracking().ToListAsync();
             }
 
-            return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
+            return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Key.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
+                                       (!string.IsNullOrEmpty(keyword) ? x.Name.ToLower().Contains(keyword.ToLower().Trim()) : true)).OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
         }
 
         #region Get Scale Monitor Type

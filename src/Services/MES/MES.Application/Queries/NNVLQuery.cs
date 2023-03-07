@@ -1,6 +1,7 @@
 ﻿using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.NNVL;
+using MES.Application.Commands.Scale;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NNVL;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +40,11 @@ namespace MES.Application.Queries
         private readonly IRepository<ComponentImportModel> _nnvlgcRepo;
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public NNVLQuery(IRepository<VendorModel> vendorRepo, IRepository<ProductModel> prodRepo, IRepository<PlantModel> plantRepo,
-                         IRepository<ComponentImportModel> nnvlgcRepo, IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo)
+                         IRepository<ComponentImportModel> nnvlgcRepo, IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo,
+                         IRepository<ScaleModel> scaleRepo)
         {
             _vendorRepo = vendorRepo;
             _prodRepo = prodRepo;
@@ -49,6 +52,7 @@ namespace MES.Application.Queries
             _nnvlgcRepo = nnvlgcRepo;
             _userRepo = userRepo;
             _cataRepo = cataRepo;
+            _scaleRepo = scaleRepo;
         }
 
         public async Task<List<SearchNNVLResponse>> GetDataNNVLGC(SearchNNVLCommand request)
@@ -119,6 +123,8 @@ namespace MES.Application.Queries
             //User Query
             var user = _userRepo.GetQuery().AsNoTracking();
 
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
+
 
             //Catalog status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
@@ -146,6 +152,8 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight ?? 0,
                 //Đầu cân
                 WeightHeadCode = x.WeightHeadCode ?? "",
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //Trọng lượng cân
                 Weight = x.Weight ?? 0,
                 //Confirm quantity

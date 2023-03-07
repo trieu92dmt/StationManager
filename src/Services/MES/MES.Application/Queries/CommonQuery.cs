@@ -5,6 +5,7 @@ using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.Security.Cryptography.Xml;
 
 namespace MES.Application.Queries
 {
@@ -185,7 +186,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<Common3Response>> GetDropdownCustomer(string keyword);
+        Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string type);
 
         /// <summary>
         /// Get dropdown scale monitor type
@@ -979,15 +980,32 @@ namespace MES.Application.Queries
 
         #endregion
 
-        public async Task<List<Common3Response>> GetDropdownCustomer(string keyword)
+        public async Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string type)
         {
-            var response = await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
-                                .Select(x => new Common3Response
-                                {
-                                    Key = x.CustomerNumber,
-                                    Value = $"{x.CustomerNumber} | {x.CustomerName}",
-                                    Name = x.CustomerName
-                                }).AsNoTracking().ToListAsync();
+            var response = new List<Common3Response>();
+
+            if (type == "NHLT")
+            {
+                response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                                                          //Lọc plant
+                                                    (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 && x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0))    //Lọc od from to
+                                        .Select(x => new Common3Response
+                                        {
+                                            Key = x.OutboundDelivery.ShiptoParty,
+                                            Value = $"{x.OutboundDelivery.ShiptoParty} | {x.OutboundDelivery.ShiptoPartyName}",
+                                            Name = x.OutboundDelivery.ShiptoPartyName
+                                        }).AsNoTracking().ToListAsync();   
+            }
+            else
+            {
+                response = await _custRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CustomerNumber.ToLower().Contains(keyword.ToLower().Trim()) : true))
+                                   .Select(x => new Common3Response
+                                   {
+                                       Key = x.CustomerNumber,
+                                       Value = $"{x.CustomerNumber} | {x.CustomerName}",
+                                       Name = x.CustomerName
+                                   }).AsNoTracking().ToListAsync();
+            }
 
             return response.OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
         }

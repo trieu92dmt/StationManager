@@ -18,7 +18,7 @@ namespace MES.Application.Commands.OutboundDelivery
 
     public class SaveGoodsReturn
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         //Plant
         public string PlantCode { get; set; }
         //Od code

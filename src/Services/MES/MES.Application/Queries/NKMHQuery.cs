@@ -261,7 +261,7 @@ namespace MES.Application.Queries
                 //Ghi chú 
                 Description = x.Description,
                 //Hình ảnh
-                Image = !string.IsNullOrEmpty(x.Img) ? $"itp-mes.isdcorp.vn/{x.Img}" : "",
+                Image = !string.IsNullOrEmpty(x.Img) ? $"https://itp-mes.isdcorp.vn/{x.Img}" : "",
                 Status = nkmhStatus.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 CreateTime = x.CreateTime,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",

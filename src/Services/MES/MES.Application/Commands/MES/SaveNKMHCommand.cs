@@ -21,7 +21,7 @@ namespace MES.Application.Commands.MES
 
     public class NKMHRequest
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         //Plant
         public string PlantCode { get; set; }
         //Material
@@ -121,24 +121,24 @@ namespace MES.Application.Commands.MES
 
             foreach (var x in request.NKMHRequests)
             {
-                //Lấy ra dòng dữ liệu đã lưu
-                var record = await _nkRep.FindOneAsync(n => n.GoodsReceiptId == x.Id);
+                ////Lấy ra dòng dữ liệu đã lưu
+                //var record = await _nkRep.FindOneAsync(n => n.GoodsReceiptId == x.Id);
 
-                //Lấy ra dòng dữ liệu mapping với đợt cân
-                var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == x.Id);
+                ////Lấy ra dòng dữ liệu mapping với đợt cân
+                //var weightSsChose = await _weightSsChoseRepo.FindOneAsync(w => w.RecordId == x.Id);
 
-                //Check status
-                if (x.Status == "DAXOA")
-                {
+                ////Check status
+                //if (x.Status == "DAXOA")
+                //{
 
-                    _weightSsChoseRepo.Remove(weightSsChose);
+                //    _weightSsChoseRepo.Remove(weightSsChose);
 
-                    _nkRep.Remove(record);
+                //    _nkRep.Remove(record);
 
-                    await _unitOfWork.SaveChangesAsync();
+                //    await _unitOfWork.SaveChangesAsync();
 
-                    continue;
-                }
+                //    continue;
+                //}
 
                 //Check điều kiện lưu
                 #region Check điều kiện lưu
@@ -164,7 +164,7 @@ namespace MES.Application.Commands.MES
                 var poLine = await _poDetailRep.GetQuery(p => p.PurchaseOrderDetailId == x.PoDetailId)
                                                .Include(x => x.PurchaseOrder)
                                                .FirstOrDefaultAsync();
-                //var GoodsReceiptId = Guid.NewGuid();
+                var GoodsReceiptId = Guid.NewGuid();
 
 
                 var imgPath = "";
@@ -174,7 +174,7 @@ namespace MES.Application.Commands.MES
                     byte[] bytes = Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',') + 1));
                     MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, x.Id.ToString(), $"{x.Id.ToString()}.jpg");
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, GoodsReceiptId.ToString(), $"{GoodsReceiptId.ToString()}.jpg");
                     //Save image to server
                     imgPath = await _utilitiesService.UploadFile(file, "NKMH");
                 }
@@ -186,51 +186,51 @@ namespace MES.Application.Commands.MES
                 var weightSession = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
                                  weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
-                //Nếu có đợt cân thì lưu vào bảng mapping
-                if (weightSession != null)
-                {
-                    if (weightSsChose != null)
-                        _weightSsChoseRepo.Add(new WeighSessionChoseModel
-                        {
-                            Id = Guid.NewGuid(),
-                            DateKey = weightSession.DateKey,
-                            OrderIndex = weightSession.OrderIndex,
-                            ScaleCode = weightSession.ScaleCode,
-                            RecordId = x.Id
-                        });
-                }
+                ////Nếu có đợt cân thì lưu vào bảng mapping
+                //if (weightSession != null)
+                //{
+                //    if (weightSsChose != null)
+                //        _weightSsChoseRepo.Add(new WeighSessionChoseModel
+                //        {
+                //            Id = Guid.NewGuid(),
+                //            DateKey = weightSession.DateKey,
+                //            OrderIndex = weightSession.OrderIndex,
+                //            ScaleCode = weightSession.ScaleCode,
+                //            RecordId = x.Id
+                //        });
+                //}
 
-                //Nếu đã tồn tại dữ liệu đã lưu thi update
-                if (record != null)
-                {
-                    //Sloc code
-                    record.SlocCode = x.SlocCode;
-                    //Sloc Name
-                    record.SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null;
-                    //Số lô
-                    record.Batch = x.Batch;
-                    //Trọng lượng cân
-                    record.Weight = x.Weight;
-                    //Confirm quantity
-                    record.ConfirmQty = x.ConfirmQty;
-                    //SL kèm bao bì
-                    record.QuantityWithPackaging = x.QuantityWithPackaging;
-                    //Số phương tiện
-                    record.VehicleCode = x.VehicleCode;
-                    //Số lần cân
-                    record.QuantityWeitght = x.QuantityWeight;
-                    //Số cân đầu vào
-                    record.InputWeight = x.InputWeight;
-                    //Số cân đầu ra
-                    record.OutputWeight = x.OutputWeight;
-                    //Ghi chú
-                    record.Description = x.Description;
-                }
-                else
+                ////Nếu đã tồn tại dữ liệu đã lưu thi update
+                //if (record != null)
+                //{
+                //    //Sloc code
+                //    record.SlocCode = x.SlocCode;
+                //    //Sloc Name
+                //    record.SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null;
+                //    //Số lô
+                //    record.Batch = x.Batch;
+                //    //Trọng lượng cân
+                //    record.Weight = x.Weight;
+                //    //Confirm quantity
+                //    record.ConfirmQty = x.ConfirmQty;
+                //    //SL kèm bao bì
+                //    record.QuantityWithPackaging = x.QuantityWithPackaging;
+                //    //Số phương tiện
+                //    record.VehicleCode = x.VehicleCode;
+                //    //Số lần cân
+                //    record.QuantityWeitght = x.QuantityWeight;
+                //    //Số cân đầu vào
+                //    record.InputWeight = x.InputWeight;
+                //    //Số cân đầu ra
+                //    record.OutputWeight = x.OutputWeight;
+                //    //Ghi chú
+                //    record.Description = x.Description;
+                //}
+                //else
                     //Save data nhập kho mua hàng
                     _nkRep.Add(new GoodsReceiptModel
                     {
-                        GoodsReceiptId = x.Id,
+                        GoodsReceiptId = GoodsReceiptId,
                         //Số lô
                         Batch = x.Batch,
                         //POLine

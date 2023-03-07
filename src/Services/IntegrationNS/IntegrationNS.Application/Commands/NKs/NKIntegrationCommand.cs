@@ -186,6 +186,8 @@ namespace IntegrationNS.Application.Commands.NKs
                 WeightHeadCode = x.WeightHeadCode ?? "",
                 //18 Trọng lượng cân
                 Weight = x.Weight ?? 0,
+                //Vehicle code
+                VehicleCode = x.VehicleCode ?? "",
                 //19 Confirm Quantity
                 ConfirmQuantity = x.ConfirmQty ?? 0,
                 //20 SL kèm bao bì

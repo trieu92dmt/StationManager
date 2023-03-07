@@ -29,6 +29,8 @@ namespace MES.Application.DTOs.MES.XNVLGC
         public string MaterialDesc { get; set; }
         //Component
         public string Component { get; set; }
+        //Component item
+        public string ComponentItem { get; set; }
         //Component desc
         public string ComponentDesc { get; set; }
         //Document Date
@@ -67,6 +69,8 @@ namespace MES.Application.DTOs.MES.XNVLGC
         public string MaterialDesc { get; set; }
         //Component
         public string Component { get; set; }
+        //Component item
+        public string ComponentItem { get; set; }
         //Component desc
         public string ComponentDesc { get; set; }
         //Sloc

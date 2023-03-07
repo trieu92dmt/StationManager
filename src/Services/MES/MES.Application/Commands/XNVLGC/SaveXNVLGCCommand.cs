@@ -36,6 +36,8 @@ namespace MES.Application.Commands.XNVLGC
         public string Material { get; set; }
         //component
         public string Component { get; set; }
+        //Component item
+        public string ComponentItem { get; set; }
         //vendor name
         public string VendorCode { get; set; }
         //7. Stor. Loc
@@ -253,6 +255,8 @@ namespace MES.Application.Commands.XNVLGC
                     ComponentCode = !string.IsNullOrEmpty(item.Component) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "",
                     ComponentName = !string.IsNullOrEmpty(item.Component) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName : "",
                     ComponentCodeInt = !string.IsNullOrEmpty(item.Component) ? long.Parse(item.Component) : null,
+                    //Component item
+                    ComponentItem = item.ComponentItem,
                     //8. SlocCode
                     SlocCode = item.Sloc,
                     //9. SlocName

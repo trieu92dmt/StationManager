@@ -29,6 +29,8 @@ namespace MES.Application.Commands.XNVLGC
         public string Plant { get; set; }
         //Component
         public string Component { get; set; }
+        //Component item
+        public string ComponentItem { get; set; }
         //Sloc
         public string Sloc { get; set; }
         //Đầu cân
@@ -187,6 +189,7 @@ namespace MES.Application.Commands.XNVLGC
                         PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,
                         //Component
                         ComponentCode = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "",
+                        ComponentItem = item.ComponentItem,
                         ComponentName = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName : "",
                         ComponentCodeInt = !string.IsNullOrEmpty(item.Component) ? long.Parse(item.Component) : null,
                         //Batch

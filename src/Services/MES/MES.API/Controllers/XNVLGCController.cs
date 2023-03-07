@@ -103,6 +103,21 @@ namespace MES.API.Controllers
             });
         }
 
+        #region Get dropdown data by component
+        /// <summary>
+        /// Get dropdown data by component
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="componentItem"></param>
+        /// <returns></returns>
+        [HttpGet("get-data-by-component")]
+        public async Task<IActionResult> GetDataByComponentAsync(string component, string componentItem)
+        {
+            var dropdownList = await _query.GetListPOByComponent(component, componentItem);
+            return Ok(new ApiSuccessResponse<List<GetDataByComponent>> { Data = dropdownList });
+        }
+        #endregion
+
         #region Get số phiếu cân
         /// <summary>
         /// Dropdown số phiếu cân

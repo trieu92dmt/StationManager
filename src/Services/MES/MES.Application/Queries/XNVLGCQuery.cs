@@ -1,18 +1,9 @@
-﻿using Azure.Core;
-using Core.SeedWork.Repositories;
+﻿using Core.SeedWork.Repositories;
 using Infrastructure.Models;
-using MediatR;
 using MES.Application.Commands.XNVLGC;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.XNVLGC;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MES.Application.Queries
 {
@@ -38,6 +29,22 @@ namespace MES.Application.Queries
         /// <param name="command"></param>
         /// <returns></returns>
         Task<List<SearchXNVLGCResponse>> GetDataXNVLGC(SearchXNVLGCCommand command);
+
+        /// <summary>
+        /// Get list po by component
+        /// </summary>
+        /// <param name="component"></param>
+        /// <returns></returns>
+        Task<List<GetDataByComponent>> GetListPOByComponent(string component, string componentItem);
+    }
+
+    public class GetDataByComponent
+    {
+        public string PurchaseOrder { get; set; }
+        public string PurchaseOrderItem { get; set; }
+        public string Material { get; set; }
+        public string MaterialDesc { get; set; }
+        public string Vendor { get; set; }
     }
 
     public class XNVLGCQuery : IXNVLGCQuery
@@ -198,6 +205,8 @@ namespace MES.Application.Queries
                 MaterialDesc = x.MaterialName ?? "",
                 //Component
                 Component = x.ComponentCodeInt.ToString(),
+                //Component item
+                ComponentItem = x.ComponentItem,
                 //Component desc
                 ComponentDesc = x.ComponentName,
                 //Sloc
@@ -398,6 +407,8 @@ namespace MES.Application.Queries
                             MaterialDesc = materials.FirstOrDefault(x => x.ProductCode == po.ProductCode).ProductName,
                             //Component
                             Component = res.MaterialCodeInt.ToString(),
+                            //Component item
+                            ComponentItem = res.ReservationItem,
                             //Component Desc
                             ComponentDesc = materials.FirstOrDefault(x => x.ProductCode == res.Material).ProductName,
                             //Document date
@@ -426,6 +437,34 @@ namespace MES.Application.Queries
                 item.IndexKey = index;
                 index++;
             }
+
+            return data;
+        }
+
+        public async Task<List<GetDataByComponent>> GetListPOByComponent(string component, string componentItem)
+        {
+            //Get query po
+            var pos = _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).AsNoTracking();
+
+            //Get query material
+            var materials = _prodRepo.GetQuery().AsNoTracking();
+
+            //Get query reservation
+            var reservations = _resDetailRepo.GetQuery(x => x.MaterialCodeInt == long.Parse(component) &&
+                                                            x.ReservationItem == componentItem).AsNoTracking();
+
+            var data = await (from res in reservations
+                        join p in pos on new { PO = res.PurchasingDoc, POLine = res.Item } equals
+                                         new { PO = p.PurchaseOrder.PurchaseOrderCode, POLine = p.POLine }
+                        join m in materials on p.ProductCode equals m.ProductCode
+                        select new GetDataByComponent
+                        {
+                            PurchaseOrder = res.PurchasingDoc,
+                            PurchaseOrderItem = res.Item,
+                            Material = m.ProductCodeInt.ToString(),
+                            MaterialDesc = m.ProductName,
+                            Vendor = p.PurchaseOrder.VendorCode
+                        }).ToListAsync();
 
             return data;
         }

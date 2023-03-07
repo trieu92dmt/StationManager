@@ -32,6 +32,8 @@ namespace Infrastructure.Models
         public string MaterialName { get; set; }
         [StringLength(50)]
         public string ComponentCode { get; set; }
+        [StringLength(50)]
+        public string ComponentItem { get; set; }
         public long? ComponentCodeInt { get; set; }
         [StringLength(200)]
         public string ComponentName { get; set; }

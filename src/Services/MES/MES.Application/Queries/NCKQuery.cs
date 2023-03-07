@@ -468,7 +468,7 @@ namespace MES.Application.Queries
                 index++;
             }
 
-            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo && data != null && data.Count >0)
+            if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo && data == null && !data.Any())
             {
                 data.Add(new GetInputDataResponse
                 {

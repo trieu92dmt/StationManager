@@ -72,10 +72,11 @@ namespace IntegrationNS.Application.DTOs
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }
         //Create On
-        public string CreateOn { get; set; }
+        public DateTime? CreateOn { get; set; }
         //Chamge By
         public Guid? ChangeById { get; set; }
         public string ChangeBy { get; set; }
+        public DateTime? ChangeOn { get; set; }
         //Material Doc
         public string MatDoc { get; set; }
         //Reverse Doc

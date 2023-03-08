@@ -581,7 +581,7 @@ namespace MES.Application.Queries
                                     .Select(x => new DropdownWeightHeadResponse
                                     {
                                         Key = x.ScaleCode,
-                                        Value = x.ScaleName,
+                                        Value = $"{x.ScaleCode} | {x.ScaleName}",
                                         Data = x.ScaleType.Value == true ? true : false,
                                         Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
                                     }).AsNoTracking().ToListAsync();

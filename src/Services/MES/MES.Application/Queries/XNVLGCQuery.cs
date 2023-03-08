@@ -40,8 +40,8 @@ namespace MES.Application.Queries
 
     public class GetDataByComponent
     {
-        public string PurchaseOrderKey { get; set; }
-        public string PurchaseOrderValue { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
         public string PurchaseOrderItem { get; set; }
         public string Material { get; set; }
         public string MaterialDesc { get; set; }
@@ -460,8 +460,8 @@ namespace MES.Application.Queries
                         join m in materials on p.ProductCode equals m.ProductCode
                         select new GetDataByComponent
                         {
-                            PurchaseOrderKey = p.PurchaseOrder.PurchaseOrderCode,
-                            PurchaseOrderValue = res.PurchasingDoc,
+                            Key = p.PurchaseOrder.PurchaseOrderCode,
+                            Value = res.PurchasingDoc,
                             PurchaseOrderItem = res.Item,
                             Material = m.ProductCodeInt.ToString(),
                             MaterialDesc = m.ProductName,

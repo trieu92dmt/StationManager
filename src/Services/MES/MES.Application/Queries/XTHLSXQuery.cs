@@ -433,11 +433,11 @@ namespace MES.Application.Queries
                 //21 Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
                 //Total Quantity
-                TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity) : 0,
+                TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity) : 0,
                 //22 Số lượng yêu cầu
-                RequirementQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy) : 0,
+                RequirementQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.RequirementQuantiy : x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.RequirementQuantiy) : 0,
                 //23 Số lượng đã nhập thu hồi
-                WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn) : 0,
+                WithdrawnQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.QuantityWithdrawn : x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn) : 0,
                 //24 UOM
                 Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : !string.IsNullOrEmpty(x.ComponentCode) ? materials.FirstOrDefault(m => m.ProductCode == x.ComponentCode).Unit : null,
                 //Schedule Start Time

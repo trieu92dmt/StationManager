@@ -27,6 +27,10 @@ namespace MES.Application.Commands.XNVLGC
         public Guid XNVLGCId { get; set; }
         //Plant
         public string Plant { get; set; }
+        //PO
+        public string PurchaseOrder { get; set; }
+        //PO item
+        public string PurchaseOrderItem { get; set; }
         //Component
         public string Component { get; set; }
         //Component item
@@ -84,10 +88,11 @@ namespace MES.Application.Commands.XNVLGC
         private readonly IRepository<DimDateModel> _dimDateRepo;
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<PlantModel> _plantRepo;
+        private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
 
         public UpdateXNVLGCCommandHandler(IUnitOfWork unitOfWork, IRepository<ComponentExportModel> xnvlgcRepo, IRepository<ProductModel> prdRepo,
                                           IRepository<StorageLocationModel> slocRepo, IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService,
-                                          IRepository<PlantModel> plantRepo)
+                                          IRepository<PlantModel> plantRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo)
         {
             _unitOfWork = unitOfWork;
             _xnvlgcRepo = xnvlgcRepo;
@@ -96,6 +101,7 @@ namespace MES.Application.Commands.XNVLGC
             _dimDateRepo = dimDateRepo;
             _utilitiesService = utilitiesService;
             _plantRepo = plantRepo;
+            _poDetailRepo = poDetailRepo;
         }
 
         public async Task<ApiResponse> Handle(UpdateXNVLGCCommand request, CancellationToken cancellationToken)
@@ -176,6 +182,9 @@ namespace MES.Application.Commands.XNVLGC
                     imgPath = await _utilitiesService.UploadFile(file, "XNVLGC");
                 }
 
+                //po
+                var po = !string.IsNullOrEmpty(item.PurchaseOrder) ? _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).FirstOrDefault(x => x.PurchaseOrder.PurchaseOrderCode == item.PurchaseOrder &&
+                                                                                                                                                x.POLine == item.PurchaseOrderItem) : null;
 
                 //Chưa có thì tạo mới
                 if (xnvlgc == null)
@@ -187,6 +196,9 @@ namespace MES.Application.Commands.XNVLGC
                         //Plant
                         PlantCode = item.Plant,
                         PlantName = plants.FirstOrDefault(x => x.PlantCode == item.Plant).PlantName,
+                        //po
+                        PurchaseOrderDetailId = po != null ? po.PurchaseOrderDetailId : null,
+                        //poitem
                         //Component
                         ComponentCode = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "",
                         ComponentItem = item.ComponentItem,

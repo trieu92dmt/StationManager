@@ -22,6 +22,7 @@ namespace Infrastructure.Models
         public string ScreenCode { get; set; }
         [StringLength(200)]
         public string ScreenName { get; set; }
+        public int? OrderIndex { get; set; }
         public bool? Actived { get; set; }
 
         [InverseProperty("Screen")]

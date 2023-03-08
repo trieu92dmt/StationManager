@@ -223,6 +223,12 @@ namespace MES.Application.Queries
         /// <param name="keyword"></param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetScaleStatus(string keyword);
+
+        /// <summary>
+        /// Get screen
+        /// </summary>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownScreen();
     }
 
     #region Response
@@ -1105,6 +1111,19 @@ namespace MES.Application.Queries
                                   }).ToListAsync();
 
             return result;
+        }
+        #endregion
+
+        #region Dropdown screen
+        public async Task<List<CommonResponse>> GetDropdownScreen()
+        {
+            return await _screenRepo.GetQuery(x => x.Actived == true)
+                                  .OrderBy(x => x.OrderIndex)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.ScreenCode,
+                                      Value = x.ScreenName
+                                  }).ToListAsync();
         }
         #endregion
     }

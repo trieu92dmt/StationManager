@@ -901,7 +901,8 @@ namespace MES.Application.Queries
 
                 response = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
                                           .Where(x => (!string.IsNullOrEmpty(plant) ? x.Reservation.Plant == plant : true) &&                                                    //Lọc plant
-                                                      (!string.IsNullOrEmpty(poFrom) ? x.PurchasingDoc.CompareTo(poFrom) >= 0 && x.PurchasingDoc.CompareTo(poTo) <= 0 : true))   //Lọc po from to
+                                                      (!string.IsNullOrEmpty(poFrom) ? x.PurchasingDoc.CompareTo(poFrom) >= 0 && x.PurchasingDoc.CompareTo(poTo) <= 0 : true) && //Lọc po from to
+                                                      x.PurchasingDoc != null && x.Item != null)   
                                         .OrderBy(x => x.MaterialCodeInt)
                                         .Select(x => new DropdownMaterialResponse
                                         {

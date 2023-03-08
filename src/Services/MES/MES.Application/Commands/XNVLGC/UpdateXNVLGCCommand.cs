@@ -246,6 +246,8 @@ namespace MES.Application.Commands.XNVLGC
                 else
                 {
                     //Cập nhật
+                    //po
+                    xnvlgc.PurchaseOrderDetailId = po != null ? po.PurchaseOrderDetailId : null;
                     //Component Code
                     xnvlgc.ComponentCode = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "";
                     xnvlgc.ComponentName = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName : "";

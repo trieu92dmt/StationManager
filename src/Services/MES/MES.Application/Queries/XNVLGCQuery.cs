@@ -468,7 +468,7 @@ namespace MES.Application.Queries
                             Material = puchaseOrderItem.ProductCodeInt.ToString(),
                             MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == puchaseOrderItem.ProductCode).ProductName,
                             Vendor = puchaseOrderItem.PurchaseOrder.VendorCode
-                        }).ToListAsync();
+                        }).OrderBy(x => x.Key).ToListAsync();
 
             return data;
         }

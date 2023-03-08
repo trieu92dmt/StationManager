@@ -85,7 +85,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     nkhtNew.Status = "NOT";
                     nkhtNew.TotalQuantity = 0;
                     nkhtNew.DeliveredQuantity = 0;
-                    nkht.OpenQuantity = 0;
+                    nkhtNew.OpenQuantity = 0;
                     nkhtNew.MaterialDocument = null;
                     nkhtNew.ReverseDocument = null;
                     #region code cũ

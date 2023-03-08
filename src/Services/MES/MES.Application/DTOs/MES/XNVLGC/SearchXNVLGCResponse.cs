@@ -33,6 +33,8 @@ namespace MES.Application.DTOs.MES.XNVLGC
         public string ComponentItem { get; set; }
         //Component desc
         public string ComponentDesc { get; set; }
+        //Id
+        public Guid ReservationId { get; set; }
         //Document Date
         public DateTime? DocumentDate { get; set; }
         //Sloc

@@ -410,6 +410,8 @@ namespace MES.Application.Queries
                             Component = res.MaterialCodeInt.ToString(),
                             //Component item
                             ComponentItem = res.ReservationItem,
+                            //Reservation id
+                            ReservationId = res.DetailReservationId,
                             //Component Desc
                             ComponentDesc = materials.FirstOrDefault(x => x.ProductCode == res.Material).ProductName,
                             //Document date

@@ -16,6 +16,8 @@ namespace Infrastructure.Models
         [Required]
         [StringLength(50)]
         public string WeighSessionCode { get; set; }
+        [StringLength(50)]
+        public string ScaleCode { get; set; }
         public int? NumberOfWeigh { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? DetailWeight { get; set; }

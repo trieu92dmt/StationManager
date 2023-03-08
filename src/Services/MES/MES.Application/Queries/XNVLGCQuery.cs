@@ -35,7 +35,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="component"></param>
         /// <returns></returns>
-        Task<List<GetDataByComponent>> GetListPOByComponent(string component, string componentItem);
+        Task<List<GetDataByComponent>> GetListPOByComponent(string keyword, string component, string componentItem);
     }
 
     public class GetDataByComponent
@@ -442,7 +442,7 @@ namespace MES.Application.Queries
             return data;
         }
 
-        public async Task<List<GetDataByComponent>> GetListPOByComponent(string component, string componentItem)
+        public async Task<List<GetDataByComponent>> GetListPOByComponent(string keyword, string component, string componentItem)
         {
             //Get query po
             var pos = _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).AsNoTracking();
@@ -468,7 +468,7 @@ namespace MES.Application.Queries
                             Material = puchaseOrderItem.ProductCodeInt.ToString(),
                             MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == puchaseOrderItem.ProductCode).ProductName,
                             Vendor = puchaseOrderItem.PurchaseOrder.VendorCode
-                        }).OrderBy(x => x.Key).ToListAsync();
+                        }).Where(x => !string.IsNullOrEmpty(keyword) ? x.Key.Contains(keyword) : true).OrderBy(x => x.Key).ToListAsync();
 
             return data;
         }

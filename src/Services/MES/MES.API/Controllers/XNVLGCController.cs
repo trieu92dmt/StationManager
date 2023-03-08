@@ -111,9 +111,9 @@ namespace MES.API.Controllers
         /// <param name="componentItem"></param>
         /// <returns></returns>
         [HttpGet("get-data-by-component")]
-        public async Task<IActionResult> GetDataByComponentAsync(string component, string componentItem)
+        public async Task<IActionResult> GetDataByComponentAsync(string keyword, string component, string componentItem)
         {
-            var dropdownList = await _query.GetListPOByComponent(component, componentItem);
+            var dropdownList = await _query.GetListPOByComponent(keyword ,component, componentItem);
             return Ok(new ApiSuccessResponse<List<GetDataByComponent>> { Data = dropdownList });
         }
         #endregion

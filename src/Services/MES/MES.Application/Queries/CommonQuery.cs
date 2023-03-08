@@ -101,8 +101,8 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
-        //Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type);
+        //Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode);
+        Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type);
 
         /// <summary>
         /// Dropdown Sloc
@@ -579,10 +579,32 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode)
+        //public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode)
+        //{
+        //    var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
+        //                                                  (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
+        //                            .OrderBy(x => x.ScaleCode)
+        //                            .Select(x => new DropdownWeightHeadResponse
+        //                            {
+        //                                Key = x.ScaleCode,
+        //                                Value = $"{x.ScaleCode} | {x.ScaleName}",
+        //                                Data = x.ScaleType.Value == true ? true : false,
+        //                                Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
+        //                            }).AsNoTracking().ToListAsync();
+
+        //    return response;
+        //}
+
+        public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
         {
+            //Lấy danh sách id cân theo màn hình
+            var scaleIds = !string.IsNullOrEmpty(type) ? _screenRepo.GetQuery().Include(x => x.Screen_Scale_MappingModel)
+                                                        .FirstOrDefault(x => x.ScreenCode == type)?.Screen_Scale_MappingModel.Select(x => x.ScaleId) : null;
+
+
             var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
-                                                          (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
+                                                          (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true) &&
+                                                          (!string.IsNullOrEmpty(type) ? scaleIds != null ? scaleIds.Contains(x.ScaleId) : true : true))
                                     .OrderBy(x => x.ScaleCode)
                                     .Select(x => new DropdownWeightHeadResponse
                                     {
@@ -594,28 +616,6 @@ namespace MES.Application.Queries
 
             return response;
         }
-
-        //public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
-        //{
-        //    //Lấy danh sách id cân theo màn hình
-        //    var scaleIds = !string.IsNullOrEmpty(type) ? _screenRepo.GetQuery().Include(x => x.Screen_Scale_MappingModel)
-        //                                                .FirstOrDefault(x => x.ScreenCode == type).Screen_Scale_MappingModel.Select(x => x.ScaleId) : null;
-                                      
-
-        //    var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
-        //                                                  (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true) &&
-        //                                                  (!string.IsNullOrEmpty(type) ? scaleIds.Contains(x.ScaleId) : true))
-        //                            .OrderBy(x => x.ScaleCode)
-        //                            .Select(x => new DropdownWeightHeadResponse
-        //                            {
-        //                                Key = x.ScaleCode,
-        //                                Value = x.ScaleName,
-        //                                Data = x.ScaleType.Value == true ? true : false,
-        //                                Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
-        //                            }).AsNoTracking().ToListAsync();
-
-        //    return response;
-        //}
 
         public async Task<List<Common3Response>> GetDropdownSloc(string keyword, string plant)
         {

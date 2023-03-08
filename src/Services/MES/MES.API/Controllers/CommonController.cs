@@ -186,22 +186,22 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-weight-head-by-plant")]
-        public async Task<IActionResult> GetListWeightHeadByPlant(string keyword, string plantCode)
+        public async Task<IActionResult> GetListWeightHeadByPlant(string keyword, string plantCode, string type)
         {
             //Lấy danh sách mã đầu cân đã được chọn
 
             //Query những thằng chưa được chọn
-            var dropdownList = await _commonQuery.GetDropdownWeightHeadByPlant(keyword, plantCode);
+            var dropdownList = await _commonQuery.GetDropdownWeightHeadByPlant(keyword, plantCode, type);
             return Ok(new ApiSuccessResponse<List<DropdownWeightHeadResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
         }
-        //[HttpGet("list-dropdown-weight-head-by-plant")]
-        //public async Task<IActionResult> GetListWeightHeadByPlant(string keyword, string plantCode, string type)
+        //[httpget("list-dropdown-weight-head-by-plant")]
+        //public async task<iactionresult> getlistweightheadbyplant(string keyword, string plantcode, string type)
         //{
-        //    //Lấy danh sách mã đầu cân đã được chọn
+        //    //lấy danh sách mã đầu cân đã được chọn
 
-        //    //Query những thằng chưa được chọn
-        //    var dropdownList = await _commonQuery.GetDropdownWeightHeadByPlant(keyword, plantCode, type);
-        //    return Ok(new ApiSuccessResponse<List<DropdownWeightHeadResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách đầu cân") });
+        //    //query những thằng chưa được chọn
+        //    var dropdownlist = await _commonquery.getdropdownweightheadbyplant(keyword, plantcode, type);
+        //    return ok(new apisuccessresponse<list<dropdownweightheadresponse>> { data = dropdownlist, message = string.format(commonresource.msg_success, "lấy danh sách đầu cân") });
         //}
         #endregion
 

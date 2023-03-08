@@ -452,20 +452,22 @@ namespace MES.Application.Queries
 
             //Get query reservation
             var reservations = _resDetailRepo.GetQuery(x => x.MaterialCodeInt == long.Parse(component) &&
-                                                            x.ReservationItem == componentItem).AsNoTracking();
+                                                            x.ReservationItem == componentItem &&
+                                                            x.PurchasingDoc != null &&
+                                                            x.Item != null).AsNoTracking();
 
             var data = await (from res in reservations
                         join p in pos on new { PO = res.PurchasingDoc, POLine = res.Item } equals
-                                         new { PO = p.PurchaseOrder.PurchaseOrderCode, POLine = p.POLine }
-                        join m in materials on p.ProductCode equals m.ProductCode
+                                         new { PO = p.PurchaseOrder.PurchaseOrderCode, POLine = p.POLine } into purchaseOrderItems
+                        from puchaseOrderItem in purchaseOrderItems.DefaultIfEmpty()
                         select new GetDataByComponent
                         {
-                            Key = p.PurchaseOrder.PurchaseOrderCode,
-                            Value = res.PurchasingDoc,
+                            Key = puchaseOrderItem.PurchaseOrder.PurchaseOrderCode,
+                            Value = puchaseOrderItem.PurchaseOrder.PurchaseOrderCodeInt.ToString(),
                             PurchaseOrderItem = res.Item,
-                            Material = m.ProductCodeInt.ToString(),
-                            MaterialDesc = m.ProductName,
-                            Vendor = p.PurchaseOrder.VendorCode
+                            Material = puchaseOrderItem.ProductCodeInt.ToString(),
+                            MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == puchaseOrderItem.ProductCode).ProductName,
+                            Vendor = puchaseOrderItem.PurchaseOrder.VendorCode
                         }).ToListAsync();
 
             return data;

@@ -28,11 +28,13 @@ namespace IntegrationNS.Application.Commands.NKMHs
     public class UpdateAndCancelNKMHCommandHandler : IRequestHandler<UpdateAndCancelNKMHCommand, bool>
     {
         private readonly IRepository<GoodsReceiptModel> _nkmhRep;
+        private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateAndCancelNKMHCommandHandler(IRepository<GoodsReceiptModel> nkmhRep, IUnitOfWork unitOfWork)
+        public UpdateAndCancelNKMHCommandHandler(IRepository<GoodsReceiptModel> nkmhRep, IRepository<PurchaseOrderDetailModel> poDetailRepo, IUnitOfWork unitOfWork)
         {
             _nkmhRep = nkmhRep;
+            _poDetailRepo = poDetailRepo;
             _unitOfWork = unitOfWork;
         }
 
@@ -47,7 +49,6 @@ namespace IntegrationNS.Application.Commands.NKMHs
         {
             if (request.IsCancel == true)
             {
-
                 if (!request.NKMHs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu NKMH");
 
@@ -55,6 +56,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                 {
                     //Phiếu nhập kho mua hàng
                     var nkmh = await _nkmhRep.FindOneAsync(x => x.GoodsReceiptId == item.NkmhId);
+
+                    //Chứng từ
+                    var document = nkmh.PurchaseOrderDetailId.HasValue ? await _poDetailRepo.FindOneAsync(x => x.PurchaseOrderDetailId == nkmh.PurchaseOrderDetailId) : null;
 
                     //Check
                     if (nkmh is null)
@@ -74,6 +78,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     var nkmhNew = JsonConvert.DeserializeObject<GoodsReceiptModel>(serialized);
                     //Khác id
                     nkmhNew.GoodsReceiptId = Guid.NewGuid();
+                    nkmhNew.Batch = document != null ? document.Batch : null;
                     nkmhNew.Status = "NOT";
                     nkmhNew.TotalQuantity = 0;
                     nkmhNew.DeliveryQuantity = 0;

@@ -215,6 +215,8 @@ namespace MES.Application.Commands.XCK
                         WeightVote = item.WeightVote,
                         //Weight Head Code
                         WeightHeadCode = item.WeightHeadCode,
+                        //Vehicle code
+                        VehicleCode = item.VehicleCode,
                         //Weight
                         Weight = item.Weight,
                         //Confirm Quantity
@@ -258,6 +260,8 @@ namespace MES.Application.Commands.XCK
                     xck.SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc)?.StorageLocationName;
                     //Batch
                     xck.Batch = item.Batch;
+                    //Vehicle code
+                    xck.VehicleCode = item.VehicleCode;
                     //MVT
                     xck.MovementType = item.MovementType;
                     //Số lượng bao

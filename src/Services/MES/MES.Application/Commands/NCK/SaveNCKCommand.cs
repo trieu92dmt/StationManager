@@ -309,10 +309,10 @@ namespace MES.Application.Commands.NCK
                     StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
-                    EndTime = DateTime.Now,
+                    EndTime = item.BagQuantity.HasValue && item.BagQuantity > 0 && item.SingleWeight.HasValue && item.SingleWeight > 0 ? null : DateTime.Now,
 
-                    //24  CreateTime
-                    CreateTime = DateTime.Now,
+                        //24  CreateTime
+                        CreateTime = DateTime.Now,
                     //25  CreateBy
                     CreateBy = TokenExtensions.GetAccountId(),
                     //28  Actived

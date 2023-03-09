@@ -244,7 +244,7 @@ namespace MES.Application.Commands.NK
                     StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
-                    EndTime = DateTime.Now,
+                    EndTime = item.BagQuantity.HasValue && item.BagQuantity > 0 && item.SingleWeight.HasValue && item.SingleWeight > 0 ? null : DateTime.Now,
                     //21  SlocCode
                     SlocCode = item.Sloc,
                     //22  SlocName

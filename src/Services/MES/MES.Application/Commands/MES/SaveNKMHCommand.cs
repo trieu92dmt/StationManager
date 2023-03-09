@@ -287,7 +287,7 @@ namespace MES.Application.Commands.MES
                         Status = "NOT",
                         //Start Time - End Time
                         StartTime = weightSession != null ? weightSession.StartTime : DateTime.Now,
-                        EndTime = DateTime.Now,
+                        EndTime = x.BagQuantity.HasValue && x.BagQuantity > 0 && x.SingleWeight.HasValue && x.SingleWeight > 0 ? null : DateTime.Now,
                     });
 
                 index++;

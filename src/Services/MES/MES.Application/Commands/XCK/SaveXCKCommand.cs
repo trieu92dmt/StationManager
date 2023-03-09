@@ -275,7 +275,7 @@ namespace MES.Application.Commands.XCK
                     StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
-                    EndTime = DateTime.Now,
+                    EndTime = item.BagQuantity.HasValue && item.BagQuantity > 0 && item.SingleWeight.HasValue && item.SingleWeight > 0 ? null : DateTime.Now,
                     //Số xe tải
                     TruckInfoId = item.TruckInfoId,
                     TruckNumber = item.TruckInfoId.HasValue ? truckInfos.FirstOrDefault(t => t.TruckInfoId == item.TruckInfoId).TruckNumber : null,

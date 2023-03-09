@@ -222,7 +222,7 @@ namespace MES.Application.Commands.XKLXH
                     WeightHeadCode = item.WeightHeadCode,
                     StartTime = weightSession != null ?
                                weightSession.StartTime : null,
-                    EndTime = DateTime.Now,
+                    EndTime = item.BagQuantity.HasValue && item.BagQuantity > 0 && item.SingleWeight.HasValue && item.SingleWeight > 0 ? null : DateTime.Now,
                     //Material
                     MaterialCode = !string.IsNullOrEmpty(item.Material) ? prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : null,
                     MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,

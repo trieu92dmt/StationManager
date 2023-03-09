@@ -258,7 +258,7 @@ namespace MES.Application.Commands.NHLT
                     StartTime = weightSession != null ?
                                weightSession.StartTime : null,
                     //18  EndTime
-                    EndTime = DateTime.Now,
+                    EndTime = item.BagQuantity.HasValue && item.BagQuantity > 0 && item.SingleWeight.HasValue && item.SingleWeight > 0 ? null : DateTime.Now,
                     //số cân đầu vào
                     InputWeight = item.InputWeight,
                     //số cân đầu ra

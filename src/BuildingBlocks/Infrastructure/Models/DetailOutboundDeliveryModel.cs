@@ -55,6 +55,7 @@ namespace Infrastructure.Models
         public string ReferenceDocument1 { get; set; }
         [StringLength(50)]
         public string ReferenceItem { get; set; }
+        public int? ReferenceItemInt { get; set; }
         [StringLength(50)]
         public string SalesOffice { get; set; }
         [StringLength(50)]

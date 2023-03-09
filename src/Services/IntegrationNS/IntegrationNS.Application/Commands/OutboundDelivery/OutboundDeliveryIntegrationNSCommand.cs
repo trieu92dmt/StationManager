@@ -216,6 +216,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                 ItemDescription = item.ItemDescription,
                                 ReferenceDocument1 = item.ReferenceDocument1,
                                 ReferenceItem = item.ReferenceItem,
+                                ReferenceItemInt = int.Parse(item.ReferenceItem),
                                 SalesOffice = item.SalesOffice,
                                 SalesGroup = item.SalesGroup,
                                 DivisionCode = item.DivisionCode,

@@ -217,6 +217,8 @@ namespace MES.Application.Commands.XCK
                         WeightHeadCode = item.WeightHeadCode,
                         //Vehicle code
                         VehicleCode = item.VehicleCode,
+                        //Output weight
+                        OutputWeight = item.OutputWeight,
                         //Weight
                         Weight = item.Weight,
                         //Confirm Quantity
@@ -274,6 +276,8 @@ namespace MES.Application.Commands.XCK
                     xck.ConfirmQty = item.ConfirmQty;
                     //Sl kèm bao bì
                     xck.QuantityWithPackaging = item.QuantityWithPackage;
+                    //Output weight
+                    xck.OutputWeight = item.OutputWeight;
                     //Ghi chú
                     xck.Description = item.Description;
                     //Hình ảnh

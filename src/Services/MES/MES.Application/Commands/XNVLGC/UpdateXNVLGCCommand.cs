@@ -1,4 +1,5 @@
-﻿using Core.Extensions;
+﻿using Core.Exceptions;
+using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
@@ -168,6 +169,13 @@ namespace MES.Application.Commands.XNVLGC
 
             foreach (var item in request.UpdateXNVLGCs)
             {
+                #region Check điều kiện update
+                if (!item.ConfirmQuantity.HasValue || item.ConfirmQuantity <= 0)
+                {
+                    throw new ISDException("Confirm Quantity phải lớn hơn 0");
+                }
+                #endregion
+
                 //Check tồn tại xnvlgc
                 var xnvlgc = await xnvlgcs.FirstOrDefaultAsync(x => x.ComponentExportId == item.XNVLGCId);
 

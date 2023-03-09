@@ -55,6 +55,7 @@ namespace MES.Application.Commands.OutboundDelivery
         public string Description { get; set; }
         //Hình ảnh
         public string Image { get; set; }
+        public List<string> ListImage { get; set; } = new List<string>();
         //Trạng thái
         public string Status { get; set; }
         //Đầu cân
@@ -157,17 +158,30 @@ namespace MES.Application.Commands.OutboundDelivery
 
                 var GoodsReturnId = Guid.NewGuid();
 
-                var imgPath = "";
-                if (!string.IsNullOrEmpty(item.Image))
+                var imgPath ="";
+                for (int i = 1; i <= item.ListImage.Count(); i++)
                 {
-                    //Convert Base64 to Iformfile
-                    byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
-                    MemoryStream stream = new MemoryStream(bytes);
+                    if (!string.IsNullOrEmpty(item.ListImage[i]))
+                    {
+                        //Convert Base64 to Iformfile
+                        byte[] bytes = Convert.FromBase64String(item.ListImage[i].Substring(item.ListImage[i].IndexOf(',') + 1));
+                        MemoryStream stream = new MemoryStream(bytes);
 
-                    IFormFile file = new FormFile(stream, 0, bytes.Length, GoodsReturnId.ToString(), $"{GoodsReturnId.ToString()}.jpg");
-                    //Save image to server
-                    imgPath = await _utilitiesService.UploadFile(file, "NKHT");
+                        IFormFile file = new FormFile(stream, 0, bytes.Length, $"{GoodsReturnId.ToString()}_{i}", $"{GoodsReturnId.ToString()}_{i}.jpg");
+                        //Save image to server
+                        imgPath = await _utilitiesService.UploadFile(file, "NKHT") + ",";
+                    }
                 }
+                //if (!string.IsNullOrEmpty(item.Image))
+                //{
+                //    //Convert Base64 to Iformfile
+                //    byte[] bytes = Convert.FromBase64String(item.Image.Substring(item.Image.IndexOf(',') + 1));
+                //    MemoryStream stream = new MemoryStream(bytes);
+
+                //    IFormFile file = new FormFile(stream, 0, bytes.Length, GoodsReturnId.ToString(), $"{GoodsReturnId.ToString()}.jpg");
+                //    //Save image to server
+                //    imgPath = await _utilitiesService.UploadFile(file, "NKHT");
+                //}
 
                 //Lấy ra cân hiện tại
                 var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);

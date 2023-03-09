@@ -454,6 +454,9 @@ namespace MES.Application.Queries
             //Get query po
             var pos = _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).AsNoTracking();
 
+            //Get vendor query
+            var vendors = _vendorRepo.GetQuery().AsNoTracking();
+
             //Get query material
             var materials = _prodRepo.GetQuery().AsNoTracking();
 
@@ -478,7 +481,9 @@ namespace MES.Application.Queries
                             OrderUnit = puchaseOrderItem.Unit ?? "",
                             RequirementQuantity = res.RequirementQty,
                             RequirementUnit = res.BaseUnit ?? "",
-                            Vendor = puchaseOrderItem.PurchaseOrder.VendorCode
+                            Vendor = puchaseOrderItem.PurchaseOrder.VendorCode,
+                            VendorName = !string.IsNullOrEmpty(puchaseOrderItem.PurchaseOrder.VendorCode) ?
+                                        vendors.FirstOrDefault(x => x.VendorCode == puchaseOrderItem.PurchaseOrder.VendorCode).VendorName : ""
                         }).Where(x => !string.IsNullOrEmpty(keyword) ? x.Key.Contains(keyword) : true).OrderBy(x => x.Key).ToListAsync();
 
             return data;

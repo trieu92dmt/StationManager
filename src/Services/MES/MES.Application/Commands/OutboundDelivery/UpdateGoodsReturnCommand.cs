@@ -73,9 +73,9 @@ namespace MES.Application.Commands.OutboundDelivery
         public string Description { get; set; }
         //Hình ảnh
         public string Image { get; set; }
-        public List<string> ListImage { get; set; } = new List<string>();
+        //public List<string> ListImage { get; set; } = new List<string>();
         public string NewImage { get; set; }
-        public List<string> ListNewImage { get; set; } = new List<string>();
+        //public List<string> ListNewImage { get; set; } = new List<string>();
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
     }
@@ -131,7 +131,7 @@ namespace MES.Application.Commands.OutboundDelivery
             var dimDate = _dimDateRepo.GetQuery().AsNoTracking();
 
             //Tạo query image mapping
-            var imgMappings = _docImgRepo.GetQuery().AsNoTracking();
+            //var imgMappings = _docImgRepo.GetQuery().AsNoTracking();
 
             //Check confirm quantity
             //Lấy ra các phiếu cân cần update
@@ -198,43 +198,43 @@ namespace MES.Application.Commands.OutboundDelivery
 
                 //var img = await _utilitiesService.UploadFile(item.Image, "NKMH");SS
 
-                //var imgPath = string.Empty;
-                ////Convert Base64 to Iformfile
-                //if (!string.IsNullOrEmpty(item.NewImage))
-                //{
-                //    byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
-                //    MemoryStream stream = new MemoryStream(bytes);
+                var imgPath = string.Empty;
+                //Convert Base64 to Iformfile
+                if (!string.IsNullOrEmpty(item.NewImage))
+                {
+                    byte[] bytes = Convert.FromBase64String(item.NewImage.Substring(item.NewImage.IndexOf(',') + 1));
+                    MemoryStream stream = new MemoryStream(bytes);
 
-                //    IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKHTId.ToString(), $"{item.NKHTId.ToString()}.jpg");
-                //    //Save image to server
-                //    imgPath = await _utilitiesService.UploadFile(file, "NKHT");
-                //}
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, item.NKHTId.ToString(), $"{item.NKHTId.ToString()}.jpg");
+                    //Save image to server
+                    imgPath = await _utilitiesService.UploadFile(file, "NKHT");
+                }
 
                 //Lấy ra ảnh đã lưu
-                var imgSaved = imgMappings.Where(x => x.Document_Image_MappingId == item.NKHTId);
+                //var imgSaved = imgMappings.Where(x => x.Document_Image_MappingId == item.NKHTId);
 
-                var imgMapping = new List<Document_Image_Mapping>();
-                for (int i = 0; i < item.ListNewImage.Count(); i++)
-                {
-                    if (!string.IsNullOrEmpty(item.ListNewImage[i]))
-                    {
-                        //Convert Base64 to Iformfile
-                        byte[] bytes = Convert.FromBase64String(item.ListNewImage[i].Substring(item.ListNewImage[i].IndexOf(',') + 1));
-                        MemoryStream stream = new MemoryStream(bytes);
+                //var imgMapping = new List<Document_Image_Mapping>();
+                //for (int i = 0; i < item.ListNewImage.Count(); i++)
+                //{
+                //    if (!string.IsNullOrEmpty(item.ListNewImage[i]))
+                //    {
+                //        //Convert Base64 to Iformfile
+                //        byte[] bytes = Convert.FromBase64String(item.ListNewImage[i].Substring(item.ListNewImage[i].IndexOf(',') + 1));
+                //        MemoryStream stream = new MemoryStream(bytes);
 
-                        IFormFile file = new FormFile(stream, 0, bytes.Length, $"{item.NKHTId.ToString()}_{i}", $"{item.NKHTId.ToString()}_{i}.jpg");
-                        //Save image to server
-                        var imagePath = await _utilitiesService.UploadFile(file, "NKHT");
+                //        IFormFile file = new FormFile(stream, 0, bytes.Length, $"{item.NKHTId.ToString()}_{i}", $"{item.NKHTId.ToString()}_{i}.jpg");
+                //        //Save image to server
+                //        var imagePath = await _utilitiesService.UploadFile(file, "NKHT");
 
-                        imgMapping.Add(new Document_Image_Mapping
-                        {
-                            Document_Image_MappingId = Guid.NewGuid(),
-                            DocumentId = item.NKHTId,
-                            Image = imagePath,
-                            Actived = true
-                        });
-                    }
-                }
+                //        imgMapping.Add(new Document_Image_Mapping
+                //        {
+                //            Document_Image_MappingId = Guid.NewGuid(),
+                //            DocumentId = item.NKHTId,
+                //            Image = imagePath,
+                //            Actived = true
+                //        });
+                //    }
+                //}
 
                 //Chưa có thì tạo mới
                 if (nkht == null)
@@ -261,7 +261,7 @@ namespace MES.Application.Commands.OutboundDelivery
                         InputWeight = item.InputWeight,
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        //Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
@@ -304,7 +304,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //Ghi chú
                     nkht.Description = item.Description;
                     //Hình ảnh
-                    //nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : imgPath;
+                    nkht.Image = string.IsNullOrEmpty(imgPath) ? nkht.Image : imgPath;
 
                     nkht.LastEditBy = TokenExtensions.GetAccountId();
                     nkht.LastEditTime = DateTime.Now;
@@ -318,11 +318,11 @@ namespace MES.Application.Commands.OutboundDelivery
                     }
                 }
 
-                if (imgMapping.Count > 0)
-                {
-                    _docImgRepo.RemoveRange(imgSaved);
-                    _docImgRepo.AddRange(imgMapping);
-                }
+                //if (imgMapping.Count > 0)
+                //{
+                //    _docImgRepo.RemoveRange(imgSaved);
+                //    _docImgRepo.AddRange(imgMapping);
+                //}
             }
 
             await _unitOfWork.SaveChangesAsync();

@@ -50,10 +50,11 @@ namespace MES.Application.Queries
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public NCKQuery(IRepository<WarehouseImportTransferModel> nckRepo, IRepository<MaterialDocumentModel> matDocRepo, IRepository<ProductModel> prodRepo,
                         IRepository<PlantModel> plantRepo, IRepository<ReservationModel> resRepo, IRepository<StorageLocationModel> slocRepo, IRepository<AccountModel> userRepo,
-                        IRepository<CatalogModel> cataRepo)
+                        IRepository<CatalogModel> cataRepo, IRepository<ScaleModel> scaleRepo)
         {
             _nckRepo = nckRepo;
             _matDocRepo = matDocRepo;
@@ -63,6 +64,7 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _userRepo = userRepo;
             _cataRepo = cataRepo;
+            _scaleRepo = scaleRepo;
         }
 
         public async Task<GetDataByMatDocAndMatDocItemResponse> GetDataByMatDocAndMatDocItem(string matdoc, string matdocItem)
@@ -133,6 +135,9 @@ namespace MES.Application.Queries
 
             //Query matDoc
             var matDocs = _matDocRepo.GetQuery().AsNoTracking();
+
+            //Scale
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
 
             //Get query nck
             var query = _nckRepo.GetQuery().Include(x => x.MaterialDoc).AsNoTracking();
@@ -253,6 +258,8 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight.HasValue ? x.SingleWeight : 0,
                 //Đầu cân
                 WeightHeadCode = x.WeightHeadCode ?? "",
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //Trọng lượng cân
                 Weight = x.Weight.HasValue ? x.Weight : 0,
                 //Confirm Qty

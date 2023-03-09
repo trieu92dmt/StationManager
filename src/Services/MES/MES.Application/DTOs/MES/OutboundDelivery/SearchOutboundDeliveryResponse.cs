@@ -100,6 +100,7 @@ namespace MES.Application.DTOs.MES.OutboundDelivery
         public string Description { get; set; }
         //Hình ảnh
         public string Image { get; set; }
+        public List<string> ListImage { get; set; } = new List<string>();
         //Status
         public string Status { get; set; }
         //Số phiếu cân

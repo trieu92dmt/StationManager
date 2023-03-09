@@ -51,10 +51,11 @@ namespace MES.Application.Queries
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public XCKQuery(IRepository<WarehouseExportTransferModel> xckRepo, IRepository<ReservationModel> reserRepo, IRepository<DetailReservationModel> detailReserRepo,
                         IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prodRepo,
-                        IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo)
+                        IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo, IRepository<ScaleModel> scaleRepo)
         {
             _xckRepo = xckRepo;
             _reserRepo = reserRepo;
@@ -64,6 +65,7 @@ namespace MES.Application.Queries
             _userRepo = userRepo;
             _cataRepo = cataRepo;
             _slocRepo = slocRepo;
+            _scaleRepo = scaleRepo;
         }
 
 
@@ -329,6 +331,9 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
 
+            //Scale
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
+
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
@@ -362,6 +367,8 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight.HasValue ? x.SingleWeight : 0,
                 //Đầu cân
                 WeightHeadCode = x.WeightHeadCode ?? "",
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //Trọng lượng cân
                 Weight = x.Weight.HasValue ? x.Weight : 0,
                 //Confirm Qty

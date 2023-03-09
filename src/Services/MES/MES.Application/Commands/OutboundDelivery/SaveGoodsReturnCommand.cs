@@ -75,11 +75,12 @@ namespace MES.Application.Commands.OutboundDelivery
         private readonly IUtilitiesService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
+        private readonly IRepository<Document_Image_Mapping> _docImgRepo;
 
         public SaveGoodsReturnCommandHandler(IUnitOfWork unitOfWork, IRepository<GoodsReturnModel> nkhtRepo, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, IRepository<DetailOutboundDeliveryModel> detailODRepo,
                                              IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService, IRepository<ProductModel> prodRepo,
-                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo, IRepository<Document_Image_Mapping> docImgRepo)
         {
             _unitOfWork = unitOfWork;
             _nkhtRepo = nkhtRepo;
@@ -90,6 +91,7 @@ namespace MES.Application.Commands.OutboundDelivery
             _utilitiesService = utilitiesService;
             _prodRepo = prodRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _docImgRepo = docImgRepo;
         }
 
         public async Task<bool> Handle(SaveGoodsReturnCommand request, CancellationToken cancellationToken)
@@ -158,7 +160,7 @@ namespace MES.Application.Commands.OutboundDelivery
 
                 var GoodsReturnId = Guid.NewGuid();
 
-                var imgPath ="";
+                var imgMapping = new List<Document_Image_Mapping>();
                 for (int i = 0; i < item.ListImage.Count(); i++)
                 {
                     if (!string.IsNullOrEmpty(item.ListImage[i]))
@@ -169,7 +171,15 @@ namespace MES.Application.Commands.OutboundDelivery
 
                         IFormFile file = new FormFile(stream, 0, bytes.Length, $"{GoodsReturnId.ToString()}_{i}", $"{GoodsReturnId.ToString()}_{i}.jpg");
                         //Save image to server
-                        imgPath = await _utilitiesService.UploadFile(file, "NKHT") + ",";
+                        var imagePath = await _utilitiesService.UploadFile(file, "NKHT");
+
+                        imgMapping.Add(new Document_Image_Mapping
+                        {
+                            Document_Image_MappingId = Guid.NewGuid(),
+                            DocumentId = GoodsReturnId,
+                            Image = imagePath,
+                            Actived = true
+                        });
                     }
                 }
                 //if (!string.IsNullOrEmpty(item.Image))
@@ -291,7 +301,7 @@ namespace MES.Application.Commands.OutboundDelivery
                     //40  Description
                     Description = item.Description,
                     //41  Image
-                    Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                    //Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                     //42  Status
                     Status = "NOT",
                     ////43  TruckInfoId
@@ -306,6 +316,9 @@ namespace MES.Application.Commands.OutboundDelivery
                     Actived = true
 
                 });
+
+                if (imgMapping.Count > 0)
+                    _docImgRepo.AddRange(imgMapping);
 
                 index++;
             }

@@ -45,7 +45,12 @@ namespace MES.Application.Queries
         public string PurchaseOrderItem { get; set; }
         public string Material { get; set; }
         public string MaterialDesc { get; set; }
+        public decimal? OrderQuantity { get; set; }
+        public string OrderUnit { get; set; }
+        public decimal? RequirementQuantity { get; set; }
+        public string RequirementUnit { get; set; }
         public string Vendor { get; set; }
+        public string VendorName { get; set; }
     }
 
     public class XNVLGCQuery : IXNVLGCQuery
@@ -469,6 +474,10 @@ namespace MES.Application.Queries
                             PurchaseOrderItem = res.Item,
                             Material = puchaseOrderItem.ProductCodeInt.ToString(),
                             MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == puchaseOrderItem.ProductCode).ProductName,
+                            OrderQuantity = puchaseOrderItem.OrderQuantity,
+                            OrderUnit = puchaseOrderItem.Unit ?? "",
+                            RequirementQuantity = res.RequirementQty,
+                            RequirementUnit = res.BaseUnit ?? "",
                             Vendor = puchaseOrderItem.PurchaseOrder.VendorCode
                         }).Where(x => !string.IsNullOrEmpty(keyword) ? x.Key.Contains(keyword) : true).OrderBy(x => x.Key).ToListAsync();
 

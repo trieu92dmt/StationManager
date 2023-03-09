@@ -159,7 +159,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 var GoodsReturnId = Guid.NewGuid();
 
                 var imgPath ="";
-                for (int i = 1; i <= item.ListImage.Count(); i++)
+                for (int i = 0; i < item.ListImage.Count(); i++)
                 {
                     if (!string.IsNullOrEmpty(item.ListImage[i]))
                     {

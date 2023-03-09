@@ -50,10 +50,11 @@ namespace MES.Application.Queries
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public XTHLSXQuery(IRepository<IssueForProductionModel > xthlsxRepo, IRepository<WorkOrderModel> woRepo, IRepository<DetailWorkOrderModel> detailWoRepo,
                           IRepository<ProductModel> prdRepo, IRepository<OrderTypeModel> orderTypeRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo,
-                          IRepository<StorageLocationModel> slocRepo)
+                          IRepository<StorageLocationModel> slocRepo, IRepository<ScaleModel> scaleRepo)
         {
             _xthlsxRepo = xthlsxRepo;
             _woRepo = woRepo;
@@ -63,6 +64,7 @@ namespace MES.Application.Queries
             _cataRepo = cataRepo;
             _userRepo = userRepo;
             _slocRepo = slocRepo;
+            _scaleRepo = scaleRepo;
         }
 
         public async Task<GetDataByWoAndItemComponentResponse> GetDataByWoAndItemComponent(string workorder, string item)
@@ -389,6 +391,9 @@ namespace MES.Application.Queries
             //Get query data order type
             var orderTypes = _orderTypeRepo.GetQuery().AsNoTracking();
 
+            //Scale
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
+
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
@@ -432,6 +437,8 @@ namespace MES.Application.Queries
                 QuantityWithPackage = x.QuantityWithPackaging ?? 0,
                 //21 Số lần cân
                 QuantityWeight = x.QuantityWeitght ?? 0,
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //Total Quantity
                 TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity) : 0,
                 //22 Số lượng yêu cầu

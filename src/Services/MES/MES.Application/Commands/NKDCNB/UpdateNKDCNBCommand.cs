@@ -183,6 +183,15 @@ namespace MES.Application.Commands.NKDCNB
                     imgPath = await _utilitiesService.UploadFile(file, "NKDCNB");
                 }
 
+                //Check od có mapping với material
+                if (detailOD != null && detailOD.ProductCodeInt != long.Parse(item.Material))
+                {
+                    response.IsSuccess = false;
+                    response.Message = $"Outbound delivery và Material Không mapping với nhau";
+
+                    return response;
+                }
+
 
                 //Chưa có thì tạo mới
                 if (nkdcnb == null)

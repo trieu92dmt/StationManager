@@ -113,6 +113,7 @@ namespace Infrastructure.Data
         public virtual DbSet<DistributionChannelModel> DistributionChannelModel { get; set; }
         public virtual DbSet<DistrictModel> DistrictModel { get; set; }
         public virtual DbSet<DivisionModel> DivisionModel { get; set; }
+        public virtual DbSet<Document_Image_Mapping> Document_Image_Mapping { get; set; }
         public virtual DbSet<EmailAccountModel> EmailAccountModel { get; set; }
         public virtual DbSet<EmailConfig> EmailConfig { get; set; }
         public virtual DbSet<EmployeeRecordModel> EmployeeRecordModel { get; set; }
@@ -1193,6 +1194,11 @@ namespace Infrastructure.Data
             modelBuilder.Entity<DivisionModel>(entity =>
             {
                 entity.Property(e => e.DivisionId).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<Document_Image_Mapping>(entity =>
+            {
+                entity.Property(e => e.Document_Image_MappingId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<EmailAccountModel>(entity =>

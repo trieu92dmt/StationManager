@@ -75,6 +75,7 @@ namespace MES.Application.DTOs.MES.XK
         public decimal? SingleWeight { get; set; }
         //Đầu cân
         public string WeightHeadCode { get; set; }
+        public string ScaleType { get; set; } //TICHHOP | KHONGTICHHOP | CANXETAI
         //Trọng lượng cân
         public decimal? Weight { get; set; }
         //Customer

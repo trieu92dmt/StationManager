@@ -60,10 +60,11 @@ namespace MES.Application.Queries
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public NHLTQuery(IRepository<GoodsReceiptTypeTModel> nhltRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prodRepo,
                          IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<CustmdSaleModel> cusRepo, IRepository<StorageLocationModel> slocRepo,
-                         IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo)
+                         IRepository<AccountModel> userRepo, IRepository<CatalogModel> cataRepo, IRepository<ScaleModel> scaleRepo)
         {
             _nhltRepo = nhltRepo;
             _plantRepo = plantRepo;
@@ -73,6 +74,7 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _userRepo = userRepo;
             _cataRepo = cataRepo;
+            _scaleRepo = scaleRepo;
         }
 
         public async Task<GetDataByOdAndOdItemResponse> GetDataByOdAndOdItem(string od, string odItem)
@@ -223,6 +225,9 @@ namespace MES.Application.Queries
                 query = query.Where(x => x.CreateBy == command.CreateBy);
             }
 
+            //Scale
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
+
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
@@ -249,6 +254,8 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight ?? 0,
                 //Đầu cân
                 WeightHeadCode = x.WeightHeadCode ?? "",
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //Số batch
                 Batch = x.Batch ?? "",
                 //Trọng lượng

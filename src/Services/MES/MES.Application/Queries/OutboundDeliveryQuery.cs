@@ -44,10 +44,12 @@ namespace MES.Application.Queries
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<PlantModel> _plantRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
         //private readonly IRepository<Document_Image_Mapping> _docImgRepo;
 
         public OutboundDeliveryQuery(IRepository<DetailOutboundDeliveryModel> detailODRepo, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo,
-                                     IRepository<GoodsReturnModel> nkhtRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<PlantModel> plantRepo)
+                                     IRepository<GoodsReturnModel> nkhtRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<PlantModel> plantRepo,
+                                     IRepository<ScaleModel> scaleRepo)
         {
             _detailODRepo = detailODRepo;
             _prdRepo = prdRepo;
@@ -56,6 +58,7 @@ namespace MES.Application.Queries
             _cataRepo = cataRepo;
             _userRepo = userRepo;
             _plantRepo = plantRepo;
+            _scaleRepo = scaleRepo;
             //_docImgRepo = docImgRepo;
         }
 
@@ -313,33 +316,58 @@ namespace MES.Application.Queries
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
+
             var data = await query.OrderByDescending(x => x.CreateTime).Select(x => new GoodsReturnResponse
             {
                 GoodsReturnId = x.GoodsReturnId,
+                //Plant
                 Plant = x.PlantCode,
+                //Ship to party
                 ShipToParty = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoParty : "",
                 ShipToPartyName = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoPartyName : "",
+                //od
                 OutboundDelivery = x.DetailODId.HasValue ? long.Parse(x.DetailOD.OutboundDelivery.DeliveryCode).ToString() : null,
+                //od item
                 OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : null,
+                //Material code
                 Material = long.Parse(x.MaterialCode).ToString(),
+                //Material
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
+                //Sloc code
                 Sloc = x.SlocCode,
+                //Sloc name
                 SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName}",
+                //Số batch
                 Batch = x.Batch ?? "",
+                //Số lượng bao
                 BagQuantity = x.BagQuantity,
+                //Đơn trọng
                 SingleWeight = x.SingleWeight,
+                //Đầu cân
                 WeightHeadCode = x.WeightHeadCode,
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
+                //Trọng lượng cân
                 Weight = x.Weight,
+                //Confirm quantity
                 ConfirmQty = x.ConfirmQty,
+                //Sl kèm bao bì
                 QtyWithPackage = x.QuantityWithPackaging,
+                //Số phương tiện
                 VehicleCode = x.VehicleCode,
+                //Số lần cân
                 QtyWeight = x.QuantityWeitght,
                 TotalQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.DetailODId.HasValue ? x.DetailOD.DeliveryQuantity : 0,
                 DeliveryQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveredQuantity : x.DetailODId.HasValue ? x.DetailOD.PickedQuantityPUoM : 0,
+                //UOM
                 UOM = x.UOM,
+                //ghi chú
                 Description = x.Description,
+                //Hình ảnh
                 Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
                 //ListImage = imgMappings.Where(img => img.DocumentId == x.GoodsReturnId).Select(img => $"https://itp-mes.isdcorp.vn/{img.Image}").ToList(),
+                //Trạng thái
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 WeightVote = x.WeightVote,
                 StartTime = x.StartTime,

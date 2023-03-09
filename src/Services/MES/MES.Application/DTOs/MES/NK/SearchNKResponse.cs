@@ -54,6 +54,7 @@ namespace MES.Application.DTOs.MES.NK
         public decimal? SingleWeight { get; set; }
         //Đầu cân
         public string WeightHeadCode { get; set; }
+        public string ScaleType { get; set; }
         //Trọng lượng cân
         public decimal? Weight { get; set; }
         //Confirm Quantity

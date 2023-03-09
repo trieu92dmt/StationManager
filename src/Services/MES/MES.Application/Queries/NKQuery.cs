@@ -55,9 +55,10 @@ namespace MES.Application.Queries
         private readonly IRepository<CustmdSaleModel> _custRepo;
         private readonly IRepository<CatalogModel> _cataRepo;
         private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<ScaleModel> _scaleRepo;
 
         public NKQuery(IRepository<OtherImportModel> nkRepo, IRepository<PlantModel> plantRepo, IRepository<ProductModel> prdRepo, IRepository<CustmdSaleModel> custRepo,
-                       IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo)
+                       IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<ScaleModel> scaleRepo)
         {
             _nkRepo = nkRepo;
             _plantRepo = plantRepo;
@@ -65,6 +66,7 @@ namespace MES.Application.Queries
             _custRepo = custRepo;
             _cataRepo = cataRepo;
             _userRepo = userRepo;
+            _scaleRepo = scaleRepo;
         }
 
         public async Task<List<GetInputDataResponse>> GetInputData(SearchNKCommand command)
@@ -183,6 +185,8 @@ namespace MES.Application.Queries
             //Catalog status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
+            //Scale
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
 
             //Get data
             var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNKResponse
@@ -216,6 +220,8 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight ?? 0,
                 //17 Đầu cân
                 WeightHeadCode = x.WeightHeadCode ?? "",
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //18 Trọng lượng cân
                 Weight = x.Weight ?? 0,
                 //19 Confirm Quantity

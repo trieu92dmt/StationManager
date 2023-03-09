@@ -57,6 +57,7 @@
         //NKMH
         public decimal? BagQuantity { get; set; }
         public decimal? SingleWeight { get; set; }
+        public string ScaleType { get; set; }
         public string WeightHeadCode { get; set; }
         public decimal? Weight { get; set; }
         public decimal? ConfirmQty { get; set; }

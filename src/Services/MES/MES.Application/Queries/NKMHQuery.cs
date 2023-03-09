@@ -199,6 +199,9 @@ namespace MES.Application.Queries
             //Catalog Nhập kho mua hàng status
             var nkmhStatus = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
+            //Scale
+            var scale = _scaleRepo.GetQuery().AsNoTracking();
+
             //Data NKMH
             var dataNKMH = await queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
             {
@@ -226,6 +229,8 @@ namespace MES.Application.Queries
                 SingleWeight = x.SingleWeight,
                 //Đầu cân
                 WeightHeadCode = x.WeightHeadCode,
+                ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
+                                                                      scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //Trọng lượng cân
                 Weight = x.Weight,
                 //Confirm Qty

@@ -128,8 +128,8 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 if (string.IsNullOrEmpty(command.SalesOrderTo))
                     command.SalesOrderTo = command.SalesOrderFrom;
 
-                query = query.Where(x => x.DetailODId.HasValue ? x.DetailOD.SalesOrder.CompareTo(command.SalesOrderFrom) >= 0 &&
-                                                                 x.DetailOD.SalesOrder.CompareTo(command.SalesOrderTo) <= 0 : false);
+                query = query.Where(x => x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument1.CompareTo(command.SalesOrderFrom) >= 0 &&
+                                                                 x.DetailOD.ReferenceDocument1.CompareTo(command.SalesOrderTo) <= 0 : false);
             }
 
             //Theo outbound deliver

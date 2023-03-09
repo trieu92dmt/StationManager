@@ -31,6 +31,8 @@ namespace MES.Application.Commands.XNVLGC
         public string PurchaseOrder { get; set; }
         //PO item
         public string PurchaseOrderItem { get; set; }
+        //Material
+        public string Material { get; set; }
         //Component
         public string Component { get; set; }
         //Component item
@@ -199,6 +201,10 @@ namespace MES.Application.Commands.XNVLGC
                         //po
                         PurchaseOrderDetailId = po != null ? po.PurchaseOrderDetailId : null,
                         //poitem
+                        //Material
+                        MaterialCode = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
+                        MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,
+                        MaterialName = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName : "",
                         //Component
                         ComponentCode = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "",
                         ComponentItem = item.ComponentItem,
@@ -229,7 +235,7 @@ namespace MES.Application.Commands.XNVLGC
                         //Số cân đầu ra
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
-                        Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                        Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                         //Sloc
@@ -248,6 +254,10 @@ namespace MES.Application.Commands.XNVLGC
                     //Cập nhật
                     //po
                     xnvlgc.PurchaseOrderDetailId = po != null ? po.PurchaseOrderDetailId : null;
+                    //Material
+                    xnvlgc.MaterialCode = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "";
+                    xnvlgc.MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null;
+                    xnvlgc.MaterialName = !string.IsNullOrEmpty(item.Material) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductName : "";
                     //Component Code
                     xnvlgc.ComponentCode = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode : "";
                     xnvlgc.ComponentName = !string.IsNullOrEmpty(item.Component) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductName : "";

@@ -323,6 +323,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                     ItemDescription = item.ItemDescription,
                                     ReferenceDocument1 = item.ReferenceDocument1,
                                     ReferenceItem = item.ReferenceItem,
+                                    ReferenceItemInt = int.Parse(item.ReferenceItem),
                                     SalesOffice = item.SalesOffice,
                                     SalesGroup = item.SalesGroup,
                                     DivisionCode = item.DivisionCode,
@@ -365,6 +366,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                                 detailDelivery.ItemDescription = item.ItemDescription;
                                 detailDelivery.ReferenceDocument1 = item.ReferenceDocument1;
                                 detailDelivery.ReferenceItem = item.ReferenceItem;
+                                detailDelivery.ReferenceItemInt = int.Parse(item.ReferenceItem);
                                 detailDelivery.SalesOffice = item.SalesOffice;
                                 detailDelivery.SalesGroup = item.SalesGroup;
                                 detailDelivery.DivisionCode = item.DivisionCode;

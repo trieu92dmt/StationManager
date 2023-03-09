@@ -5,6 +5,7 @@ using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKDCNB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Web;
 
 namespace MES.Application.Queries
 {
@@ -140,6 +141,7 @@ namespace MES.Application.Queries
             //Tạo query detail po
             var poQuery = _detailPoRepo.GetQuery().Include(x => x.PurchaseOrder).AsNoTracking();
 
+
             //Tạo query detail od
             var query = _detailOdRepo.GetQuery()
                                         .Include(x => x.OutboundDelivery)
@@ -155,16 +157,16 @@ namespace MES.Application.Queries
             query = query.Where(x => poQuery.FirstOrDefault(p => p.POLine == x.ReferenceItem && p.PurchaseOrder.PurchaseOrderCode == x.ReferenceDocument1).DeliveryCompleted != "X" &&
                                     //Loại trừ các delivery đã đánh dấu xóa
                                      poQuery.FirstOrDefault(p => p.POLine == x.ReferenceItem && p.PurchaseOrder.PurchaseOrderCode == x.ReferenceDocument1).DeletionInd != "L");
-            
+
+
+            //Query sloc
+            var slocs = _slocRepo.GetQuery().AsNoTracking();
 
             //Products
             var prods = _prdRepo.GetQuery().AsNoTracking();
 
-            //Sloc
-            var slocs = _slocRepo.GetQuery().AsNoTracking();
-
             //Plant
-            //var plants = _plantRepo.GetQuery().AsNoTracking();
+            //var plants = _plantRepo.GetQuery().AsNoTracking();    
 
             //NKDCNB
             var nkdcnbs = _nkdcnbRepo.GetQuery().AsNoTracking();
@@ -243,9 +245,6 @@ namespace MES.Application.Queries
                 Material = x.ProductCodeInt.ToString() ?? "",
                 //Material Desc
                 MaterialDesc = !string.IsNullOrEmpty(x.ProductCode) ? prods.FirstOrDefault(m => m.ProductCodeInt == x.ProductCodeInt).ProductName : "",
-                //Storage Location
-                Sloc = x.StorageLocation ?? "",
-                SlocDesc = string.IsNullOrEmpty(x.StorageLocation) ? "" : $"{x.StorageLocation} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName}",
                 //Batch
                 Batch = x.Batch ?? "",
                 //Total quantity

@@ -1,4 +1,5 @@
-﻿using Core.SeedWork.Repositories;
+﻿using Core.Extensions;
+using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.OutboundDelivery;
 using MES.Application.DTOs.Common;
@@ -367,7 +368,7 @@ namespace MES.Application.Queries
                 Description = x.Description,
                 //Hình ảnh
                 Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
-                ListImage = imgMappings.Where(img => img.DocumentId == x.GoodsReturnId).Select(img => $"https://itp-mes.isdcorp.vn/{img.Image}").ToList(),
+                ListImage = imgMappings.Where(img => img.DocumentId == x.GoodsReturnId).Select(img => $"{new ConfigManager().DomainUploadUrl}{img.Image}").ToList(),
                 //Trạng thái
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 WeightVote = x.WeightVote,

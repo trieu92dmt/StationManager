@@ -55,7 +55,7 @@ namespace MES.Application.Commands.OutboundDelivery
         public string Description { get; set; }
         //Hình ảnh
         public string Image { get; set; }
-        public List<IFormFile> ListImage { get; set; } = new List<IFormFile>();
+        public List<string> ListImage { get; set; } = new List<string>();
         //Trạng thái
         public string Status { get; set; }
         //Đầu cân
@@ -164,12 +164,12 @@ namespace MES.Application.Commands.OutboundDelivery
                 for (int i = 0; i < item.ListImage.Count(); i++)
                 {
                         //Convert Base64 to Iformfile
-                        //byte[] bytes = Convert.FromBase64String(item.ListImage[i].Substring(item.ListImage[i].IndexOf(',') + 1));
-                        //MemoryStream stream = new MemoryStream(bytes);
+                        byte[] bytes = Convert.FromBase64String(item.ListImage[i].Substring(item.ListImage[i].IndexOf(',') + 1));
+                        MemoryStream stream = new MemoryStream(bytes);
 
-                        //IFormFile file = new FormFile(stream, 0, bytes.Length, $"{GoodsReturnId.ToString()}_{i}", $"{GoodsReturnId.ToString()}_{i}.jpg");
+                        IFormFile file = new FormFile(stream, 0, bytes.Length, $"{GoodsReturnId.ToString()}_{i}", $"{GoodsReturnId.ToString()}_{i}.jpg");
                         //Save image to server
-                        var imagePath = await _utilitiesService.UploadFile(item.ListImage[i], "NKHT");
+                        var imagePath = await _utilitiesService.UploadFile(file, "NKHT");
 
                         imgMapping.Add(new Document_Image_Mapping
                         {

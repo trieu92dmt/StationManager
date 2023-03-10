@@ -211,32 +211,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 //    imgPath = await _utilitiesService.UploadFile(file, "NKHT");
                 //}
 
-                //Lấy ra ảnh cần xóa
-                var imgDelete = imgMappings.Where(x => x.Document_Image_MappingId == item.NKHTId && item.ListDeleteImage.Contains(x.Image));
-
-                var imgMapping = new List<Document_Image_Mapping>();
-                for (int i = 0; i < item.ListNewImage.Count(); i++)
-                {
-                    if (!string.IsNullOrEmpty(item.ListNewImage[i]))
-                    {
-                        //Convert Base64 to Iformfile
-                        byte[] bytes = Convert.FromBase64String(item.ListNewImage[i].Substring(item.ListNewImage[i].IndexOf(',') + 1));
-                        MemoryStream stream = new MemoryStream(bytes);
-
-                        IFormFile file = new FormFile(stream, 0, bytes.Length, $"{item.NKHTId.ToString()}_{i}", $"{item.NKHTId.ToString()}_{i}.jpg");
-                        //Save image to server
-                        var imagePath = await _utilitiesService.UploadFile(file, "NKHT");
-
-                        imgMapping.Add(new Document_Image_Mapping
-                        {
-                            Document_Image_MappingId = Guid.NewGuid(),
-                            DocumentId = item.NKHTId,
-                            Image = $"https://itp-mes.isdcorp.vn/{imagePath}",
-                            Actived = true
-                        });
-                    }
-                }
-
+                
                 //Chưa có thì tạo mới
                 if (nkht == null)
                 {
@@ -319,9 +294,44 @@ namespace MES.Application.Commands.OutboundDelivery
                     }
                 }
 
+                //Lấy ra ảnh cần xóa
+                var imgDelete = imgMappings.Where(x => x.Document_Image_MappingId == item.NKHTId && item.ListDeleteImage.Contains(x.Image));
+
+                var imgMapping = new List<Document_Image_Mapping>();
+                for (int i = 0; i < item.ListNewImage.Count(); i++)
+                {
+                    if (!string.IsNullOrEmpty(item.ListNewImage[i]))
+                    {
+                        //Convert Base64 to Iformfile
+                        byte[] bytes = Convert.FromBase64String(item.ListNewImage[i].Substring(item.ListNewImage[i].IndexOf(',') + 1));
+                        MemoryStream stream = new MemoryStream(bytes);
+
+                        IFormFile file = new FormFile(stream, 0, bytes.Length, $"{item.NKHTId.ToString()}_{i}", $"{item.NKHTId.ToString()}_{i}.jpg");
+                        //Save image to server
+                        var imagePath = await _utilitiesService.UploadFile(file, "NKHT");
+
+                        imgMapping.Add(new Document_Image_Mapping
+                        {
+                            Document_Image_MappingId = Guid.NewGuid(),
+                            DocumentId = item.NKHTId,
+                            Image = imagePath,
+                            Actived = true
+                        });
+                    }
+                }
+
+                //Xóa ảnh
+                foreach (var img in imgDelete)
+                {
+                    File.Delete(Path.Combine(new ConfigManager().DocumentDomainUpload + img.Image));
+                    _docImgRepo.Remove(img);
+                }
+                    
+                
+
+                //Thêm ảnh
                 if (imgMapping.Count > 0)
                 {
-                    _docImgRepo.RemoveRange(imgDelete);
                     _docImgRepo.AddRange(imgMapping);
                 }
             }

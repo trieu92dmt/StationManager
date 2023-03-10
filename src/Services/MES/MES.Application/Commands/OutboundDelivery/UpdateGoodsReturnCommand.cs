@@ -323,7 +323,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 //Xóa ảnh
                 foreach (var img in imgDelete)
                 {
-                    File.Delete(Path.Combine(new ConfigManager().DocumentDomainUpload + img.Image));
+                    File.Delete(Path.Combine(new ConfigManager().DocumentDomainUpload + img.Image.Replace(new ConfigManager().DomainUploadUrl, "")));
                     _docImgRepo.Remove(img);
                 }
                     

@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,11 +35,16 @@ namespace IntegrationNS.Application.Commands.XCKs
     {
         private readonly IRepository<WarehouseExportTransferModel> _xckRep;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<DetailReservationModel> _dtResRepo;
 
-        public UpdateAndCancelXCKCommandHandler(IRepository<WarehouseExportTransferModel> xckRep, IUnitOfWork unitOfWork)
+        public UpdateAndCancelXCKCommandHandler(IRepository<WarehouseExportTransferModel> xckRep, IUnitOfWork unitOfWork, IRepository<AccountModel> userRepo, 
+                                                IRepository<DetailReservationModel> dtResRepo)
         {
             _xckRep = xckRep;
             _unitOfWork = unitOfWork;
+            _userRepo = userRepo;
+            _dtResRepo = dtResRepo;
         }
 
         /// <summary>
@@ -50,6 +56,9 @@ namespace IntegrationNS.Application.Commands.XCKs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelXCKCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -78,55 +87,25 @@ namespace IntegrationNS.Application.Commands.XCKs
                     var serialized = JsonConvert.SerializeObject(xck);
                     var xckNew = JsonConvert.DeserializeObject<WarehouseExportTransferModel>(serialized);
 
+                    //Chứng từ
+                    var document = await _dtResRepo.FindOneAsync(x => x.DetailReservationId == xck.DetailReservationId);
+
                     xckNew.WarehouseTransferId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    xckNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    xckNew.LastEditBy = null;
+                    xckNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    xckNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    xckNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     xckNew.Status = "NOT";
                     xckNew.TotalQuantity = 0;
                     xckNew.DeliveredQuantity = 0;
                     xckNew.OpenQuantity = 0;
                     xckNew.MaterialDocument = null;
                     xckNew.ReverseDocument = null;
-
-                    #region Code cũ
-                    //var xckNew = new WarehouseExportTransferModel
-                    //{
-                    //    WarehouseTransferId = Guid.NewGuid(),
-                    //    PlantCode = xck.PlantCode,
-                    //    PlantName = xck.PlantName,
-                    //    DetailReservationId = xck.DetailReservationId,
-                    //    WeightId = xck.WeightId,
-                    //    MaterialName = xck.MaterialName,
-                    //    MaterialCodeInt = xck.MaterialCodeInt,
-                    //    WeightVote = xck.WeightVote,
-                    //    BagQuantity = xck.BagQuantity,
-                    //    SingleWeight = xck.SingleWeight,
-                    //    WeightHeadCode = xck.WeightHeadCode,
-                    //    Weight = xck.Weight,
-                    //    ConfirmQty = xck.ConfirmQty,
-                    //    QuantityWithPackaging = xck.QuantityWithPackaging,
-                    //    VehicleCode = xck.VehicleCode,
-                    //    QuantityWeitght = xck.QuantityWeitght,
-                    //    TruckInfoId = xck.TruckInfoId,
-                    //    TruckNumber = xck.TruckNumber,
-                    //    InputWeight = xck.InputWeight,
-                    //    OutputWeight = xck.OutputWeight,
-                    //    Description = xck.Description,
-                    //    MaterialCode = xck.MaterialCode,
-                    //    SlocCode = xck.SlocCode,
-                    //    SlocName = xck.SlocName,
-                    //    ReceivingSlocCode = xck.ReceivingSlocCode,
-                    //    ReceivingSlocName = xck.ReceivingSlocName,
-                    //    MovementType = xck.MovementType,
-                    //    StockType = xck.StockType,
-                    //    Customer = xck.Customer,
-                    //    Unit = xck.Unit,
-                    //    Image = xck.Image,
-                    //    Status = xck.Status,
-                    //    StartTime = xck.StartTime,
-                    //    EndTime = xck.EndTime,
-                    //    CreateTime = DateTime.Now,
-                    //    Actived = true
-                    //};
-                    #endregion
 
                     _xckRep.Add(xckNew);
                 }

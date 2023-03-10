@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,15 +36,20 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
         private readonly IRepository<ComponentExportModel> _xnvlgcRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<DetailOutboundDeliveryModel> _obDetailRepo;
+        private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
         private readonly IRepository<DetailReservationModel> _dtResRepo;
+        private readonly IRepository<AccountModel> _userRepo;
 
         public UpdateAndCancelXNVLGCCommandHandler(IRepository<ComponentExportModel> xnvlgcRep, IUnitOfWork unitOfWork,
-                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo, IRepository<DetailReservationModel> dtResRepo)
+                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo, IRepository<DetailReservationModel> dtResRepo, 
+                                                 IRepository<AccountModel> userRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo)
         {
             _xnvlgcRep = xnvlgcRep;
             _unitOfWork = unitOfWork;
             _obDetailRepo = obDetailRepo;
             _dtResRepo = dtResRepo;
+            _userRepo = userRepo;
+            _poDetailRepo = poDetailRepo;
         }
 
         /// <summary>
@@ -55,6 +61,9 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelXNVLGCCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             //Get query reservation
             var reservations = _dtResRepo.GetQuery().AsNoTracking();
             if (request.IsCancel == true)
@@ -85,7 +94,22 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     var serialized = JsonConvert.SerializeObject(xnvlgc);
                     var xnvlgcNew = JsonConvert.DeserializeObject<ComponentExportModel>(serialized);
 
+
+                    //Chứng từ
+                    var po = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder).FirstOrDefaultAsync(x => x.PurchaseOrderDetailId == xnvlgc.PurchaseOrderDetailId);
+                    var document = reservations.FirstOrDefault(x => x.Material == xnvlgc.ComponentCode && x.ReservationItem == xnvlgc.ComponentItem &&
+                                                                    x.PurchasingDoc == po.PurchaseOrder.PurchaseOrderCode && x.Item == po.POLine);
+
                     xnvlgcNew.ComponentExportId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    xnvlgcNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    xnvlgcNew.LastEditBy = null;
+                    xnvlgcNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    xnvlgcNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    xnvlgcNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     xnvlgcNew.Status = "NOT";
                     xnvlgcNew.TotalQuantity = 0;
                     xnvlgcNew.RequirementQuantity = 0;

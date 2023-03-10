@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MES.Application.Commands.Scale
 {
-    public class SaveScaleCommad : IRequest<ApiResponse>
+    public class SaveScaleCommand : IRequest<ApiResponse>
     {
         //Plant
         [Required]
@@ -26,14 +26,14 @@ namespace MES.Application.Commands.Scale
         [Required]
         public string ScaleName { get; set; }
         //Cân tích hợp
-        public bool isIntegrated { get; set; }
+        public bool isIntegrated { get; set; } = false;
         //Cân không tích hợp
-        public bool isTruckScale { get; set; }
+        public bool isTruckScale { get; set; } = false;
         //List màn hình
         public List<string> Screens { get; set; } = new List<string>();
     }
 
-    public class SaveScaleCommadHandler : IRequestHandler<SaveScaleCommad, ApiResponse>
+    public class SaveScaleCommadHandler : IRequestHandler<SaveScaleCommand, ApiResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<ScaleModel> _scaleRepo;
@@ -48,7 +48,7 @@ namespace MES.Application.Commands.Scale
             _screenScaleRepo = screenScaleRepo;
         }
 
-        public async Task<ApiResponse> Handle(SaveScaleCommad request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(SaveScaleCommand request, CancellationToken cancellationToken)
         {
             //Tạo response
             var response = new ApiResponse()

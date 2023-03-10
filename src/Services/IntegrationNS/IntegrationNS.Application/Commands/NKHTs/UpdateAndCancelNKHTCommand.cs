@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,13 +36,15 @@ namespace IntegrationNS.Application.Commands.NKHTs
         private readonly IRepository<GoodsReturnModel> _nkhtRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<DetailOutboundDeliveryModel> _obDetailRepo;
+        private readonly IRepository<AccountModel> _userRepo;
 
         public UpdateAndCancelNKHTCommandHandler(IRepository<GoodsReturnModel> nkhtRep, IUnitOfWork unitOfWork,
-                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo)
+                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo, IRepository<AccountModel> userRepo)
         {
             _nkhtRep = nkhtRep;
             _unitOfWork = unitOfWork;
             _obDetailRepo = obDetailRepo;
+            _userRepo = userRepo;
         }
 
         /// <summary>
@@ -53,6 +56,9 @@ namespace IntegrationNS.Application.Commands.NKHTs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNKHTCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -81,7 +87,19 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     var serialized = JsonConvert.SerializeObject(nkht);
                     var nkhtNew = JsonConvert.DeserializeObject<GoodsReturnModel>(serialized);
 
+                    //Chứng từ
+                    var document = await _obDetailRepo.FindOneAsync(x => x.DetailOutboundDeliveryId == nkht.DetailODId);
+
                     nkhtNew.GoodsReturnId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    nkhtNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    nkhtNew.LastEditBy = null;
+                    nkhtNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    nkhtNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    nkhtNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     nkhtNew.Status = "NOT";
                     nkhtNew.TotalQuantity = 0;
                     nkhtNew.DeliveredQuantity = 0;

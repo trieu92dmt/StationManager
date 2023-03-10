@@ -38,13 +38,15 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
         private readonly IRepository<ReceiptFromProductionModel> _nktpsxRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<WorkOrderModel> _woRepo;
+        private readonly IRepository<AccountModel> _userRepo;
 
         public UpdateAndCancelNKTPSXCommandHandler(IRepository<ReceiptFromProductionModel> nktpsxRep, IUnitOfWork unitOfWork,
-                                                   IRepository<WorkOrderModel> woRepo)
+                                                   IRepository<WorkOrderModel> woRepo, IRepository<AccountModel> userRepo)
         {
             _nktpsxRep = nktpsxRep;
             _unitOfWork = unitOfWork;
             _woRepo = woRepo;
+            _userRepo = userRepo;
         }
 
         /// <summary>
@@ -56,6 +58,9 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNKTPSXCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -83,7 +88,19 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     var serialized = JsonConvert.SerializeObject(nktpsx);
                     var nktpsxNew = JsonConvert.DeserializeObject<ReceiptFromProductionModel>(serialized);
 
+                    //Chứng từ
+                    var document = await _woRepo.FindOneAsync(x => x.WorkOrderId == nktpsx.WorkOrderId);
+
                     nktpsxNew.RcFromProductiontId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    nktpsxNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    nktpsxNew.LastEditBy = null;
+                    nktpsxNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    nktpsxNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    nktpsxNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     nktpsxNew.Status = "NOT";
                     nktpsxNew.TotalQuantity = 0;
                     nktpsxNew.DeliveryQuantity = 0;

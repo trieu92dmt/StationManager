@@ -35,13 +35,15 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
         private readonly IRepository<InhouseTransferModel> _nkdcnbRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<DetailOutboundDeliveryModel> _obDetailRepo;
+        private readonly IRepository<AccountModel> _userRepo;
 
         public UpdateAndCancelNKDCNBCommandHandler(IRepository<InhouseTransferModel> nkdcnbRep, IUnitOfWork unitOfWork,
-                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo)
+                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo, IRepository<AccountModel> userRepo)
         {
             _nkdcnbRep = nkdcnbRep;
             _unitOfWork = unitOfWork;
             _obDetailRepo = obDetailRepo;
+            _userRepo = userRepo;
         }
 
         /// <summary>
@@ -53,6 +55,9 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNKDCNBCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             //Tạo query oubound delivery
             var nkdcnbs = _nkdcnbRep.GetQuery().AsNoTracking();
             if (request.IsCancel == true)
@@ -83,7 +88,19 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     var serialized = JsonConvert.SerializeObject(nkdcnb);
                     var nkdcnbNew = JsonConvert.DeserializeObject<InhouseTransferModel>(serialized);
 
+                    //Chứng từ
+                    var document = await _obDetailRepo.FindOneAsync(x => x.DetailOutboundDeliveryId == nkdcnb.DetailODId);
+
                     nkdcnbNew.InhouseTransferId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    nkdcnbNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    nkdcnbNew.LastEditBy = null;
+                    nkdcnbNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    nkdcnbNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    nkdcnbNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     nkdcnbNew.Status = "NOT";
                     nkdcnbNew.TotalQuantity = 0;
                     nkdcnbNew.DeliveredQuantity = 0;

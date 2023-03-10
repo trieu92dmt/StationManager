@@ -5,7 +5,9 @@ using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Newtonsoft.Json;
+using System.Reflection.Metadata;
 
 namespace IntegrationNS.Application.Commands.NKPPPPs
 {
@@ -29,11 +31,16 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
     {
         private readonly IRepository<ScrapFromProductionModel> _nkppppRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<DetailWorkOrderModel> _dtWoRepo;
 
-        public UpdateAndCancelNKPPPPCommandHandler(IRepository<ScrapFromProductionModel> nkppppRepo, IUnitOfWork unitOfWork)
+        public UpdateAndCancelNKPPPPCommandHandler(IRepository<ScrapFromProductionModel> nkppppRepo, IUnitOfWork unitOfWork, IRepository<AccountModel> userRepo, 
+                                                   IRepository<DetailWorkOrderModel> dtWoRepo)
         {
             _nkppppRepo = nkppppRepo;
             _unitOfWork = unitOfWork;
+            _userRepo = userRepo;
+            _dtWoRepo = dtWoRepo;
         }
 
         /// <summary>
@@ -45,6 +52,9 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNKPPPPCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -73,7 +83,19 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     var serialized = JsonConvert.SerializeObject(nkpppp);
                     var nkppppNew = JsonConvert.DeserializeObject<ScrapFromProductionModel>(serialized);
 
+                    //Chứng từ
+                    var document = await _dtWoRepo.FindOneAsync(x => x.DetailWorkOrderId == nkpppp.DetailWorkOrderId);
+
                     nkppppNew.ScFromProductiontId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    nkppppNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    nkppppNew.LastEditBy = null;
+                    nkppppNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    nkppppNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    nkppppNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     nkppppNew.Status = "NOT";
                     nkppppNew.TotalQuantity = 0;
                     nkppppNew.RequirementQuantiy = 0;

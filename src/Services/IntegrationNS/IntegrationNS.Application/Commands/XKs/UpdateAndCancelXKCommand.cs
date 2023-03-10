@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -33,11 +34,16 @@ namespace IntegrationNS.Application.Commands.XKs
     {
         private readonly IRepository<OtherExportModel> _xkRep;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<DetailReservationModel> _resRepo;
 
-        public UpdateAndCancelXKCommandHandler(IRepository<OtherExportModel> xkRep, IUnitOfWork unitOfWork)
+        public UpdateAndCancelXKCommandHandler(IRepository<OtherExportModel> xkRep, IUnitOfWork unitOfWork, IRepository<AccountModel> userRepo,
+                                               IRepository<DetailReservationModel> resRepo)
         {
             _xkRep = xkRep;
             _unitOfWork = unitOfWork;
+            _userRepo = userRepo;
+            _resRepo = resRepo;
         }
 
         /// <summary>
@@ -49,6 +55,9 @@ namespace IntegrationNS.Application.Commands.XKs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelXKCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -77,7 +86,19 @@ namespace IntegrationNS.Application.Commands.XKs
                     var serialized = JsonConvert.SerializeObject(xk);
                     var xkNew = JsonConvert.DeserializeObject<OtherExportModel>(serialized);
 
+                    //Chứng từ
+                    var document = await _resRepo.FindOneAsync(x => x.DetailReservationId == xk.DetailReservationId);
+
                     xkNew.OtherExportId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    xkNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    xkNew.LastEditBy = null;
+                    xkNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    xkNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    xkNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     xkNew.Status = "NOT";
                     xkNew.TotalQuantity = 0;
                     xkNew.DeliveredQuantity = 0;
@@ -97,7 +118,7 @@ namespace IntegrationNS.Application.Commands.XKs
                 foreach (var item in request.XKs)
                 {
                     //Phiếu xuất khác
-                    var xk = await _xkRep.FindOneAsync(x => x.OtherExportId == item.XkId);
+                    var xk = await _xkRep.GetQuery().Include(x => x.DetailReservation).FirstOrDefaultAsync(x => x.OtherExportId == item.XkId);
 
                     //Check
                     if (xk is null)
@@ -105,6 +126,9 @@ namespace IntegrationNS.Application.Commands.XKs
 
                     //Cập nhật Batch và MaterialDocument
                     xk.Batch = item.Batch;
+                    xk.TotalQuantity = xk.DetailReservation.RequirementQty;
+                    xk.DeliveredQuantity = xk.DetailReservation.QtyWithdrawn;
+                    xk.OpenQuantity = xk.TotalQuantity - xk.OpenQuantity;
                     xk.MaterialDocument = item.MaterialDocument;
                     if (!string.IsNullOrEmpty(xk.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
                         xk.Status = "POST";

@@ -4,6 +4,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace IntegrationNS.Application.Commands.NKs
@@ -28,11 +29,13 @@ namespace IntegrationNS.Application.Commands.NKs
     {
         private readonly IRepository<OtherImportModel> _nkRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<AccountModel> _userRepo;
 
-        public UpdateAndCancelNKCommandHandler(IRepository<OtherImportModel> nkRepo, IUnitOfWork unitOfWork)
+        public UpdateAndCancelNKCommandHandler(IRepository<OtherImportModel> nkRepo, IUnitOfWork unitOfWork, IRepository<AccountModel> userRepo)
         {
             _nkRepo = nkRepo;
             _unitOfWork = unitOfWork;
+            _userRepo = userRepo;
         }
 
         /// <summary>
@@ -44,6 +47,9 @@ namespace IntegrationNS.Application.Commands.NKs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNKCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -73,6 +79,13 @@ namespace IntegrationNS.Application.Commands.NKs
                     var nkNew = JsonConvert.DeserializeObject<OtherImportModel>(serialized);
 
                     nkNew.OtherImportId = Guid.NewGuid();
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    nkNew.LastEditBy = null;
+                    nkNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    nkNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    nkNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     nkNew.Status = "NOT";
                     nkNew.MaterialDocument = null;
                     nkNew.ReverseDocument = null;

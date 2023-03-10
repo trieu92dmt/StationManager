@@ -47,7 +47,7 @@ namespace MES.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("save-scale-info")]
-        public async Task<IActionResult> SaveScaleInfoAsync([FromBody] SaveScaleCommad request)
+        public async Task<IActionResult> SaveScaleInfoAsync([FromBody] SaveScaleCommand request)
         {
             var response = await _mediator.Send(request);
 

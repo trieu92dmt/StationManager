@@ -4,12 +4,6 @@ using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
 using MES.Application.DTOs.MES.Scale;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.Scale
 {

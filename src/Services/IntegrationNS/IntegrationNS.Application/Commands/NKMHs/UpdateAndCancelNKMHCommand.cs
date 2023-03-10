@@ -30,12 +30,15 @@ namespace IntegrationNS.Application.Commands.NKMHs
         private readonly IRepository<GoodsReceiptModel> _nkmhRep;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<AccountModel> _userRepo;
 
-        public UpdateAndCancelNKMHCommandHandler(IRepository<GoodsReceiptModel> nkmhRep, IRepository<PurchaseOrderDetailModel> poDetailRepo, IUnitOfWork unitOfWork)
+        public UpdateAndCancelNKMHCommandHandler(IRepository<GoodsReceiptModel> nkmhRep, IRepository<PurchaseOrderDetailModel> poDetailRepo, IUnitOfWork unitOfWork,
+                                                 IRepository<AccountModel> userRepo)
         {
             _nkmhRep = nkmhRep;
             _poDetailRepo = poDetailRepo;
             _unitOfWork = unitOfWork;
+            _userRepo = userRepo;
         }
 
         /// <summary>
@@ -47,6 +50,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNKMHCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
                 if (!request.NKMHs.Any())
@@ -56,9 +62,6 @@ namespace IntegrationNS.Application.Commands.NKMHs
                 {
                     //Phiếu nhập kho mua hàng
                     var nkmh = await _nkmhRep.FindOneAsync(x => x.GoodsReceiptId == item.NkmhId);
-
-                    //Chứng từ
-                    var document = nkmh.PurchaseOrderDetailId.HasValue ? await _poDetailRepo.FindOneAsync(x => x.PurchaseOrderDetailId == nkmh.PurchaseOrderDetailId) : null;
 
                     //Check
                     if (nkmh is null)
@@ -76,8 +79,21 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //Clone class
                     var serialized = JsonConvert.SerializeObject(nkmh);
                     var nkmhNew = JsonConvert.DeserializeObject<GoodsReceiptModel>(serialized);
+
+                    //Chứng từ
+                    var document = await _poDetailRepo.FindOneAsync(x => x.PurchaseOrderDetailId == nkmh.PurchaseOrderDetailId);
+
                     //Khác id
                     nkmhNew.GoodsReceiptId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    nkmhNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    nkmhNew.LastEditBy = null;
+                    nkmhNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    nkmhNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    nkmhNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     nkmhNew.Batch = document != null ? document.Batch : null;
                     nkmhNew.Status = "NOT";
                     nkmhNew.TotalQuantity = 0;

@@ -6,6 +6,7 @@ using Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Reflection.Metadata;
 
 namespace IntegrationNS.Application.Commands.XTHLSXs
 {
@@ -29,11 +30,16 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
     {
         private readonly IRepository<IssueForProductionModel> _xthlsxRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<AccountModel> _userRepo;
+        private readonly IRepository<DetailWorkOrderModel> _dtWoRepo;
 
-        public UpdateAndCancelXTHLSXCommandHandler(IRepository<IssueForProductionModel> xthlsxRepo, IUnitOfWork unitOfWork)
+        public UpdateAndCancelXTHLSXCommandHandler(IRepository<IssueForProductionModel> xthlsxRepo, IUnitOfWork unitOfWork, IRepository<AccountModel> userRepo, 
+                                                   IRepository<DetailWorkOrderModel> dtWoRepo)
         {
             _xthlsxRepo = xthlsxRepo;
             _unitOfWork = unitOfWork;
+            _userRepo = userRepo;
+            _dtWoRepo = dtWoRepo;
         }
 
         /// <summary>
@@ -45,6 +51,9 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelXTHLSXCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -73,7 +82,19 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     var serialized = JsonConvert.SerializeObject(xthlsx);
                     var xthlsxNew = JsonConvert.DeserializeObject<IssueForProductionModel>(serialized);
 
+                    //Chứng từ
+                    var document = await _dtWoRepo.FindOneAsync(x => x.DetailWorkOrderId == xthlsx.DetailWorkOrderId);
+
                     xthlsxNew.IssForProductiontId = Guid.NewGuid();
+                    //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
+                    xthlsxNew.Batch = document.Batch;
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    xthlsxNew.LastEditBy = null;
+                    xthlsxNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    xthlsxNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    xthlsxNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     xthlsxNew.Status = "NOT";
                     xthlsxNew.TotalQuantity = 0;
                     xthlsxNew.RequirementQuantiy = 0;

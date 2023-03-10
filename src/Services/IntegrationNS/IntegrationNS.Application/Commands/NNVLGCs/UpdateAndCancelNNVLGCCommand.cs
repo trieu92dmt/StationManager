@@ -4,7 +4,9 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Reflection.Metadata;
 
 namespace IntegrationNS.Application.Commands.NNVLGCs
 {
@@ -29,13 +31,15 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
         private readonly IRepository<ComponentImportModel> _nnvlgcRep;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<DetailOutboundDeliveryModel> _obDetailRepo;
+        private readonly IRepository<AccountModel> _userRepo;
 
         public UpdateAndCancelNNVLGCCommandHandler(IRepository<ComponentImportModel> nnvlgcRep, IUnitOfWork unitOfWork,
-                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo)
+                                                 IRepository<DetailOutboundDeliveryModel> obDetailRepo, IRepository<AccountModel> userRepo)
         {
             _nnvlgcRep = nnvlgcRep;
             _unitOfWork = unitOfWork;
             _obDetailRepo = obDetailRepo;
+            _userRepo = userRepo;
         }
 
         /// <summary>
@@ -47,6 +51,9 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Handle(UpdateAndCancelNNVLGCCommand request, CancellationToken cancellationToken)
         {
+            //Query user
+            var users = _userRepo.GetQuery().AsNoTracking();
+
             if (request.IsCancel == true)
             {
 
@@ -76,6 +83,13 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                     var nnvlgcNew = JsonConvert.DeserializeObject<ComponentImportModel>(serialized);
 
                     nnvlgcNew.ComponentImportId = Guid.NewGuid();
+                    //Dòng cũ có change by --> Dòng mới sẽ không có
+                    nnvlgcNew.LastEditBy = null;
+                    nnvlgcNew.LastEditTime = null;
+                    //Created By sẽ được tạo bởi sysadmin và Created On sẽ cập nhật theo ngày tạo, không lấy created on của line cũ
+                    nnvlgcNew.CreateBy = users.FirstOrDefault(x => x.UserName == "sysadmin").AccountId;
+                    nnvlgcNew.CreateTime = DateTime.Now;
+                    //-------------------------//
                     nnvlgcNew.Status = "NOT";
                     nnvlgcNew.MaterialDocument = null;
                     nnvlgcNew.ReverseDocument = null;

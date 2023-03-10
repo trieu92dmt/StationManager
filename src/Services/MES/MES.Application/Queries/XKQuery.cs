@@ -1,4 +1,5 @@
-﻿using Core.SeedWork.Repositories;
+﻿using Core.Extensions;
+using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.XK;
 using MES.Application.DTOs.Common;
@@ -250,7 +251,7 @@ namespace MES.Application.Queries
                 //25 Ghi chú
                 Description = x.Description ?? "",
                 //26 Hình ảnh
-                Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
+                Image = !string.IsNullOrEmpty(x.Image) ? $"{new ConfigManager().DomainUploadUrl}{x.Image}" : "",
                 //27 Status
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //28 Số phiếu cân

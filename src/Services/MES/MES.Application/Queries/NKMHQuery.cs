@@ -1,4 +1,5 @@
-﻿using Core.SeedWork.Repositories;
+﻿using Core.Extensions;
+using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
@@ -266,7 +267,7 @@ namespace MES.Application.Queries
                 //Ghi chú 
                 Description = x.Description,
                 //Hình ảnh
-                Image = !string.IsNullOrEmpty(x.Img) ? $"https://itp-mes.isdcorp.vn/{x.Img}" : "",
+                Image = !string.IsNullOrEmpty(x.Img) ? $"{new ConfigManager().DomainUploadUrl}{x.Img}" : "",
                 Status = nkmhStatus.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 CreateTime = x.CreateTime,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",

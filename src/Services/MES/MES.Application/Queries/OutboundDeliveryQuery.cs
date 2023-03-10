@@ -45,11 +45,11 @@ namespace MES.Application.Queries
         private readonly IRepository<AccountModel> _userRepo;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        //private readonly IRepository<Document_Image_Mapping> _docImgRepo;
+        private readonly IRepository<Document_Image_Mapping> _docImgRepo;
 
         public OutboundDeliveryQuery(IRepository<DetailOutboundDeliveryModel> detailODRepo, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo,
                                      IRepository<GoodsReturnModel> nkhtRepo, IRepository<CatalogModel> cataRepo, IRepository<AccountModel> userRepo, IRepository<PlantModel> plantRepo,
-                                     IRepository<ScaleModel> scaleRepo)
+                                     IRepository<ScaleModel> scaleRepo, IRepository<Document_Image_Mapping> docImgRepo)
         {
             _detailODRepo = detailODRepo;
             _prdRepo = prdRepo;
@@ -59,7 +59,8 @@ namespace MES.Application.Queries
             _userRepo = userRepo;
             _plantRepo = plantRepo;
             _scaleRepo = scaleRepo;
-            //_docImgRepo = docImgRepo;
+            _docImgRepo = docImgRepo;
+            _docImgRepo = docImgRepo;
         }
 
         public async Task<List<OutboundDeliveryResponse>> GetOutboundDelivery(SearchOutboundDeliveryCommand command)
@@ -225,7 +226,7 @@ namespace MES.Application.Queries
             var slocs = _slocRepo.GetQuery().AsNoTracking();
 
             //Img mapping
-            //var imgMappings = _docImgRepo.GetQuery().AsNoTracking();
+            var imgMappings = _docImgRepo.GetQuery().AsNoTracking();
 
             //Get query nkht
             var query = _nkhtRepo.GetQuery().Include(x => x.DetailOD).ThenInclude(x => x.OutboundDelivery).AsNoTracking();
@@ -366,7 +367,7 @@ namespace MES.Application.Queries
                 Description = x.Description,
                 //Hình ảnh
                 Image = !string.IsNullOrEmpty(x.Image) ? $"https://itp-mes.isdcorp.vn/{x.Image}" : "",
-                //ListImage = imgMappings.Where(img => img.DocumentId == x.GoodsReturnId).Select(img => $"https://itp-mes.isdcorp.vn/{img.Image}").ToList(),
+                ListImage = imgMappings.Where(img => img.DocumentId == x.GoodsReturnId).Select(img => img.Image).ToList(),
                 //Trạng thái
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 WeightVote = x.WeightVote,

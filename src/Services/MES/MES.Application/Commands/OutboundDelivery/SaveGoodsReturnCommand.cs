@@ -55,7 +55,7 @@ namespace MES.Application.Commands.OutboundDelivery
         public string Description { get; set; }
         //Hình ảnh
         public string Image { get; set; }
-        public List<string> ListImage { get; set; } = new List<string>();
+        public List<IFormFile> ListImage { get; set; } = new List<IFormFile>();
         //Trạng thái
         public string Status { get; set; }
         //Đầu cân
@@ -163,15 +163,13 @@ namespace MES.Application.Commands.OutboundDelivery
                 var imgMapping = new List<Document_Image_Mapping>();
                 for (int i = 0; i < item.ListImage.Count(); i++)
                 {
-                    if (!string.IsNullOrEmpty(item.ListImage[i]))
-                    {
                         //Convert Base64 to Iformfile
-                        byte[] bytes = Convert.FromBase64String(item.ListImage[i].Substring(item.ListImage[i].IndexOf(',') + 1));
-                        MemoryStream stream = new MemoryStream(bytes);
+                        //byte[] bytes = Convert.FromBase64String(item.ListImage[i].Substring(item.ListImage[i].IndexOf(',') + 1));
+                        //MemoryStream stream = new MemoryStream(bytes);
 
-                        IFormFile file = new FormFile(stream, 0, bytes.Length, $"{GoodsReturnId.ToString()}_{i}", $"{GoodsReturnId.ToString()}_{i}.jpg");
+                        //IFormFile file = new FormFile(stream, 0, bytes.Length, $"{GoodsReturnId.ToString()}_{i}", $"{GoodsReturnId.ToString()}_{i}.jpg");
                         //Save image to server
-                        var imagePath = await _utilitiesService.UploadFile(file, "NKHT");
+                        var imagePath = await _utilitiesService.UploadFile(item.ListImage[i], "NKHT");
 
                         imgMapping.Add(new Document_Image_Mapping
                         {
@@ -180,7 +178,7 @@ namespace MES.Application.Commands.OutboundDelivery
                             Image = imagePath,
                             Actived = true
                         });
-                    }
+                    
                 }
                 //var imgPath = "";
                 //if (!string.IsNullOrEmpty(item.Image))

@@ -15,7 +15,7 @@ namespace Infrastructure.Models
         public Guid Document_Image_MappingId { get; set; }
         public Guid DocumentId { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(200)]
         public string Image { get; set; }
         public bool? Actived { get; set; }
     }

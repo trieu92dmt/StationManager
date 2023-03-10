@@ -28,6 +28,8 @@ namespace MES.Application.Commands.Scale
         public bool isIntegrated { get; set; }
         //Cân xe tải
         public bool isTruckScale { get; set; }
+        //Trạng thái
+        public bool isActived { get; set; }
     }
 
     public class UpdateScaleCommandHandler : IRequestHandler<UpdateScaleCommand, bool>
@@ -53,6 +55,7 @@ namespace MES.Application.Commands.Scale
                 scale.ScaleName = item.ScaleName;
                 scale.ScaleType = item.isIntegrated;
                 scale.isCantai = item.isTruckScale;
+                scale.Actived = item.isActived;
             }
 
             await _unitOfWork.SaveChangesAsync();

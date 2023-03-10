@@ -48,6 +48,13 @@ namespace Core.Extensions
                 return this._configuration["DocumentDomainUpload"];
             }
         }
+        public string DomainUploadUrl
+        {
+            get
+            {
+                return this._configuration["DomainUploadUrl"];
+            }
+        }
     }
 
 }

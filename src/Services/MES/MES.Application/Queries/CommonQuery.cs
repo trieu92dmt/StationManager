@@ -581,7 +581,7 @@ namespace MES.Application.Queries
 
         public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
         {
-            var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
+            var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleCode.Contains(keyword) || x.ScaleName.Contains(keyword) : true) &&
                                                           (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
                                     .OrderBy(x => x.ScaleCode)
                                     .Select(x => new DropdownWeightHeadResponse

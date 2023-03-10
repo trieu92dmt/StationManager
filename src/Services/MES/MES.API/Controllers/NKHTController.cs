@@ -62,7 +62,7 @@ namespace MES.API.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("save-goods-return")]
-        public async Task<IActionResult> SaveGoodsReturnAsync([FromBody] SaveGoodsReturnCommand command)
+        public async Task<IActionResult> SaveGoodsReturnAsync([FromForm] SaveGoodsReturnCommand command)
         {
             var response = await _mediator.Send(command);
 

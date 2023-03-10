@@ -231,7 +231,7 @@ namespace MES.Application.Commands.OutboundDelivery
                         {
                             Document_Image_MappingId = Guid.NewGuid(),
                             DocumentId = item.NKHTId,
-                            Image = imagePath,
+                            Image = $"https://itp-mes.isdcorp.vn/{imagePath}",
                             Actived = true
                         });
                     }

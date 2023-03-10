@@ -125,7 +125,6 @@ namespace Infrastructure.Data
         public virtual DbSet<ErrorListModel> ErrorListModel { get; set; }
         public virtual DbSet<ExcelLogModel> ExcelLogModel { get; set; }
         public virtual DbSet<ExportByCommandModel> ExportByCommandModel { get; set; }
-        public virtual DbSet<FaceCheckInOutModel> FaceCheckInOutModel { get; set; }
         public virtual DbSet<FavoriteReportModel> FavoriteReportModel { get; set; }
         public virtual DbSet<FileAttachmentModel> FileAttachmentModel { get; set; }
         public virtual DbSet<FixingTypeModel> FixingTypeModel { get; set; }
@@ -138,6 +137,7 @@ namespace Infrastructure.Data
         public virtual DbSet<Hash> Hash { get; set; }
         public virtual DbSet<HeaderSaleOrderModel> HeaderSaleOrderModel { get; set; }
         public virtual DbSet<HistoryModel> HistoryModel { get; set; }
+        public virtual DbSet<ImageTest> ImageTest { get; set; }
         public virtual DbSet<InhouseTransferModel> InhouseTransferModel { get; set; }
         public virtual DbSet<IssueForProductionModel> IssueForProductionModel { get; set; }
         public virtual DbSet<Job> Job { get; set; }
@@ -147,7 +147,6 @@ namespace Infrastructure.Data
         public virtual DbSet<KanbanModel> KanbanModel { get; set; }
         public virtual DbSet<Kanban_TaskStatus_Mapping> Kanban_TaskStatus_Mapping { get; set; }
         public virtual DbSet<LaborModel> LaborModel { get; set; }
-        public virtual DbSet<LastRunCheckInOutModel> LastRunCheckInOutModel { get; set; }
         public virtual DbSet<List> List { get; set; }
         public virtual DbSet<LogApiModel> LogApiModel { get; set; }
         public virtual DbSet<Log_BC01Model> Log_BC01Model { get; set; }
@@ -284,10 +283,6 @@ namespace Infrastructure.Data
         public virtual DbSet<SOTextItem100Model> SOTextItem100Model { get; set; }
         public virtual DbSet<SOTextItem80Model> SOTextItem80Model { get; set; }
         public virtual DbSet<SaleOrderDetailModel> SaleOrderDetailModel { get; set; }
-        public virtual DbSet<SaleOrderHeader100Model> SaleOrderHeader100Model { get; set; }
-        public virtual DbSet<SaleOrderHeader80Model> SaleOrderHeader80Model { get; set; }
-        public virtual DbSet<SaleOrderItem100Model> SaleOrderItem100Model { get; set; }
-        public virtual DbSet<SaleOrderItem80Model> SaleOrderItem80Model { get; set; }
         public virtual DbSet<SaleOrderMasterModel> SaleOrderMasterModel { get; set; }
         public virtual DbSet<SaleOrgModel> SaleOrgModel { get; set; }
         public virtual DbSet<SaleProcessModel> SaleProcessModel { get; set; }
@@ -306,7 +301,6 @@ namespace Infrastructure.Data
         public virtual DbSet<SearchTemplateModel> SearchTemplateModel { get; set; }
         public virtual DbSet<SendMailCalendarModel> SendMailCalendarModel { get; set; }
         public virtual DbSet<Server> Server { get; set; }
-        public virtual DbSet<ServiceAppointmentModel> ServiceAppointmentModel { get; set; }
         public virtual DbSet<ServiceFlagModel> ServiceFlagModel { get; set; }
         public virtual DbSet<ServiceOrderConsultModel> ServiceOrderConsultModel { get; set; }
         public virtual DbSet<ServiceOrderDetailAccessoryModel> ServiceOrderDetailAccessoryModel { get; set; }
@@ -367,8 +361,6 @@ namespace Infrastructure.Data
         public virtual DbSet<VendorModel> VendorModel { get; set; }
         public virtual DbSet<View_BOM_Inventor_Rip> View_BOM_Inventor_Rip { get; set; }
         public virtual DbSet<View_Catalog_Category> View_Catalog_Category { get; set; }
-        public virtual DbSet<View_FaceCheckIn> View_FaceCheckIn { get; set; }
-        public virtual DbSet<View_FaceCheckOut> View_FaceCheckOut { get; set; }
         public virtual DbSet<View_MES_StockReceiving> View_MES_StockReceiving { get; set; }
         public virtual DbSet<View_PriorityModel> View_PriorityModel { get; set; }
         public virtual DbSet<View_Product_Detail> View_Product_Detail { get; set; }
@@ -405,10 +397,6 @@ namespace Infrastructure.Data
         public virtual DbSet<WorkFlowModel> WorkFlowModel { get; set; }
         public virtual DbSet<WorkOrderModel> WorkOrderModel { get; set; }
         public virtual DbSet<WorkShopModel> WorkShopModel { get; set; }
-        public virtual DbSet<WorkingDateModel> WorkingDateModel { get; set; }
-        public virtual DbSet<WorkingTimeConfigModel> WorkingTimeConfigModel { get; set; }
-        public virtual DbSet<WorkingTimeDetailModel> WorkingTimeDetailModel { get; set; }
-        public virtual DbSet<WorkingTimeModel> WorkingTimeModel { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -1376,6 +1364,11 @@ namespace Infrastructure.Data
                 entity.Property(e => e.HistoryModifyId).ValueGeneratedNever();
             });
 
+            modelBuilder.Entity<ImageTest>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+            });
+
             modelBuilder.Entity<InhouseTransferModel>(entity =>
             {
                 entity.Property(e => e.InhouseTransferId).ValueGeneratedNever();
@@ -1460,11 +1453,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<LaborModel>(entity =>
             {
                 entity.Property(e => e.Actived).HasDefaultValueSql("((1))");
-            });
-
-            modelBuilder.Entity<LastRunCheckInOutModel>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<List>(entity =>
@@ -2589,32 +2577,6 @@ namespace Infrastructure.Data
                     .HasConstraintName("FK_SaleOrderDetailModel_SaleOrderMasterModel");
             });
 
-            modelBuilder.Entity<SaleOrderHeader100Model>(entity =>
-            {
-                entity.Property(e => e.SO100HeaderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SaleOrderHeader80Model>(entity =>
-            {
-                entity.HasKey(e => e.SOHeaderId)
-                    .HasName("PK_SaleOrderHeaderModel");
-
-                entity.Property(e => e.SOHeaderId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SaleOrderItem100Model>(entity =>
-            {
-                entity.Property(e => e.SO100ItemId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<SaleOrderItem80Model>(entity =>
-            {
-                entity.HasKey(e => e.SOItemId)
-                    .HasName("PK_SaleOrderItemModel");
-
-                entity.Property(e => e.SOItemId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<SaleOrderMasterModel>(entity =>
             {
                 entity.HasKey(e => e.SaleOrderMasterId)
@@ -2760,11 +2722,6 @@ namespace Infrastructure.Data
                 entity.Property(e => e.isCheckin).HasComment("Đã check in");
 
                 entity.Property(e => e.isConfirm).HasComment("Đã xác nhận");
-            });
-
-            modelBuilder.Entity<ServiceAppointmentModel>(entity =>
-            {
-                entity.Property(e => e.AppointmentId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ServiceFlagModel>(entity =>
@@ -3422,16 +3379,6 @@ namespace Infrastructure.Data
                 entity.ToView("View_Catalog_Category");
             });
 
-            modelBuilder.Entity<View_FaceCheckIn>(entity =>
-            {
-                entity.ToView("View_FaceCheckIn", "Task");
-            });
-
-            modelBuilder.Entity<View_FaceCheckOut>(entity =>
-            {
-                entity.ToView("View_FaceCheckOut", "Task");
-            });
-
             modelBuilder.Entity<View_MES_StockReceiving>(entity =>
             {
                 entity.ToView("View_MES_StockReceiving");
@@ -3621,34 +3568,6 @@ namespace Infrastructure.Data
                     .HasName("PK_WorkShop");
 
                 entity.Property(e => e.WorkShopId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<WorkingDateModel>(entity =>
-            {
-                entity.HasKey(e => e.WorkingDateId)
-                    .HasName("PK_WorkingDateModel_1");
-
-                entity.Property(e => e.WorkingDateId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<WorkingTimeConfigModel>(entity =>
-            {
-                entity.Property(e => e.WorkingTimeConfigId).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<WorkingTimeDetailModel>(entity =>
-            {
-                entity.Property(e => e.WorkingTimeDetailId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.WorkingTime)
-                    .WithMany(p => p.WorkingTimeDetailModel)
-                    .HasForeignKey(d => d.WorkingTimeId)
-                    .HasConstraintName("FK_WorkingTimeDetailModel_WorkingTimeModel");
-            });
-
-            modelBuilder.Entity<WorkingTimeModel>(entity =>
-            {
-                entity.Property(e => e.WorkingTimeId).ValueGeneratedNever();
             });
 
             OnModelCreatingPartial(modelBuilder);

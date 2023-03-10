@@ -195,6 +195,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[DataCollection].[Document_Image_Mapping]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[DataCollection].[ExportByCommandModel]",
          "ObjectType": 0
       },
@@ -363,14 +367,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[FaceCheckInOutModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[LastRunCheckInOutModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[ghMasterData].[AccessoryPriceModel]",
          "ObjectType": 0
       },
@@ -487,10 +483,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[ghService].[BookingModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[ghService].[CheckingTimesNotificationModel]",
          "ObjectType": 0
       },
@@ -508,10 +500,6 @@
       },
       {
          "Name": "[ghService].[FixingTypeModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[ghService].[ServiceAppointmentModel]",
          "ObjectType": 0
       },
       {
@@ -548,22 +536,6 @@
       },
       {
          "Name": "[ghService].[VehicleInfoModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[ghService].[WorkingDateModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[ghService].[WorkingTimeConfigModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[ghService].[WorkingTimeDetailModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[ghService].[WorkingTimeModel]",
          "ObjectType": 0
       },
       {
@@ -811,22 +783,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[MES].[SaleOrderHeader100Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SaleOrderHeader80Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SaleOrderItem100Model]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[MES].[SaleOrderItem80Model]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[MES].[SO100ScheduleLineModel]",
          "ObjectType": 0
       },
@@ -1036,6 +992,10 @@
       },
       {
          "Name": "[Report].[Log_BC18Model]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[system].[ImageTest]",
          "ObjectType": 0
       },
       {
@@ -1567,14 +1527,6 @@
          "ObjectType": 3
       },
       {
-         "Name": "[Task].[View_FaceCheckIn]",
-         "ObjectType": 3
-      },
-      {
-         "Name": "[Task].[View_FaceCheckOut]",
-         "ObjectType": 3
-      },
-      {
          "Name": "[Task].[View_Task_GTB]",
          "ObjectType": 3
       },
@@ -1599,7 +1551,7 @@
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
-   "UseDateOnlyTimeOnly": false,
+   "UseDateOnlyTimeOnly": true,
    "UseDbContextSplitting": false,
    "UseFluentApiOnly": false,
    "UseHandleBars": false,

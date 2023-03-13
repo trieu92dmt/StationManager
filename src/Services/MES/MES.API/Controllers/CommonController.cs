@@ -57,11 +57,21 @@ namespace MES.API.Controllers
                                                          string poFrom, string poTo,
                                                          string odFrom, string odTo,
                                                          string woFrom, string woTo,
-                                                         string resFrom, string resTo, 
+                                                         string resFrom, string resTo,
+                                                         string soFrom, string soTo,
                                                          string vendorFrom, string vendorTo,
+                                                         string shipToPartyFrom, string shipToPartyTo,
                                                          string poType, string type)
         {
-            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant, poFrom, poTo, odFrom, odTo, woFrom, woTo, resFrom, resTo, vendorFrom, vendorTo, poType, type);
+            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant, 
+                                                                      poFrom, poTo, 
+                                                                      odFrom, odTo, 
+                                                                      woFrom, woTo, 
+                                                                      resFrom, resTo, 
+                                                                      soFrom, soTo, 
+                                                                      vendorFrom, vendorTo, 
+                                                                      shipToPartyFrom, shipToPartyTo, 
+                                                                      poType, type);
             return Ok(new ApiSuccessResponse<List<DropdownMaterialResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách material") });
         }
         #endregion
@@ -245,9 +255,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-sale-order")]
-        public async Task<IActionResult> GetListSaleOrder(string keyword)
+        public async Task<IActionResult> GetListSaleOrder(string keyword, string plant, string type)
         {
-            var dropdownList = await _commonQuery.GetDropdownSaleOrder(keyword);
+            var dropdownList = await _commonQuery.GetDropdownSaleOrder(keyword, plant, type);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sale order") });
         }
         #endregion
@@ -259,9 +269,12 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-outbound-delivery")]
-        public async Task<IActionResult> GetListOutboundDelivery(string type, string plant, string salesOrderFrom, string salesOrderTo, string materialFrom, string materialTo, string keyword)
+        public async Task<IActionResult> GetListOutboundDelivery(string type, string plant,
+                                                               string salesOrderFrom, string salesOrderTo,
+                                                               string shipToPartyFrom, string shipToPartyTo,
+                                                               string materialFrom, string materialTo, string keyword)
         {
-            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(type, plant, salesOrderFrom, salesOrderTo, materialFrom, materialTo, keyword);
+            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(type, plant, salesOrderFrom, salesOrderTo, shipToPartyFrom, shipToPartyTo, materialFrom, materialTo, keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách outbound delivery") });
         }
         #endregion
@@ -287,9 +300,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-ship-to-party")]
-        public async Task<IActionResult> GetListShipToParty(string keyword)
+        public async Task<IActionResult> GetListShipToParty(string keyword, string plant, string type, string soFrom, string soTo)
         {
-            var dropdownList = await _commonQuery.GetDropdownShipToParty(keyword);
+            var dropdownList = await _commonQuery.GetDropdownShipToParty(keyword, plant, type, soFrom, soTo);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách ship to party") });
         }
         #endregion

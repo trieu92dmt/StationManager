@@ -37,13 +37,15 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant, 
-                                                                 string poFrom, string poTo, 
-                                                                 string odFrom, string odTo, 
-                                                                 string woFrom, string woTo, 
-                                                                 string resFrom, string resTo,
-                                                                 string vendorFrom, string vendorTo,
-                                                                 string poType, string type);
+        Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant,
+                                                                        string poFrom, string poTo,
+                                                                        string odFrom, string odTo,
+                                                                        string woFrom, string woTo,
+                                                                        string resFrom, string resTo,
+                                                                        string soFrom, string soTo,
+                                                                        string vendorFrom, string vendorTo,
+                                                                        string shipToPartyFrom, string shipToPartyTo,
+                                                                        string poType, string type);
 
         /// <summary>
         /// Dropdown Component by wo
@@ -121,14 +123,17 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword);
+        Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type);
 
         /// <summary>
         /// Dropdown Outbound Delivery
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string salesOrderFrom, string salesOrderTo, string materialFrom, string materialTo, string keyword);
+        Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant,
+                                                               string salesOrderFrom, string salesOrderTo,
+                                                               string shipToPartyFrom, string shipToPartyTo,
+                                                               string materialFrom, string materialTo, string keyword);
 
         /// <summary>
         /// Dropdown Outbound Delivery Item
@@ -142,7 +147,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownShipToParty(string keyword);
+        Task<List<CommonResponse>> GetDropdownShipToParty(string keyword, string plant, string type, string soFrom, string soTo);
 
         /// <summary>
         /// Dropdown số xe tải
@@ -328,7 +333,9 @@ namespace MES.Application.Queries
                                                                         string odFrom, string odTo,
                                                                         string woFrom, string woTo,
                                                                         string resFrom, string resTo, 
+                                                                        string soFrom, string soTo,
                                                                         string vendorFrom, string vendorTo,
+                                                                        string shipToPartyFrom, string shipToPartyTo,
                                                                         string poType, string type)
         {
             //Chỉ search vendorFrom thì search 1
@@ -337,7 +344,19 @@ namespace MES.Application.Queries
             //Chỉ search poFrom thì search 1
             poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : "";
 
+            //Chỉ search odFrom thì search 1
+            odTo = !string.IsNullOrEmpty(odFrom) && string.IsNullOrEmpty(odTo) ? odFrom : "";
+
+            //Chỉ search soFrom thì search 1
+            soTo = !string.IsNullOrEmpty(soFrom) && string.IsNullOrEmpty(soTo) ? soFrom : "";
+
+            //Chỉ search shipToPartyFrom thì search 1
+            shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : "";
+
             var response = new List<DropdownMaterialResponse>();
+
+            //Khai bao mảng chức delivery type
+            var deliveryType = new List<string>();
 
             //Get query product
             var products = _prodRepo.GetQuery().AsNoTracking();
@@ -360,6 +379,38 @@ namespace MES.Application.Queries
                                         Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
                                         Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
+
+                return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
+            #region NKHT
+            else if (type == "NKHT")
+            {
+                //Delivery Type lấy ra
+                deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
+
+                response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                          .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&  //Lọc plant
+                                                                                                                   //Lọc od from to
+                                                      (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
+                                                      x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0) &&
+                                                      //Theo shiptoparty
+                                                      (!string.IsNullOrEmpty(shipToPartyFrom) ? (x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                                x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0) : true) &&
+                                                      //Theo So
+                                                      (!string.IsNullOrEmpty(soFrom) ? (x.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
+                                                                                       x.ReferenceDocument1.CompareTo(soTo) <= 0) : true) &&
+                                                      (deliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                                      (x.GoodsMovementSts != "C")
+                                                      )   
+                                     .OrderBy(x => x.ProductCode)
+                                     .Select(x => new DropdownMaterialResponse
+                                     {
+                                         Key = x.ProductCodeInt.ToString(),
+                                         Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                         Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                         Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                     }).ToListAsync();
 
                 return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -731,8 +782,30 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Sale Orrder
-        public async Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type)
         {
+            //Khai bao mảng chức delivery type
+            var deliveryType = new List<string>();
+
+            if (type == "NKHT")
+            {
+                //Delivery Type lấy ra
+                deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
+
+                return await _dtOdRepo.GetQuery()
+                                       .Include(x => x.OutboundDelivery)
+                                       .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Plant
+                                                   (string.IsNullOrEmpty(keyword) ? true : x.ReferenceDocument1.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                   (deliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                                   x.GoodsMovementSts != "C")
+                                       .OrderBy(x => x.ReferenceDocument1)
+                                       .Select(x => new CommonResponse
+                                       {
+                                           Key = x.ReferenceDocument1,
+                                           Value = x.ReferenceDocument1
+                                       }).Take(10).ToListAsync();
+            }
+
             return await _saleDocRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.SalesDocumentCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
                                          .OrderBy(x => x.SalesDocumentCode)
                                          .Select(x => new CommonResponse
@@ -744,24 +817,63 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Outbound Delivery
-        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant, string salesOrderFrom, string salesOrderTo, string materialFrom, string materialTo, string keyword)
+        public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant,
+                                                                            string salesOrderFrom, string salesOrderTo,
+                                                                            string shipToPartyFrom, string shipToPartyTo,
+                                                                            string materialFrom, string materialTo, string keyword)
         {
+            var response = new List<CommonResponse>();
+
             //Khai bao mảng chức delivery type
             var deliveryType = new List<string>();
 
             if (!string.IsNullOrEmpty(salesOrderFrom) && string.IsNullOrEmpty(salesOrderTo))
                 salesOrderTo = salesOrderFrom;
 
-            //Ở màn hình nhập kho hàng trả
+            //Nếu chỉ search shiptoparty from thì search 1
+            shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : "";
+
+            //Nếu chỉ search material from thì search 1
+            materialTo = !string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo) ? materialFrom : "";
+
+
             var query = _dtOdRepo.GetQuery()
-                                       .Include(x => x.OutboundDelivery)
-                                       .Where(x => (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
-                                                   (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 && x.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true))
-                                       .AsNoTracking();
+                                   .Include(x => x.OutboundDelivery)
+                                   .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Plant
+                                               (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                               (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 &&
+                                                                                        x.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true))
+                                   .AsNoTracking();
 
             //Lọc điều kiện
+            //Màn hình nhập kho hàng trả
+            if (type == "NKHT")
+            {
+                //Delivery Type lấy ra
+                deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
+
+                response = await _dtOdRepo.GetQuery()
+                                       .Include(x => x.OutboundDelivery)
+                                       .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Plant
+                                                   (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                   (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 &&  //Theo SO
+                                                                                            x.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true) &&
+                                                   (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&      //Theo ship to party
+                                                                                             x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                   (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                          x.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                                   (deliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                                   x.GoodsMovementSts != "C")
+                                       .OrderBy(x => x.OutboundDelivery.DeliveryCode)
+                                       .Select(x => new CommonResponse
+                                       {
+                                           Key = x.OutboundDelivery.DeliveryCode,
+                                           Value = x.OutboundDelivery.DeliveryCodeInt.ToString()
+                                       }).AsNoTracking().ToListAsync();
+                return response.DistinctBy(x => x.Key).Take(10).ToList();
+            }
             //Màn hình nhập kho điều chuyển nội bộ
-            if (type == "NKDCNB")
+            else if (type == "NKDCNB")
             {
                 query = query.Where(x => x.OutboundDelivery.ReceivingPlant == plant &&
                                                         (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN"));
@@ -817,9 +929,41 @@ namespace MES.Application.Queries
             return data.DistinctBy(x => x.Key).Take(10).ToList();
         }
 
-        public async Task<List<CommonResponse>> GetDropdownShipToParty(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownShipToParty(string keyword, string plant, string type, string soFrom, string soTo)
         {
-            var response = await _obDeliveryRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.ShiptoParty.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
+            //Khai bao mảng chức delivery type
+            var deliveryType = new List<string>();
+
+            //Nếu chỉ search soFrom thì search
+            soTo = !string.IsNullOrEmpty(soFrom) && string.IsNullOrEmpty(soTo) ? soFrom : "";
+
+            var response = new List<CommonResponse>();
+
+            if (type == "NKHT")
+            {
+                //Delivery Type lấy ra
+                deliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
+
+                response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                          .Where(x => (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.ShiptoParty.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
+                                                                                                x.OutboundDelivery.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                      (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && // Theo plant
+                                                      (!string.IsNullOrEmpty(soFrom) ? x.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
+                                                                                       x.ReferenceDocument1.CompareTo(soTo) <= 0 : true) && //Theo SO
+                                                      (deliveryType.Contains(x.OutboundDelivery.DeliveryType)) && 
+                                                      (x.GoodsMovementSts != "C")
+                                                      )
+                                         .OrderBy(x => x.OutboundDelivery.ShiptoParty)
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.OutboundDelivery.ShiptoParty,
+                                             Value = $"{x.OutboundDelivery.ShiptoParty} | {x.OutboundDelivery.ShiptoPartyName}"
+                                         }).ToListAsync();
+
+                return response.DistinctBy(x => x.Key).Take(10).ToList();
+            }
+
+            response = await _obDeliveryRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.ShiptoParty.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
                                                                                                 x.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
                                          .OrderBy(x => x.ShiptoParty)
                                          .Select(x => new CommonResponse

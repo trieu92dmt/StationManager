@@ -295,7 +295,7 @@ namespace MES.Application.Commands.OutboundDelivery
                 }
 
                 //Lấy ra ảnh cần xóa
-                var imgDelete = imgMappings.Where(x => x.Document_Image_MappingId == item.NKHTId && item.ListDeleteImage.Contains(x.Image));
+                var imgDelete = await imgMappings.Where(x => (x.DocumentId == item.NKHTId) && (item.ListDeleteImage.Contains(x.Image))).ToListAsync();
 
                 var imgMapping = new List<Document_Image_Mapping>();
                 for (int i = 0; i < item.ListNewImage.Count(); i++)

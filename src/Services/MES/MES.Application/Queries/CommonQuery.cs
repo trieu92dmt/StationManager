@@ -76,7 +76,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownVendor(string keyword);
+        Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type);
 
         /// <summary>
         /// Dropdown POType
@@ -339,19 +339,19 @@ namespace MES.Application.Queries
                                                                         string poType, string type)
         {
             //Chỉ search vendorFrom thì search 1
-            vendorTo = !string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo) ? vendorFrom : "";
+            vendorTo = !string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo) ? vendorFrom : vendorTo;
 
             //Chỉ search poFrom thì search 1
-            poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : "";
+            poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
 
             //Chỉ search odFrom thì search 1
-            odTo = !string.IsNullOrEmpty(odFrom) && string.IsNullOrEmpty(odTo) ? odFrom : "";
+            odTo = !string.IsNullOrEmpty(odFrom) && string.IsNullOrEmpty(odTo) ? odFrom : odTo;
 
             //Chỉ search soFrom thì search 1
-            soTo = !string.IsNullOrEmpty(soFrom) && string.IsNullOrEmpty(soTo) ? soFrom : "";
+            soTo = !string.IsNullOrEmpty(soFrom) && string.IsNullOrEmpty(soTo) ? soFrom : soTo;
 
             //Chỉ search shipToPartyFrom thì search 1
-            shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : "";
+            shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : shipToPartyTo;
 
             var response = new List<DropdownMaterialResponse>();
 
@@ -369,8 +369,12 @@ namespace MES.Application.Queries
                                                 (!string.IsNullOrEmpty(poFrom) ? x.PurchaseOrder.PurchaseOrderCode.CompareTo(poFrom) >= 0 && 
                                                                                  x.PurchaseOrder.PurchaseOrderCode.CompareTo(poTo) <= 0 : true) &&  //Lọc po from to
                                                 (!string.IsNullOrEmpty(poType) ? x.PurchaseOrder.POType == poType : true) && //Lọc theo po type 
-                                                (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 &&
-                                                                                     x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true)) //Lọc theo vendor from to  
+                                                (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 &&   //Lọc theo vendor from to  
+                                                                                     x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
+                                                x.DeliveryCompleted != "X" &&
+                                                x.DeletionInd != "X" &&
+                                                x.PurchaseOrder.DeletionInd != "X" &&
+                                                x.PurchaseOrder.ReleaseIndicator == "R") 
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
@@ -576,8 +580,40 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Vendor
-        public async Task<List<CommonResponse>> GetDropdownVendor(string keyword)
+        public async Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type)
         {
+            //Get query po
+            var vendors = _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true).AsNoTracking();
+
+            //Màn nhập kho mua hàng
+            if (type == "NKMH")
+            {
+                //Get query po
+                var pos = _poDetailRepo.GetQuery()
+                                            .Include(x => x.PurchaseOrder)
+                                            .Where(x =>
+                                                        //Theo keyword
+                                                        x.DeliveryCompleted != "X" &&
+                                                        x.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.ReleaseIndicator == "R" &&
+                                                        x.PurchaseOrder.VendorCode != null &&
+                                                        x.PurchaseOrder.VendorCode != "")
+                                            .AsNoTracking();
+                //Join lấy data
+                var res = await (from p in pos
+                                  join v in vendors on p.PurchaseOrder.VendorCode equals v.VendorCode into vendorItems
+                                  from vendorItem in vendorItems.DefaultIfEmpty()
+                                  orderby p.PurchaseOrder.VendorCode
+                                  select new CommonResponse
+                                  {
+                                      Key = vendorItem.VendorCode,
+                                      Value = $"{vendorItem.VendorCode} | {vendorItem.VendorName}"
+                                  }).AsNoTracking().ToListAsync();
+
+                return res.DistinctBy(x => x.Key).Take(10).ToList();
+            }
+
             var response = await _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true)
                 .OrderBy(x => x.VendorCode)
                 .Select(x => new CommonResponse
@@ -602,16 +638,23 @@ namespace MES.Application.Queries
             //Get query order type
             var orderType = _oTypeRep.GetQuery().AsNoTracking();
 
-            var response = await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.POType.Contains(keyword) : true) &&
-                                                             (x.Plant == plant) &&
-                                                             (!string.IsNullOrEmpty(vendorFrom) ? x.VendorCode.CompareTo(vendorFrom) >= 0 && x.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
-                                                             (x.POType != null) &&
-                                                             (x.POType != ""))
-                                        .OrderBy(x => x.POType)
+            var response = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder)
+                                              .Where(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrder.POType.Contains(keyword) : true) &&
+                                                             //Theo plant
+                                                             (x.PurchaseOrder.Plant == plant) && 
+                                                             //Theo vendor
+                                                             (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 && 
+                                                                                                  x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
+                                                             x.DeliveryCompleted != "X" &&
+                                                             x.DeletionInd != "X" &&
+                                                             x.PurchaseOrder.DeletionInd != "X" &&
+                                                             x.PurchaseOrder.ReleaseIndicator == "R"
+                                                             )
+                                        .OrderBy(x => x.PurchaseOrder.POType)
                                         .Select(x => new CommonResponse
                                         {
-                                            Key = x.POType,
-                                            Value = $"{x.POType} | {orderType.FirstOrDefault(o => o.OrderTypeCode == x.POType && o.Category == "01").ShortText}"
+                                            Key = x.PurchaseOrder.POType,
+                                            Value = $"{x.PurchaseOrder.POType} | {orderType.FirstOrDefault(o => o.OrderTypeCode == x.PurchaseOrder.POType && o.Category == "01").ShortText}"
                                         }).AsNoTracking().ToListAsync();
 
             return response.DistinctBy(x => x.Key).ToList();
@@ -625,7 +668,7 @@ namespace MES.Application.Queries
                                                               string materialFrom, string materialTo)
         {
             //Nếu chỉ search materialFrom thì search 1
-            materialTo = !string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo) ? materialFrom : "";
+            materialTo = !string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo) ? materialFrom : materialTo;
 
             //Nếu không search vendorto gán vendor to = vendor from
             if (!string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo))
@@ -831,10 +874,10 @@ namespace MES.Application.Queries
                 salesOrderTo = salesOrderFrom;
 
             //Nếu chỉ search shiptoparty from thì search 1
-            shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : "";
+            shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : shipToPartyTo;
 
             //Nếu chỉ search material from thì search 1
-            materialTo = !string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo) ? materialFrom : "";
+            materialTo = !string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo) ? materialFrom : materialTo;
 
 
             var query = _dtOdRepo.GetQuery()

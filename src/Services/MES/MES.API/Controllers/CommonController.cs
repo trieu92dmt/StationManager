@@ -142,9 +142,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-vendor")]
-        public async Task<IActionResult> GetListVendor(string keyword)
+        public async Task<IActionResult> GetListVendor(string keyword, string type)
         {
-            var dropdownList = await _commonQuery.GetDropdownVendor(keyword);
+            var dropdownList = await _commonQuery.GetDropdownVendor(keyword, type);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách vendor") });
         }
         #endregion

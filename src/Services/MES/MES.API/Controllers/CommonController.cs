@@ -57,9 +57,11 @@ namespace MES.API.Controllers
                                                          string poFrom, string poTo,
                                                          string odFrom, string odTo,
                                                          string woFrom, string woTo,
-                                                         string resFrom, string resTo)
+                                                         string resFrom, string resTo, 
+                                                         string vendorFrom, string vendorTo,
+                                                         string poType, string type)
         {
-            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant, poFrom, poTo, odFrom, odTo, woFrom, woTo, resFrom, resTo);
+            var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant, poFrom, poTo, odFrom, odTo, woFrom, woTo, resFrom, resTo, vendorFrom, vendorTo, poType, type);
             return Ok(new ApiSuccessResponse<List<DropdownMaterialResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách material") });
         }
         #endregion
@@ -144,9 +146,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-potype")]
-        public async Task<IActionResult> GetListPOType(string keyword)
+        public async Task<IActionResult> GetListPOType(string keyword, string plant, string vendorFrom, string vendorTo)
         {
-            var dropdownList = await _commonQuery.GetDropdownPOType(keyword);
+            var dropdownList = await _commonQuery.GetDropdownPOType(keyword, plant, vendorFrom, vendorTo);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách po type") });
         }
         #endregion
@@ -158,9 +160,12 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-po")]
-        public async Task<IActionResult> GetListPO(string keyword, string plant, string type, string poType, string vendorFrom, string vendorTo)
+        public async Task<IActionResult> GetListPO(string keyword, string plant, string type, 
+                                                   string poType, 
+                                                   string vendorFrom, string vendorTo, 
+                                                   string materialFrom, string materialTo)
         {
-            var dropdownList = await _commonQuery.GetDropdownPO(keyword, plant, type, poType, vendorFrom, vendorTo);
+            var dropdownList = await _commonQuery.GetDropdownPO(keyword, plant, type, poType, vendorFrom, vendorTo, materialFrom, materialTo);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách po") });
         }
         #endregion

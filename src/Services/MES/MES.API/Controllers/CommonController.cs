@@ -56,7 +56,7 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetListMaterial(string keyword, string plant,
                                                          string poFrom, string poTo,
                                                          string odFrom, string odTo, string deliveryType,
-                                                         string woFrom, string woTo,
+                                                         string woFrom, string woTo, string orderType,
                                                          string resFrom, string resTo,
                                                          string soFrom, string soTo,
                                                          string vendorFrom, string vendorTo,
@@ -66,7 +66,7 @@ namespace MES.API.Controllers
             var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant, 
                                                                       poFrom, poTo, 
                                                                       odFrom, odTo, deliveryType,
-                                                                      woFrom, woTo, 
+                                                                      woFrom, woTo, orderType,
                                                                       resFrom, resTo, 
                                                                       soFrom, soTo, 
                                                                       vendorFrom, vendorTo, 
@@ -142,9 +142,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-vendor")]
-        public async Task<IActionResult> GetListVendor(string keyword, string type)
+        public async Task<IActionResult> GetListVendor(string keyword, string type, string plant)
         {
-            var dropdownList = await _commonQuery.GetDropdownVendor(keyword, type);
+            var dropdownList = await _commonQuery.GetDropdownVendor(keyword, type, plant);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách vendor") });
         }
         #endregion
@@ -255,9 +255,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-sale-order")]
-        public async Task<IActionResult> GetListSaleOrder(string keyword, string plant, string type)
+        public async Task<IActionResult> GetListSaleOrder(string keyword, string plant, string type, string orderType)
         {
-            var dropdownList = await _commonQuery.GetDropdownSaleOrder(keyword, plant, type);
+            var dropdownList = await _commonQuery.GetDropdownSaleOrder(keyword, plant, type, orderType);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách sale order") });
         }
         #endregion
@@ -364,9 +364,17 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-work-order")]
-        public async Task<IActionResult> GetWorkOrderAsync(string plant, string orderType, string material, string keyword)
+        public async Task<IActionResult> GetWorkOrderAsync(string plant, string type,
+                                                           string orderType, 
+                                                           string materialFrom, string materialTo, 
+                                                           string soFrom, string soTo, 
+                                                           string keyword)
         {
-            var dropdownList = await _commonQuery.GetWorkOrder(plant, orderType, material, keyword);
+            var dropdownList = await _commonQuery.GetWorkOrder(plant, type,
+                                                               orderType, 
+                                                               materialFrom, materialTo, 
+                                                               soFrom, soTo, 
+                                                               keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion

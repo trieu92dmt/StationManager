@@ -41,7 +41,7 @@ namespace MES.Application.Queries
         Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant,
                                                                  string poFrom, string poTo,
                                                                  string odFrom, string odTo, string deliveryType,
-                                                                 string woFrom, string woTo,
+                                                                 string woFrom, string woTo, string orderType,
                                                                  string resFrom, string resTo,
                                                                  string soFrom, string soTo,
                                                                  string vendorFrom, string vendorTo,
@@ -77,7 +77,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type);
+        Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type, string plant);
 
         /// <summary>
         /// Dropdown POType
@@ -124,7 +124,7 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type);
+        Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type, string orderType);
 
         /// <summary>
         /// Dropdown Outbound Delivery
@@ -185,7 +185,11 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string material, string keyword);
+        Task<List<CommonResponse>> GetWorkOrder(string plant, string type, 
+                                                string orderType,
+                                                string materialFrom, string materialTo,
+                                                string soFrom, string soTo,
+                                                string keyword);
 
         /// <summary>
         /// Get Reservation
@@ -334,7 +338,7 @@ namespace MES.Application.Queries
         public async Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant,
                                                                         string poFrom, string poTo,
                                                                         string odFrom, string odTo, string deliveryType,
-                                                                        string woFrom, string woTo,
+                                                                        string woFrom, string woTo, string orderType,
                                                                         string resFrom, string resTo, 
                                                                         string soFrom, string soTo,
                                                                         string vendorFrom, string vendorTo,
@@ -346,6 +350,9 @@ namespace MES.Application.Queries
 
             //Chỉ search poFrom thì search 1
             poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
+
+            //Chỉ search woFrom thì search 1
+            woTo = !string.IsNullOrEmpty(woFrom) && string.IsNullOrEmpty(woTo) ? woFrom : woTo;
 
             //Chỉ search odFrom thì search 1
             odTo = !string.IsNullOrEmpty(odFrom) && string.IsNullOrEmpty(odTo) ? odFrom : odTo;
@@ -420,45 +427,85 @@ namespace MES.Application.Queries
             }
             #endregion
             #region XKLXH
-            var deliveryTypeQuery = _oTypeRep.GetQuery().AsNoTracking();
+            if (type == "XKLXH")
+            {
+                var deliveryTypeQuery = _oTypeRep.GetQuery().AsNoTracking();
 
-            //Delivery Type lấy ra
-            var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
+                //Delivery Type lấy ra
+                var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
-            var xklxhResponse = await _dtOdRepo.GetQuery()
-                            .Include(x => x.OutboundDelivery)
-                            .Where(x => //Search theo delivery type
-                                        (xklxhDeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
-                                        //Theo delivery type
-                                        (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true) &&
-                                        //Theo plant
-                                        (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
-                                        //Theo po
-                                        (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
-                                                                         x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
-                                        //Theo so
-                                        (!string.IsNullOrEmpty(soFrom) ? x.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
-                                                                         x.ReferenceDocument1.CompareTo(soTo) <= 0 : true) &&
-                                        //Theo Shiptoparty
-                                        (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
-                                                                                  x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
-                                        //Theo od
-                                        (!string.IsNullOrEmpty(odFrom) ? x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
-                                                                         x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0 : true) &&
-                                        //Điều kiện riêng của màn hình xklxh
-                                        (x.OutboundDelivery.GoodsMovementSts != "C"))
-                             .OrderBy(x => x.ProductCodeInt)
-                             .Select(x => new DropdownMaterialResponse
-                             {
-                                 Key = x.ProductCodeInt.ToString(),
-                                 Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
-                                 Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
-                                 Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
-                             }).ToListAsync();
+                var xklxhResponse = await _dtOdRepo.GetQuery()
+                                .Include(x => x.OutboundDelivery)
+                                .Where(x => //Search theo delivery type
+                                            (xklxhDeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                            //Theo delivery type
+                                            (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true) &&
+                                            //Theo plant
+                                            (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                            //Theo po
+                                            (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                             x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
+                                            //Theo so
+                                            (!string.IsNullOrEmpty(soFrom) ? x.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
+                                                                             x.ReferenceDocument1.CompareTo(soTo) <= 0 : true) &&
+                                            //Theo Shiptoparty
+                                            (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                      x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                            //Theo od
+                                            (!string.IsNullOrEmpty(odFrom) ? x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
+                                                                             x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0 : true) &&
+                                            //Điều kiện riêng của màn hình xklxh
+                                            (x.OutboundDelivery.GoodsMovementSts != "C"))
+                                 .OrderBy(x => x.ProductCodeInt)
+                                 .Select(x => new DropdownMaterialResponse
+                                 {
+                                     Key = x.ProductCodeInt.ToString(),
+                                     Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                     Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                     Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                 }).ToListAsync();
 
-            return xklxhResponse.Where(x => //Theo Keyword
-                                            (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
-                                      ).DistinctBy(x => x.Key).Take(10).ToList();
+                return xklxhResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
+            #region NKTPSX
+            else if (type == "NKTPSX")
+            {
+                //Tạo query
+                var NKTPSXResponse = await _workOrderRep.GetQuery(x =>
+                                                  //Lọc theo plant
+                                                  (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                  //Lọc theo order type
+                                                  (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode == orderType : true) &&
+                                                  //Lọc theo sale order
+                                                  (!string.IsNullOrEmpty(soFrom) ? x.SalesOrder.CompareTo(soFrom) >= 0 &&
+                                                                                   x.SalesOrder.CompareTo(soTo) <= 0 : true) &&
+                                                  //Lọc theo workorder
+                                                  (!string.IsNullOrEmpty(woFrom) ? x.WorkOrderCode.CompareTo(woFrom) >= 0 &&
+                                                                                   x.WorkOrderCode.CompareTo(woTo) <= 0 : true) &&
+                                                  //Lọc theo điều kiện riêng từng màn hình
+                                                  //System Status bắt đầu bằng "REL"
+                                                  x.SystemStatus.StartsWith("REL") &&
+                                                  //Loại System Status bắt đầu bằng "REL CNF" và "REL TECO"
+                                                  !x.SystemStatus.StartsWith("REL CNF") &&
+                                                  !x.SystemStatus.StartsWith("REL TECO") &&
+                                                  //Loại các line có tích DeletionFlag
+                                                  x.DeletionFlag != "X")
+                                            .OrderBy(x => x.ProductCodeInt)
+                                            .Select(x => new DropdownMaterialResponse
+                                            {
+                                                Key = x.ProductCodeInt.ToString(),
+                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                                Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                            }).ToListAsync();
+
+                return NKTPSXResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
             #endregion
 
             #region po
@@ -621,7 +668,7 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Vendor
-        public async Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type)
+        public async Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type, string plant)
         {
             //Get query po
             var vendors = _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true).AsNoTracking();
@@ -630,29 +677,25 @@ namespace MES.Application.Queries
             if (type == "NKMH")
             {
                 //Get query po
-                var pos = _poDetailRepo.GetQuery()
+                var res = await _poDetailRepo.GetQuery()
                                             .Include(x => x.PurchaseOrder)
                                             .Where(x =>
-                                                        //Theo keyword
+                                                        //Theo plant
+                                                        (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&
                                                         x.DeliveryCompleted != "X" &&
                                                         x.DeletionInd != "X" &&
                                                         x.PurchaseOrder.DeletionInd != "X" &&
                                                         x.PurchaseOrder.ReleaseIndicator == "R" &&
                                                         x.PurchaseOrder.VendorCode != null &&
                                                         x.PurchaseOrder.VendorCode != "")
-                                            .AsNoTracking();
-                //Join lấy data
-                var res = await (from p in pos
-                                  join v in vendors on p.PurchaseOrder.VendorCode equals v.VendorCode into vendorItems
-                                  from vendorItem in vendorItems.DefaultIfEmpty()
-                                  orderby p.PurchaseOrder.VendorCode
-                                  select new CommonResponse
-                                  {
-                                      Key = vendorItem.VendorCode,
-                                      Value = $"{vendorItem.VendorCode} | {vendorItem.VendorName}"
-                                  }).AsNoTracking().ToListAsync();
+                                            .Select(x => new CommonResponse
+                                            {
+                                                Key = x.PurchaseOrder.VendorCode,
+                                                Value = $"{x.PurchaseOrder.VendorCode} | {vendors.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode).VendorName}"
+                                            })
+                                            .AsNoTracking().ToArrayAsync();
 
-                return res.DistinctBy(x => x.Key).Take(10).ToList();
+                return res.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
             }
 
             var response = await _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true)
@@ -904,10 +947,13 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Sale Orrder
-        public async Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type)
+        public async Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type, string orderType)
         {
             //Khai bao mảng chức delivery type
             var deliveryType = new List<string>();
+
+            //Query so
+            var soQuery = _saleDocRepo.GetQuery().AsNoTracking();
 
             if (type == "NKHT")
             {
@@ -933,8 +979,7 @@ namespace MES.Application.Queries
                 //Delivery Type lấy ra
                 var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
-                //Query po
-                var soQuery = _saleDocRepo.GetQuery().AsNoTracking();
+                
 
                 var xklxhResponse = await _dtOdRepo.GetQuery()
                                 .Include(x => x.OutboundDelivery)
@@ -960,7 +1005,33 @@ namespace MES.Application.Queries
 
                 return xklxhResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }
+            //Màn hình Nhập kho thành phẩm sản xuất
+            else if (type == "NKTPSX")
+            {
+                //Tạo query
+                var NKTPSXResponse = await _workOrderRep.GetQuery(x =>
+                                                  //Lọc theo plant
+                                                  (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                  //Lọc theo order type
+                                                  (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode == orderType : true) &&
+                                                  //Lọc theo điều kiện riêng từng màn hình
+                                                  //System Status bắt đầu bằng "REL"
+                                                  x.SystemStatus.StartsWith("REL") &&
+                                                  //Loại System Status bắt đầu bằng "REL CNF" và "REL TECO"
+                                                  !x.SystemStatus.StartsWith("REL CNF") &&
+                                                  !x.SystemStatus.StartsWith("REL TECO") &&
+                                                  //Loại các line có tích DeletionFlag
+                                                  x.DeletionFlag != "X" &&
+                                                  x.SalesOrder != null)
+                                    .OrderBy(x => x.SalesOrder)
+                                    .Select(x => new CommonResponse
+                                    {
+                                        Key = x.SalesOrder,
+                                        Value = soQuery.FirstOrDefault(p => p.SalesDocumentCode == x.SalesOrder).SalesDocumentCode
+                                    }).AsNoTracking().ToListAsync();
 
+                return NKTPSXResponse.DistinctBy(x => x.Key).Take(10).ToList();
+            }
             return await _saleDocRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.SalesDocumentCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
                                          .OrderBy(x => x.SalesDocumentCode)
                                          .Select(x => new CommonResponse
@@ -1277,13 +1348,13 @@ namespace MES.Application.Queries
         /// <returns></returns>
         public async Task<List<CommonResponse>> GetOrderType(string plant, string keyword, string type)
         {
+            var oTypeQuery = _oTypeRep.GetQuery().AsNoTracking();
+
             //Khai bao mảng chức delivery type
             var deliveryType = new List<string>();
 
             if (type == "XKLXH")
             {
-                var deliveryTypeQuery = _oTypeRep.GetQuery().AsNoTracking();
-
                 //Delivery Type lấy ra
                 var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
@@ -1299,7 +1370,7 @@ namespace MES.Application.Queries
                                  .Select(x => new CommonResponse
                                  {
                                      Key = x.OutboundDelivery.DeliveryType,
-                                     Value = $"{x.OutboundDelivery.DeliveryType} | {deliveryTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OutboundDelivery.DeliveryType).ShortText}" 
+                                     Value = $"{x.OutboundDelivery.DeliveryType} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OutboundDelivery.DeliveryType).ShortText}" 
                                  })
                                 .AsNoTracking().ToListAsync();
 
@@ -1308,7 +1379,33 @@ namespace MES.Application.Queries
                                                                                   x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }    
+            else if (type == "NKTPSX")
+            {
+                //Tạo query
+                var NKTPSXResponse = await _workOrderRep.GetQuery(x => 
+                                                  //Lọc theo plant
+                                                  (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                  //Lọc theo điều kiện riêng từng màn hình
+                                                  //System Status bắt đầu bằng "REL"
+                                                  x.SystemStatus.StartsWith("REL") &&
+                                                  //Loại System Status bắt đầu bằng "REL CNF" và "REL TECO"
+                                                  !x.SystemStatus.StartsWith("REL CNF") &&
+                                                  !x.SystemStatus.StartsWith("REL TECO") &&
+                                                  //Loại các line có tích DeletionFlag
+                                                  x.DeletionFlag != "X")
+                                   .OrderBy(x => x.OrderTypeCode)
+                                   .Select(x => new CommonResponse
+                                   {
+                                       Key = x.OrderTypeCode,
+                                       Value = $"{x.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OrderTypeCode).ShortText}"
+                                   })
+                                   .AsNoTracking().ToListAsync();
 
+                return NKTPSXResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }   
+            
             var result = await _oTypeRep.GetQuery(x => x.Plant == plant && 
                                                     (!string.IsNullOrEmpty(keyword) ? x.OrderTypeCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
                                   .OrderBy(x => x.OrderTypeCode)
@@ -1328,15 +1425,56 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        public async Task<List<CommonResponse>> GetWorkOrder(string plant, string orderType, string material, string keyword)
+        public async Task<List<CommonResponse>> GetWorkOrder(string plant, string type,
+                                                             string orderType,
+                                                             string materialFrom, string materialTo,
+                                                             string soFrom, string soTo,
+                                                             string keyword)
         {
-            var result = await _workOrderRep.GetQuery(x => x.Plant == plant &&
+
+            //Nếu ko có materialTo thì search 1
+            materialTo = !string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo) ? materialFrom : materialTo;
+
+            //Nếu ko có soTo thì search 1
+            soTo = !string.IsNullOrEmpty(soFrom) && string.IsNullOrEmpty(soTo) ? soFrom : soTo;
+
+            //Màn hình NKTPSX
+            if (type == "NKTPSX")
+            {
+                return await _workOrderRep.GetQuery(x =>
+                                                           //Lọc theo plant
+                                                           x.Plant == plant &&
+                                                           //Điều kiện riêng từng màn hình
+                                                           (!x.SystemStatus.StartsWith("REL CNF")) &&
+                                                           (!x.SystemStatus.StartsWith("TECO")) &&
+                                                           (x.DeletionFlag != "X") &&
+                                                           //Theo order type
+                                                           (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
+                                                           //Theo keyword
+                                                           (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
+                                                           //Theo material
+                                                           (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                                  x.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                                           //Theo sales order
+                                                           (!string.IsNullOrEmpty(soFrom) ? x.SalesOrder.CompareTo(soFrom) >= 0 &&
+                                                                                            x.SalesOrder.CompareTo(soTo) <= 0 : true)
+                                                           )
+                                  .OrderBy(x => x.WorkOrderCode)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.WorkOrderCode,
+                                      Value = x.WorkOrderCodeInt.ToString()
+                                  }).Take(20).ToListAsync();
+            }
+            var result = await _workOrderRep.GetQuery(x =>
+                                                           x.Plant == plant &&
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
                                                            (!x.SystemStatus.StartsWith("TECO")) &&
                                                            (x.DeletionFlag != "X") &&
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
                                                            (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
-                                                           (!string.IsNullOrEmpty(material) ? x.ProductCodeInt == long.Parse(material) : true))
+                                                           (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                                  x.ProductCodeInt <= long.Parse(materialTo): true))
                                   .OrderBy(x => x.WorkOrderCode)
                                   .Select(x => new CommonResponse
                                   {

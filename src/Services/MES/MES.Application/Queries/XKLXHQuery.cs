@@ -382,7 +382,7 @@ namespace MES.Application.Queries
             //Theo plant
             if (!string.IsNullOrEmpty(command.Plant))
             {
-                query = query.Where(x => x.OutboundDelivery.ShippingPoint == command.Plant);
+                query = query.Where(x => x.Plant == command.Plant);
             }
 
             //Theo delivery type

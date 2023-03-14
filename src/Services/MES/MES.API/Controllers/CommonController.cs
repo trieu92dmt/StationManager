@@ -55,7 +55,7 @@ namespace MES.API.Controllers
         [HttpGet("list-dropdown-material")]
         public async Task<IActionResult> GetListMaterial(string keyword, string plant,
                                                          string poFrom, string poTo,
-                                                         string odFrom, string odTo,
+                                                         string odFrom, string odTo, string deliveryType,
                                                          string woFrom, string woTo,
                                                          string resFrom, string resTo,
                                                          string soFrom, string soTo,
@@ -65,7 +65,7 @@ namespace MES.API.Controllers
         {
             var dropdownList = await _commonQuery.GetDropdownMaterial(keyword, plant, 
                                                                       poFrom, poTo, 
-                                                                      odFrom, odTo, 
+                                                                      odFrom, odTo, deliveryType,
                                                                       woFrom, woTo, 
                                                                       resFrom, resTo, 
                                                                       soFrom, soTo, 
@@ -270,11 +270,19 @@ namespace MES.API.Controllers
         /// <returns></returns>
         [HttpGet("list-dropdown-outbound-delivery")]
         public async Task<IActionResult> GetListOutboundDelivery(string type, string plant,
+                                                               string deliveryType,
                                                                string salesOrderFrom, string salesOrderTo,
                                                                string shipToPartyFrom, string shipToPartyTo,
+                                                               string poFrom, string poTo,
                                                                string materialFrom, string materialTo, string keyword)
         {
-            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(type, plant, salesOrderFrom, salesOrderTo, shipToPartyFrom, shipToPartyTo, materialFrom, materialTo, keyword);
+            var dropdownList = await _commonQuery.GetDropdownOutboundDelivery(type, plant,
+                                                                              deliveryType,
+                                                                              salesOrderFrom, salesOrderTo, 
+                                                                              shipToPartyFrom, shipToPartyTo, 
+                                                                              poFrom, poTo, 
+                                                                              materialFrom, materialTo, 
+                                                                              keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách outbound delivery") });
         }
         #endregion
@@ -300,9 +308,9 @@ namespace MES.API.Controllers
         /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-dropdown-ship-to-party")]
-        public async Task<IActionResult> GetListShipToParty(string keyword, string plant, string type, string soFrom, string soTo)
+        public async Task<IActionResult> GetListShipToParty(string keyword, string plant, string type, string soFrom, string soTo, string poFrom, string poTo)
         {
-            var dropdownList = await _commonQuery.GetDropdownShipToParty(keyword, plant, type, soFrom, soTo);
+            var dropdownList = await _commonQuery.GetDropdownShipToParty(keyword, plant, type, soFrom, soTo, poFrom, poTo);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách ship to party") });
         }
         #endregion

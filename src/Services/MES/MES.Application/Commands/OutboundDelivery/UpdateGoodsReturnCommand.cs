@@ -242,10 +242,8 @@ namespace MES.Application.Commands.OutboundDelivery
                         EndTime = item.EndTime,
                         SlocCode = item.StorageLocation,
                         DocumentDate = item.DocumentDate,
-                        CreateBy = item.CreateBy,
+                        CreateBy = TokenExtensions.GetAccountId(),
                         CreateTime = DateTime.Now,
-                        LastEditBy = TokenExtensions.GetAccountId(),
-                        LastEditTime = DateTime.Now,
                         Actived = true,
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });

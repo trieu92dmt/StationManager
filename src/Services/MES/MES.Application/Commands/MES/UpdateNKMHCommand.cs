@@ -235,10 +235,8 @@ namespace MES.Application.Commands.MES
                         SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
                         DocumentDate = item.DocumentDate,
                         Batch = item.Batch,
-                        CreateBy = item.CreateBy,
-                        CreateTime = item.CreateOn,
-                        LastEditBy = TokenExtensions.GetAccountId(),
-                        LastEditTime = DateTime.Now,
+                        CreateBy = TokenExtensions.GetAccountId(),
+                        CreateTime = DateTime.Now,
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }

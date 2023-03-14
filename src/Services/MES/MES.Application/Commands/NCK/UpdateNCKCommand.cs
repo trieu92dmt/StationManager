@@ -253,10 +253,8 @@ namespace MES.Application.Commands.NCK
                         SlocName = slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc)?.StorageLocationName,
                         //Trạng thái
                         Status = item.isDelete == true ? "DEL" : "NOT",
-                        CreateBy = item.CreateBy,
-                        CreateTime = item.CreateOn,
-                        LastEditBy = TokenExtensions.GetAccountId(),
-                        LastEditTime = DateTime.Now
+                        CreateBy = TokenExtensions.GetAccountId(),
+                        CreateTime = DateTime.Now,
                     });
                 } 
                 //Tồn tại thì update

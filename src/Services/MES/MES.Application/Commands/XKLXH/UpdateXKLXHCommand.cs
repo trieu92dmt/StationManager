@@ -248,10 +248,8 @@ namespace MES.Application.Commands.XKLXH
                         Description = item.Description,
                         //Trạng thái
                         Status = item.isDelete == true ? "DEL" : "NOT",
-                        CreateBy = item.CreateBy,
+                        CreateBy = TokenExtensions.GetAccountId(),
                         CreateTime = DateTime.Now,
-                        LastEditBy = TokenExtensions.GetAccountId(),
-                        LastEditTime = DateTime.Now,
                     });
                 }
                 //Tồn tại thì update

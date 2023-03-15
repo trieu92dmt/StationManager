@@ -1,8 +1,11 @@
-﻿using Core.Extensions;
+﻿using Azure.Core;
+using Core.Extensions;
+using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.NCK;
 using MES.Application.DTOs.Common;
+using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NCK;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -23,14 +26,14 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name = "command" ></param>
         /// <returns ></returns>
-        Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command);
+        Task<PagingResultSP<GetInputDataResponse>> GetInputData(SearchNCKCommand command);
 
         /// <summary>
         /// Lấy data xck
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        Task<List<SearchNCKResponse>> GetDataNCK(SearchNCKCommand command);
+        Task<PagingResultSP<SearchNCKResponse>> GetDataNCK(SearchNCKCommand command);
 
         /// <summary>
         /// Get data by matdoc and matdoc item
@@ -102,7 +105,7 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<SearchNCKResponse>> GetDataNCK(SearchNCKCommand command)
+        public async Task<PagingResultSP<SearchNCKResponse>> GetDataNCK(SearchNCKCommand command)
         {
             #region Format Day
 
@@ -232,7 +235,7 @@ namespace MES.Application.Queries
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
-            var data = await query.OrderByDescending(x => x.CreateTime).Select(x => new SearchNCKResponse
+            var data = query.OrderByDescending(x => x.CreateTime).Select(x => new SearchNCKResponse
             {
                 //Id
                 NCKId = x.WarehouseImportTransferId,
@@ -318,9 +321,31 @@ namespace MES.Application.Queries
                 //Được chỉnh sửa
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
                 //isEdit = ((x.Status == "DEL") || (!string.IsNullOrEmpty(x.MaterialDocument))) ? false : true
-            }).ToListAsync();
+            });
 
-            return data;
+            #region Phân trang
+            //Số dòng dữ liệu
+            var totalRecords = data.Count();
+
+            //Sorting
+            var dataSorting = PagingSorting.Sorting(command.Paging, data.AsQueryable());
+            //Phân trang
+            var responsePaginated = PaginatedList<SearchNCKResponse>.Create(dataSorting, command.Paging.Offset, command.Paging.PageSize);
+            var res = new PagingResultSP<SearchNCKResponse>(responsePaginated, totalRecords, command.Paging.PageIndex, command.Paging.PageSize);
+
+            //Đánh số thứ tự
+            if (res.Data.Any())
+            {
+                int i = command.Paging.Offset;
+                foreach (var item in res.Data)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+            #endregion
+
+            return await Task.FromResult(res);
         }
 
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
@@ -333,7 +358,7 @@ namespace MES.Application.Queries
                                         }).Distinct().Take(20).ToListAsync();
         }
 
-        public async Task<List<GetInputDataResponse>> GetInputData(SearchNCKCommand command)
+        public async Task<PagingResultSP<GetInputDataResponse>> GetInputData(SearchNCKCommand command)
         {
             #region Format Day
 
@@ -493,7 +518,29 @@ namespace MES.Application.Queries
                 });
             }
 
-            return data;
+            #region Phân trang
+            //Số dòng dữ liệu
+            var totalRecords = data.Count();
+
+            //Sorting
+            var dataSorting = PagingSorting.Sorting(command.Paging, data.AsQueryable());
+            //Phân trang
+            var responsePaginated = PaginatedList<GetInputDataResponse>.Create(dataSorting, command.Paging.Offset, command.Paging.PageSize);
+            var res = new PagingResultSP<GetInputDataResponse>(responsePaginated, totalRecords, command.Paging.PageIndex, command.Paging.PageSize);
+
+            //Đánh số thứ tự
+            if (res.Data.Any())
+            {
+                int i = command.Paging.Offset;
+                foreach (var item in res.Data)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+            #endregion
+
+            return await Task.FromResult(res);
         }
     }
 }

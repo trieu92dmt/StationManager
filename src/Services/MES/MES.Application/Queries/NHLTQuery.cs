@@ -1,21 +1,12 @@
 ﻿using Core.Extensions;
+using Core.SeedWork;
 using Core.SeedWork.Repositories;
-using Grpc.Core;
 using Infrastructure.Models;
 using MES.Application.Commands.NHLT;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NHLT;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Data;
 
 namespace MES.Application.Queries
 {
@@ -33,14 +24,14 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        Task<List<GetInputDataResponse>> GetInputDatas(SearchNHLTCommand command);
+        Task<PagingResultSP<GetInputDataResponse>> GetInputDatas(SearchNHLTCommand command);
 
         /// <summary>
         /// Lấy dữ liệu đã lưu nhlt
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command);
+        Task<PagingResultSP<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command);
 
         /// <summary>
         /// Lấy data theo od và od item
@@ -107,7 +98,7 @@ namespace MES.Application.Queries
             return response;
         }
 
-        public async Task<List<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)
+        public async Task<PagingResultSP<SearchNHLTResponse>> GetDataNHLT(SearchNHLTCommand command)
         {
             #region Format Day
 
@@ -232,7 +223,7 @@ namespace MES.Application.Queries
             //Catalog Nhập kho mua hàng status
             var status = _cataRepo.GetQuery(x => x.CatalogTypeCode == "NKMHStatus").AsNoTracking();
 
-            var data = await query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNHLTResponse
+            var data = query.OrderByDescending(x => x.WeightVote).ThenByDescending(x => x.CreateTime).Select(x => new SearchNHLTResponse
             {
                 //Id
                 NHLTId = x.GoodsReceiptTypeTId,
@@ -310,9 +301,31 @@ namespace MES.Application.Queries
                 RevDoc = x.ReverseDocument ?? null,
                 isDelete = x.Status == "DEL" ? true : false,
                 isEdit = !string.IsNullOrEmpty(x.MaterialDocument) ? false : true
-            }).ToListAsync();
+            });
 
-            return data;
+            #region Phân trang
+            //Số dòng dữ liệu
+            var totalRecords = data.Count();
+
+            //Sorting
+            var dataSorting = PagingSorting.Sorting(command.Paging, data.AsQueryable());
+            //Phân trang
+            var responsePaginated = PaginatedList<SearchNHLTResponse>.Create(dataSorting, command.Paging.Offset, command.Paging.PageSize);
+            var res = new PagingResultSP<SearchNHLTResponse>(responsePaginated, totalRecords, command.Paging.PageIndex, command.Paging.PageSize);
+
+            //Đánh số thứ tự
+            if (res.Data.Any())
+            {
+                int i = command.Paging.Offset;
+                foreach (var item in res.Data)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+            #endregion
+
+            return await Task.FromResult(res);
         }
 
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
@@ -325,7 +338,7 @@ namespace MES.Application.Queries
                                         }).Distinct().Take(20).ToListAsync();
         }
 
-        public async Task<List<GetInputDataResponse>> GetInputDatas(SearchNHLTCommand command)
+        public async Task<PagingResultSP<GetInputDataResponse>> GetInputDatas(SearchNHLTCommand command)
         {
             #region Format Day
 
@@ -419,7 +432,7 @@ namespace MES.Application.Queries
                                                  x.OutboundDelivery.DocumentDate <= command.DocumentDateTo);
             }
 
-            var query = await (from p in plants
+            var query = (from p in plants
                         join m in materials on p.PlantCode equals m.PlantCode into mtr
                         from mtrs in mtr.DefaultIfEmpty()
                         join d in detailOds on p.PlantCode equals d.Plant into dtOd
@@ -454,7 +467,7 @@ namespace MES.Application.Queries
                             SlocName = !string.IsNullOrEmpty(dtOds.StorageLocation) ? slocs.FirstOrDefault(s => s.StorageLocationCode == dtOds.StorageLocation).StorageLocationName : "",
                             //Document Date
                             DocumentDate = dtOds != null ? dtOds.OutboundDelivery.DocumentDate : null
-                        }).AsNoTracking().ToListAsync();
+                        });
 
 
             var index = 1;
@@ -464,7 +477,29 @@ namespace MES.Application.Queries
                 index++;
             }
 
-            return query;
+            #region Phân trang
+            //Số dòng dữ liệu
+            var totalRecords = query.Count();
+
+            //Sorting
+            var dataSorting = PagingSorting.Sorting(command.Paging, query.AsQueryable());
+            //Phân trang
+            var responsePaginated = PaginatedList<GetInputDataResponse>.Create(dataSorting, command.Paging.Offset, command.Paging.PageSize);
+            var res = new PagingResultSP<GetInputDataResponse>(responsePaginated, totalRecords, command.Paging.PageIndex, command.Paging.PageSize);
+
+            //Đánh số thứ tự
+            if (res.Data.Any())
+            {
+                int i = command.Paging.Offset;
+                foreach (var item in res.Data)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+            #endregion
+
+            return await Task.FromResult(res);
         }
     }
 }

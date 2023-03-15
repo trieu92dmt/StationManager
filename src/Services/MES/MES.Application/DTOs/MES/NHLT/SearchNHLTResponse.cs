@@ -8,6 +8,7 @@ namespace MES.Application.DTOs.MES.NHLT
 {
     public class GetInputDataResponse
     {
+        public int STT { get; set; }
         //Id
         public Guid Id { get; set; }
         //Index key
@@ -41,6 +42,7 @@ namespace MES.Application.DTOs.MES.NHLT
     }
     public class SearchNHLTResponse
     {
+        public int STT { get; set; }
         //NHLT Id
         public Guid NHLTId { get; set; }
         //Plant

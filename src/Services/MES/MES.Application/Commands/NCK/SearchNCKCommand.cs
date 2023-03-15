@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.SeedWork;
 
 namespace MES.Application.Commands.NCK
 {
     public class SearchNCKCommand
     {
+        public PagingQuery Paging { get; set; } = new PagingQuery();
         //Plant
         public string Plant { get; set; }
         //Receving Sloc

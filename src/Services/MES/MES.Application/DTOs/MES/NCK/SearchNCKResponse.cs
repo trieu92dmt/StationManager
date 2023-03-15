@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MES.Application.DTOs.MES.NCK
+﻿namespace MES.Application.DTOs.MES.NCK
 {
     public class SearchNCKResponse
     {
+        public int STT { get; set; }
         //Id
         public Guid NCKId { get; set; }
         //Plant
@@ -96,6 +91,7 @@ namespace MES.Application.DTOs.MES.NCK
 
     public class GetInputDataResponse
     {
+        public int STT { get; set; }
         //Id
         public Guid Id { get; set; }
         public int IndexKey { get; set; }

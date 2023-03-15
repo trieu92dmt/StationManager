@@ -45,9 +45,12 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetInputData(command);
 
-            return Ok(new ApiSuccessResponse<List<GetInputDataResponse>>
+            return Ok(new ApiSuccessResponse<IList<GetInputDataResponse>>
             {
-                Data = response
+                Data = response.Data,
+                RecordsTotal = response.Paging.TotalCount,
+                PagesCount = response.Paging.TotalPages,
+                ResultsCount = response.Paging.PageSize
             });
         }
 
@@ -78,9 +81,12 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetDataNCK(command);
 
-            return Ok(new ApiSuccessResponse<List<SearchNCKResponse>>
+            return Ok(new ApiSuccessResponse<IList<SearchNCKResponse>>
             {
-                Data = response
+                Data = response.Data,
+                RecordsTotal = response.Paging.TotalCount,
+                PagesCount = response.Paging.TotalPages,
+                ResultsCount = response.Paging.PageSize
             });
         }
 

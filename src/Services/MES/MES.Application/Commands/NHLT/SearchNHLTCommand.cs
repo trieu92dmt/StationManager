@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.SeedWork;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace MES.Application.Commands.NHLT
 {
     public class SearchNHLTCommand
     {
+        public PagingQuery Paging { get; set; } = new PagingQuery();
         //Plant
         public string Plant { get; set; }
         //Customer

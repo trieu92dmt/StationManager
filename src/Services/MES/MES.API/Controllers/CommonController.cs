@@ -21,9 +21,9 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown plant
         /// <summary>
-        /// Lấy dropdown plant
+        /// Dropdown mã nhà máy
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-plant")]
         public async Task<IActionResult> GetListProduct(string keyword)
@@ -48,9 +48,28 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown material
         /// <summary>
-        /// Lấy dropdown material
+        /// Dropdown material
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="odFrom">OutboundDelivery</param>
+        /// <param name="odTo">OutboundDelivery</param>
+        /// <param name="deliveryType">DeliveryType</param>
+        /// <param name="woFrom">ProductionOrder</param>
+        /// <param name="woTo">ProductionOrder</param>
+        /// <param name="orderType">OrderType</param>
+        /// <param name="resFrom">Reservation</param>
+        /// <param name="resTo">Reservation</param>
+        /// <param name="soFrom">SalesOrder</param>
+        /// <param name="soTo">SalesOrder</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
+        /// <param name="shipToPartyFrom">ShipToParty</param>
+        /// <param name="shipToPartyTo">ShipToParty</param>
+        /// <param name="poType">POType</param>
+        /// <param name="type">Tên màn hình</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-material")]
         public async Task<IActionResult> GetListMaterial(string keyword, string plant,
@@ -78,9 +97,15 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown Component
         /// <summary>
-        /// Lấy dropdown Component
+        /// Dropdown mã nguyên vật liệu
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="woFrom">WorkOrder</param>
+        /// <param name="woTo">WorkOrder</param>
+        /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-component")]
         public async Task<IActionResult> GetListComponent(string keyword, string plant,
@@ -95,9 +120,9 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown Item Component
         /// <summary>
-        /// Lấy dropdown Item Component
+        /// Dropdown component item theo WorkOrderCode
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="workorder">WorkOrderCode</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-item-component")]
         public async Task<IActionResult> GetListItemComponent(string wo)
@@ -109,9 +134,10 @@ namespace MES.API.Controllers
 
         #region Lấy Purchasing Org theo Plant Code
         /// <summary>
-        /// Lấy Purchasing Org theo Plant Code
+        /// Dropdonw Purchasing Organization
         /// </summary>
-        /// <param name="plantCode"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plantCode">Mã nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-purchasingorg-by-plant")]
         public async Task<IActionResult> GetListPurchasingOrgByPlant(string keyword, string plantCode)
@@ -123,9 +149,9 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown purchasing gr
         /// <summary>
-        /// Lấy dropdown purchasing gr
+        /// Dropdown Purchasing Group
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-purchasing-gr")]
         public async Task<IActionResult> GetListPurchasingGr(string keyword)
@@ -137,9 +163,11 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown vendor
         /// <summary>
-        /// Lấy dropdown vendor
+        /// Dropdown vendor
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="plant">Mã nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-vendor")]
         public async Task<IActionResult> GetListVendor(string keyword, string type, string plant)
@@ -151,9 +179,12 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown POType
         /// <summary>
-        /// Lấy dropdown POType
+        /// Dropdown PO Type
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-potype")]
         public async Task<IActionResult> GetListPOType(string keyword, string plant, string vendorFrom, string vendorTo)
@@ -165,9 +196,16 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown PO
         /// <summary>
-        /// Lấy dropdown PO
+        /// Dropdown PO
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="poType">PO Type</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-po")]
         public async Task<IActionResult> GetListPO(string keyword, string plant, string type, 
@@ -182,9 +220,9 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown PO Item
         /// <summary>
-        /// Lấy dropdown PO Item
+        /// Dropdown POLine
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="poCode">PurchaseOrderCode</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-po-item")]
         public async Task<IActionResult> GetListPOItem(string poCode)
@@ -196,7 +234,7 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown đầu cân theo plant
         /// <summary>
-        /// Lấy dropdown đầu cân theo plant
+        /// Dropdown WeightHead
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
@@ -222,9 +260,10 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown sloc
         /// <summary>
-        /// Lấy dropdown sloc
+        /// Dropdown Storage Location
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-sloc")]
         public async Task<IActionResult> GetListSloc(string keyword, string plant)
@@ -236,9 +275,9 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown create by
         /// <summary>
-        /// Lấy dropdown create by
+        /// Dropdown người tạo
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-create-by")]
         public async Task<IActionResult> GetListCreateBy(string keyword)
@@ -250,9 +289,12 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown SaleOrder (SaleDocumentModel)
         /// <summary>
-        /// Lấy dropdown SaleOrder (SaleDocumentModel)
+        /// Dropdown Sales Order
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="orderType">OrderType</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-sale-order")]
         public async Task<IActionResult> GetListSaleOrder(string keyword, string plant, string type, string orderType)
@@ -264,9 +306,20 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown Outbound Delivery
         /// <summary>
-        /// Lấy dropdown Outbound Delivery
+        /// Dropdown Outbound Delivery
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="deliveryType">DeliveryType</param>
+        /// <param name="salesOrderFrom">SalesOrder</param>
+        /// <param name="salesOrderTo">SalesOrder</param>
+        /// <param name="shipToPartyFrom">ShipToParty</param>
+        /// <param name="shipToPartyTo">ShipToParty</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-outbound-delivery")]
         public async Task<IActionResult> GetListOutboundDelivery(string type, string plant,
@@ -289,7 +342,7 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown Outbound Delivery Item theo od
         /// <summary>
-        /// Lấy dropdown Outbound Delivery Item theo od
+        /// Dropdown Outbound Delivery Item
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
@@ -303,9 +356,15 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown Ship to Party
         /// <summary>
-        /// Lấy dropdown Ship to Party
+        /// Dropdown Ship To Party
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="soFrom">Sales Order</param>
+        /// <param name="soTo">Sales Order</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-ship-to-party")]
         public async Task<IActionResult> GetListShipToParty(string keyword, string plant, string type, string soFrom, string soTo, string poFrom, string poTo)
@@ -317,9 +376,10 @@ namespace MES.API.Controllers
 
         #region Lấy dropdown Số xe tải
         /// <summary>
-        /// Lấy dropdown số xe tải
+        /// Dropdown số xe tải
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-truck-number")]
         public async Task<IActionResult> GetListTruckNumber(string keyword, string plant)
@@ -333,7 +393,7 @@ namespace MES.API.Controllers
         /// <summary>
         /// Dropdown số phiếu cân
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-weight-vote")]
         public async Task<IActionResult> GetWeightVoteAsync(string keyword)
@@ -345,23 +405,30 @@ namespace MES.API.Controllers
 
         #region Dropdown OrderType
         /// <summary>
-        /// Get order type (Delivery Type)
+        /// Dropdown OrderType
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-order-type")]
-        public async Task<IActionResult> GetOrderTypeAsync([Required]string plant, string keyword, string type)
+        public async Task<IActionResult> GetOrderTypeAsync([Required]string plant, string keyword, string type, string poFrom, string poTo)
         {
-            var dropdownList = await _commonQuery.GetOrderType(plant, keyword, type);
+            var dropdownList = await _commonQuery.GetOrderType(plant, keyword, type, poFrom, poTo);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
 
         #region Dropdown WorkOrder
         /// <summary>
-        /// Get Work Order
+        /// Drodpown work order
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="orderType">OrderType</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
+        /// <param name="soFrom">SalesOrder</param>
+        /// <param name="soTo">SalesOrder</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-work-order")]
         public async Task<IActionResult> GetWorkOrderAsync(string plant, string type,
@@ -381,9 +448,10 @@ namespace MES.API.Controllers
 
         #region Dropdown Reservation
         /// <summary>
-        /// Get Reservation
+        /// Dropdown reservation
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-reservation")]
         public async Task<IActionResult> GetReservationAsync(string keyword, string plant)
@@ -395,9 +463,13 @@ namespace MES.API.Controllers
 
         #region Dropdown Customer
         /// <summary>
-        /// Get dropdown customer
+        /// Dropdown Customer
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="odFrom">OutboundDelivery</param>
+        /// <param name="odTo">OutboundDelivery</param>
+        /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-customer")]
         public async Task<IActionResult> GetCustomerAsync(string keyword, string plant, string odFrom, string odTo, string type)
@@ -409,9 +481,9 @@ namespace MES.API.Controllers
 
         #region Dropdown Scale monitor type
         /// <summary>
-        /// Get dropdown Scale monitor type
+        /// Dropdown loại hoạt động cân
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-scale-monitor-type")]
         public async Task<IActionResult> GetScaleMonitorTypeAsync(string keyword)
@@ -423,9 +495,10 @@ namespace MES.API.Controllers
 
         #region Dropdown Reservation item by Reservation
         /// <summary>
-        /// Get Reservation item by Reservation
+        /// Dropdown reservation item
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="reservation">Reservation</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-reservation-item")]
         public async Task<IActionResult> GetReservationItemAsync(string reservation, string keyword)
@@ -437,9 +510,10 @@ namespace MES.API.Controllers
 
         #region Dropdown Material Doc
         /// <summary>
-        /// Get Material Doc
+        /// Dropdown material document
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-mat-doc")]
         public async Task<IActionResult> GetMatDocAsync(string keyword, string plant)
@@ -451,9 +525,10 @@ namespace MES.API.Controllers
 
         #region Dropdown Material Doc Item
         /// <summary>
-        /// Get Material Doc Item
+        /// Dropdown MaterialDocumentItem
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="matdoc">MaterialDocCode</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-mat-doc-item")]
         public async Task<IActionResult> GetMatDocItemAsync(string matdoc, string keyword)
@@ -465,9 +540,9 @@ namespace MES.API.Controllers
 
         #region Dropdown Scale Status
         /// <summary>
-        /// Get dropdown scale status
+        /// Dropdown trạng thái cân
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-scale-status")]
         public async Task<IActionResult> GetScaleStatusAsync(string keyword)
@@ -478,10 +553,10 @@ namespace MES.API.Controllers
         #endregion
 
         #region Dropdown Screen
+
         /// <summary>
-        /// Get Dropdown Screen
+        /// Dropdown màn hình
         /// </summary>
-        /// <param name="keyword"></param>
         /// <returns></returns>
         [HttpGet("list-screen")]
         public async Task<IActionResult> GetDropdownScreenAsync()

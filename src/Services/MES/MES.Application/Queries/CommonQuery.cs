@@ -4,18 +4,15 @@ using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
-using Microsoft.IdentityModel.Tokens;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using System.Security.Cryptography.Xml;
 
 namespace MES.Application.Queries
 {
     public interface ICommonQuery
     {
         /// <summary>
-        /// Dropdown Plant
+        /// Dropdown mã nhà máy
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPlant(string keyword);
 
@@ -27,16 +24,35 @@ namespace MES.Application.Queries
         Task<List<CommonResponse>> GetDropdownSaleOrg();
 
         /// <summary>
-        /// Dropdown Purchasing Gr
+        /// Dropdown Purchasing Group
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPurchasingGr(string keyword);
 
         /// <summary>
-        /// Dropdown Material
+        /// Dropdown material
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="odFrom">OutboundDelivery</param>
+        /// <param name="odTo">OutboundDelivery</param>
+        /// <param name="deliveryType">DeliveryType</param>
+        /// <param name="woFrom">ProductionOrder</param>
+        /// <param name="woTo">ProductionOrder</param>
+        /// <param name="orderType">OrderType</param>
+        /// <param name="resFrom">Reservation</param>
+        /// <param name="resTo">Reservation</param>
+        /// <param name="soFrom">SalesOrder</param>
+        /// <param name="soTo">SalesOrder</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
+        /// <param name="shipToPartyFrom">ShipToParty</param>
+        /// <param name="shipToPartyTo">ShipToParty</param>
+        /// <param name="poType">POType</param>
+        /// <param name="type">Tên màn hình</param>
         /// <returns></returns>
         Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant,
                                                                  string poFrom, string poTo,
@@ -49,9 +65,15 @@ namespace MES.Application.Queries
                                                                  string poType, string type);
 
         /// <summary>
-        /// Dropdown Component by wo
+        /// Dropdown mã nguyên vật liệu
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="woFrom">WorkOrder</param>
+        /// <param name="woTo">WorkOrder</param>
+        /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
                                                                  string poFrom, string poTo,
@@ -59,38 +81,50 @@ namespace MES.Application.Queries
                                                                  string type);
 
         /// <summary>
-        /// Dropdown Item Component by wo
+        /// Dropdown component item theo WorkOrderCode
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="workorder">WorkOrderCode</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownItemComponent(string workorder);
 
         /// <summary>
-        /// Dropdown Purchasing Org by Plant
+        /// Dropdonw Purchasing Organization
         /// </summary>
-        /// <param name="plantCode"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plantCode">Mã nhà máy</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPurchasingOrgByPlant(string keyword, string plantCode);
 
         /// <summary>
-        /// Dropdown Vendor
+        /// Dropdown vendor
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="plant">Mã nhà máy</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type, string plant);
 
         /// <summary>
-        /// Dropdown POType
+        /// Dropdown PO Type
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPOType(string keyword, string plant, string vendorFrom, string vendorTo);
 
         /// <summary>
         /// Dropdown PO
         /// </summary>
-        /// <param name="keyword"></param>
-        /// <param name="plant"></param>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="poType">PO Type</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, 
                                                  string type, string poType, 
@@ -98,9 +132,9 @@ namespace MES.Application.Queries
                                                  string materialFrom, string materialTo);
 
         /// <summary>
-        /// Dropdown PO Item
+        /// Dropdown POLine
         /// </summary>
-        /// <param name="poCode"></param>
+        /// <param name="poCode">PurchaseOrderCode</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownPOItem(string poCode);
 
@@ -113,23 +147,38 @@ namespace MES.Application.Queries
         Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type);
 
         /// <summary>
-        /// Dropdown Sloc
+        /// Dropdown Storage Location
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
         /// <returns></returns>
         Task<List<Common3Response>> GetDropdownSloc(string keyword, string plant);
-        
+
         /// <summary>
-        /// Dropdown Sale Order
+        /// Dropdown Sales Order
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="orderType">OrderType</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type, string orderType);
 
         /// <summary>
         /// Dropdown Outbound Delivery
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="deliveryType">DeliveryType</param>
+        /// <param name="salesOrderFrom">SalesOrder</param>
+        /// <param name="salesOrderTo">SalesOrder</param>
+        /// <param name="shipToPartyFrom">ShipToParty</param>
+        /// <param name="shipToPartyTo">ShipToParty</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant,
                                                                string deliveryType,
@@ -148,42 +197,57 @@ namespace MES.Application.Queries
         /// <summary>
         /// Dropdown Ship To Party
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="soFrom">Sales Order</param>
+        /// <param name="soTo">Sales Order</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownShipToParty(string keyword, string plant, string type, string soFrom, string soTo, string poFrom, string poTo);
 
         /// <summary>
         /// Dropdown số xe tải
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
         Task<List<Common2Response>> GetDropdownTruckNumber(string keyword, string plant);
-        
+
         /// <summary>
-        /// Dropdown Create By
+        /// Dropdown người tạo
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<Common2Response>> GetDropdownCreateBy(string keyword);
-        
+
         /// <summary>
-        /// Get số phiêu cân
+        /// Dropdown số phiếu cân
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetWeightVote(string keyword);
 
         /// <summary>
-        /// Get OrderType
+        /// Dropdown OrderType
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetOrderType(string plant, string keyword, string type);
+        Task<List<CommonResponse>> GetOrderType(string plant, string keyword, string type,
+                                                string poFrom, string poTo);
 
         /// <summary>
-        /// Get WorkOrder
+        /// Drodpown work order
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="orderType">OrderType</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
+        /// <param name="soFrom">SalesOrder</param>
+        /// <param name="soTo">SalesOrder</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetWorkOrder(string plant, string type, 
                                                 string orderType,
@@ -192,57 +256,64 @@ namespace MES.Application.Queries
                                                 string keyword);
 
         /// <summary>
-        /// Get Reservation
+        /// Dropdown reservation
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetReservation(string keyword, string plant);
 
         /// <summary>
-        /// Get dropdown customer
+        /// Dropdown Customer
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="odFrom">OutboundDelivery</param>
+        /// <param name="odTo">OutboundDelivery</param>
+        /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string type);
 
         /// <summary>
-        /// Get dropdown scale monitor type
+        /// Dropdown loại hoạt động cân
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetScaleMonitorType(string keyword);
 
         /// <summary>
-        /// Get reservation item by reservation
+        /// Dropdown reservation item
         /// </summary>
-        /// <param name="reservation"></param>
-        /// <param name="keyword"></param>
+        /// <param name="reservation">Reservation</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetReservationItem(string reservation, string keyword);
 
         /// <summary>
-        /// Get mat doc
+        /// Dropdown material document
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetMatDoc(string keyword, string plant);
 
         /// <summary>
-        /// Get mat doc item
+        /// Dropdown MaterialDocumentItem
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="matdoc">MaterialDocCode</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetMatDocItem(string matdoc, string keyword);
 
         /// <summary>
-        /// Get scale status
+        /// Dropdown trạng thái cân
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         Task<List<CommonResponse>> GetScaleStatus(string keyword);
 
         /// <summary>
-        /// Get screen
+        /// Dropdown màn hình
         /// </summary>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownScreen();
@@ -335,6 +406,30 @@ namespace MES.Application.Queries
         }
 
         #region Get DropdownMaterial
+        /// <summary>
+        /// Dropdown material
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="odFrom">OutboundDelivery</param>
+        /// <param name="odTo">OutboundDelivery</param>
+        /// <param name="deliveryType">DeliveryType</param>
+        /// <param name="woFrom">ProductionOrder</param>
+        /// <param name="woTo">ProductionOrder</param>
+        /// <param name="orderType">OrderType</param>
+        /// <param name="resFrom">Reservation</param>
+        /// <param name="resTo">Reservation</param>
+        /// <param name="soFrom">SalesOrder</param>
+        /// <param name="soTo">SalesOrder</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
+        /// <param name="shipToPartyFrom">ShipToParty</param>
+        /// <param name="shipToPartyTo">ShipToParty</param>
+        /// <param name="poType">POType</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <returns></returns>
         public async Task<List<DropdownMaterialResponse>> GetDropdownMaterial(string keyword, string plant,
                                                                         string poFrom, string poTo,
                                                                         string odFrom, string odTo, string deliveryType,
@@ -369,6 +464,8 @@ namespace MES.Application.Queries
             var products = _prodRepo.GetQuery().AsNoTracking();
 
             #region NKMH
+            //Màn hình nhập kho mua hàng
+            //Khi lại màn hình là "NKMH" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
             if (type == "NKMH" && (!string.IsNullOrEmpty(poType) || !string.IsNullOrEmpty(vendorFrom) || !string.IsNullOrEmpty(poFrom)))
             {
                 response = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder)
@@ -378,23 +475,32 @@ namespace MES.Application.Queries
                                                 (!string.IsNullOrEmpty(poType) ? x.PurchaseOrder.POType == poType : true) && //Lọc theo po type 
                                                 (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 &&   //Lọc theo vendor from to  
                                                                                      x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
+                                                //Loại các line đã hoàn tất nhập kho
                                                 x.DeliveryCompleted != "X" &&
+                                                //Loại các line đã đánh dấu xóa
                                                 x.DeletionInd != "X" &&
                                                 x.PurchaseOrder.DeletionInd != "X" &&
                                                 x.PurchaseOrder.ReleaseIndicator == "R") 
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
+                                        //Material code
                                         Key = x.ProductCodeInt.ToString(),
+                                        //Material code | material name
                                         Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                        //Material name
                                         Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                        //Đơn vị
                                         Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
 
+                //Lọc theo keywork
                 return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
             #region NKHT
+            //Màn hình nhập kho hàng trả
+            //Khi lại màn hình là "NKHT" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
             else if (type == "NKHT" && (!string.IsNullOrEmpty(odFrom) || !string.IsNullOrEmpty(shipToPartyFrom) || !string.IsNullOrEmpty(soFrom)))
             {
                 //Delivery Type lấy ra
@@ -408,25 +514,34 @@ namespace MES.Application.Queries
                                                       //Theo shiptoparty
                                                       (!string.IsNullOrEmpty(shipToPartyFrom) ? (x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
                                                                                                 x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0) : true) &&
-                                                      //Theo So
+                                                      //Theo sales order
                                                       (!string.IsNullOrEmpty(soFrom) ? (x.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
                                                                                        x.ReferenceDocument1.CompareTo(soTo) <= 0) : true) &&
+                                                      //Theo delivery type
                                                       (NKHTdeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                                      //Đã hoàn tất giao dịch
                                                       (x.GoodsMovementSts != "C")
                                                       )   
                                      .OrderBy(x => x.ProductCode)
                                      .Select(x => new DropdownMaterialResponse
                                      {
+                                         //Material code
                                          Key = x.ProductCodeInt.ToString(),
-                                         Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                         //Material code | material name
+                                         Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                         //Material name
                                          Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                         //Đơn vị
                                          Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                      }).ToListAsync();
 
+                //Lọc theo keyword
                 return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
             #region XKLXH
+            //Màn hình xuất kho theo lệnh xuất hàng
+            //Khi lại màn hình là "XKLXH" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
             if (type == "XKLXH" && (!string.IsNullOrEmpty(poFrom) || 
                                     !string.IsNullOrEmpty(soFrom) || 
                                     !string.IsNullOrEmpty(deliveryType) || 
@@ -459,13 +574,18 @@ namespace MES.Application.Queries
                                             (!string.IsNullOrEmpty(odFrom) ? x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
                                                                              x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0 : true) &&
                                             //Điều kiện riêng của màn hình xklxh
+                                            //Đã hoàn tất giao dịch
                                             (x.OutboundDelivery.GoodsMovementSts != "C"))
                                  .OrderBy(x => x.ProductCodeInt)
                                  .Select(x => new DropdownMaterialResponse
                                  {
+                                     //Material code
                                      Key = x.ProductCodeInt.ToString(),
-                                     Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                     //Material code | material name
+                                     Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                     //Material name
                                      Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                     //Đơn vị
                                      Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                  }).ToListAsync();
 
@@ -475,6 +595,8 @@ namespace MES.Application.Queries
             }
             #endregion
             #region NKTPSX
+            //Màn hình nhập kho thành phẩm sản xuất
+            //Khi lại màn hình là "NKTPSX" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
             else if (type == "NKTPSX" && (!string.IsNullOrEmpty(orderType) || !string.IsNullOrEmpty(soFrom) || !string.IsNullOrEmpty(woFrom)))
             {
                 //Tạo query
@@ -500,13 +622,55 @@ namespace MES.Application.Queries
                                             .OrderBy(x => x.ProductCodeInt)
                                             .Select(x => new DropdownMaterialResponse
                                             {
+                                                //Material code
                                                 Key = x.ProductCodeInt.ToString(),
-                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                                //Material code | material name
+                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                //Material name
                                                 Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                //Đơn vị
                                                 Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                             }).ToListAsync();
 
                 return NKTPSXResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
+            #region NKDCNB
+            //Màn hình nhập kho điều chuyển nội bộ
+            //Khi lại màn hình là "NKDCNB" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
+            else if (type == "NKDCNB")
+            {
+                var NKDCNBResponse = await _dtOdRepo.GetQuery()
+                                                    .Include(x => x.OutboundDelivery)
+                                                    //Lọc delivery type
+                                                    .Where(x => (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                                //Lấy delivery đã hoàn tất giao dịch
+                                                                x.OutboundDelivery.GoodsMovementSts == "C" &&
+                                                                x.GoodsMovementSts == "C" &&
+                                                                //Lọc theo po
+                                                                (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                                                 x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
+                                                                //Lọc theo shiptoparty
+                                                                (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                                          x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                                //Lọc theo deliveryType
+                                                                (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true)
+                                                                )
+                                                    .OrderBy(x => x.OutboundDelivery.DeliveryCodeInt)
+                                                    .Select(x => new DropdownMaterialResponse
+                                                    {
+                                                        //Material code
+                                                        Key = x.ProductCodeInt.ToString(),
+                                                        //Material code | material name
+                                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                        //Material name
+                                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                        //Đơn vị
+                                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                                    }).AsNoTracking().ToListAsync();
+                return NKDCNBResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -611,13 +775,22 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Plant
+        /// <summary>
+        /// Dropdown mã nhà máy
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownPlant(string keyword)
         {
-            var response = await _plantRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PlantName.Contains(keyword) || x.PlantCode.Contains(keyword) : true)
+            var response = await _plantRepo.GetQuery(x => 
+                                                        //Lọc theo từ khóa
+                                                        !string.IsNullOrEmpty(keyword) ? x.PlantName.Contains(keyword) || x.PlantCode.Contains(keyword) : true)
                                      .OrderBy(x => x.PlantCode)
                                      .Select(x => new CommonResponse
                                      {
+                                         //Mã nhà máy
                                          Key = x.PlantCode,
+                                         //Mã nhà máy | tên nhà máy
                                          Value = $"{x.PlantCode} | {x.PlantName}" 
                                      }).Take(10).ToListAsync();
 
@@ -626,6 +799,11 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Sale Org
+        /// <summary>
+        /// Dropdown Sale Org
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownSaleOrg()
         {
             var response = await _saleOrgRepo.GetQuery(x => x.Actived == true)
@@ -641,9 +819,14 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Purchasing Gr
+        /// <summary>
+        /// Dropdown Purchasing Group
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownPurchasingGr(string keyword)
         {
-            var response = await _purGrRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchasingGroupName.Contains(keyword) || x.PurchasingGroupCode.Contains(keyword) : true)
+            var response = await _purGrRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.PurchasingGroupName.Contains(keyword) || x.PurchasingGroupCode.Contains(keyword) : true) //Lọc theo từ khóa
                 .OrderBy(x => x.PurchasingGroupCode)
                 .Select(x => new CommonResponse
                 {
@@ -656,9 +839,15 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Purchasing Org by Plant
+        /// <summary>
+        /// Dropdonw Purchasing Organization
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plantCode">Mã nhà máy</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownPurchasingOrgByPlant(string keyword, string plantCode)
         {
-            var response = await _purOrgRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchasingOrgName.Contains(keyword) || x.PurchasingOrgCode.Contains(keyword) : true))
+            var response = await _purOrgRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchasingOrgName.Contains(keyword) || x.PurchasingOrgCode.Contains(keyword) : true)) //Lọc theo từ khóa
                 .OrderBy(x => x.PurchasingOrgCode)
                 .Select(x => new CommonResponse
                 {
@@ -672,6 +861,13 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Vendor
+        /// <summary>
+        /// Dropdown vendor
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownVendor(string keyword, string type, string plant)
         {
             //Get query po
@@ -686,27 +882,36 @@ namespace MES.Application.Queries
                                             .Where(x =>
                                                         //Theo plant
                                                         (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&
+                                                        //Loại các line đã hoàn tất chuyển kho
                                                         x.DeliveryCompleted != "X" &&
+                                                        //Loại các line đã đánh dấu xóa
                                                         x.DeletionInd != "X" &&
                                                         x.PurchaseOrder.DeletionInd != "X" &&
+                                                        //Lấy các line đã được duyệt
                                                         x.PurchaseOrder.ReleaseIndicator == "R" &&
+                                                        //Lấy các line vendor không bị trống
                                                         x.PurchaseOrder.VendorCode != null &&
                                                         x.PurchaseOrder.VendorCode != "")
                                             .Select(x => new CommonResponse
                                             {
+                                                //Mã vendor
                                                 Key = x.PurchaseOrder.VendorCode,
+                                                //Mã vendor | Tên vendor
                                                 Value = $"{x.PurchaseOrder.VendorCode} | {vendors.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode).VendorName}"
                                             })
                                             .AsNoTracking().ToArrayAsync();
-
+                //Lọc theo từ khóa
                 return res.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
             }
 
+            ////Lọc theo từ khóa
             var response = await _vendorRepo.GetQuery(x => !string.IsNullOrEmpty(keyword) ? x.VendorName.Contains(keyword) || x.VendorCode.Contains(keyword) : true)
                 .OrderBy(x => x.VendorCode)
                 .Select(x => new CommonResponse
                 {
+                    //Mã vendor
                     Key = x.VendorCode,
+                    //Mã vendor | Tên vendor
                     Value = $"{x.VendorCode} | {x.VendorName}"
                 }).AsNoTracking().ToListAsync();
 
@@ -714,7 +919,15 @@ namespace MES.Application.Queries
         }
         #endregion
 
-        #region Dropdown po type
+        #region Dropdown PO Type
+        /// <summary>
+        /// Dropdown PO Type
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownPOType(string keyword, string plant, string vendorFrom, string vendorTo)
         {
             //Nếu chỉ có vendorfrom thì search 1
@@ -733,15 +946,20 @@ namespace MES.Application.Queries
                                                              //Theo vendor
                                                              (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 && 
                                                                                                   x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
+                                                             //Loại các line đã hoàn tất chuyển kho
                                                              x.DeliveryCompleted != "X" &&
+                                                             //Loại các line đã đánh dấu xóa
                                                              x.DeletionInd != "X" &&
                                                              x.PurchaseOrder.DeletionInd != "X" &&
+                                                             //Lấy các line đã duyệt
                                                              x.PurchaseOrder.ReleaseIndicator == "R"
                                                              )
                                         .OrderBy(x => x.PurchaseOrder.POType)
                                         .Select(x => new CommonResponse
                                         {
+                                            //PO Type
                                             Key = x.PurchaseOrder.POType,
+                                            //PO Type | PO Type name
                                             Value = $"{x.PurchaseOrder.POType} | {orderType.FirstOrDefault(o => o.OrderTypeCode == x.PurchaseOrder.POType && o.Category == "01").ShortText}"
                                         }).AsNoTracking().ToListAsync();
 
@@ -749,7 +967,19 @@ namespace MES.Application.Queries
         }
         #endregion
 
-        #region Dropdown po
+        #region Dropdown PO
+        /// <summary>
+        /// Dropdown PO
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="poType">PO Type</param>
+        /// <param name="vendorFrom">Vendor</param>
+        /// <param name="vendorTo">Vendor</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownPO(string keyword, string plant, 
                                                               string type, string poType, 
                                                               string vendorFrom, string vendorTo,
@@ -762,12 +992,19 @@ namespace MES.Application.Queries
             if (!string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo))
                 vendorTo = vendorFrom;
 
+            //Màn hình nhập kho điều chuyển nội bộ
             if (type == "NKDCNB")
             {
-                return await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                var NKDCNBResponse = await _poMasterRepo.GetQuery(x => 
+                                                             //Lọc theo từ khóa
+                                                             (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                                                             //Lọc theo nhà máy
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             //Lấy line có PO Type là "Z007"
                                                              (x.POType == "Z007") &&
+                                                             //Lấy các line đã duyệt
                                                              (x.ReleaseIndicator == "R") &&
+                                                             //Loại các line đã đánh dấu xóa
                                                              (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
                                         .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
                                         .OrderBy(x => x.PurchaseOrderCode)
@@ -776,6 +1013,8 @@ namespace MES.Application.Queries
                                             Key = x.PurchaseOrderCode,
                                             Value = x.PurchaseOrderCodeInt.ToString()
                                         }).AsNoTracking().ToListAsync();
+
+                return NKDCNBResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }   
             else if (type == "XNVLGC")
             {
@@ -867,17 +1106,32 @@ namespace MES.Application.Queries
 
             return response;
         }
+        #endregion
 
+        #region Dropdown đầu cân
+        /// <summary>
+        /// Dropdown đầu cân
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm gần đúng</param>
+        /// <param name="plantCode">Mã nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <returns></returns>
         public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
         {
-            var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleCode.Contains(keyword) || x.ScaleName.Contains(keyword) : true) &&
+            var response = await _scaleRepo.GetQuery(x => 
+                                                          //Lọc theo từ khóa
+                                                          (!string.IsNullOrEmpty(keyword) ? x.ScaleCode.Contains(keyword) || x.ScaleName.Contains(keyword) : true) &&
+                                                          //Lấy theo mã nhà máy
                                                           (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
                                     .OrderBy(x => x.ScaleCode)
                                     .Select(x => new DropdownWeightHeadResponse
                                     {
+                                        //Mã đầu cân
                                         Key = x.ScaleCode,
+                                        //Mã đầu cân | Tên đầu cân
                                         Value = $"{x.ScaleCode} | {x.ScaleName}",
                                         Data = x.ScaleType.Value == true ? true : false,
+                                        //Loại cân
                                         Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
                                     }).AsNoTracking().ToListAsync();
 
@@ -905,16 +1159,30 @@ namespace MES.Application.Queries
 
         //    return response;
         //}
+        #endregion
 
+        #region Dropdown Sloc
+        /// <summary>
+        /// Dropdown Storage Location
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <returns></returns>
         public async Task<List<Common3Response>> GetDropdownSloc(string keyword, string plant)
         {
-            var response = await _slocRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.StorageLocationCode.Contains(keyword) || x.StorageLocationName.Contains(keyword) : true) &&
+            var response = await _slocRepo.GetQuery(x => 
+                                                         //Lọc theo từ khóa
+                                                         (!string.IsNullOrEmpty(keyword) ? x.StorageLocationCode.Contains(keyword) || x.StorageLocationName.Contains(keyword) : true) &&
+                                                         //Lọc theo plant
                                                          x.PlantCode == plant)
                                     .OrderBy(x => x.StorageLocationCode)
                                     .Select(x => new Common3Response
                                     {
+                                        //Storage Location Code
                                         Key = x.StorageLocationCode,
+                                        //Storage Location Code | Storage Location Name
                                         Value = $"{x.StorageLocationCode} | {x.StorageLocationName}",
+                                        //Storage Location Name
                                         Name = x.StorageLocationName
                                     }).Take(10).AsNoTracking().ToListAsync();
 
@@ -923,11 +1191,19 @@ namespace MES.Application.Queries
         #endregion
 
         #region GetWeightVote
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetWeightVote(string keyword)
         {
-            return await _nkmhRep.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeitghtVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
+            return await _nkmhRep.GetQuery(x => 
+                                                //Lọc theo từ khóa
+                                                string.IsNullOrEmpty(keyword) ? true : x.WeitghtVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
                                          .Select(x => new CommonResponse
                                          {
+                                             //Số phiếu cân
                                              Key = x.WeitghtVote,
                                              Value = x.WeitghtVote
                                          }).Distinct().Take(20).ToListAsync();
@@ -935,6 +1211,11 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown PoItem
+        /// <summary>
+        /// Dropdown POLine
+        /// </summary>
+        /// <param name="poCode">PurchaseOrderCode</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownPOItem(string poCode)
         {
             var po = await _poMasterRepo.GetQuery().Include(x => x.PurchaseOrderDetailModel).FirstOrDefaultAsync(x => x.PurchaseOrderCode == poCode);
@@ -950,7 +1231,15 @@ namespace MES.Application.Queries
         }
         #endregion
 
-        #region Dropdown Sale Orrder
+        #region Dropdown Sales Orrder
+        /// <summary>
+        /// Dropdown Sales Order
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Mã nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="orderType">OrderType</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownSaleOrder(string keyword, string plant, string type, string orderType)
         {
             //Khai bao mảng chức delivery type
@@ -959,6 +1248,7 @@ namespace MES.Application.Queries
             //Query so
             var soQuery = _saleDocRepo.GetQuery().AsNoTracking();
 
+            //Màn hình nhập kho hàng trả
             if (type == "NKHT")
             {
                 //Delivery Type lấy ra
@@ -966,9 +1256,12 @@ namespace MES.Application.Queries
 
                 return await _dtOdRepo.GetQuery()
                                        .Include(x => x.OutboundDelivery)
-                                       .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Plant
+                                       .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Lọc theo Plant
+                                                   //Lọc theo từ khóa
                                                    (string.IsNullOrEmpty(keyword) ? true : x.ReferenceDocument1.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                   //Lọc theo delivery type
                                                    (deliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                                   //Lấy các line đã hoàn tất giao dịch
                                                    x.GoodsMovementSts != "C")
                                        .OrderBy(x => x.ReferenceDocument1)
                                        .Select(x => new CommonResponse
@@ -984,7 +1277,6 @@ namespace MES.Application.Queries
                 var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
                 
-
                 var xklxhResponse = await _dtOdRepo.GetQuery()
                                 .Include(x => x.OutboundDelivery)
                                 .Where(x => //Search theo delivery type
@@ -1026,6 +1318,7 @@ namespace MES.Application.Queries
                                                   !x.SystemStatus.StartsWith("REL TECO") &&
                                                   //Loại các line có tích DeletionFlag
                                                   x.DeletionFlag != "X" &&
+                                                  //Loại các line sales order trống
                                                   x.SalesOrder != null)
                                     .OrderBy(x => x.SalesOrder)
                                     .Select(x => new CommonResponse
@@ -1047,6 +1340,22 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown Outbound Delivery
+        /// <summary>
+        /// Dropdown Outbound Delivery
+        /// </summary>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="deliveryType">DeliveryType</param>
+        /// <param name="salesOrderFrom">SalesOrder</param>
+        /// <param name="salesOrderTo">SalesOrder</param>
+        /// <param name="shipToPartyFrom">ShipToParty</param>
+        /// <param name="shipToPartyTo">ShipToParty</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownOutboundDelivery(string type, string plant,
                                                                             string deliveryType,
                                                                             string salesOrderFrom, string salesOrderTo,
@@ -1074,8 +1383,10 @@ namespace MES.Application.Queries
 
             var query = _dtOdRepo.GetQuery()
                                    .Include(x => x.OutboundDelivery)
-                                   .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Plant
+                                   .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Lọc theo Plant
+                                               //Lọc theo từ khóa
                                                (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                               //Lọc theo sales order
                                                (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 &&
                                                                                         x.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true))
                                    .AsNoTracking();
@@ -1087,17 +1398,23 @@ namespace MES.Application.Queries
                 //Delivery Type lấy ra
                 var NKHTdeliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
 
-                response = await _dtOdRepo.GetQuery()
+                var NKHTresponse = await _dtOdRepo.GetQuery()
                                        .Include(x => x.OutboundDelivery)
                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Plant
+                                                   //Lọc theo từ khóa
                                                    (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
-                                                   (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 &&  //Theo SO
+                                                   //Theo sales order
+                                                   (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 &&  
                                                                                             x.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true) &&
-                                                   (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&      //Theo ship to party
+                                                   //Theo ship to party
+                                                   (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&      
                                                                                              x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                   //Theo material
                                                    (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
                                                                                           x.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                                   //Theo delivery type
                                                    (NKHTdeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                                   //Loại các line đã hoàn tất giao dịch
                                                    x.GoodsMovementSts != "C")
                                        .OrderBy(x => x.OutboundDelivery.DeliveryCode)
                                        .Select(x => new CommonResponse
@@ -1105,7 +1422,7 @@ namespace MES.Application.Queries
                                            Key = x.OutboundDelivery.DeliveryCode,
                                            Value = x.OutboundDelivery.DeliveryCodeInt.ToString()
                                        }).AsNoTracking().ToListAsync();
-                return response.DistinctBy(x => x.Key).Take(10).ToList();
+                return NKHTresponse.DistinctBy(x => x.Key).Take(10).ToList();
             }
             //màn hình xklxh
             else if (type == "XKLXH")
@@ -1153,9 +1470,33 @@ namespace MES.Application.Queries
             //Màn hình nhập kho điều chuyển nội bộ
             else if (type == "NKDCNB")
             {
-                query = query.Where(x => x.OutboundDelivery.ReceivingPlant == plant &&
-                                                        (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN"));
-            }    
+                var NKDCNBResponse = await _dtOdRepo.GetQuery()
+                                                    .Include(x => x.OutboundDelivery)
+                                                    //Lọc delivery type
+                                                    .Where(x => (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                                //Lấy delivery đã hoàn tất giao dịch
+                                                                x.OutboundDelivery.GoodsMovementSts == "C" &&
+                                                                x.GoodsMovementSts == "C" &&
+                                                                //Lọc theo po
+                                                                (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                                                 x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
+                                                                //Lọc theo shiptoparty
+                                                                (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                                          x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                                //Lọc theo deliveryType
+                                                                (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true) &&
+                                                                //Lọc theo material
+                                                                (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                                       x.ProductCodeInt >= long.Parse(materialTo) : true)
+                                                                )
+                                                    .OrderBy(x => x.OutboundDelivery.DeliveryCodeInt)
+                                                    .Select(x => new CommonResponse
+                                                    {
+                                                        Key = x.OutboundDelivery.DeliveryCode,
+                                                        Value = $"{x.OutboundDelivery.DeliveryCode} | {x.OutboundDelivery.DeliveryCodeInt.ToString()}"
+                                                    }).AsNoTracking().ToListAsync();
+                return NKDCNBResponse.DistinctBy(x => x.Key).Take(10).ToList();
+            }
             //Màn hình nhập hàng loại T
             else if (type == "NHLT")
             {
@@ -1206,7 +1547,20 @@ namespace MES.Application.Queries
 
             return data.DistinctBy(x => x.Key).Take(10).ToList();
         }
+        #endregion
 
+        #region Dropdown Ship to party
+        /// <summary>
+        /// Dropdown Ship To Party
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="soFrom">Sales Order</param>
+        /// <param name="soTo">Sales Order</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownShipToParty(string keyword, string plant, string type, string soFrom, string soTo, string poFrom, string poTo)
         {
             //Khai bao mảng chức delivery type
@@ -1281,6 +1635,32 @@ namespace MES.Application.Queries
 
                 return xklxhResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }
+            //Màn hình nhập kho điều chuyển nội bộ
+            else if (type == "NKDCNB")
+            {
+                var NKDCNBResponse = await _dtOdRepo.GetQuery()
+                                                    .Include(x => x.OutboundDelivery)
+                                                    //Lọc delivery type
+                                                    .Where(x =>
+                                                                //Theo keyword
+                                                                (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.ShiptoParty.Contains(keyword) ||
+                                                                                                x.OutboundDelivery.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                                (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                                //Lấy delivery đã hoàn tất giao dịch
+                                                                x.OutboundDelivery.GoodsMovementSts == "C" &&
+                                                                x.GoodsMovementSts == "C" &&
+                                                                //Lọc theo po
+                                                                (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                                                 x.ReferenceDocument1.CompareTo(poTo) <= 0 : true)
+                                                                )
+                                                    .OrderBy(x => x.OutboundDelivery.ShiptoParty)
+                                                    .Select(x => new CommonResponse
+                                                    {
+                                                        Key = x.OutboundDelivery.ShiptoParty,
+                                                        Value = $"{x.OutboundDelivery.ShiptoParty} | {x.OutboundDelivery.ShiptoPartyName}"
+                                                    }).AsNoTracking().ToListAsync();
+                return response.DistinctBy(x => x.Key).Take(10).ToList();
+            }    
 
             response = await _obDeliveryRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.ShiptoParty.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
                                                                                                 x.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
@@ -1296,6 +1676,11 @@ namespace MES.Application.Queries
         #endregion
 
         #region GetDropdownCreateBy
+        /// <summary>
+        /// Dropdown người tạo
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <returns></returns>
         public async Task<List<Common2Response>> GetDropdownCreateBy(string keyword)
         {
             return await _accRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.UserName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
@@ -1309,16 +1694,24 @@ namespace MES.Application.Queries
         #endregion
 
         #region GetDropdownTruckNumber
+        /// <summary>
+        /// Dropdown số xe tải
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <returns></returns>
         public async Task<List<Common2Response>> GetDropdownTruckNumber(string keyword, string plant)
         {
             var response = await _truckInfoRepo.GetQuery(x => (string.IsNullOrEmpty(keyword) ? true : x.TruckNumber.Contains(keyword)) &&
+                                                              //Lọc theo plant
                                                               x.PlantCode == plant &&
+                                                              //Lấy ra các line được tạo trong ngày hiện tại
                                                               (x.CreateTime.HasValue ? x.CreateTime.Value.Date == DateTime.Now.Date &&
                                                                                        x.CreateTime.Value.Month == DateTime.Now.Month &&
                                                                                        x.CreateTime.Value.Year == DateTime.Now.Year: false))
                                   .OrderBy(x => x.TruckNumber).ThenByDescending(x => x.CreateTime)
                                   .AsNoTracking().ToListAsync();
-
+                            //Group by lấy line đầu mỗi group để lấy được line được tạo gần nhất
             return response.GroupBy(x => x.TruckNumber, (k, v) => new { Key = k, Value = v.ToList() })
                                   .Select(x => new Common2Response
                                   {
@@ -1329,6 +1722,12 @@ namespace MES.Application.Queries
         #endregion
 
         #region GetDropdownOutboundDeliveryItem
+        /// <summary>
+        /// Dropdown Outbound Delivery Item
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="odCode">OutboundDeliveryCode</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownOutboundDeliveryItem(string keyword, string odCode)
         {
             var od = await _obDeliveryRepo.GetQuery().Include(x => x.DetailOutboundDeliveryModel).FirstOrDefaultAsync(x => x.DeliveryCode == odCode);
@@ -1346,13 +1745,21 @@ namespace MES.Application.Queries
 
         #region Get OrderType
         /// <summary>
-        /// GetOrderType
+        /// Dropdown OrderType
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
         /// <returns></returns>
-        public async Task<List<CommonResponse>> GetOrderType(string plant, string keyword, string type)
+        public async Task<List<CommonResponse>> GetOrderType(string plant, string keyword, string type,
+                                                             string poFrom, string poTo)
         {
             var oTypeQuery = _oTypeRep.GetQuery().AsNoTracking();
+
+            //Nếu chỉ search poFrom thì search 1
+            poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
 
             //Khai bao mảng chức delivery type
             var deliveryType = new List<string>();
@@ -1369,6 +1776,7 @@ namespace MES.Application.Queries
                                             //Theo plant
                                             (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
                                             //Điều kiện riêng của màn hình xklxh
+                                            //Loại các line đã hoàn tất giao dịch
                                             (x.OutboundDelivery.GoodsMovementSts != "C"))
                                  .OrderBy(x => x.OutboundDelivery.DeliveryType)
                                  .Select(x => new CommonResponse
@@ -1408,8 +1816,31 @@ namespace MES.Application.Queries
                 return NKTPSXResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
-            }   
-            
+            }
+            //Màn hình nhập kho điều chuyển nội bộ
+            else if (type == "NKDCNB")
+            {
+                var NKDCNBResponse = await _dtOdRepo.GetQuery()
+                                                    .Include(x => x.OutboundDelivery)
+                                                    //Lọc delivery type
+                                                    .Where(x => 
+                                                                (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                                //Lấy delivery đã hoàn tất giao dịch
+                                                                x.OutboundDelivery.GoodsMovementSts == "C" &&
+                                                                x.GoodsMovementSts == "C" &&
+                                                                //Lọc theo po
+                                                                (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                                                 x.ReferenceDocument1.CompareTo(poTo) <= 0 : true)
+                                                                )
+                                                    .OrderBy(x => x.OutboundDelivery.ShiptoParty)
+                                                    .Select(x => new CommonResponse
+                                                    {
+                                                        Key = x.OutboundDelivery.DeliveryType,
+                                                        Value = $"{x.OutboundDelivery.DeliveryType} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OutboundDelivery.DeliveryType).ShortText}"
+                                                    }).AsNoTracking().ToListAsync();
+                return NKDCNBResponse.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+
             var result = await _oTypeRep.GetQuery(x => x.Plant == plant && 
                                                     (!string.IsNullOrEmpty(keyword) ? x.OrderTypeCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true))
                                   .OrderBy(x => x.OrderTypeCode)
@@ -1425,9 +1856,16 @@ namespace MES.Application.Queries
 
         #region Get WorkOrder
         /// <summary>
-        /// Get WorkOrder
+        /// Drodpown work order
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="orderType">OrderType</param>
+        /// <param name="materialFrom">Material</param>
+        /// <param name="materialTo">Material</param>
+        /// <param name="soFrom">SalesOrder</param>
+        /// <param name="soTo">SalesOrder</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         public async Task<List<CommonResponse>> GetWorkOrder(string plant, string type,
                                                              string orderType,
@@ -1471,12 +1909,17 @@ namespace MES.Application.Queries
                                   }).Take(20).ToListAsync();
             }
             var result = await _workOrderRep.GetQuery(x =>
+                                                           //Lọc theo plant
                                                            x.Plant == plant &&
+                                                           //Điều kiện riêng từng màn hình
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
                                                            (!x.SystemStatus.StartsWith("TECO")) &&
                                                            (x.DeletionFlag != "X") &&
+                                                           //Theo order type
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
+                                                           //Theo keyword
                                                            (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
+                                                           //Theo material
                                                            (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
                                                                                                   x.ProductCodeInt <= long.Parse(materialTo): true))
                                   .OrderBy(x => x.WorkOrderCode)
@@ -1488,7 +1931,20 @@ namespace MES.Application.Queries
 
             return result;
         }
+        #endregion
 
+        #region Dropdown Component
+        /// <summary>
+        /// Dropdown mã nguyên vật liệu
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
+        /// <param name="woFrom">WorkOrder</param>
+        /// <param name="woTo">WorkOrder</param>
+        /// <param name="type">Tên nhà máy</param>
+        /// <returns></returns>
         public async Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
                                                                               string poFrom, string poTo,
                                                                               string woFrom, string woTo,
@@ -1500,6 +1956,7 @@ namespace MES.Application.Queries
             var products = _prodRepo.GetQuery().AsNoTracking();
 
             #region XNVLGC
+            //Màn hình xuất nguyên vật liệu gia công
             if (type == "XNVLGC")
             {
                 if (!string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo))
@@ -1515,15 +1972,20 @@ namespace MES.Application.Queries
                                         .OrderBy(x => x.MaterialCodeInt)
                                         .Select(x => new DropdownMaterialResponse
                                         {
+                                            //Mã nguyên vật liệu
                                             Key = x.MaterialCodeInt.ToString(),
+                                            //Mã nguyên vật liệu | Tên nguyên vật liệu
                                             Value = $"{x.MaterialCodeInt} | {products.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName}",
+                                            //Tên nguyên vật liệu
                                             Name = products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName,
+                                            //Đơn vị
                                             Unit = products.FirstOrDefault(p => p.ProductCode == x.Material).Unit
                                         }).ToListAsync();
                 
             }
             #endregion
-            #region XTHLSX
+            #region XTHLSX                
+            //Xuất tiêu theo lệnh xuất hàng
             else if (type == "XTHLSX")
             {
                 //Check nếu ko search field to thì gán to = from
@@ -1536,33 +1998,54 @@ namespace MES.Application.Queries
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
+                                        //Mã nguyên vật liệu
                                         Key = x.ProductCodeInt.ToString(),
+                                        //Mã nguyên vật liệu | Tên nguyên vật liệu
                                         Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                        //Tên nguyên vật liệu
                                         Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                        //Đơn vị
                                         Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
             }
             #endregion
             else
             {
-                response = await _prodRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
-                                                   (!string.IsNullOrEmpty(keyword) ? x.ProductCode.Contains(keyword) || x.ProductName.Contains(keyword) : true))
+                response = await _prodRepo.GetQuery(x => 
+                                                   //Lọc theo plant
+                                                   (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true)
+                                                   )
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
+                                        //Mã nguyên vật liệu
                                         Key = x.ProductCodeInt.ToString(),
+                                        //Mã nguyên vật liệu | Tên nguyên vật liệu
                                         Value = $"{x.ProductCodeInt} | {x.ProductName}",
+                                        //Tên nguyên vật liệu
                                         Name = x.ProductName,
+                                        //Đơn vị
                                         Unit = x.Unit
                                     }).ToListAsync();
             }
 
             return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
         }
+        #endregion
 
+        #region Dropdown reservation
+        /// <summary>
+        /// Dropdown reservation
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetReservation(string keyword, string plant)
         {
-            return await _rsRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
+            return await _rsRepo.GetQuery(x => 
+                                               //Lọc theo từ khóa
+                                               (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
+                                               //Lọc theo plant
                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true))
                                 .OrderBy(x => x.ReservationCodeInt)
                                 .Select(x => new CommonResponse
@@ -1574,7 +2057,12 @@ namespace MES.Application.Queries
 
         #endregion
 
-        #region Drop down component item theo wo
+        #region Dropdown component item theo wo
+        /// <summary>
+        /// Dropdown component item theo WorkOrderCode
+        /// </summary>
+        /// <param name="workorder">WorkOrderCode</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownItemComponent(string workorder)
         {
             var wo = await _workOrderRep.GetQuery().Include(x => x.DetailWorkOrderModel).FirstOrDefaultAsync(x => x.WorkOrderCodeInt == long.Parse(workorder));
@@ -1596,33 +2084,55 @@ namespace MES.Application.Queries
 
         #endregion
 
+        #region Dropdown customer
+        /// <summary>
+        /// Dropdown Customer
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="odFrom">OutboundDelivery</param>
+        /// <param name="odTo">OutboundDelivery</param>
+        /// <param name="type">Tên nhà máy</param>
+        /// <returns></returns>
         public async Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string type)
         {
             var response = new List<Common3Response>();
 
+            //Màn hình nhập hàng loại T
             if (type == "NHLT")
             {
+                //Chỉ search odFrom là search 1
                 if (!string.IsNullOrEmpty(odFrom) && string.IsNullOrEmpty(odTo))
                     odTo = odFrom;
 
                 response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
-                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                                                          //Lọc plant
+                                        .Where(x =>
+                                                    //Lọc plant
+                                                    (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                                                          
                                                     //Lọc od from
-                                                    (!string.IsNullOrEmpty(odFrom) ? (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 && x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0) : true))   
+                                                    (!string.IsNullOrEmpty(odFrom) ? (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 && 
+                                                                                      x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0) : true))   
                                         .Select(x => new Common3Response
                                         {
+                                            //Ship to party
                                             Key = x.OutboundDelivery.ShiptoParty,
+                                            //Ship to party | Ship to party Name
                                             Value = $"{x.OutboundDelivery.ShiptoParty} | {x.OutboundDelivery.ShiptoPartyName}",
+                                            //Ship to party Name
                                             Name = x.OutboundDelivery.ShiptoPartyName
                                         }).AsNoTracking().ToListAsync();   
             }
+            //Không có loại màn hình thì search tất cả của bảng master data
             else
             {
                 response = await _custRepo.GetQuery()
                                    .Select(x => new Common3Response
                                    {
+                                       //Customer
                                        Key = x.CustomerNumber,
+                                       //Customer | Customer name
                                        Value = $"{x.CustomerNumber} | {x.CustomerName}",
+                                       //Customer name
                                        Name = x.CustomerName
                                    }).AsNoTracking().ToListAsync();
             }
@@ -1630,12 +2140,13 @@ namespace MES.Application.Queries
             return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Key.ToLower().Contains(keyword.ToLower().Trim()) : true) ||
                                        (!string.IsNullOrEmpty(keyword) ? x.Name.ToLower().Contains(keyword.ToLower().Trim()) : true)).OrderBy(x => x.Key).DistinctBy(x => x.Key).Take(10).ToList();
         }
+        #endregion
 
         #region Get Scale Monitor Type
         /// <summary>
-        /// Get Scale Monitor Type
+        /// Dropdown loại hoạt động cân
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         public async Task<List<CommonResponse>> GetScaleMonitorType(string keyword)
         {
@@ -1655,14 +2166,18 @@ namespace MES.Application.Queries
 
         #region Get Reservation item
         /// <summary>
-        /// Get Reservation item
+        /// Dropdown reservation item
         /// </summary>
-        /// <param name="keyword"></param>
+        /// <param name="reservation">Reservation</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         public async Task<List<CommonResponse>> GetReservationItem(string reservation, string keyword)
         {
             var result = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
-                                  .Where(x => !string.IsNullOrEmpty(reservation) ? x.Reservation.ReservationCodeInt == long.Parse(reservation) : false &&
+                                  .Where(x => 
+                                              //Lấy item theo reservation code
+                                              !string.IsNullOrEmpty(reservation) ? x.Reservation.ReservationCodeInt == long.Parse(reservation) : false &&
+                                              //Lọc theo từ khóa
                                               !string.IsNullOrEmpty(keyword) ? x.ReservationItem.Contains(keyword) : true)
                                   .OrderBy(x => x.ReservationItem)
                                   .Select(x => new CommonResponse
@@ -1676,12 +2191,24 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown mat doc
+        /// <summary>
+        /// Dropdown material document
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetMatDoc(string keyword, string plant)
         {
-            var response = await _matDocRepo.GetQuery(x => (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
+            var response = await _matDocRepo.GetQuery(x => 
+                                                           //Lọc theo plant
+                                                           (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
+                                                           //Lọc theo từ khóa
                                                            (!string.IsNullOrEmpty(keyword) ? x.MaterialDocCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
+                                                           //Lấy các line có movement type là "313"
                                                            (x.MovementType == "313") &&
+                                                           //Lấy các line có đánh dấu Auto Created
                                                            (x.ItemAutoCreated == "X") &&
+                                                           //Loại các line có movement type là "315"
                                                            (x.MovementType != "315"))
                                 .Select(x => new CommonResponse
                                 {
@@ -1694,9 +2221,18 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown mat doc item
+        /// <summary>
+        /// Dropdown MaterialDocumentItem
+        /// </summary>
+        /// <param name="matdoc">MaterialDocCode</param>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetMatDocItem(string matdoc, string keyword)
         {
-            return  await _matDocRepo.GetQuery(x =>(!string.IsNullOrEmpty(matdoc) ? x.MaterialDocCode == matdoc : false) &&
+            return  await _matDocRepo.GetQuery(x =>
+                                                   //Lọc theo material documet code
+                                                   (!string.IsNullOrEmpty(matdoc) ? x.MaterialDocCode == matdoc : false) &&
+                                                   //Lọc theo từ khóa
                                                    (!string.IsNullOrEmpty(keyword) ? x.MaterialDocItem.ToLower().Contains(keyword.ToLower().Trim()) : true))
                                 .OrderBy(x => x.MaterialDocItem)
                                 .Select(x => new CommonResponse
@@ -1708,9 +2244,16 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown scale status
+        /// <summary>
+        /// Dropdown trạng thái cân
+        /// </summary>
+        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetScaleStatus(string keyword)
         {
-            var result = await _cataRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.CatalogCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) &&
+            var result = await _cataRepo.GetQuery(x => 
+                                                       //Lọc theo từ khóa
+                                                       (!string.IsNullOrEmpty(keyword) ? x.CatalogCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) &&
                                                                                          x.CatalogText_vi.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
                                                        x.CatalogTypeCode == "ScaleStatus")
                                   .OrderBy(x => x.CatalogText_vi)
@@ -1725,6 +2268,10 @@ namespace MES.Application.Queries
         #endregion
 
         #region Dropdown screen
+        /// <summary>
+        /// Dropdown màn hình
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownScreen()
         {
             return await _screenRepo.GetQuery(x => x.Actived == true)

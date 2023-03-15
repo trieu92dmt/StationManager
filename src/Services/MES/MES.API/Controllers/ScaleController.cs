@@ -3,6 +3,7 @@ using Core.Properties;
 using MediatR;
 using MES.Application.Commands.Scale;
 using MES.Application.DTOs.MES.Scale;
+using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MES.API.Controllers
@@ -13,10 +14,12 @@ namespace MES.API.Controllers
     public class ScaleController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IScaleQuery _query;
 
-        public ScaleController(IMediator mediator)
+        public ScaleController(IMediator mediator, IScaleQuery query)
         {
             _mediator = mediator;
+            _query = query;
         }
 
         #region Search Data thông tin cân
@@ -36,6 +39,25 @@ namespace MES.API.Controllers
                 RecordsTotal = response.PagingRep.TotalResultsCount,
                 ResultsCount = response.PagingRep.FilterResultsCount,
                 PagesCount = response.PagingRep.TotalPagesCount
+            });
+        }
+        #endregion
+
+        #region Get chi tiết thông tin cân
+        /// <summary>
+        /// Get chi tiết thông tin cân
+        /// </summary>
+        /// <param name="ScaleId"></param>
+        /// <returns></returns>
+        [HttpGet("get-detail-scale")]
+        public async Task<IActionResult> GetScaleInfoAsync(Guid ScaleId)
+        {
+            var response = await _query.GetScaleDetail(ScaleId);
+
+            return Ok(new ApiSuccessResponse<ScaleDetailResponse>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy chi tiết cân")
             });
         }
         #endregion

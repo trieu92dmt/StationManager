@@ -1,4 +1,7 @@
-﻿namespace MES.Application.DTOs.MES
+﻿using MES.Application.DTOs.Common;
+using MES.Application.DTOs.MES.Scale;
+
+namespace MES.Application.DTOs.MES
 {
     public class NKMHMesResponse
     {
@@ -8,6 +11,8 @@
     }
     public class PuchaseOrderNKMHResponse
     {
+        //STT
+        public int STT { get; set; }
         //Id
         public Guid Id { get; set; }
         //PO
@@ -33,6 +38,7 @@
 
     public class ListNKMHResponse
     {
+        public int STT { get; set; }         
         //PO
         public Guid NkmhId { get; set; }
         public string Plant { get; set; }

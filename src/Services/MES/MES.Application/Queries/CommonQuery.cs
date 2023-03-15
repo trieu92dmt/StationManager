@@ -369,7 +369,7 @@ namespace MES.Application.Queries
             var products = _prodRepo.GetQuery().AsNoTracking();
 
             #region NKMH
-            if (type == "NKMH")
+            if (type == "NKMH" && (!string.IsNullOrEmpty(poType) || !string.IsNullOrEmpty(vendorFrom) || !string.IsNullOrEmpty(poFrom)))
             {
                 response = await _poDetailRepo.GetQuery().Include(x => x.PurchaseOrder)
                                     .Where(x => (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&           //Lọc plant
@@ -395,7 +395,7 @@ namespace MES.Application.Queries
             }
             #endregion
             #region NKHT
-            else if (type == "NKHT")
+            else if (type == "NKHT" && (!string.IsNullOrEmpty(odFrom) || !string.IsNullOrEmpty(shipToPartyFrom) || !string.IsNullOrEmpty(soFrom)))
             {
                 //Delivery Type lấy ra
                 var NKHTdeliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
@@ -427,7 +427,11 @@ namespace MES.Application.Queries
             }
             #endregion
             #region XKLXH
-            if (type == "XKLXH")
+            if (type == "XKLXH" && (!string.IsNullOrEmpty(poFrom) || 
+                                    !string.IsNullOrEmpty(soFrom) || 
+                                    !string.IsNullOrEmpty(deliveryType) || 
+                                    !string.IsNullOrEmpty(shipToPartyFrom) ||
+                                    !string.IsNullOrEmpty(odFrom)))
             {
                 var deliveryTypeQuery = _oTypeRep.GetQuery().AsNoTracking();
 
@@ -471,7 +475,7 @@ namespace MES.Application.Queries
             }
             #endregion
             #region NKTPSX
-            else if (type == "NKTPSX")
+            else if (type == "NKTPSX" && (!string.IsNullOrEmpty(orderType) || !string.IsNullOrEmpty(soFrom) || !string.IsNullOrEmpty(woFrom)))
             {
                 //Tạo query
                 var NKTPSXResponse = await _workOrderRep.GetQuery(x =>

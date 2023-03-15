@@ -1,7 +1,11 @@
-﻿namespace MES.Application.Commands.MES
+﻿using Core.Models;
+using Core.SeedWork;
+
+namespace MES.Application.Commands.MES
 {
     public class GetNKMHCommand
     {
+        public PagingQuery Paging { get; set; } = new PagingQuery();
         public string Plant { get; set; }
         public string PurchasingOrgFrom { get; set; }
         public string PurchasingOrgTo { get; set; }

@@ -1,11 +1,15 @@
-﻿using Core.Extensions;
+﻿using Azure;
+using Core.Extensions;
+using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
+using MES.Application.DTOs.MES.Scale;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MES.Application.Queries
@@ -17,14 +21,14 @@ namespace MES.Application.Queries
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request);
+        Task<PagingResultSP<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request);
 
         /// <summary>
         /// Get PO
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<List<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request);
+        Task<PagingResultSP<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request);
 
         /// <summary>
         /// Lấy số cân
@@ -76,8 +80,9 @@ namespace MES.Application.Queries
         }
 
 
-        public async Task<List<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)
+        public async Task<PagingResultSP<ListNKMHResponse>> GetNKMHAsync(GetNKMHCommand request)
         {
+            
             #region Format Day
 
             //Ngày phát lệnh
@@ -101,6 +106,7 @@ namespace MES.Application.Queries
             }
             #endregion
 
+            #region Search tham số
             var user = _userRep.GetQuery().AsNoTracking();
 
             //Danh sách sloc
@@ -202,9 +208,11 @@ namespace MES.Application.Queries
 
             //Scale
             var scale = _scaleRepo.GetQuery().AsNoTracking();
+            #endregion
 
+            #region Get dữ liệu
             //Data NKMH
-            var dataNKMH = await queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
+            var dataNKMH = queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
             {
                 //Id
                 NkmhId = x.GoodsReceiptId,
@@ -279,12 +287,34 @@ namespace MES.Application.Queries
                 MaterialDocument = x.MaterialDocument,
                 VendorName = x.PurchaseOrderDetailId.HasValue ? vendor.FirstOrDefault(v => v.VendorCode == x.PurchaseOrderDetail.PurchaseOrder.VendorCode).VendorName : "",
 
-            }).ToListAsync();
+            });
+            #endregion
 
-            return dataNKMH;
+            #region Phân trang
+            var totalRecords = dataNKMH.Count();
+
+            //Sorting
+            var dataSorting = PagingSorting.Sorting(request.Paging, dataNKMH.AsQueryable());
+            //Phân trang
+            var responsePaginated = PaginatedList<ListNKMHResponse>.Create(dataSorting, request.Paging.Offset, request.Paging.PageSize);
+            var res = new PagingResultSP<ListNKMHResponse>(responsePaginated, totalRecords, request.Paging.PageIndex, request.Paging.PageSize);
+
+            //Đánh số thứ tự
+            if (res.Data.Any())
+            {
+                int i = request.Paging.Offset;
+                foreach (var item in res.Data)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+            #endregion
+
+            return await Task.FromResult(res);
         }
 
-        public async Task<List<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request)
+        public async Task<PagingResultSP<PuchaseOrderNKMHResponse>> GetPOAsync(GetNKMHCommand request)
         {
             #region Format Day
 
@@ -299,6 +329,7 @@ namespace MES.Application.Queries
             }
             #endregion
 
+            #region Lọc điều kiện
             var user = _userRep.GetQuery().AsNoTracking();
 
             //Product
@@ -372,7 +403,9 @@ namespace MES.Application.Queries
 
             //Data vendor
             var vendor = _vendorRep.GetQuery().AsNoTracking();
+            #endregion
 
+            #region Lấy dữ liệu
             //Data PO
             var dataPO = await queryPO.Select(x => new PuchaseOrderNKMHResponse
             {
@@ -419,8 +452,30 @@ namespace MES.Application.Queries
                     Unit = material?.Unit
                 });
             }
+            #endregion
 
-            return dataPO;
+            #region Phân trang
+            var totalRecords = dataPO.Count();
+
+            //Sorting
+            var dataSorting = PagingSorting.Sorting(request.Paging, dataPO.AsQueryable());
+            //Phân trang
+            var responsePaginated = PaginatedList<PuchaseOrderNKMHResponse>.Create(dataSorting, request.Paging.Offset, request.Paging.PageSize);
+            var res = new PagingResultSP<PuchaseOrderNKMHResponse>(responsePaginated, totalRecords, request.Paging.PageIndex, request.Paging.PageSize);
+
+            //Đánh số thứ tự
+            if (res.Data.Any())
+            {
+                int i = request.Paging.Offset;
+                foreach (var item in res.Data)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+            #endregion
+
+            return await Task.FromResult(res); 
         }
 
         public async Task<GetWeighNumResponse> GetWeighNum(string weightHeadCode)

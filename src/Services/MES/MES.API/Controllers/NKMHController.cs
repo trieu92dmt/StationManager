@@ -150,9 +150,12 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetNKMHAsync(command);
 
-            return Ok(new ApiSuccessResponse<List<ListNKMHResponse>>
+            return Ok(new ApiSuccessResponse<IList<ListNKMHResponse>>
             {
-                Data = response
+                Data = response.Data,
+                RecordsTotal = response.Paging.TotalCount,
+                PagesCount = response.Paging.TotalPages,
+                ResultsCount = response.Paging.PageSize
             });
         }
 
@@ -169,19 +172,25 @@ namespace MES.API.Controllers
 
             if (command.MaterialFrom != null)
             {
-                return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
+                return Ok(new ApiSuccessResponse<IList<PuchaseOrderNKMHResponse>>
                 {
-                    Data = response,
-                    Message = response.Count() == 1 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
-                    IsSuccess = response.Count() == 1 ? false : true
+                    Data = response.Data,
+                    RecordsTotal = response.Paging.TotalCount,
+                    PagesCount = response.Paging.TotalPages,
+                    ResultsCount = response.Paging.PageSize,
+                    Message = response.Data.Count() == 1 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
+                    IsSuccess = response.Data.Count() == 1 ? false : true
                 });
             }
             else
-                return Ok(new ApiSuccessResponse<List<PuchaseOrderNKMHResponse>>
+                return Ok(new ApiSuccessResponse<IList<PuchaseOrderNKMHResponse>>
                 {
-                    Data = response,
-                    Message = response.Count() == 0 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
-                    IsSuccess = response.Count() == 0 ? false : true
+                    Data = response.Data,
+                    RecordsTotal = response.Paging.TotalCount,
+                    PagesCount = response.Paging.TotalPages,
+                    ResultsCount = response.Paging.PageSize,
+                    Message = response.Data.Count() == 0 ? "Không có chứng từ SAP!" : string.Format(CommonResource.Msg_Success, "Lấy PO"),
+                    IsSuccess = response.Data.Count() == 0 ? false : true
                 });
         }
 

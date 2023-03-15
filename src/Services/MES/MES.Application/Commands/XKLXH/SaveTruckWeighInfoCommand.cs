@@ -45,6 +45,7 @@ namespace MES.Application.Commands.XKLXH
 
                 //Update
                 nklxh.OutputWeight = item.OutputWeight ?? 0;
+                //Số cân hàng hóa = số cân đầu vào - số cân đầu ra lấy dương
                 nklxh.GoodsWeight = Math.Abs(nklxh.OutputWeight.Value - nklxh.InputWeight.Value);
                 if (request.Type == "SAVE")
                     nklxh.RecordTime2 = DateTime.Now;

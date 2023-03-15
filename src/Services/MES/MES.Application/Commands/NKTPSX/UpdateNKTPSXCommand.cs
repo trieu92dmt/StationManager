@@ -116,9 +116,13 @@ namespace MES.Application.Commands.NKTPSX
             var weightVotes = request.UpdateUpdateNKTPSXs.GroupBy(x => x.WeightVote, (k, v) => new { Key = k, Value = v.ToList() })
                                                  .Select(x => new
                                                  {
+                                                     //Số phiếu cân
                                                      WeightVote = x.Key,
-                                                     NKHTIDs = x.Value.Select(v => v.NKTPSXId).ToList(),
+                                                     //Danh sách id các dòng
+                                                     NKTPSXIDs = x.Value.Select(v => v.NKTPSXId).ToList(),
+                                                     //Confirm quantity
                                                      ConfirmQty = x.Value.Sum(x => x.ConfirmQty),
+                                                     //SL kèm bao bì
                                                      QuantityWithPackage = x.Value.Sum(x => x.QuantityWithPackaging)
                                                  }).ToList();
             //Duyệt phiếu cân kiểm tra confirm quantity và SL kèm bao bì
@@ -127,7 +131,7 @@ namespace MES.Application.Commands.NKTPSX
                 //Tính tổng confirm quantity ban đầu
                 var sumConfirmQty1 = nktpsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.ConfirmQty);
                 //Tính tổng confirm quantity khác các dòng data gửi lên từ FE
-                var sumConfirmQty2 = nktpsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.RcFromProductiontId)).Sum(x => x.ConfirmQty);
+                var sumConfirmQty2 = nktpsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKTPSXIDs.Contains(x.RcFromProductiontId)).Sum(x => x.ConfirmQty);
                 //So sánh
                 if (item.ConfirmQty + sumConfirmQty2 > sumConfirmQty1)
                 {
@@ -138,7 +142,7 @@ namespace MES.Application.Commands.NKTPSX
                 //Tính tổng SL kèm bao bì
                 var sumQtyWithPackage1 = nktpsxs.Where(x => x.WeightVote == item.WeightVote).Sum(x => x.QuantityWithPackaging);
                 //Tính tổng SL kèm bao bì khác các dòng data gửi lên từ FE
-                var sumQtyWithPackage2 = nktpsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKHTIDs.Contains(x.RcFromProductiontId)).Sum(x => x.QuantityWithPackaging);
+                var sumQtyWithPackage2 = nktpsxs.Where(x => x.WeightVote == item.WeightVote && !item.NKTPSXIDs.Contains(x.RcFromProductiontId)).Sum(x => x.QuantityWithPackaging);
                 //So sánh
                 if (item.QuantityWithPackage + sumQtyWithPackage2 > sumQtyWithPackage1)
                 {
@@ -184,26 +188,46 @@ namespace MES.Application.Commands.NKTPSX
                     _nktpsxRepo.Add(new ReceiptFromProductionModel
                     {
                         RcFromProductiontId = item.NKTPSXId,
+                        //Workorder id
                         WorkOrderId = wo != null ? wo.WorkOrderId : null,
+                        //Mã nhà máy
                         PlantCode = item.Plant,
+                        //Material Code
                         MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
+                        //Material Code Int
                         MaterialCodeInt = long.Parse(item.Material),
+                        //Số phiếu cân
                         WeightVote = item.WeightVote,
+                        //Mã đầu cân
                         WeightHeadCode = item.WeightHeadCode,
+                        //Trọng lượng cân
                         Weight = item.Weight,
+                        //Confirm quantity
                         ConfirmQty = item.ConfirmQty,
+                        //SL kèm bao bì
                         QuantityWithPackaging = item.QuantityWithPackaging,
+                        //Số lần cân
                         QuantityWeitght = item.QuantityWeight,
+                        //Số lô
                         Batch = item.Batch,
+                        //Số lượng bao
                         BagQuantity= item.BagQuantity,
+                        //Đơn trọng
                         SingleWeight = item.SingleWeight,
+                        //Ghi chú
                         Description = item.Description,
+                        //Hình ảnh
                         Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                        //TG bắt đầu
                         StartTime = item.StartTime,
+                        //TG kết thúc
                         EndTime = item.EndTime,
+                        //Storage location
                         SlocCode = item.StorageLocation,
                         SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
+                        //Trạng thái
                         Status = item.isDelete == true ? "DEL" : "NOT",
+                        //Người tạo
                         CreateBy = TokenExtensions.GetAccountId(),
                         CreateTime = DateTime.Now,
                     });

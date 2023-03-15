@@ -29,7 +29,10 @@ namespace MES.Application.Commands.Scale
 
         public Task<ScaleListResponse> Handle(SearchScaleCommand request, CancellationToken cancellationToken)
         {
-            var query = _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(request.Plant) ? x.Plant == request.Plant : true) &&
+            var query = _scaleRepo.GetQuery(x => 
+                                                 //Lọc theo plant
+                                                 (!string.IsNullOrEmpty(request.Plant) ? x.Plant == request.Plant : true) &&
+                                                 //Lọc theo mã đầu cân
                                                  (!string.IsNullOrEmpty(request.ScaleCode) ? x.ScaleCode == request.ScaleCode : true) &&
                                                  (request.Status.HasValue ? x.Actived == request.Status : true))
                                   .OrderBy(x => x.Plant).ThenBy(x => x.ScaleCode)

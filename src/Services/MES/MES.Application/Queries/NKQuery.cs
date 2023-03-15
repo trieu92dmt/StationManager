@@ -270,6 +270,11 @@ namespace MES.Application.Queries
             return data;
         }
 
+        /// <summary>
+        /// Lấy dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword">Từ khóa</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
         {
             return await _nkRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
@@ -280,6 +285,12 @@ namespace MES.Application.Queries
                                          }).Distinct().Take(20).ToListAsync();
         }
 
+        /// <summary>
+        /// Lấy đơn vị của material theo plant
+        /// </summary>
+        /// <param name="material"></param>
+        /// <param name="plant"></param>
+        /// <returns></returns>
         public async Task<string> GetUnitByMaterialAndPlant(string material, string plant)
         {
             var prd = await _prdRepo.FindOneAsync(x => x.ProductCodeInt == long.Parse(material) && x.PlantCode == plant);

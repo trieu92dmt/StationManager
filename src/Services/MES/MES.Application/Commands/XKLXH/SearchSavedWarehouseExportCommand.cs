@@ -70,8 +70,11 @@ namespace MES.Application.Commands.XKLXH
                                       RecordTime = x.RecordTime3
                                   }).AsNoTracking();
 
+            //Tổng field lọc được
             int filterResultsCount = 0;
+            //Tổng số kết quả
             int totalResultsCount = 0;
+            //Tổng số trang
             int totalPagesCount = 0;
 
             var response = new ListSavedWarehouseExportResponse();
@@ -92,8 +95,11 @@ namespace MES.Application.Commands.XKLXH
             }
 
             response.SavedWarehouseExports = res;
+            //Tổng field lọc được
             response.PagingRep.FilterResultsCount = filterResultsCount;
+            //Tổng số kết quả
             response.PagingRep.TotalResultsCount = totalResultsCount;
+            //Tổng số trang
             response.PagingRep.TotalPagesCount = totalPagesCount;
 
             return Task.FromResult(response);

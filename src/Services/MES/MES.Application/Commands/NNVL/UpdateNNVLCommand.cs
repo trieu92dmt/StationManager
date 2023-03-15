@@ -207,14 +207,20 @@ namespace MES.Application.Commands.NNVL
                         VehicleCode = item.VehicleCode,
                         //Số cân đầu ra
                         OutputWeight = item.OutputWeight,
+                        //Ghi chú
                         Description = item.Description,
+                        //Hình ảnh
                         Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                        //TG bắt đầu
                         StartTime = item.StartTime,
+                        //TG kết thúc
                         EndTime = item.EndTime,
                         //Sloc
                         SlocCode = item.Sloc,
                         SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "",
+                        //Trạng thái
                         Status = item.isDelete == true ? "DEL" : "NOT",
+                        //Common
                         CreateBy = TokenExtensions.GetAccountId(),
                         CreateTime = DateTime.Now,
                     });

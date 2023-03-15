@@ -180,26 +180,46 @@ namespace MES.Application.Commands.NKPPPP
                     _nkppppRepo.Add(new ScrapFromProductionModel
                     {
                         ScFromProductiontId = item.NKPPPPId,
+                        //Detail wo id
                         DetailWorkOrderId = wo != null ? wo.DetailWorkOrderId : null,
+                        //Nhà máy
                         PlantCode = item.Plant,
+                        //NVL
                         ComponentCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Component)).ProductCode,
                         ComponentCodeInt = long.Parse(item.Component),
+                        //Số lô
                         Batch = item.Batch,
+                        //Số lượng bao
                         BagQuantity = item.BagQuantity,
+                        //Đơn trọng
                         SingleWeight = item.SingleWeight,
+                        //Số phiếu cân
                         WeightVote = item.WeightVote,
+                        //Mã đầu cân
                         WeightHeadCode = item.WeightHeadCode,
+                        //Trọng lượng cân
                         Weight = item.Weight,
+                        //Confirm quantity
                         ConfirmQty = item.ConfirmQty,
+                        //Số lượng kèm bao bì
                         QuantityWithPackaging = item.QuantityWithPackaging,
+                        //Số lần cân
                         QuantityWeitght = item.QuantityWeight,
+                        //Ghi chú
                         Description = item.Description,
+                        //Lưu ảnh
                         Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
+                        //TG bắt đầu
                         StartTime = item.StartTime,
+                        //TG kết thúc
                         EndTime = item.EndTime,
+                        //Mã storage location
                         SlocCode = item.StorageLocation,
+                        //Storage location
                         SlocName = !string.IsNullOrEmpty(item.StorageLocation) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.StorageLocation).StorageLocationName : "",
+                        //Trạng thái
                         Status = item.isDelete == true ? "DEL" : "NOT",
+                        //Người tạo
                         CreateBy = TokenExtensions.GetAccountId(),
                         CreateTime = DateTime.Now,
                     });

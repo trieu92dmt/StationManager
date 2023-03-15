@@ -54,11 +54,17 @@ namespace MES.Application.Commands.TruckInfo
             {
                 truckInfos.Add(new TruckInfoModel
                 {
+                    //Id xe tải
                     TruckInfoId = Guid.NewGuid(),
+                    //Mã xe tải tự sinh
                     TruckInfoCode = $"XT{DateTime.Now.ToString("yyMM")}{1000 + truckInfoCount + index}",
+                    //Mã nhà máy
                     PlantCode = item.PlantCode,
+                    //Số  xe tải
                     TruckNumber = item.TruckNumber,
+                    //Tài xế xe tải
                     Driver = item.Driver,
+                    //Số cân đầu vào
                     InputWeight = item.InputWeight,
                     Actived = true,
                     CreateTime = DateTime.Now,

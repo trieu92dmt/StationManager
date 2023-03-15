@@ -159,18 +159,30 @@ namespace MES.Application.Queries
             var data = await query.Select(x => new OutboundDeliveryResponse
             {
                 Id = Guid.NewGuid(),
+                //Mhà máy
                 Plant = x.Plant,
+                //Tên nhà máy
                 PlantName = plants.FirstOrDefault(p => p.PlantCode == x.Plant).PlantName,
+                //Ship to party
                 ShipToParty = x.OutboundDelivery.ShiptoParty,
+                //Ship to party name
                 ShipToPartyName = x.OutboundDelivery.ShiptoPartyName,
+                //Detail od id
                 DetailODId = x.DetailOutboundDeliveryId,
+                //Outbound delivery
                 OutboundDelivery = long.Parse(x.OutboundDelivery.DeliveryCode).ToString(),
+                //Outbound delivery item
                 OutboundDeliveryItem = x.OutboundDeliveryItem,
+                //Material
                 Material = long.Parse(x.ProductCode).ToString(),
+                //Material desc
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                //Storage location
                 Sloc = x.StorageLocation,
                 SlocDesc = slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName,
+                //Số lô
                 Batch = x.Batch,
+                //Số phương tiện
                 VehicleCode = x.OutboundDelivery.VehicleCode,
                 TotalQty = x.DeliveryQuantity,
                 DeliveryQty = x.PickedQuantityPUoM,
@@ -179,13 +191,18 @@ namespace MES.Application.Queries
                 
             }).ToListAsync();
 
+            //Không có chứng từ SAP và có search theo material thì trả line trống
             if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo && data.Count == 0)
             {
                 data.Add(new OutboundDeliveryResponse
                 {
+                    //Nhà máy
                     Plant = command.PlantCode,
+                    //Material
                     Material = long.Parse(command.MaterialFrom).ToString(),
+                    //Material Description
                     MaterialDesc = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
+                    //Đơn vị
                     Unit = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
                 });
             }
@@ -371,16 +388,21 @@ namespace MES.Application.Queries
                 ListImage = imgMappings.Where(img => img.DocumentId == x.GoodsReturnId).Select(img => $"{new ConfigManager().DomainUploadUrl}{img.Image}").ToList(),
                 //Trạng thái
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
+                //Số phiếu cân
                 WeightVote = x.WeightVote,
+                //TG bắt đầu
                 StartTime = x.StartTime,
+                //TG kết thúc
                 EndTime = x.EndTime,
                 DocumentDate = x.DocumentDate,
+                //Common
                 CreateById = x.CreateBy,
                 CreateBy = x.CreateBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.CreateBy).FullName : "",
                 CreateOn = x.CreateTime,
                 ChangeById = x.LastEditBy,
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 ChangeOn = x.LastEditTime,
+                //Matdoc - Reversedoc
                 MatDoc = x.MaterialDocument,
                 ReverseDoc = x.ReverseDocument,
                 isDelete = x.Status == "DEL" ? true : false,
@@ -428,6 +450,11 @@ namespace MES.Application.Queries
             return response;
         }
 
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword">Từ khóa</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
         {
             return await _nkhtRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))

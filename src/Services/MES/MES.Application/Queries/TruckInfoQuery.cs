@@ -81,12 +81,19 @@ namespace MES.Application.Queries
                                       .OrderByDescending(x => x.CreateTime)
                                       .Select(x => new SearchTruckInfoResponse
                                       {
+                                          //Id xe tải
                                           TruckInfoId = x.TruckInfoCode,
+                                          //Mã nhà máy
                                           PlantCode = x.PlantCode,
+                                          //Số xe tải
                                           TruckNumber = x.TruckNumber,
+                                          //Tài xế
                                           Driver = x.Driver,
+                                          //Số cân đầu dzô
                                           InputWeight = x.InputWeight,
+                                          //Thời gian ghi nhận
                                           RecordTime = x.CreateTime,
+                                          //Common
                                           CreateById = x.CreateBy,
                                           CreateBy = accs.FirstOrDefault(a => a.AccountId == x.CreateBy).UserName,
                                           isEdit = nkmhs.FirstOrDefault(n => n.TruckInfoId == x.TruckInfoId && n.MaterialDocument != null) != null ? false : true

@@ -36,7 +36,9 @@ namespace MES.Application.Commands.TruckInfo
                 throw new ISDException(CommonResource.Msg_NotFound, "Thông tin cân xe tải");
 
             //Mapping
+            //Tài xế
             truckInfo.Driver = request.Driver;
+            //Số cân đầu vào
             truckInfo.InputWeight = request.InputWeight;
 
             await _unitOfWork.SaveChangesAsync();

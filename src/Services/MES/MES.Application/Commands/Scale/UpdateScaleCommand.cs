@@ -52,8 +52,11 @@ namespace MES.Application.Commands.Scale
                 var scale = await _scaleRepo.FindOneAsync(x => x.ScaleId == item.ScaleId);
 
                 //cập nhật
+                //Tên đầu cân
                 scale.ScaleName = item.ScaleName;
+                //Loại cân
                 scale.ScaleType = item.isIntegrated;
+                //Là cân xe tải ?
                 scale.isCantai = item.isTruckScale;
                 scale.Actived = item.isActived;
             }

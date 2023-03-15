@@ -49,10 +49,14 @@ namespace MES.Application.Commands.XKLXH
                 var nklxh = await _nklxhRepo.FindOneAsync(x => x.ExportByCommandId == item.NKLXHId);
 
                 //Update
+                //SL bao
                 nklxh.BagQuantity = item.BagQuantity ?? 0;
+                //Đơn trọng
                 nklxh.SingleWeight = item.SingleWeight ?? 0;
                 nklxh.ConfirmQty = item.ConfirmQty ?? 0;
+                //SL kèm bao bì
                 nklxh.QuantityWithPackaging = item.QuantityWithPackage ?? 0;
+                //Nếu là tạo mới thì lưu recordTime3 là ngày tạo
                 if (request.Type == "SAVE")
                     nklxh.RecordTime3 = DateTime.Now;
             }

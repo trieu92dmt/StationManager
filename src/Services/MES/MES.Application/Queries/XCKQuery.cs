@@ -200,20 +200,25 @@ namespace MES.Application.Queries
             }).ToListAsync();
 
             var index = 1;
-            //Tính open quantity
+            //Gán STT
             foreach (var item in data)
             {
                 item.IndexKey = index;
                 index++;
             }
 
+            //Nếu không có chứng từ SAP và có search theo material thì trả line trống
             if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo && data.Count == 0)
             {
                 data.Add(new GetInputDataResponse
                 {
+                    //Nhà máy
                     Plant = command.Plant,
+                    //Material
                     Material = long.Parse(command.MaterialFrom).ToString(),
+                    //Material desc
                     MaterialDesc = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
+                    //Đơn vị
                     Unit = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
                 });
             }

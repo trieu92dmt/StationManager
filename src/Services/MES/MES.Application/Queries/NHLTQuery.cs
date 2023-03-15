@@ -45,8 +45,8 @@ namespace MES.Application.Queries
         /// <summary>
         /// Lấy data theo od và od item
         /// </summary>
-        /// <param name="od"></param>
-        /// <param name="odItem"></param>
+        /// <param name="od">Outbound Delivery</param>
+        /// <param name="odItem">Outbound Delivery Item</param>
         /// <returns></returns>
         Task<GetDataByOdAndOdItemResponse> GetDataByOdAndOdItem(string od, string odItem);
     }

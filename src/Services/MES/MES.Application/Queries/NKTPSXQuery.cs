@@ -427,6 +427,11 @@ namespace MES.Application.Queries
             return response;
         }
 
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
         {
             return await _nktpsxRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))

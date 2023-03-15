@@ -33,15 +33,15 @@ namespace MES.Application.Queries
         /// <summary>
         /// Lấy số cân
         /// </summary>
-        /// <param name="weightHead"></param>
+        /// <param name="scaleCode">Mã đầu cân</param>
         /// <returns></returns>
         Task<GetWeighNumResponse> GetWeighNum(string scaleCode);
 
         /// <summary>
         /// Lấy data theo po và poitem
         /// </summary>
-        /// <param name="po"></param>
-        /// <param name="poItem"></param>
+        /// <param name="po">Purchase Order</param>
+        /// <param name="poItem">Purchase Order Item</param>
         /// <returns></returns>
         Task<GetDataByPoPoItemResponse> GetDataByPoAndPoItem(string po, string poItem);
     }
@@ -123,43 +123,52 @@ namespace MES.Application.Queries
                                     .ThenInclude(x => x.PurchaseOrder)
                                     .AsNoTracking();
 
+            //Lọc theo plant
             if (!string.IsNullOrEmpty(request.Plant))
             {
                 queryNKMH = queryNKMH.Where(x => x.PlantCode == request.Plant);
             }
+
+            //Lọc theo purchasing organization
             if (!string.IsNullOrEmpty(request.PurchasingOrgFrom))
             {
+                //Nếu ko search to thì search 1
                 if (string.IsNullOrEmpty(request.PurchasingOrgTo)) request.PurchasingOrgTo = request.PurchasingOrgFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrgFrom);
             }
+            //Lọc theo vendor
             if (!string.IsNullOrEmpty(request.VendorFrom))
             {
+                //Nếu không có To thì search 1
                 if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.VendorCode.CompareTo(request.VendorFrom) >= 0 &&
                                                                                     x.PurchaseOrderDetail.PurchaseOrder.VendorCode.CompareTo(request.VendorTo) <= 0 : false);
             }
-
+            //Lọc PO Type
             if (!string.IsNullOrEmpty(request.POType))
             {
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType) : false);
             }
-
+            //Lọc theo material
             if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
+                //Nếu không có To thì search 1
                 if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
                 queryNKMH = queryNKMH.Where(x => x.MaterialCodeInt >= long.Parse(request.MaterialFrom) &&
                                                  x.MaterialCodeInt <= long.Parse(request.MaterialTo));
             }
-
+            //Lọc theo Purchasing Group
             if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
+                //Nếu không có To thì search 1
                 if (string.IsNullOrEmpty(request.PurchasingGroupTo)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup.CompareTo(request.PurchasingGroupFrom) >=0 &&
                                                                                     x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup.CompareTo(request.PurchasingGroupTo) <= 0 : false);
             }
-
+            //Lọc theo PurchaseOrder
             if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
+                //Nếu không có To thì search 1
                 if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
                 queryNKMH = queryNKMH.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderFrom) >= 0 &&
                                                                                     x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderTo) <= 0 : false);
@@ -182,20 +191,22 @@ namespace MES.Application.Queries
                 queryNKMH = queryNKMH.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHeadCode.Trim().ToLower() : false);
             }
 
-
+            //Search ngày cân
             if (request.WeightDateFrom.HasValue)
             {
+                //Nếu không có WeightDateTo thì lọc theo ngày WeightDateFrom
                 if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
 
                 queryNKMH = queryNKMH.Where(x => x.WeighDate >= request.WeightDateFrom &&
                 x.WeighDate <= request.WeightDateTo);
             }
-
+            //Loc theo số phiếu cân
             if (request.WeightVotes != null && request.WeightVotes.Any())
             {
                 queryNKMH = queryNKMH.Where(x => request.WeightVotes.Contains(x.WeitghtVote));
             }
 
+            //Lọc theo người tạo
             if (request.CreateBy.HasValue)
             {
                 queryNKMH = queryNKMH.Where(x => x.CreateBy == request.CreateBy);

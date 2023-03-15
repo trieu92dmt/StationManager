@@ -218,33 +218,58 @@ namespace MES.Application.Commands.OutboundDelivery
                     _nkhtRepo.Add(new GoodsReturnModel
                     {
                         GoodsReturnId = item.NKHTId,
+                        //ODDetailID
                         DetailODId = !string.IsNullOrEmpty(item.ODCode) ? detailOD.DetailOutboundDeliveryId : null,
+                        //Mã nhà máy
                         PlantCode = item.Plant,
+                        //Material Code
                         MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode,
+                        //Material Code Int
                         MaterialCodeInt = long.Parse(item.Material),
+                        //Số phiếu cân
                         WeightVote = item.WeightVote,
+                        //SL bao
                         BagQuantity = item.BagQuantity,
+                        //Đơn trọng
                         SingleWeight = item.SingleWeight,
+                        //Đàu cân
                         WeightHeadCode = item.WeightHeadCode,
+                        //Trọng lượng cân
                         Weight = item.Weight,
+                        //Confirm quantity
                         ConfirmQty = item.ConfirmQty,
+                        //Số lượng kèm bao bì
                         QuantityWithPackaging = item.QuantityWithPackaging,
+                        //Số phương tiện
                         VehicleCode = item.VehicleCode,
+                        //Số lô
                         Batch = item.Batch,
+                        //Số lần cân
                         QuantityWeitght = item.QuantityWeight,
+                        //Id xe tải
                         TruckInfoId = item.TruckInfoId.HasValue ? item.TruckInfoId : null,
+                        //Số xe tải
                         TruckNumber = item.TruckQty,
+                        //Số cân đầu vào
                         InputWeight = item.InputWeight,
+                        //Số cân đầu ra
                         OutputWeight = item.OutputWeight,
+                        //Ghi chú
                         Description = item.Description,
                         //Image = string.IsNullOrEmpty(imgPath) ? null : imgPath,
+                        //TG bắt đầu
                         StartTime = item.StartTime,
+                        //TG kết thúc
                         EndTime = item.EndTime,
+                        //Storage location
                         SlocCode = item.StorageLocation,
                         DocumentDate = item.DocumentDate,
+                        //Người tạo
                         CreateBy = TokenExtensions.GetAccountId(),
+                        //Ngày tạo
                         CreateTime = DateTime.Now,
                         Actived = true,
+                        //Trạng thái
                         Status = item.isDelete == true ? "DEL" : "NOT"
                     });
                 }

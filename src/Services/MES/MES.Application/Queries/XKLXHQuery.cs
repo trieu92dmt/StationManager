@@ -334,6 +334,11 @@ namespace MES.Application.Queries
             return data;
         }
 
+        /// <summary>
+        /// Dropdown số phiếu cân
+        /// </summary>
+        /// <param name="keyword">Từ khóa</param>
+        /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropDownWeightVote(string keyword)
         {
             return await _xklxhRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.WeightVote.Trim().ToLower().Contains(keyword.Trim().ToLower()))
@@ -489,19 +494,25 @@ namespace MES.Application.Queries
             }).ToListAsync();
 
             var index = 1;
+            //Gán STT
             foreach (var item in data)
             {
                 item.IndexKey = index;
                 index++;
             }
 
+            //Nếu không có chứng từ SAP và có search theo material
             if (!string.IsNullOrEmpty(command.MaterialFrom) && command.MaterialFrom == command.MaterialTo && data.Count == 0)
             {
                 data.Add(new GetInputDataResponse
                 {
+                    //Mã nhà máy
                     Plant = command.Plant,
+                    //Material
                     Material = long.Parse(command.MaterialFrom).ToString(),
+                    //Material desc
                     MaterialDesc = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).ProductName,
+                    //Đơn vị
                     Unit = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(command.MaterialFrom)).Unit
                 });
             }

@@ -68,8 +68,11 @@ namespace MES.Application.Commands.XKLXH
                                       Plant = x.PlantCode
                                   }).AsNoTracking();
 
+            //Tổng field lọc được
             int filterResultsCount = 0;
+            //Tổng số kết quả
             int totalResultsCount = 0;
+            //Tổng số trang
             int totalPagesCount = 0;
 
             var response = new ListWarehouseExportResponse();
@@ -90,8 +93,11 @@ namespace MES.Application.Commands.XKLXH
             }
 
             response.WarehouseExports = res;
+            //Tổng field lọc được
             response.PagingRep.FilterResultsCount = filterResultsCount;
+            //Tổng số kết quả
             response.PagingRep.TotalResultsCount = totalResultsCount;
+            //Tổng số trang
             response.PagingRep.TotalPagesCount = totalPagesCount;
 
             return Task.FromResult(response);

@@ -440,6 +440,7 @@ namespace MES.Application.Queries
                             RequirementUnit = res.BaseUnit
                         }).ToListAsync();
 
+            //Đánh số thứ tự
             var index = 1;
             foreach (var item in data)
             {
@@ -450,6 +451,13 @@ namespace MES.Application.Queries
             return data;
         }
 
+        /// <summary>
+        /// Lấy data theo component và component item khi chỉnh sửa
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="component"></param>
+        /// <param name="componentItem"></param>
+        /// <returns></returns>
         public async Task<List<GetDataByComponent>> GetListPOByComponent(string keyword, string component, string componentItem)
         {
             //Get query po
@@ -473,16 +481,27 @@ namespace MES.Application.Queries
                         from puchaseOrderItem in purchaseOrderItems.DefaultIfEmpty()
                         select new GetDataByComponent
                         {
+                            //Key
                             Key = puchaseOrderItem.PurchaseOrder.PurchaseOrderCode,
+                            //Value
                             Value = puchaseOrderItem.PurchaseOrder.PurchaseOrderCodeInt.ToString(),
+                            //Các thành phần nhảy tho
+                            //Item
                             PurchaseOrderItem = res.Item,
+                            //Material
                             Material = puchaseOrderItem.ProductCodeInt.ToString(),
                             MaterialDesc = materials.FirstOrDefault(m => m.ProductCode == puchaseOrderItem.ProductCode).ProductName,
+                            //OrderQuantity
                             OrderQuantity = puchaseOrderItem.OrderQuantity,
+                            //Order Unit
                             OrderUnit = puchaseOrderItem.Unit ?? "",
+                            //Requirement Quantity
                             RequirementQuantity = res.RequirementQty,
+                            //Requirement Unit
                             RequirementUnit = res.BaseUnit ?? "",
+                            //Vendor
                             Vendor = puchaseOrderItem.PurchaseOrder.VendorCode,
+                            //Vendor name
                             VendorName = !string.IsNullOrEmpty(puchaseOrderItem.PurchaseOrder.VendorCode) ?
                                         vendors.FirstOrDefault(x => x.VendorCode == puchaseOrderItem.PurchaseOrder.VendorCode).VendorName : ""
                         }).Where(x => !string.IsNullOrEmpty(keyword) ? x.Key.Contains(keyword) : true).OrderBy(x => x.Key).ToListAsync();

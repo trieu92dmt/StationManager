@@ -61,6 +61,8 @@ namespace IntegrationNS.Application.Commands.NKHTs
 
             if (request.IsCancel == true)
             {
+                //Get query chứng từ
+                var documentQuery = _obDetailRepo.GetQuery().AsNoTracking();
 
                 if (!request.NKHTs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu NKHT");
@@ -83,12 +85,12 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     nkht.LastEditTime = DateTime.Now;
 
                     //Tạo line mới
-                    //Clone class
-                    var serialized = JsonConvert.SerializeObject(nkht);
+                    //Clone class 
+                    var serialized = JsonConvert.SerializeObject(nkht);;
                     var nkhtNew = JsonConvert.DeserializeObject<GoodsReturnModel>(serialized);
 
                     //Chứng từ
-                    var document = await _obDetailRepo.FindOneAsync(x => x.DetailOutboundDeliveryId == nkht.DetailODId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailOutboundDeliveryId == nkht.DetailODId);
 
                     nkhtNew.GoodsReturnId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

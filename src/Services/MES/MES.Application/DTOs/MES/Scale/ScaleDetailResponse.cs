@@ -12,6 +12,10 @@ namespace MES.Application.DTOs.MES.Scale
         public Guid ScaleId { get; set; }
         //Nhà máy
         public string Plant { get; set; }
+        //Tên nhà máy
+        public string PlantName { get; set; }
+        //Nhà máy | Tên nhà máy
+        public string PlantFmt => !string.IsNullOrEmpty(Plant) && !string.IsNullOrEmpty(PlantName) ? $"{Plant} | {PlantName}" : "";
         //Mã đầu cân
         public string ScaleCode { get; set; }
         //Tên đầu cân

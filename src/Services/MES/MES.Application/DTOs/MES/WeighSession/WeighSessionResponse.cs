@@ -20,6 +20,8 @@ namespace MES.Application.DTOs.MES.WeighSession
         public string ScaleName { get; set; }
         //DateKey
         public string DateKey { get; set; }
+        //STT đợt cân
+        public int MyProperty { get; set; }
         //Thời gian bắt đầu
         public DateTime? StartTime { get; set; }
         //Thời gian kết thúc

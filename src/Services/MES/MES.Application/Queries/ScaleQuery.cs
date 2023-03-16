@@ -25,14 +25,19 @@ namespace MES.Application.Queries
     public class ScaleQuery : IScaleQuery
     {
         private readonly IRepository<ScaleModel> _scaleRepo;
+        private readonly IRepository<PlantModel> _plantRepo;
 
-        public ScaleQuery(IRepository<ScaleModel> scaleRepo)
+        public ScaleQuery(IRepository<ScaleModel> scaleRepo, IRepository<PlantModel> plantRepo)
         {
             _scaleRepo = scaleRepo;
+            _plantRepo = plantRepo;
         }
 
         public async Task<ScaleDetailResponse> GetScaleDetail(Guid scaleId)
         {
+            //Get query plant
+            var plantQuery = _plantRepo.GetQuery().AsNoTracking();
+
             //Check tồn tại cân
             var scale = await _scaleRepo.GetQuery().Include(x => x.Screen_Scale_MappingModel).ThenInclude(x => x.Screen).FirstOrDefaultAsync(s => s.ScaleId == scaleId);
 
@@ -45,6 +50,8 @@ namespace MES.Application.Queries
                 ScaleId = scale.ScaleId,
                 //Nhà máy
                 Plant = scale.Plant,
+                //Tên nhà máy
+                PlantName = plantQuery.FirstOrDefault(x => x.PlantCode == scale.Plant).PlantName,
                 //Mã cân
                 ScaleCode = scale.ScaleCode,
                 //Tên cân

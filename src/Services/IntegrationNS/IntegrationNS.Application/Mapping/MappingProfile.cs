@@ -6,7 +6,6 @@ namespace IntegrationNS.Application.Mapping
     {
         public MappingProfile()
         {
-            
         }
     }
 }

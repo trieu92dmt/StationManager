@@ -62,6 +62,9 @@ namespace IntegrationNS.Application.Commands.XKLXH
             if (request.IsCancel == true)
             {
 
+                //Get query chứng từ
+                var documentQuery = _obDetailRepo.GetQuery().AsNoTracking();
+
                 if (!request.XKLXHs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xuất kho theo lệnh xuất hàng");
 
@@ -86,7 +89,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     var xklxhNew = JsonConvert.DeserializeObject<ExportByCommandModel>(serialized);
 
                     //Chứng từ
-                    var document = await _obDetailRepo.FindOneAsync(x => x.DetailOutboundDeliveryId == xklxh.DetailODId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailOutboundDeliveryId == xklxh.DetailODId);
 
                     xklxhNew.ExportByCommandId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

@@ -63,6 +63,9 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
             if (request.IsCancel == true)
             {
 
+                //Get query chứng từ
+                var documentQuery = _obDetailRepo.GetQuery().AsNoTracking();
+
                 if (!request.NKDCNBs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu nhập kho điều chuyển nội bộ");
 
@@ -89,7 +92,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     var nkdcnbNew = JsonConvert.DeserializeObject<InhouseTransferModel>(serialized);
 
                     //Chứng từ
-                    var document = await _obDetailRepo.FindOneAsync(x => x.DetailOutboundDeliveryId == nkdcnb.DetailODId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailOutboundDeliveryId == nkdcnb.DetailODId);
 
                     nkdcnbNew.InhouseTransferId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

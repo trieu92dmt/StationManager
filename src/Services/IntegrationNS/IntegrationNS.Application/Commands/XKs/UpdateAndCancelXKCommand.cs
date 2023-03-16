@@ -60,6 +60,8 @@ namespace IntegrationNS.Application.Commands.XKs
 
             if (request.IsCancel == true)
             {
+                //Get query chứng từ
+                var documentQuery = _resRepo.GetQuery().AsNoTracking();
 
                 if (!request.XKs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xuất khác");
@@ -87,7 +89,7 @@ namespace IntegrationNS.Application.Commands.XKs
                     var xkNew = JsonConvert.DeserializeObject<OtherExportModel>(serialized);
 
                     //Chứng từ
-                    var document = await _resRepo.FindOneAsync(x => x.DetailReservationId == xk.DetailReservationId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailReservationId == xk.DetailReservationId);
 
                     xkNew.OtherExportId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

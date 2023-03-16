@@ -55,6 +55,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
 
             if (request.IsCancel == true)
             {
+                //Get query chứng từ
+                var documentQuery = _poDetailRepo.GetQuery().AsNoTracking();
+
                 if (!request.NKMHs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu NKMH");
 
@@ -81,7 +84,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     var nkmhNew = JsonConvert.DeserializeObject<GoodsReceiptModel>(serialized);
 
                     //Chứng từ
-                    var document = await _poDetailRepo.FindOneAsync(x => x.PurchaseOrderDetailId == nkmh.PurchaseOrderDetailId);
+                    var document = documentQuery.FirstOrDefault(x => x.PurchaseOrderDetailId == nkmh.PurchaseOrderDetailId);
 
                     //Khác id
                     nkmhNew.GoodsReceiptId = Guid.NewGuid();

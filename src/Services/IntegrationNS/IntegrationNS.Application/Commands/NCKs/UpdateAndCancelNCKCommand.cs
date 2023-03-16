@@ -66,6 +66,8 @@ namespace IntegrationNS.Application.Commands.NCKs
 
             if (request.IsCancel == true)
             {
+                //Get query chứng từ
+                var documentQuery = _matDocRepo.GetQuery().AsNoTracking();
 
                 if (!request.NCKs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu nhập chuyển kho");
@@ -93,7 +95,7 @@ namespace IntegrationNS.Application.Commands.NCKs
                     var nckNew = JsonConvert.DeserializeObject<WarehouseImportTransferModel>(serialized);
 
                     //Chứng từ
-                    var document = await _matDocRepo.FindOneAsync(x => x.MaterialDocId == nck.MaterialDocId);
+                    var document = documentQuery.FirstOrDefault(x => x.MaterialDocId == nck.MaterialDocId);
 
                     nckNew.WarehouseImportTransferId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

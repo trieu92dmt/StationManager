@@ -57,6 +57,9 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
 
             if (request.IsCancel == true)
             {
+                //Get query chứng từ
+                var documentQuery = _dtWoRepo.GetQuery().AsNoTracking();
+
 
                 if (!request.NKPPPPs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu NKPPPP");
@@ -84,7 +87,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     var nkppppNew = JsonConvert.DeserializeObject<ScrapFromProductionModel>(serialized);
 
                     //Chứng từ
-                    var document = await _dtWoRepo.FindOneAsync(x => x.DetailWorkOrderId == nkpppp.DetailWorkOrderId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailWorkOrderId == nkpppp.DetailWorkOrderId);
 
                     nkppppNew.ScFromProductiontId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

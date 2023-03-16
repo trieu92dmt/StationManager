@@ -57,6 +57,9 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
             if (request.IsCancel == true)
             {
 
+                //Get query chứng từ
+                var documentQuery = _dtWoRepo.GetQuery().AsNoTracking();
+
                 if (!request.XTHLSXs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xuất tiêu hao lệnh sản xuất");
 
@@ -83,7 +86,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     var xthlsxNew = JsonConvert.DeserializeObject<IssueForProductionModel>(serialized);
 
                     //Chứng từ
-                    var document = await _dtWoRepo.FindOneAsync(x => x.DetailWorkOrderId == xthlsx.DetailWorkOrderId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailWorkOrderId == xthlsx.DetailWorkOrderId);
 
                     xthlsxNew.IssForProductiontId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

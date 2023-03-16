@@ -61,6 +61,9 @@ namespace IntegrationNS.Application.Commands.XCKs
 
             if (request.IsCancel == true)
             {
+                //Get query chứng từ
+                var documentQuery = _dtResRepo.GetQuery().AsNoTracking();
+
 
                 if (!request.XCKs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xuất chuyển kho");
@@ -88,7 +91,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                     var xckNew = JsonConvert.DeserializeObject<WarehouseExportTransferModel>(serialized);
 
                     //Chứng từ
-                    var document = await _dtResRepo.FindOneAsync(x => x.DetailReservationId == xck.DetailReservationId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailReservationId == xck.DetailReservationId);
 
                     xckNew.WarehouseTransferId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

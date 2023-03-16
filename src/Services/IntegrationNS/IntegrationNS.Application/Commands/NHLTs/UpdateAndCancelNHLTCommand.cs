@@ -61,6 +61,8 @@ namespace IntegrationNS.Application.Commands.NHLTs
 
             if (request.IsCancel == true)
             {
+                //Get query chứng từ
+                var documentQuery = _obDetailRepo.GetQuery().AsNoTracking();
 
                 if (!request.NHLTs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu nhập hàng loại T");
@@ -88,7 +90,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     var nhltNew = JsonConvert.DeserializeObject<GoodsReceiptTypeTModel>(serialized);
 
                     //Chứng từ
-                    var document = await _obDetailRepo.FindOneAsync(x => x.DetailOutboundDeliveryId == nhlt.DetailODId);
+                    var document = documentQuery.FirstOrDefault(x => x.DetailOutboundDeliveryId == nhlt.DetailODId);
 
                     nhltNew.GoodsReceiptTypeTId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

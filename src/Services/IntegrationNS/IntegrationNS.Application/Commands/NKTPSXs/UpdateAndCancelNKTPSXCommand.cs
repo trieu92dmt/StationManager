@@ -64,6 +64,9 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
             if (request.IsCancel == true)
             {
 
+                //Get query chứng từ
+                var documentQuery = _woRepo.GetQuery().AsNoTracking();
+
                 if (!request.NKTPSXs.Any())
                     throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu NKTPSX");
 
@@ -89,7 +92,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     var nktpsxNew = JsonConvert.DeserializeObject<ReceiptFromProductionModel>(serialized);
 
                     //Chứng từ
-                    var document = await _woRepo.FindOneAsync(x => x.WorkOrderId == nktpsx.WorkOrderId);
+                    var document = documentQuery.FirstOrDefault(x => x.WorkOrderId == nktpsx.WorkOrderId);
 
                     nktpsxNew.RcFromProductiontId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc

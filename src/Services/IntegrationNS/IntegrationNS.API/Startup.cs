@@ -41,6 +41,7 @@ namespace IntegrationNS.API
             //MediatR
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
+            //Add auto mapper
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
 
             //Swagger Config

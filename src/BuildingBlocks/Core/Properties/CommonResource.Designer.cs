@@ -97,6 +97,15 @@ namespace Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không có dữ liệu &quot;{0}&quot; !.
+        /// </summary>
+        public static string Msg_NoData {
+            get {
+                return ResourceManager.GetString("Msg_NoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;{0}&quot; không tồn tại !.
         /// </summary>
         public static string Msg_NotFound {

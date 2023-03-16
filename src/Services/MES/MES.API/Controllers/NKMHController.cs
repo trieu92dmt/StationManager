@@ -264,13 +264,13 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetWeighNum(weightHeadCode);
 
-            //if (response.isSuccess == false)
-            //    return Ok(new ApiSuccessResponse<GetWeighNumResponse>
-            //    {
-            //        Data = response,
-            //        IsSuccess = false,
-            //        Message = string.Format("Lấy số cân thất bại")
-            //    });
+            if (response.isSuccess == false)
+                return Ok(new ApiSuccessResponse<GetWeighNumResponse>
+                {
+                    Data = response,
+                    IsSuccess = false,
+                    Message = string.Format(CommonResource.Msg_NoData, "cân")
+                });
 
             return Ok(new ApiSuccessResponse<GetWeighNumResponse>
             {

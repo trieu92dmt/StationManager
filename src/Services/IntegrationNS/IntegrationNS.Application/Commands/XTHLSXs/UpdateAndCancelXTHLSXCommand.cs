@@ -1,4 +1,5 @@
-﻿using Core.Exceptions;
+﻿using AutoMapper;
+using Core.Exceptions;
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;

@@ -39,7 +39,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
         private readonly IRepository<DetailReservationModel> _dtResRepo;
         private readonly IRepository<AccountModel> _userRepo;
-
+        
         public UpdateAndCancelXNVLGCCommandHandler(IRepository<ComponentExportModel> xnvlgcRep, IUnitOfWork unitOfWork,
                                                  IRepository<DetailOutboundDeliveryModel> obDetailRepo, IRepository<DetailReservationModel> dtResRepo, 
                                                  IRepository<AccountModel> userRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo)
@@ -117,6 +117,8 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     xnvlgcNew.ReverseDocument = null;
 
                     _xnvlgcRep.Add(xnvlgcNew);
+
+                   
                 }
             }
             else

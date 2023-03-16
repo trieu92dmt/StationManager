@@ -26,7 +26,7 @@ namespace MES.API.Controllers
         /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <returns></returns>
         [HttpGet("list-dropdown-plant")]
-        public async Task<IActionResult> GetListProduct(string keyword)
+        public async Task<IActionResult> GetDropdownPlant(string keyword)
         {
             var dropdownList = await _commonQuery.GetDropdownPlant(keyword);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách plant") });
@@ -407,7 +407,11 @@ namespace MES.API.Controllers
         /// <summary>
         /// Dropdown OrderType
         /// </summary>
-        /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
+        /// <param name="plant">Nhà máy</param>
+        /// <param name="keyword">Từ khóa</param>
+        /// <param name="type">Tên màn hình</param>
+        /// <param name="poFrom">PurchaseOrder</param>
+        /// <param name="poTo">PurchaseOrder</param>
         /// <returns></returns>
         [HttpGet("list-order-type")]
         public async Task<IActionResult> GetOrderTypeAsync([Required]string plant, string keyword, string type, string poFrom, string poTo)

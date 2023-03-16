@@ -223,7 +223,7 @@ namespace MES.Application.Queries
 
             #region Get dữ liệu
             //Data NKMH
-            var dataNKMH = queryNKMH.OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
+            var dataNKMH = queryNKMH.OrderByDescending(x => x.WeitghtVote).OrderByDescending(x => x.CreateTime).Select(x => new ListNKMHResponse
             {
                 //Id
                 NkmhId = x.GoodsReceiptId,

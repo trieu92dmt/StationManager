@@ -1451,7 +1451,7 @@ namespace MES.Application.Queries
                                                                                       x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
                                             //Theo Material
                                             (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
-                                                                                   x.ProductCodeInt <= long.Parse(shipToPartyTo) : true) &&
+                                                                                   x.ProductCodeInt <= long.Parse(materialTo) : true) &&
                                             //Điều kiện riêng của màn hình xklxh
                                             (x.OutboundDelivery.GoodsMovementSts != "C"))
                                  .OrderBy(x => x.OutboundDelivery.DeliveryCode)

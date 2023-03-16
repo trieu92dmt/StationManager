@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using IntegrationNS.API.Extensions;
+using IntegrationNS.Application.Mapping;
 
 namespace IntegrationNS.API
 {
@@ -39,6 +40,8 @@ namespace IntegrationNS.API
 
             //MediatR
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+
+            services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
 
             //Swagger Config
             SwaggerConfig.Configure(services, Configuration);

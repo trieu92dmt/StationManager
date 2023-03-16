@@ -268,7 +268,7 @@ namespace MES.API.Controllers
                 return Ok(new ApiSuccessResponse<GetWeighNumResponse>
                 {
                     Data = response,
-                    IsSuccess = true,
+                    IsSuccess = false,
                     Message = string.Format(CommonResource.Msg_NoData, "cân")
                 });
 

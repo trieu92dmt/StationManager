@@ -219,6 +219,8 @@ namespace MES.Application.Commands.NKDCNB
                         QuantityWithPackaging = item.QuantityWithPackage,
                         //Số phương tiện
                         VehicleCode = item.VehicleCode,
+                        //Đơn vị vận chuyển
+                        TransportUnit = detailOD != null ? detailOD.OutboundDelivery.TransportUnit : "",
                         //Số lần cân
                         QuantityWeitght = item.QuantityWeight,
                         //UOM
@@ -262,6 +264,8 @@ namespace MES.Application.Commands.NKDCNB
                     nkdcnb.QuantityWithPackaging = item.QuantityWithPackage;
                     //Số phương tiện
                     nkdcnb.VehicleCode = item.VehicleCode;
+                    //Đơn vị vận chuyển
+                    nkdcnb.TransportUnit = detailOD != null ? detailOD.OutboundDelivery.TransportUnit : "";
                     //Số cân đầu ra
                     nkdcnb.OutputWeight = item.OutputWeight;
                     //Ghi chú

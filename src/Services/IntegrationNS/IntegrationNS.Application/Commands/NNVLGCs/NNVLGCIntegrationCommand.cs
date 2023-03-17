@@ -164,6 +164,8 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                 QuantityWithPackage = x.QuantityWithPackaging ?? 0,
                 //Số phương tiện
                 VehicleCode = x.VehicleCode ?? "",
+                //Đơn vị vận chuyển
+                TransportUnit = x.TransportUnit ?? "",
                 //Số lần cân
                 QuantityWeight = x.QuantityWeight ?? 0,
                 //VendorName

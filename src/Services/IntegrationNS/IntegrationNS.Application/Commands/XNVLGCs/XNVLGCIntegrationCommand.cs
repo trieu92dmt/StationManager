@@ -235,7 +235,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                 //Số phương tiện
                 VehicleCode = x.VehicleCode ?? "",
                 //Đơn vị vận chuyển
-                TransportUnit = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.TransportUnit : "",
+                TransportUnit = x.TransportUnit ?? "",
                 //Số lần cân
                 QuantityWeight = x.QuantityWeight ?? 0,
                 //Order quantity

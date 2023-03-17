@@ -222,6 +222,8 @@ namespace MES.Application.Commands.MES
                         ConfirmQty = item.ConfirmQty,
                         QuantityWithPackaging = item.QuantityWithPackaging,
                         VehicleCode = item.VehicleCode,
+                        //Đơn vị vận chuyển
+                        TransportUnit = !string.IsNullOrEmpty(item.PurchaseOrderCode) ? detailPO.TransportUnit : null,
                         QuantityWeitght = item.QuantityWeight,
                         TruckInfoId = item.TruckInfoId.HasValue ? item.TruckInfoId : null,
                         TruckQuantity = item.TruckQty,
@@ -260,6 +262,8 @@ namespace MES.Application.Commands.MES
                     nkmh.QuantityWithPackaging = item.QuantityWithPackaging;
                     //Số phương tiện
                     nkmh.VehicleCode = item.VehicleCode;
+                    //Đơn vị vận chuyển
+                    nkmh.TransportUnit = !string.IsNullOrEmpty(item.PurchaseOrderCode) ? detailPO.TransportUnit : null;
                     //Số cân đầu rea
                     nkmh.OutputWeight = item.OutputWeight;
                     //Id cân xe tải

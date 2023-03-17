@@ -244,6 +244,8 @@ namespace MES.Application.Commands.NKDCNB
                     QuantityWithPackaging = item.QuantityWithPackage,
                     //VehicleCode
                     VehicleCode = item.VehicleCode,
+                    //Đơn vị vận chuyển
+                    TransportUnit = detailOd != null ? detailOd.OutboundDelivery.TransportUnit : "",
                     //Số lần cân
                     QuantityWeitght = item.QuantityWeight,
                     //UOM

@@ -228,6 +228,9 @@ namespace MES.Application.Commands.XKLXH
                     MaterialCodeInt = !string.IsNullOrEmpty(item.Material) ? long.Parse(item.Material) : null,
                     //Số phương tiện
                     VehicleCode = item.VehicleCode,
+                    //Đơn vị vận chuyển
+                    TransportUnit = !string.IsNullOrEmpty(item.OutboundDelivery) ?
+                                 detailOb.OutboundDelivery.TransportUnit : "",
                     //UOM
                     UOM = item.Unit,
                     //Sloc

@@ -255,7 +255,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                 //Số phương tiện
                 VehicleCode = x.VehicleCode ?? "",
                 //Đơn vị vận chuyển
-                TransportUnit = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.TransportUnit : "",
+                TransportUnit = x.TransportUnit ?? "",
                 //Số lần cân
                 QtyWeight = x.QuantityWeitght ?? 0,
                 //Total quantity

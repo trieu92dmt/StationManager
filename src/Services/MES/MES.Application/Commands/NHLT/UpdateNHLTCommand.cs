@@ -209,6 +209,8 @@ namespace MES.Application.Commands.NHLT
                         QuantityWithPackaging = item.QuantityWithPackage,
                         //Số phương tiện
                         VehicleCode = item.VehicleCode,
+                        //Đơn vị vận chuyển
+                        TransportUnit = odDetail != null ? odDetail.OutboundDelivery.TransportUnit : "",
                         //Số lần cân
                         QuantityWeight = item.QuantityWeight,
                         Description = item.Description,
@@ -241,6 +243,8 @@ namespace MES.Application.Commands.NHLT
                     nhlt.SlocName = !string.IsNullOrEmpty(item.Sloc) ? slocs.FirstOrDefault(x => x.StorageLocationCode == item.Sloc).StorageLocationName : "";
                     //Số phương tiện
                     nhlt.VehicleCode = item.VehicleCode;
+                    //Đơn vị vận chuyển
+                    nhlt.TransportUnit = odDetail != null ? odDetail.OutboundDelivery.TransportUnit : "";
                     //Batch
                     nhlt.Batch = item.Batch;
                     //Số cân đầu ra

@@ -228,6 +228,8 @@ namespace MES.Application.Commands.XKLXH
                         QuantityWithPackaging = item.QuantityWithPackage,
                         //Số phương tiện
                         VehicleCode = item.VehicleCode,
+                        //Đơn vị vận chuyển
+                        TransportUnit = !string.IsNullOrEmpty(item.OutboundDelivery) ? detailOD.OutboundDelivery.TransportUnit : "",
                         //Image
                         Image = string.IsNullOrEmpty(imgPath) ? null : Path.Combine(new ConfigManager().DocumentDomainUpload + imgPath),
                         //Số lần cân
@@ -272,6 +274,8 @@ namespace MES.Application.Commands.XKLXH
                     xklxh.QuantityWithPackaging = item.QuantityWithPackage;
                     //Số phương tiện
                     xklxh.VehicleCode = item.VehicleCode;
+                    //Đơn vị vận chuyển
+                    xklxh.TransportUnit = !string.IsNullOrEmpty(item.OutboundDelivery) ? detailOD.OutboundDelivery.TransportUnit : "";
                     //Số cân đầu rea
                     xklxh.OutputWeight = item.OutputWeight;
                     //Trọng lượng hàng hóa

@@ -249,7 +249,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Số phương tiện
                                 VehicleCode = x.VehicleCode,
                                 //Đơn vị vận tải
-                                TransportUnit = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.TransportUnit : "",
+                                TransportUnit = x.TransportUnit ?? "",
                                 //Số lượng đặt hàng
                                 OrderQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail?.OrderQuantity,
                                 OpenQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.OpenQuantity : x.PurchaseOrderDetail?.OpenQuantity,

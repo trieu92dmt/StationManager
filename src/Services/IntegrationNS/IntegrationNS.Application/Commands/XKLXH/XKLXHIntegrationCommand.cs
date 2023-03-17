@@ -249,7 +249,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 //Số phương tiện
                 VehicleCode = x.VehicleCode ?? "",
                 //Đơn vị vận tải
-                TransportUnit = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.TransportUnit : "",
+                TransportUnit = x.TransportUnit ?? "",
                 //Số lần cân
                 QuantityWeight = x.QuantityWeight ?? 0,
                 //Total quantity

@@ -61,6 +61,8 @@ namespace Infrastructure.Models
         public decimal? SingleWeight { get; set; }
         [StringLength(50)]
         public string VehicleCode { get; set; }
+        [StringLength(50)]
+        public string TransportUnit { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? InputWeight { get; set; }
         [Column(TypeName = "decimal(18, 3)")]

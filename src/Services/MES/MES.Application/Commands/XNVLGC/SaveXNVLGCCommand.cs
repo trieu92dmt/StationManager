@@ -277,6 +277,8 @@ namespace MES.Application.Commands.XNVLGC
                     QuantityWeight = item.QuantityWeight,
                     //21  Số phương tiện - ZSOPT
                     VehicleCode = item.VehicleCode,
+                    //Đơn vị vận chuyển
+                    TransportUnit = detailPo != null ? detailPo.TransportUnit : "",
                     //Vendor name
                     VendorCode = item.VendorCode,
                     VendorName = !string.IsNullOrEmpty(item.VendorCode) ? vendors.FirstOrDefault(x => x.VendorCode == item.VendorCode).VendorName : null,

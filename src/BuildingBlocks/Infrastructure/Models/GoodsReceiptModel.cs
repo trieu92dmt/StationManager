@@ -45,6 +45,8 @@ namespace Infrastructure.Models
         public decimal? QuantityWithPackaging { get; set; }
         [StringLength(50)]
         public string VehicleCode { get; set; }
+        [StringLength(50)]
+        public string TransportUnit { get; set; }
         public int? QuantityWeitght { get; set; }
         public Guid? TruckInfoId { get; set; }
         [StringLength(50)]

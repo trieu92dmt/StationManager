@@ -264,6 +264,8 @@ namespace MES.Application.Commands.MES
                         QuantityWithPackaging = x.QuantityWithPackaging,
                         //Số phương tiện
                         VehicleCode = x.VehicleCode,
+                        //Đơn vị vận chuyển
+                        TransportUnit = poLine?.TransportUnit,
                         //Id cân xe tải
                         TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,
                         //Số cân đầu vào

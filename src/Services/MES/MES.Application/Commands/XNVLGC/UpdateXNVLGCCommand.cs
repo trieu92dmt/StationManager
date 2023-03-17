@@ -240,6 +240,8 @@ namespace MES.Application.Commands.XNVLGC
                         RequirementUnit = item.RequirementUnit,
                         //Vehicle
                         VehicleCode = item.VehicleCode,
+                        //Đơn vị vận chuyển
+                        TransportUnit = po != null ? po.TransportUnit : "",
                         //Số cân đầu ra
                         OutputWeight = item.OutputWeight,
                         Description = item.Description,
@@ -285,6 +287,8 @@ namespace MES.Application.Commands.XNVLGC
                     xnvlgc.QuantityWithPackaging = item.QuantityWithPackage;
                     //Số phương tiện
                     xnvlgc.VehicleCode = item.VehicleCode;
+                    //Đơn vị vận chuyển
+                    xnvlgc.TransportUnit = po != null ? po.TransportUnit : "";
                     //Số cân đầu ra
                     xnvlgc.OutputWeight = item.OutputWeight;
                     //Ghi chú

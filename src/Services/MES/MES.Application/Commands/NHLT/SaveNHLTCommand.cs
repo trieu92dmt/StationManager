@@ -265,6 +265,8 @@ namespace MES.Application.Commands.NHLT
                     OutputWeight = item.OutputWeight,
                     //Số phương tiện
                     VehicleCode = item.VehicleCode,
+                    //Đơn vị vận chuyển
+                    TransportUnit = detailOd != null ? detailOd.OutboundDelivery.TransportUnit : null,
                     //21  SlocCode
                     SlocCode = item.Sloc,
                     //Số xe tải

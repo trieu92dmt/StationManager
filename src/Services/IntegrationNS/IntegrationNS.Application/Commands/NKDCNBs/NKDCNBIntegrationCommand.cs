@@ -254,6 +254,8 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                 QtyWithPackage = x.QuantityWithPackaging ?? 0,
                 //Số phương tiện
                 VehicleCode = x.VehicleCode ?? "",
+                //Đơn vị vận chuyển
+                TransportUnit = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.TransportUnit : "",
                 //Số lần cân
                 QtyWeight = x.QuantityWeitght ?? 0,
                 //Total quantity

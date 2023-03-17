@@ -1040,8 +1040,8 @@ namespace MES.Application.Queries
                                                              (!string.IsNullOrEmpty(poType) ? x.PurchaseOrder.POType == poType : true) &&         //Theo potype
                                                              (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 &&        //Theo vendor
                                                                                                   x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
-                                                             (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
-                                                                                                    x.ProductCodeInt <= long.Parse(materialTo) : true) && //Theo material
+                                                             //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                                    //x.ProductCodeInt <= long.Parse(materialTo) : true) && //Theo material
                                                              (x.PurchaseOrder.ReleaseIndicator == "R") &&
                                                              (x.DeletionInd != "L") &&
                                                              (x.DeliveryCompleted != "X"))
@@ -1410,8 +1410,8 @@ namespace MES.Application.Queries
                                                    (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&      
                                                                                              x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
                                                    //Theo material
-                                                   (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
-                                                                                          x.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                                   //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                          //x.ProductCodeInt <= long.Parse(materialTo) : true) &&
                                                    //Theo delivery type
                                                    (NKHTdeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
                                                    //Loại các line đã hoàn tất giao dịch
@@ -1450,8 +1450,8 @@ namespace MES.Application.Queries
                                             (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
                                                                                       x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
                                             //Theo Material
-                                            (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
-                                                                                   x.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                            //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                   //x.ProductCodeInt <= long.Parse(materialTo) : true) &&
                                             //Điều kiện riêng của màn hình xklxh
                                             (x.OutboundDelivery.GoodsMovementSts != "C"))
                                  .OrderBy(x => x.OutboundDelivery.DeliveryCode)
@@ -1661,6 +1661,7 @@ namespace MES.Application.Queries
                                                     }).AsNoTracking().ToListAsync();
                 return response.DistinctBy(x => x.Key).Take(10).ToList();
             }    
+
 
             response = await _obDeliveryRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.ShiptoParty.Trim().ToLower().Contains(keyword.Trim().ToLower()) ||
                                                                                                 x.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower()))
@@ -1895,8 +1896,8 @@ namespace MES.Application.Queries
                                                            //Theo keyword
                                                            (!string.IsNullOrEmpty(keyword) ? x.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
                                                            //Theo material
-                                                           (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
-                                                                                                  x.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                                           //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                                  //x.ProductCodeInt <= long.Parse(materialTo) : true) &&
                                                            //Theo sales order
                                                            (!string.IsNullOrEmpty(soFrom) ? x.SalesOrder.CompareTo(soFrom) >= 0 &&
                                                                                             x.SalesOrder.CompareTo(soTo) <= 0 : true)

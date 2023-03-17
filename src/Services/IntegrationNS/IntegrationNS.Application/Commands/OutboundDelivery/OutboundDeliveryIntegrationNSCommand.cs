@@ -23,6 +23,7 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
         public string DeliveryType { get; set; }    //Delivery Type
         public string DeliveryTypeDescription { get; set; }    //Delivery Type Description
         public string VehicleCode { get; set; }    //Số phương tiện
+        public string TransportUnit { get; set; }   //Đơn vị vận tải
         public DateTime? DeliveryDate { get; set; }    //Delivery Date
         public DateTime? PickingDate { get; set; }    //PickingDate
         public string ShiptoParty { get; set; }    //Ship-to Party
@@ -151,7 +152,10 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                         delivery.SaleOrgCode = outboundDelivery.SaleOrgCode;
                         delivery.DeliveryType = outboundDelivery.DeliveryType;
                         delivery.DeliveryTypeDescription = outboundDelivery.DeliveryTypeDescription;
+                        //Số phương  tiện
                         delivery.VehicleCode = outboundDelivery.VehicleCode;
+                        //Đơn vị vận tải
+                        delivery.TransportUnit = outboundDelivery.TransportUnit;
                         delivery.DeliveryDate = outboundDelivery.DeliveryDate;
                         delivery.PickingDate = outboundDelivery.PickingDate;
                         delivery.ShiptoParty = outboundDelivery.ShiptoParty;
@@ -255,7 +259,10 @@ namespace IntegrationNS.Application.Commands.OutboundDelivery
                         delivery.SaleOrgCode = outboundDelivery.SaleOrgCode;
                         delivery.DeliveryType = outboundDelivery.DeliveryType;
                         delivery.DeliveryTypeDescription = outboundDelivery.DeliveryTypeDescription;
+                        //Số phương tiện
                         delivery.VehicleCode = outboundDelivery.VehicleCode;
+                        //Đơn vị vận tải
+                        delivery.TransportUnit = outboundDelivery.TransportUnit;
                         delivery.DeliveryDate = outboundDelivery.DeliveryDate;
                         delivery.PickingDate = outboundDelivery.PickingDate;
                         delivery.ShiptoParty = outboundDelivery.ShiptoParty;

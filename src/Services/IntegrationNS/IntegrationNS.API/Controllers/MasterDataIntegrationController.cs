@@ -1394,44 +1394,45 @@ namespace IntegrationNS.API.Controllers
         ///             {
         ///               "outboundDeliveries": [
         ///                 {
-        ///                   "deliveryCode": "string",
-        ///                   "shippingPoint": "string",
-        ///                   "saleOrgCode": "string",
-        ///                   "deliveryType": "string",
-        ///                   "deliveryTypeDescription": "string",
-        ///                   "vehicleCode": "string",
-        ///                   "deliveryDate": "2023-01-30T13:55:05.799Z",
-        ///                   "pickingDate": "2023-01-30T13:55:05.799Z",
-        ///                   "shiptoParty": "string",
-        ///                   "shiptoPartyName": "string",
-        ///                   "soldtoParty": "string",
-        ///                   "soldtoPartyName": "string",
-        ///                   "purchasingDocType": "string",
-        ///                   "salesDocumentType": "string",
-        ///                   "distribChannelCode": "string",
-        ///                   "divisionCode": "string",
-        ///                   "supplierCode": "string",
-        ///                   "supplierName": "string",
-        ///                   "documentDate": "2023-01-30T13:55:05.799Z",
-        ///                   "actGdsMvmntDate": "2023-01-30T13:55:05.799Z",
-        ///                   "order": "string",
-        ///                   "receivingPlant": "string",
-        ///                   "reference": "string",
-        ///                   "transactionCode": "string",
-        ///                   "storageLocChange": "string",
-        ///                   "overallStatus": "string",
-        ///                   "pickConfirmation": "string",
-        ///                   "pickingStatus": "string",
-        ///                   "overallBlockStatus": "string",
-        ///                   "overallHeader": "string",
-        ///                   "allItems": "string",
-        ///                   "pickingPutawayHeader": "string",
-        ///                   "pickingPtwyAllItems": "string",
-        ///                   "deliveryHeader": "string",
-        ///                   "deliveryAllItems": "string",
-        ///                   "goodsMvtHeader": "string",
-        ///                   "goodsMvtAllItems": "string",
-        ///                   "goodsMovementSts": "string",
+        ///                   "deliveryCode": "string",                             ---Mã Delivery
+        ///                   "shippingPoint": "string",                            ---Shipping Point
+        ///                   "saleOrgCode": "string",                              ---Sales Organization
+        ///                   "deliveryType": "string",                             ---Delivery Type
+        ///                   "deliveryTypeDescription": "string",                  ---Delivery Type Description    
+        ///                   "vehicleCode": "string",                              ---Số phương tiện
+        ///                   "transportUnit": "string",                            ---Đơn vị vận tải
+        ///                   "deliveryDate": "2023-01-30T13:55:05.799Z",           ---Delivery Date
+        ///                   "pickingDate": "2023-01-30T13:55:05.799Z",            ---PickingDate
+        ///                   "shiptoParty": "string",                              ---Ship-to Party
+        ///                   "shiptoPartyName": "string",                          ---Ship-to Party Name
+        ///                   "soldtoParty": "string",                              ---Sold-to Party
+        ///                   "soldtoPartyName": "string",                          ---Sold-to Party Name
+        ///                   "purchasingDocType": "string",                        ---Purchasing Doc. Type
+        ///                   "salesDocumentType": "string",                        ---Sales Document Type  
+        ///                   "distribChannelCode": "string",                       ---Distrib Channel
+        ///                   "divisionCode": "string",                             ---Division
+        ///                   "supplierCode": "string",                             ---Supplier
+        ///                   "supplierName": "string",                             ---Supplier Name
+        ///                   "documentDate": "2023-01-30T13:55:05.799Z",           ---Document Date
+        ///                   "actGdsMvmntDate": "2023-01-30T13:55:05.799Z",        ---Act. Gds Mvmnt Date
+        ///                   "order": "string",                                    ---Order
+        ///                   "receivingPlant": "string",                           ---Receiving Plant (plant)
+        ///                   "reference": "string",                                ---Reference
+        ///                   "transactionCode": "string",                          ---Transaction Code
+        ///                   "storageLocChange": "string",                         ---Storage Loc. Change
+        ///                   "overallStatus": "string",                            ---Overall Status
+        ///                   "pickConfirmation": "string",                         ---Pick Confirmation
+        ///                   "pickingStatus": "string",                            ---Picking Status
+        ///                   "overallBlockStatus": "string",                       ---Overall Block Status
+        ///                   "overallHeader": "string",                            ---Overall Header
+        ///                   "allItems": "string",                                 ---All Items
+        ///                   "pickingPutawayHeader": "string",                     ---Picking/Putaway – Header
+        ///                   "pickingPtwyAllItems": "string",                      ---Picking/Ptwy – All Items
+        ///                   "deliveryHeader": "string",                           ---Delivery – Header
+        ///                   "deliveryAllItems": "string",                         ---Delivery – All Items
+        ///                   "goodsMvtHeader": "string",                           ---Goods Mvt – Header
+        ///                   "goodsMvtAllItems": "string",                         ---Goods Mvt – All Items
+        ///                   "goodsMovementSts": "string",                         ---Goods Movement Sts
         ///                   "outboundDeliveryDetails": [
         ///                     {
         ///                       "outboundDeliveryItem": "string",

@@ -31,6 +31,8 @@ namespace Infrastructure.Models
         public string DeliveryTypeDescription { get; set; }
         [StringLength(50)]
         public string VehicleCode { get; set; }
+        [StringLength(50)]
+        public string TransportUnit { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? DeliveryDate { get; set; }
         [Column(TypeName = "datetime")]

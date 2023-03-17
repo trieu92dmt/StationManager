@@ -45,6 +45,8 @@ namespace IntegrationNS.Application.DTOs
         public decimal? QuantityWithPackage { get; set; }
         //Số phương tiện
         public string VehicleCode { get; set; }
+        //Đơn vị vận chuyển
+        public string TransportUnit { get; set; }
         //Số lần cân
         public int? QuantityWeight { get; set; }
         //Order quantity

@@ -19,6 +19,8 @@
         public string StorageLocation { get; set; }
         public string Batch { get; set; }
         public string VehicleCode { get; set; }
+        //Đơn vị vận tải
+        public string TransportUnit { get; set; }
         public decimal? OrderQuantity { get; set; }
         public decimal? OpenQuantity { get; set; }
         //NKMH

@@ -1891,7 +1891,7 @@ namespace MES.Application.Queries
                                                            //Điều kiện riêng từng màn hình
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
                                                            (!x.SystemStatus.StartsWith("TECO")) &&
-                                                           (x.DeletionFlag == null || x.DeletionFlag != "X") &&
+                                                           (x.DeletionFlag != "X") &&
                                                            //Theo order type
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
                                                            //Theo keyword

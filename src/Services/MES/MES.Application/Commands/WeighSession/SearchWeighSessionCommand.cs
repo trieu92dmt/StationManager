@@ -23,21 +23,6 @@ namespace MES.Application.Commands.WeighSession
 
     public class SearchWeighSessionCommandHandler : IRequestHandler<SearchWeighSessionCommand, List<WeighSessionResponse>>
     {
-        //Nhập kho mua hàng
-        private readonly IRepository<GoodsReceiptModel> _nkmhRepo;
-        //Nhập kho hàng trả
-        //Xuất kho theo lệnh xuất hàng
-        //Nhập kho thành phẩm sản xuất
-        //Nhập kho phụ phẩm phế phẩm
-        //Xuất tiêu hao theo lệnh sản xuất
-        //Xuất nguyên vật liệu gia công
-        //Nhập nguyên vật liệu gia công thừa
-        //Nhập hàng loại T
-        //Nhập chuyển kho
-        //Xuất chuyển kho
-        //Nhập kho điều chuyển nội bộ
-        //Nhập khác
-        //Xuất khác
         public SearchWeighSessionCommandHandler()
         {
         }

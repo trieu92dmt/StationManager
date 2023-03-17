@@ -11,7 +11,7 @@ namespace MES.Application.Commands.NKDCNB
         //Plant
         public string Plant { get; set; }
         //Shipping Point
-        public string ShippingPoint { get; set; }
+        //public string ShippingPoint { get; set; }
         //Purchase Order
         public string PurchaseOrderFrom { get; set; }
         public string PurchaseOrderTo { get; set; }
@@ -21,6 +21,7 @@ namespace MES.Application.Commands.NKDCNB
         //Material
         public string MaterialFrom { get; set; }
         public string MaterialTo { get; set; }
+          
         //Document Date
         public DateTime? DocumentDateFrom { get; set; }
         public DateTime? DocumentDateTo { get; set; }

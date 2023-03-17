@@ -182,10 +182,10 @@ namespace MES.Application.Queries
             }
 
             //Theo shipping point
-            if (!string.IsNullOrEmpty(command.ShippingPoint))
-            {
-                query = query.Where(x => x.OutboundDelivery.ShippingPoint == command.ShippingPoint);
-            }
+            //if (!string.IsNullOrEmpty(command.ShippingPoint))
+            //{
+            //    query = query.Where(x => x.OutboundDelivery.ShippingPoint == command.ShippingPoint);
+            //}
 
             //Theo Material
             if (!string.IsNullOrEmpty(command.MaterialFrom))
@@ -353,10 +353,10 @@ namespace MES.Application.Queries
             }
 
             //Theo shipping point
-            if (!string.IsNullOrEmpty(command.ShippingPoint))
-            {
-                query = query.Where(x => x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShippingPoint == command.ShippingPoint : false);
-            }
+            //if (!string.IsNullOrEmpty(command.ShippingPoint))
+            //{
+            //    query = query.Where(x => x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShippingPoint == command.ShippingPoint : false);
+            //}
 
             //Theo Material
             if (!string.IsNullOrEmpty(command.MaterialFrom))

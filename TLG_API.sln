@@ -52,11 +52,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationNS.Application",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{5196D45B-6AA9-4CC4-AC21-336C167C3F55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\BuildingBlocks\Core\Core.csproj", "{1B9C4458-7740-4B65-9109-B9E608614B0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\BuildingBlocks\Core\Core.csproj", "{1B9C4458-7740-4B65-9109-B9E608614B0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\BuildingBlocks\Infrastructure\Infrastructure.csproj", "{B8E3E838-F238-4BDA-930F-26F9B5422A88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\BuildingBlocks\Infrastructure\Infrastructure.csproj", "{B8E3E838-F238-4BDA-930F-26F9B5422A88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Logging", "src\BuildingBlocks\Common.Logging\Common.Logging.csproj", "{788173AF-9E6F-4BA4-91A9-28A8A440E182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Logging", "src\BuildingBlocks\Common.Logging\Common.Logging.csproj", "{788173AF-9E6F-4BA4-91A9-28A8A440E182}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WeighSession", "WeighSession", "{0FBAD646-615C-45B5-948D-BBC1677799B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeighSession.API", "src\Services\WeighSession\WeighSession.API\WeighSession.API.csproj", "{7EA28214-DE39-4498-BED0-44E08BA7E90B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeighSession.Infrastructure", "src\Services\WeighSession\WeighSession.Infrastructure\WeighSession.Infrastructure.csproj", "{B44C0394-12D7-4D25-9437-17F32D2B12E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeighSession.Application", "src\Services\WeighSession\WeighSession.Application\WeighSession.Application.csproj", "{4868FC4A-4C46-4331-A9F8-15ACB1EE1EE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +116,18 @@ Global
 		{788173AF-9E6F-4BA4-91A9-28A8A440E182}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{788173AF-9E6F-4BA4-91A9-28A8A440E182}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{788173AF-9E6F-4BA4-91A9-28A8A440E182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EA28214-DE39-4498-BED0-44E08BA7E90B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EA28214-DE39-4498-BED0-44E08BA7E90B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EA28214-DE39-4498-BED0-44E08BA7E90B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EA28214-DE39-4498-BED0-44E08BA7E90B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B44C0394-12D7-4D25-9437-17F32D2B12E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B44C0394-12D7-4D25-9437-17F32D2B12E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B44C0394-12D7-4D25-9437-17F32D2B12E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B44C0394-12D7-4D25-9437-17F32D2B12E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4868FC4A-4C46-4331-A9F8-15ACB1EE1EE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4868FC4A-4C46-4331-A9F8-15ACB1EE1EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4868FC4A-4C46-4331-A9F8-15ACB1EE1EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4868FC4A-4C46-4331-A9F8-15ACB1EE1EE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,6 +157,10 @@ Global
 		{1B9C4458-7740-4B65-9109-B9E608614B0F} = {5196D45B-6AA9-4CC4-AC21-336C167C3F55}
 		{B8E3E838-F238-4BDA-930F-26F9B5422A88} = {5196D45B-6AA9-4CC4-AC21-336C167C3F55}
 		{788173AF-9E6F-4BA4-91A9-28A8A440E182} = {5196D45B-6AA9-4CC4-AC21-336C167C3F55}
+		{0FBAD646-615C-45B5-948D-BBC1677799B3} = {B6018DB4-5C5C-4B8E-B6DF-7FFEB8DAF19F}
+		{7EA28214-DE39-4498-BED0-44E08BA7E90B} = {0FBAD646-615C-45B5-948D-BBC1677799B3}
+		{B44C0394-12D7-4D25-9437-17F32D2B12E6} = {0FBAD646-615C-45B5-948D-BBC1677799B3}
+		{4868FC4A-4C46-4331-A9F8-15ACB1EE1EE5} = {0FBAD646-615C-45B5-948D-BBC1677799B3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD436992-6C52-4C3B-8DDA-98E985E5CB15}

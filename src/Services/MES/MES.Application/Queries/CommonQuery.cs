@@ -4,6 +4,7 @@ using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using System.Security.Cryptography.Xml;
 
 namespace MES.Application.Queries
 {
@@ -1890,7 +1891,7 @@ namespace MES.Application.Queries
                                                            //Điều kiện riêng từng màn hình
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
                                                            (!x.SystemStatus.StartsWith("TECO")) &&
-                                                           (x.DeletionFlag != "X") &&
+                                                           (x.DeletionFlag == null || x.DeletionFlag != "X") &&
                                                            //Theo order type
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
                                                            //Theo keyword

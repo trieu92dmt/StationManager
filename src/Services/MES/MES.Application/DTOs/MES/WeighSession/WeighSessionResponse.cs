@@ -8,6 +8,7 @@ namespace MES.Application.DTOs.MES.WeighSession
 {
     public class WeighSessionResponse
     {
+        public int STT { get; set; }
         //Id đợt cân
         public string WeighSessionId { get; set; }
         //Số lần cân
@@ -21,7 +22,7 @@ namespace MES.Application.DTOs.MES.WeighSession
         //DateKey
         public string DateKey { get; set; }
         //STT đợt cân
-        public int MyProperty { get; set; }
+        public int OrderIndex { get; set; }
         //Thời gian bắt đầu
         public DateTime? StartTime { get; set; }
         //Thời gian kết thúc
@@ -37,5 +38,11 @@ namespace MES.Application.DTOs.MES.WeighSession
         //Người tạo
         public Guid? CreateById { get; set; }
         public string CreateBy { get; set; }
+        //Trạng thái
+        public string Status { get; set; }
+        //Đánh dấu xóa
+        public bool isDelete => Status == "DEL" ? true : false;
+        //Nghiệp vụ
+        public string TransactionType { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Jwt.Models;
+﻿using Azure.Core;
+using Core.Jwt.Models;
 using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Infrastructure.Data;
@@ -14,6 +15,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MES.Application.Commands.WeighSession
 {
@@ -44,6 +46,15 @@ namespace MES.Application.Commands.WeighSession
         {
             //User query
             var userQuery = _userRepo.GetQuery().AsNoTracking();
+
+            //Nếu không có ngày thì search trong 30 ngày
+            #region Format Day
+            if (request.DateFrom == null)
+            {
+                request.DateFrom = DateTime.Now.Date.AddDays(-30);
+                request.DateTo = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+            }
+            #endregion
 
             try
             {

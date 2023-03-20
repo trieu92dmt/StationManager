@@ -40,8 +40,6 @@ namespace MES.API.Configures
 
             // Inject UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-
         }
     }
 }

@@ -384,6 +384,7 @@ namespace MES.Application.Queries
         private readonly IRepository<ScreenModel> _screenRepo;
         private readonly IRepository<DetailWorkOrderModel> _dtWoRepo;
         private readonly IRepository<WeighSessionModel> _weighSsRepo;
+        private readonly IRepository<DimDateModel> _dimdateRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -393,7 +394,7 @@ namespace MES.Application.Queries
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
                            IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo, IRepository<ExportByCommandModel> xklxhRepo,
-                           IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo, IRepository<WeighSessionModel> weighSsRepo)
+                           IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo, IRepository<WeighSessionModel> weighSsRepo, IRepository<DimDateModel> dimdateRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -422,6 +423,7 @@ namespace MES.Application.Queries
             _screenRepo = screenRepo;
             _dtWoRepo = dtWoRepo;
             _weighSsRepo = weighSsRepo;
+            _dimdateRepo = dimdateRepo;
         }
 
         #region Get DropdownMaterial
@@ -2327,6 +2329,9 @@ namespace MES.Application.Queries
         /// <returns></returns>
         public async Task<List<CommonResponse>> GetDropdownWeighSessionCode(string ScaleCode, DateTime? DateFrom, DateTime? DateTo)
         {
+            //Get query đimdate
+            var dimdate = _dimdateRepo.GetQuery().AsNoTracking();
+
             //Không search ngày thì lấy 30 ngày từ ngày hiện tại
             #region Format Day
             if (!DateFrom.HasValue && !DateTo.HasValue)
@@ -2342,8 +2347,8 @@ namespace MES.Application.Queries
             #endregion
 
             //Chuyển ngày tháng thành datekey
-            var dateKeyFrom = $"{DateFrom.Value.Year}{DateFrom.Value.Month}{DateFrom.Value.Day}";
-            var dateKeyTo = $"{DateTo.Value.Year}{DateTo.Value.Month}{DateTo.Value.Day}";
+            var dateKeyFrom = dimdate.FirstOrDefault(x => x.Date == DateFrom.Value.Date).DateKey.ToString();
+            var dateKeyTo = dimdate.FirstOrDefault(x => x.Date == DateTo.Value.Date).DateKey.ToString();
 
             //Lấy đợt cân
             return await _weighSsRepo.GetQuery(x => 

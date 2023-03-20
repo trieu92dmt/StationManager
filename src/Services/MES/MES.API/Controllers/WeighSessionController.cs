@@ -1,11 +1,15 @@
 ﻿using Core.Models;
+using Core.Properties;
 using Core.SeedWork;
 using MediatR;
 using MES.Application.Commands.NCK;
 using MES.Application.Commands.WeighSession;
+using MES.Application.DTOs.MES.Scale;
 using MES.Application.DTOs.MES.WeighSession;
+using MES.Application.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 
 namespace MES.API.Controllers
 {
@@ -15,14 +19,21 @@ namespace MES.API.Controllers
     public class WeighSessionController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IWeighSessionQuery _query;
 
-        public WeighSessionController(IMediator mediator)
+        public WeighSessionController(IMediator mediator, IWeighSessionQuery query)
         {
             _mediator = mediator;
+            _query = query;
         }
 
+        /// <summary>
+        /// Search hoạt động cân
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPost("get-data-scale")]
-        public async Task<IActionResult> GetDataInputAsync([FromBody] SearchWeighSessionCommand command)
+        public async Task<IActionResult> GetDataWeighSesion([FromBody] SearchWeighSessionCommand command)
         {
             var response = await _mediator.Send(command);
 
@@ -34,5 +45,24 @@ namespace MES.API.Controllers
                 ResultsCount = response.Paging.PageSize
             });
         }
+
+        #region Get chi tiết thông tin đợt cân
+        /// <summary>
+        /// Get chi tiết thông tin đợt cân
+        /// </summary>
+        /// <param name="WeighSessionCode">ID đợt cân</param>
+        /// <returns></returns>
+        [HttpGet("get-detail-weigh-session")]
+        public async Task<IActionResult> GetDetailWeighSession(string WeighSessionCode)
+        {
+            var response = await _query.GetDetailWeighSs(WeighSessionCode);
+
+            return Ok(new ApiSuccessResponse<List<DetailWeighSsResponse>>
+            {
+                Data = response,
+                Message = string.Format(CommonResource.Msg_Success, "Lấy chi tiết đợt cân")
+            });
+        }
+        #endregion
     }
 }

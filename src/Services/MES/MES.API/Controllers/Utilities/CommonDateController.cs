@@ -36,16 +36,16 @@ namespace MES.API.Controllers.Utilities
             });
         }
 
-        //[HttpGet("get-common-date")]
-        //public async Task<IActionResult> GetCommonDate()
-        //{
-        //    var response = await _commonQuery.GetCommonDate();
+        [HttpGet("get-common-date")]
+        public async Task<IActionResult> GetCommonDate()
+        {
+            var response = await _commonQuery.GetCommonDate();
 
-        //    return Ok(new ApiSuccessResponse<List<CommonResponse>>()
-        //    {
-        //        Data = response
-        //    });
+            return Ok(new ApiSuccessResponse<List<CommonResponse>>()
+            {
+                Data = response
+            });
 
-        //}
+        }
     }
 }

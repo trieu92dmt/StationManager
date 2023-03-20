@@ -11,6 +11,12 @@ namespace MES.Application.Queries
     public interface ICommonQuery
     {
         /// <summary>
+        /// Lấy danh sách common date
+        /// </summary>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetCommonDate();
+
+        /// <summary>
         /// Dropdown mã nhà máy
         /// </summary>
         /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
@@ -2283,6 +2289,18 @@ namespace MES.Application.Queries
                                       Key = x.ScreenCode,
                                       Value = x.ScreenName
                                   }).ToListAsync();
+        }
+        #endregion
+
+        #region Get common date
+        public async Task<List<CommonResponse>> GetCommonDate()
+        {
+            return await _cataRepo.GetQuery(x => x.CatalogTypeCode == "CommonDate").OrderBy(x => x.OrderIndex)
+                                    .Select(x => new CommonResponse()
+                                    {
+                                        Key = x.CatalogCode,
+                                        Value = $"{x.CatalogCode} | {x.CatalogText_vi}"
+                                    }).ToListAsync();
         }
         #endregion
     }

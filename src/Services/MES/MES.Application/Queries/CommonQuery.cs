@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Azure.Core;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.DTOs.Common;
@@ -324,6 +325,15 @@ namespace MES.Application.Queries
         /// </summary>
         /// <returns></returns>
         Task<List<CommonResponse>> GetDropdownScreen();
+
+        /// <summary>
+        /// Dropdown Id đợt cân
+        /// </summary>
+        /// <param name="ScaleCode">Mã đầu cân</param>
+        /// <param name="DateFrom">Từ ngày</param>
+        /// <param name="DateTo">Đến ngày</param>
+        /// <returns></returns>
+        Task<List<CommonResponse>> GetDropdownWeighSessionCode(string ScaleCode, DateTime? DateFrom, DateTime? DateTo);
     }
 
     #region Response
@@ -373,6 +383,7 @@ namespace MES.Application.Queries
         private readonly IRepository<ExportByCommandModel> _xklxhRepo;
         private readonly IRepository<ScreenModel> _screenRepo;
         private readonly IRepository<DetailWorkOrderModel> _dtWoRepo;
+        private readonly IRepository<WeighSessionModel> _weighSsRepo;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -382,7 +393,7 @@ namespace MES.Application.Queries
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
                            IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo, IRepository<ExportByCommandModel> xklxhRepo,
-                           IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo)
+                           IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo, IRepository<WeighSessionModel> weighSsRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -410,6 +421,7 @@ namespace MES.Application.Queries
             _xklxhRepo = xklxhRepo;
             _screenRepo = screenRepo;
             _dtWoRepo = dtWoRepo;
+            _weighSsRepo = weighSsRepo;
         }
 
         #region Get DropdownMaterial
@@ -2301,6 +2313,50 @@ namespace MES.Application.Queries
                                         Key = x.CatalogCode,
                                         Value = $"{x.CatalogCode} | {x.CatalogText_vi}"
                                     }).ToListAsync();
+        }
+
+        #endregion
+
+        #region Dropdown id đợt cân
+        /// <summary>
+        /// Dropdown Id đợt cân
+        /// </summary>
+        /// <param name="ScaleCode">Mã đầu cân</param>
+        /// <param name="DateFrom">Từ ngày</param>
+        /// <param name="DateTo">Đến ngày</param>
+        /// <returns></returns>
+        public async Task<List<CommonResponse>> GetDropdownWeighSessionCode(string ScaleCode, DateTime? DateFrom, DateTime? DateTo)
+        {
+            //Không search ngày thì lấy 30 ngày từ ngày hiện tại
+            #region Format Day
+            if (!DateFrom.HasValue && !DateTo.HasValue)
+            {
+                DateFrom = DateTime.Now.Date.AddDays(-30);
+                DateTo = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+            }
+            else if (DateFrom.HasValue && !DateTo.HasValue)
+            {
+                DateFrom = DateFrom.Value.Date;
+                DateTo = DateFrom.Value.Date.AddDays(1).AddSeconds(-1);
+            }
+            #endregion
+
+            //Chuyển ngày tháng thành datekey
+            var dateKeyFrom = $"{DateFrom.Value.Year}{DateFrom.Value.Month}{DateFrom.Value.Day}";
+            var dateKeyTo = $"{DateTo.Value.Year}{DateTo.Value.Month}{DateTo.Value.Day}";
+
+            //Lấy đợt cân
+            return await _weighSsRepo.GetQuery(x => 
+                                             //Lọc theo đầu cân
+                                             (!string.IsNullOrEmpty(ScaleCode) ? x.ScaleCode == ScaleCode : true) &&
+                                             //Theo ngày cân
+                                             x.DateKey.CompareTo(dateKeyFrom) >= 0 && 
+                                             x.DateKey.CompareTo(dateKeyTo) <=0
+                                         ).Select(x => new CommonResponse()
+                                         {
+                                             Key = x.WeighSessionCode,
+                                             Value = x.WeighSessionCode,
+                                         }).AsNoTracking().ToListAsync();
         }
         #endregion
     }

@@ -569,5 +569,22 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
+
+        #region Dropdown ID đợt cân
+
+        /// <summary>
+        /// Dropdown Id đợt cân
+        /// </summary>
+        /// <param name="ScaleCode">Mã đầu cân</param>
+        /// <param name="DateFrom">Từ ngày</param>
+        /// <param name="DateTo">Đến ngày</param>
+        /// <returns></returns>
+        [HttpGet("list-weigh-session-code")]
+        public async Task<IActionResult> GetDropdownWeighSessionCodeAsync(string ScaleCode, DateTime? DateFrom, DateTime? DateTo)
+        {
+            var dropdownList = await _commonQuery.GetDropdownWeighSessionCode(ScaleCode, DateFrom, DateTo);
+            return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
+        }
+        #endregion
     }
 }

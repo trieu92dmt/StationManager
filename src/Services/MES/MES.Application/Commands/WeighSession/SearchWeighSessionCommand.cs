@@ -22,6 +22,8 @@ namespace MES.Application.Commands.WeighSession
     public class SearchWeighSessionCommand : IRequest<PagingResultSP<WeighSessionResponse>>
     {
         public PagingQuery Paging { get; set; } = new PagingQuery();
+        //Plant
+        public string Plant { get; set; }
         //Đầu cân
         public string ScaleCode { get; set; }
         //Ngày thực hiện
@@ -47,12 +49,17 @@ namespace MES.Application.Commands.WeighSession
             //User query
             var userQuery = _userRepo.GetQuery().AsNoTracking();
 
-            //Nếu không có ngày thì search trong 30 ngày
+            //Không search ngày thì lấy 30 ngày từ ngày hiện tại
             #region Format Day
-            if (request.DateFrom == null)
+            if (!request.DateFrom.HasValue && !request.DateTo.HasValue)
             {
                 request.DateFrom = DateTime.Now.Date.AddDays(-30);
                 request.DateTo = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+            }
+            else if (request.DateFrom.HasValue && !request.DateTo.HasValue)
+            {
+                request.DateFrom = request.DateFrom.Value.Date;
+                request.DateTo = request.DateFrom.Value.Date.AddDays(1).AddSeconds(-1);
             }
             #endregion
 
@@ -65,6 +72,7 @@ namespace MES.Application.Commands.WeighSession
                 using (SqlDataAdapter sda = new SqlDataAdapter(storeProc, _context.Database.GetConnectionString()))
                 {
                     sda.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@Plant", request.Plant ?? ""));
                     sda.SelectCommand.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@ScaleCode", request.ScaleCode ?? ""));
                     sda.SelectCommand.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@FromDate", request.DateFrom));
                     sda.SelectCommand.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@ToDate", request.DateTo));

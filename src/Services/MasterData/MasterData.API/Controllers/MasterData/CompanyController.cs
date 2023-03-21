@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using DTOs.Models;
 using MasterData.Application.DTOs;
 using MasterData.Applications.Commands.Company;
 using MasterData.Applications.Queries.MasterData;

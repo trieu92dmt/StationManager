@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using DTOs.Models;
 using MasterData.Applications.Commands.Catalog;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using DTOs.Models;
 using Core.Properties;
 using ISD.API.Applications.Queries.MasterData;
 using MasterData.Application.DTOs;

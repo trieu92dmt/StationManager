@@ -1,4 +1,4 @@
-﻿using DTOs.WeighSession;
+﻿using Shared.WeighSession;
 
 namespace WeighSession.API.Repositories.Interfaces
 {

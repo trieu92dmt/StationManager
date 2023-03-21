@@ -1,10 +1,8 @@
-﻿using DTOs.Models;
-using MediatR;
+﻿using MediatR;
 using MES.Application.Commands.ScaleMonitor;
-using MES.Application.Commands.XK;
 using MES.Application.DTOs.MES.ScaleMonitor;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 
 namespace MES.API.Controllers
 {

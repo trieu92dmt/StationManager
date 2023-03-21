@@ -1,5 +1,4 @@
-﻿using DTOs.Models;
-using Core.Properties;
+﻿using Core.Properties;
 using MediatR;
 using MES.Application.Commands.NKTPSX;
 using MES.Application.Commands.OutboundDelivery;
@@ -8,6 +7,7 @@ using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NKTPSX;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 
 namespace MES.API.Controllers
 {

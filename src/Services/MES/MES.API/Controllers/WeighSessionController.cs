@@ -1,15 +1,10 @@
-﻿using DTOs.Models;
-using Core.Properties;
-using Core.SeedWork;
+﻿using Core.Properties;
 using MediatR;
-using MES.Application.Commands.NCK;
 using MES.Application.Commands.WeighSession;
-using MES.Application.DTOs.MES.Scale;
 using MES.Application.DTOs.MES.WeighSession;
 using MES.Application.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Framework;
+using Shared.Models;
 
 namespace MES.API.Controllers
 {

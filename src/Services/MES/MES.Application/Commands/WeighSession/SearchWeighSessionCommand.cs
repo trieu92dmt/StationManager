@@ -1,21 +1,12 @@
-﻿using Azure.Core;
-using Core.Jwt.Models;
-using Core.SeedWork;
+﻿using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Models;
 using MediatR;
-using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.WeighSession;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MES.Application.Commands.WeighSession
 {

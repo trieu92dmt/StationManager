@@ -1,20 +1,13 @@
 ﻿using Core.Extensions;
-using Core.Implements;
 using Core.Interfaces.Databases;
-using DTOs.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
 using Core.Utilities;
 using Infrastructure.Models;
-using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared.Models;
 
 namespace MES.Application.Commands.NK
 {

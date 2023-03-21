@@ -1,14 +1,13 @@
 ﻿using Core.Jwt;
-using Core.Jwt.Models;
-using Core.Models;
 using Infrastructure.Data;
 using Infrastructure.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Graph;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Shared.Identity;
+using Shared.Identity.Permissions;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -19,7 +18,7 @@ namespace Infrastructure.Extensions
 {
     public static class JwtHelpers
     {
-        public static IEnumerable<Claim> GetClaims(this UserToken account, Guid Id)
+        public static IEnumerable<Claim> GetClaims(this TokenResponse account, Guid Id)
         {
             IEnumerable<Claim> claims = new Claim[] {
                 new Claim("Id", account.AccountId.ToString()),
@@ -45,12 +44,12 @@ namespace Infrastructure.Extensions
         /// <param name="userAccounts"></param>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public static IEnumerable<Claim> GetClaims(this UserToken userAccounts, out Guid Id)
+        public static IEnumerable<Claim> GetClaims(this TokenResponse userAccounts, out Guid Id)
         {
             Id = Guid.NewGuid();
             return GetClaims(userAccounts, Id);
         }
-        public static async Task<UserToken> GenUserTokens(AccountModel model, string plantCode, JwtSettings jwtSettings)
+        public static async Task<TokenResponse> GenUserTokens(AccountModel model, string plantCode, JwtSettings jwtSettings)
         {
 
             using (var _context = new EntityDataContext())
@@ -59,38 +58,38 @@ namespace Infrastructure.Extensions
                 DateTime expireTime = DateTime.Now;
 
                 //Tạo User token
-                var UserToken = new UserToken();
-                UserToken.UserName = model.UserName;
-                UserToken.AccountId = model.AccountId;
-                UserToken.FullName = model.FullName;
-                UserToken.EmployeeCode = model.EmployeeCode;
+                var token = new TokenResponse();
+                token.UserName = model.UserName;
+                token.AccountId = model.AccountId;
+                token.FullName = model.FullName;
+                token.EmployeeCode = model.EmployeeCode;
 
                 //Plant
                 var plant = await _context.PlantModel.FirstOrDefaultAsync(x => x.PlantCode == plantCode);
-                UserToken.PlantCode = plant?.PlantCode;
-                UserToken.PlantName = plant != null ? $"{plant.PlantCode} | {plant.PlantName}" : "";
+                token.PlantCode = plant?.PlantCode;
+                token.PlantName = plant != null ? $"{plant.PlantCode} | {plant.PlantName}" : "";
 
                 //Sale Org
                 var saleOrg = await _context.SaleOrgModel.FirstOrDefaultAsync(x => x.SaleOrgCode == plant.SaleOrgCode);
-                UserToken.SaleOrgCode = saleOrg.SaleOrgCode;
-                UserToken.SaleOrgName = saleOrg?.SaleOrgName;
+                token.SaleOrgCode = saleOrg.SaleOrgCode;
+                token.SaleOrgName = saleOrg?.SaleOrgName;
 
 
                 #region Role
 
                 var role = (from p in _context.AccountModel
                             from r in p.Roles
-                            where p.AccountId == UserToken.AccountId
+                            where p.AccountId == token.AccountId
                             select r.RolesCode).FirstOrDefault();
-                UserToken.Role = role;
+                token.Role = role;
 
 
                 var roleList = (from p in _context.AccountModel
                                 from r in p.Roles
-                                where p.AccountId == UserToken.AccountId
+                                where p.AccountId == token.AccountId
                                 select r.RolesCode).ToList();
                 var roleCodeJoin = string.Join(",", roleList.ToArray());
-                UserToken.Roles = roleCodeJoin;
+                token.Roles = roleCodeJoin;
                 #endregion
 
                 #region Permission
@@ -102,26 +101,26 @@ namespace Infrastructure.Extensions
 
                 //Convert Dataset -> Json->Object
                 var jsonDt = JsonConvert.SerializeObject(webPermissionDs);
-                UserToken.WebPermission = JsonConvert.DeserializeObject<PermissionWeb>(jsonDt);
-                if (UserToken.WebPermission != null && UserToken.WebPermission.PageModel != null)
+                token.WebPermission = JsonConvert.DeserializeObject<PermissionWebResponse>(jsonDt);
+                if (token.WebPermission != null && token.WebPermission.PageModel != null)
                 {
-                    UserToken.WebPermission.PageModel = UserToken.WebPermission.PageModel.DistinctBy(x => x.PageId).ToList();
+                    token.WebPermission.PageModel = token.WebPermission.PageModel.DistinctBy(x => x.PageId).ToList();
                 }
 
-                UserToken.Permission = GetMenuMobileList(model.AccountId);
+                token.Permission = GetMenuMobileList(model.AccountId);
                 //Lấy token
-                var jWtToken = GenJwtToken(UserToken, jwtSettings, out expireTime, out Id);
-                UserToken.Validaty = expireTime.TimeOfDay;
-                UserToken.ExpiredTime = expireTime;
-                UserToken.Token = jWtToken;
+                var jWtToken = GenJwtToken(token, jwtSettings, out expireTime, out Id);
+                token.Validaty = expireTime.TimeOfDay;
+                token.ExpiredTime = expireTime;
+                token.Token = jWtToken;
 
                 #endregion 
 
-                return UserToken;
+                return token;
             }
         }
 
-        public static string GenJwtToken(UserToken user, JwtSettings jwtSettings, out DateTime expireTime, out Guid GuidId)
+        public static string GenJwtToken(TokenResponse user, JwtSettings jwtSettings, out DateTime expireTime, out Guid GuidId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             Guid Id = Guid.Empty;
@@ -140,14 +139,14 @@ namespace Infrastructure.Extensions
         /// </summary>
         /// <param name="AccountId"></param>
         /// <returns></returns>
-        public static PermissionMobile GetMenuMobileList(Guid AccountId)
+        public static PermissionMobileResponse GetMenuMobileList(Guid AccountId)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                                .SetBasePath(Directory.GetCurrentDirectory())
                                .AddJsonFile("appsettings.json")
                                .Build();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            var permission = new PermissionMobile();
+            var permission = new PermissionMobileResponse();
             //using dataset to get multiple table in store procedure: page, menu, page permission
             DataSet ds = new DataSet();
             using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connectionString))
@@ -170,7 +169,7 @@ namespace Infrastructure.Extensions
 
             //Convert datatable into list
             var pageList = (from p in ds.Tables[0].AsEnumerable()
-                            select new MobileScreen
+                            select new MobileScreenResponse
                             {
                                 MobileScreenId = p.Field<Guid>("MobileScreenId"),
                                 ScreenName = p.Field<string>("ScreenName"),
@@ -181,7 +180,7 @@ namespace Infrastructure.Extensions
                             }).ToList();
 
             var menuList = (from p in ds.Tables[1].AsEnumerable()
-                            select new Menu()
+                            select new MenuResponse()
                             {
                                 MenuId = p.Field<Guid>("MenuId"),
                                 MenuName = p.Field<string>("MenuName"),
@@ -190,7 +189,7 @@ namespace Infrastructure.Extensions
                             }).ToList();
 
             var funcList = (from p in ds.Tables[2].AsEnumerable()
-                            select new MobileScreenPermission()
+                            select new MobileScreenPermissionResponse()
                             {
                                 RolesId = p.Field<Guid>("RolesId"),
                                 MobileScreenId = p.Field<Guid>("MobileScreenId"),
@@ -213,9 +212,9 @@ namespace Infrastructure.Extensions
         /// <param name="context"></param>
         /// <param name="AccountId"></param>
         /// <returns></returns>
-        public static PermissionWeb GetWebPermissionByAccountId(EntityDataContext context, Guid AccountId)
+        public static PermissionWebResponse GetWebPermissionByAccountId(EntityDataContext context, Guid AccountId)
         {
-            var response = new PermissionWeb();
+            var response = new PermissionWebResponse();
 
             try
             {
@@ -239,7 +238,7 @@ namespace Infrastructure.Extensions
                 context.Database.CloseConnection();
 
                 var jsonDt = JsonConvert.SerializeObject(ds);
-                response = JsonConvert.DeserializeObject<PermissionWeb>(jsonDt);
+                response = JsonConvert.DeserializeObject<PermissionWebResponse>(jsonDt);
 
                 return response;
             }

@@ -1,11 +1,7 @@
 ﻿using Core.Jwt;
-using Core.Models;
-using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace MES.Middlewares
@@ -47,10 +43,10 @@ namespace MES.Middlewares
 
             var jwtToken = (JwtSecurityToken)validatedToken;
             var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "Id").Value);
-            var identity = new ClaimsIdentity(jwtToken.Claims, DefaultAuthenticationTypes.ExternalBearer);
-            var user = new ClaimsPrincipal(identity);
-            context.User = user;
-            context.Items["Permission"] = JsonConvert.DeserializeObject<PermissionMobile>(jwtToken.Claims.First(x => x.Type == "Permission").Value);
+            //var identity = new ClaimsIdentity(jwtToken.Claims, DefaultAuthenticationTypes.ExternalBearer);
+            //var user = new ClaimsPrincipal(identity);
+            //context.User = user;
+            //context.Items["Permission"] = JsonConvert.DeserializeObject<PermissionMobile>(jwtToken.Claims.First(x => x.Type == "Permission").Value);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using DTOs.Models;
-using Core.Properties;
+﻿using Core.Properties;
 using MediatR;
 using MES.Application.Commands.NCK;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NCK;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 
 namespace MES.API.Controllers
 {

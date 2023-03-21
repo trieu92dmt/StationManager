@@ -1,16 +1,10 @@
-﻿using Azure;
-using Azure.Core;
-using Core.Extensions;
-using Core.Models;
+﻿using Core.Extensions;
 using Core.SeedWork.Repositories;
-using DTOs.Models;
 using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Security.Cryptography.Xml;
+using Shared.Models;
 
 namespace MES.Application.Queries
 {

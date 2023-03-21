@@ -1,9 +1,8 @@
-﻿using DTOs.Models;
-using MES.Application.DTOs.Common;
+﻿using MES.Application.DTOs.Common;
 using MES.Application.Queries;
 using MES.Application.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 
 namespace MES.API.Controllers.Utilities
 {

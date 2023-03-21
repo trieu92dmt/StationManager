@@ -1,7 +1,6 @@
 ﻿using Core.Attributes;
 using Core.Extensions;
 using Core.Jwt;
-using DTOs.Configurations;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using MediatR;

@@ -12,7 +12,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Core\Core.csproj" />
-	  <ProjectReference Include="..\..\..\BuildingBlocks\DTOs\DTOs.csproj" />
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 </Project>

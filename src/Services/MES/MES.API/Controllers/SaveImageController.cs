@@ -1,7 +1,7 @@
-﻿using DTOs.Models;
-using MediatR;
+﻿using MediatR;
 using MES.Application.Commands.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 
 namespace MES.API.Controllers
 {

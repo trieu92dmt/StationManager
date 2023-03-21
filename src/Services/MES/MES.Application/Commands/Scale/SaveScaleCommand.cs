@@ -1,16 +1,11 @@
 ﻿using Core.Interfaces.Databases;
-using DTOs.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+using Shared.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.Scale
 {

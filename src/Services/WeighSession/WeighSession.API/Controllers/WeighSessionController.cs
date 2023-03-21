@@ -1,6 +1,6 @@
-﻿using DTOs.Models;
-using DTOs.WeighSession;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
+using Shared.WeighSession;
 using WeighSession.API.Repositories.Interfaces;
 
 namespace WeighSession.API.Controllers

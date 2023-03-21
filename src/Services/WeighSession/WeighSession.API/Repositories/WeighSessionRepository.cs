@@ -1,5 +1,5 @@
-﻿using DTOs.WeighSession;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.WeighSession;
 using WeighSession.API.Repositories.Interfaces;
 using WeighSession.Infrastructure.Models;
 

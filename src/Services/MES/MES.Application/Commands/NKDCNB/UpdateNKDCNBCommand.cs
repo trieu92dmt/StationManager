@@ -1,6 +1,5 @@
 ﻿using Core.Extensions;
 using Core.Interfaces.Databases;
-using DTOs.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
 using Core.Utilities;
@@ -8,6 +7,7 @@ using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Shared.Models;
 
 namespace MES.Application.Commands.NKDCNB
 {

@@ -1,8 +1,8 @@
-﻿using DTOs.Models;
-using Core.Properties;
+﻿using Core.Properties;
 using MES.Application.DTOs.Common;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models;
 using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
 
 namespace MES.API.Controllers

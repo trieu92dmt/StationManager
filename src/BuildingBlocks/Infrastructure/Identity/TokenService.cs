@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Core.Commons;
+﻿using Core.Commons;
 using Core.Exceptions;
 using Core.Identity;
 using Core.Jwt;
@@ -58,6 +57,8 @@ namespace Infrastructure.Identity
 
             return token;
         }
+
+        #region GET Token
         public async Task<TokenResponse> GetToken(TokenRequest request, AccountModel model)
         {
            
@@ -140,7 +141,7 @@ namespace Infrastructure.Identity
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: signingCredentials
                 );
 
@@ -153,5 +154,7 @@ namespace Infrastructure.Identity
             byte[] secret = Encoding.UTF8.GetBytes(_jwtSettings.IssuerSigningKey);
             return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
         }
+
+        #endregion
     }
 }

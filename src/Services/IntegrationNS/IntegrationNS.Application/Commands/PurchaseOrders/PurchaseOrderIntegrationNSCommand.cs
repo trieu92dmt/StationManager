@@ -25,6 +25,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
         public string PurchaseOrder { get; set; }
         public DateTime? DocumentDate { get; set; }
         public string ReleaseIndicator { get; set; }
+        public string DeletionInd { get; set; }
         public List<PurchaseOrderDetailIntegration> PurchaseOrderDetails { get; set; } = new List<PurchaseOrderDetailIntegration>();
     }
 
@@ -101,6 +102,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         //purchaseOrder.VendorCodeInt = int.Parse(poIntegration.Vendor);
                         purchaseOrder.DocumentDate = poIntegration.DocumentDate;
                         purchaseOrder.ReleaseIndicator = poIntegration.ReleaseIndicator;
+                        purchaseOrder.DeletionInd = poIntegration.DeletionInd;
 
                         purchaseOrder.CreateTime = DateTime.Now;
                         purchaseOrder.Actived = true;
@@ -168,6 +170,8 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                         purchaseOrder.PurchasingGroup = poIntegration.PurchasingGroup;
                         purchaseOrder.VendorCode = poIntegration.Vendor;
                         purchaseOrder.DocumentDate = poIntegration.DocumentDate;
+                        purchaseOrder.ReleaseIndicator = poIntegration.ReleaseIndicator;
+                        purchaseOrder.DeletionInd = poIntegration.DeletionInd;
                         purchaseOrder.LastEditTime = DateTime.Now;
 
                         #endregion

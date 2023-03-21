@@ -1,6 +1,5 @@
 ﻿using Core.Commons;
 using Core.Identity;
-using Core.Jwt;
 using Infrastructure.Commons;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
@@ -8,6 +7,7 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Jwt;
 using System.Text;
 
 

@@ -2,7 +2,7 @@
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -67,13 +67,13 @@ namespace MES.Application.Commands.NK
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<OtherImportModel> _nkRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
-        public UpdateNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherImportModel> nkRepo, IUtilitiesService utilitiesService,
+        public UpdateNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherImportModel> nkRepo, ICommonService utilitiesService,
                                     IRepository<ScaleModel> scaleRepo, IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo,
                                     IRepository<WeighSessionModel> weightSsRepo, IRepository<TruckInfoModel> truckRepo)
         {

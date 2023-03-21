@@ -1,8 +1,8 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -75,7 +75,7 @@ namespace MES.Application.Commands.XCK
         private readonly IRepository<WarehouseExportTransferModel> _xckRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<DetailReservationModel> _detailRsRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
@@ -84,7 +84,7 @@ namespace MES.Application.Commands.XCK
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseExportTransferModel> xckRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                     IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<DetailReservationModel> detailRsRepo,
+                                     IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService, IRepository<DetailReservationModel> detailRsRepo,
                                      IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo,
                                      IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {

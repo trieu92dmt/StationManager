@@ -1,9 +1,9 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -77,7 +77,7 @@ namespace MES.Application.Commands.XK
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<OtherExportModel> _xkRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
@@ -85,7 +85,7 @@ namespace MES.Application.Commands.XK
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<DetailReservationModel> _dtResRepo;
 
-        public UpdateXKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherExportModel> xkRepo, IUtilitiesService utilitiesService,
+        public UpdateXKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherExportModel> xkRepo, ICommonService utilitiesService,
                                     IRepository<ScaleModel> scaleRepo, IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo,
                                     IRepository<WeighSessionModel> weightSsRepo, IRepository<TruckInfoModel> truckRepo, IRepository<DetailReservationModel> dtResRepo)
         {

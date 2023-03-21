@@ -2,7 +2,7 @@
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -84,11 +84,11 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<ProductModel> _materialRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
 
         public UpdateNKMHCommandHandler(IUnitOfWork unitOfWork, IRepository<GoodsReceiptModel> nkmhRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo,
                                         IRepository<StorageLocationModel> slocRepo, IRepository<ProductModel> materialRepo, IRepository<DimDateModel> dimDateRepo,
-                                        IUtilitiesService utilitiesService)
+                                        ICommonService utilitiesService)
         {
             _unitOfWork = unitOfWork;
             _nkmhRepo = nkmhRepo;

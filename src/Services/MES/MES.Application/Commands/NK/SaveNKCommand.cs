@@ -1,18 +1,12 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
-using Core.Implements;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.NK
 {
@@ -66,7 +60,7 @@ namespace MES.Application.Commands.NK
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<OtherImportModel> _nkRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
@@ -74,7 +68,7 @@ namespace MES.Application.Commands.NK
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
-        public SaveNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherImportModel> nkRepo, IUtilitiesService utilitiesService, 
+        public SaveNKCommandHandler(IUnitOfWork unitOfWork, IRepository<OtherImportModel> nkRepo, ICommonService utilitiesService, 
                                     IRepository<ScaleModel> scaleRepo, IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, 
                                     IRepository<WeighSessionModel> weightSsRepo,IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {

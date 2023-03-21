@@ -1,8 +1,8 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -59,7 +59,7 @@ namespace MES.Application.Commands.NKPPPP
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<ScrapFromProductionModel> _nkppppRepo;
         private readonly IRepository<DetailWorkOrderModel> _woDetailRepo;
@@ -67,7 +67,7 @@ namespace MES.Application.Commands.NKPPPP
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNKPPPPCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
-                                             IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
+                                             IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService,
                                              IRepository<ProductModel> prodRepo, IRepository<ScrapFromProductionModel> nkppppRepo,
                                              IRepository<DetailWorkOrderModel> woDetailRepo, IRepository<StorageLocationModel> slocRepo,
                                              IRepository<WeighSessionChoseModel> weightSsChoseRepo)

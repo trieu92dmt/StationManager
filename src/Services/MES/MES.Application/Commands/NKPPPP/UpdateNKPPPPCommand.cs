@@ -2,7 +2,7 @@
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -74,11 +74,11 @@ namespace MES.Application.Commands.NKPPPP
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<DetailWorkOrderModel> _woRepo;
 
         public UpdateNKPPPPCommandHandler(IUnitOfWork unitOfWork, IRepository<ScrapFromProductionModel> nkppppRepo, IRepository<ProductModel> prdRepo,
-                                          IRepository<StorageLocationModel> slocRepo, IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService,
+                                          IRepository<StorageLocationModel> slocRepo, IRepository<DimDateModel> dimDateRepo, ICommonService utilitiesService,
                                           IRepository<DetailWorkOrderModel> woRepo)
         {
             _unitOfWork = unitOfWork;

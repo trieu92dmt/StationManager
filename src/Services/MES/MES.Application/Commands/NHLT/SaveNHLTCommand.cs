@@ -2,7 +2,7 @@
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -76,7 +76,7 @@ namespace MES.Application.Commands.NHLT
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<GoodsReceiptTypeTModel> _nhltRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _odDetailRepo;
@@ -84,7 +84,7 @@ namespace MES.Application.Commands.NHLT
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNHLTCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo, IRepository<TruckInfoModel> truckRepo,
-                                      IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService,
+                                      IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService,
                                       IRepository<ProductModel> prodRepo, IRepository<GoodsReceiptTypeTModel> nhltRepo,
                                       IRepository<DetailOutboundDeliveryModel> odDetailRepo, IRepository<StorageLocationModel> slocRepo,
                                       IRepository<WeighSessionChoseModel> weightSsChoseRepo)

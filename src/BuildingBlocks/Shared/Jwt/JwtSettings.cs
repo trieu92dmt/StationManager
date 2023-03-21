@@ -1,4 +1,4 @@
-﻿namespace Core.Jwt
+﻿namespace Shared.Jwt
 {
     public class JwtSettings
     {

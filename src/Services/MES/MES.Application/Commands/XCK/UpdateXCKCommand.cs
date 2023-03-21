@@ -2,7 +2,7 @@
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -81,10 +81,10 @@ namespace MES.Application.Commands.XCK
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
 
         public UpdateXCKCommandHandler(IUnitOfWork unitOfWork, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo, 
-                                      IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService, IRepository<WarehouseExportTransferModel> xckRepo,
+                                      IRepository<DimDateModel> dimDateRepo, ICommonService utilitiesService, IRepository<WarehouseExportTransferModel> xckRepo,
                                       IRepository<DetailReservationModel> detailRsRepo)
         {
             _unitOfWork = unitOfWork;

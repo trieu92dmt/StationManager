@@ -1,9 +1,9 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -84,12 +84,12 @@ namespace MES.Application.Commands.XNVLGC
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<PurchaseOrderDetailModel> _poDetailRepo;
 
         public UpdateXNVLGCCommandHandler(IUnitOfWork unitOfWork, IRepository<ComponentExportModel> xnvlgcRepo, IRepository<ProductModel> prdRepo,
-                                          IRepository<StorageLocationModel> slocRepo, IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService,
+                                          IRepository<StorageLocationModel> slocRepo, IRepository<DimDateModel> dimDateRepo, ICommonService utilitiesService,
                                           IRepository<PlantModel> plantRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo)
         {
             _unitOfWork = unitOfWork;

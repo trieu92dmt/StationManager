@@ -2,7 +2,7 @@
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -73,7 +73,7 @@ namespace MES.Application.Commands.NCK
         private readonly IRepository<WarehouseImportTransferModel> _nckRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<MaterialDocumentModel> _matDocRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
@@ -83,7 +83,7 @@ namespace MES.Application.Commands.NCK
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNCKCommandHandler(IUnitOfWork unitOfWork, IRepository<WarehouseImportTransferModel> nckRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                     IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<MaterialDocumentModel> matDocRepo,
+                                     IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService, IRepository<MaterialDocumentModel> matDocRepo,
                                      IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo,
                                      IRepository<TruckInfoModel> truckRepo, IRepository<ReservationModel> resRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {

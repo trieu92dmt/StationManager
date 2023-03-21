@@ -2,7 +2,7 @@
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -74,7 +74,7 @@ namespace MES.Application.Commands.NKDCNB
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<InhouseTransferModel> _nkdcnbRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
@@ -83,7 +83,7 @@ namespace MES.Application.Commands.NKDCNB
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
-        public SaveNKDCNBCommandHandler(IUnitOfWork unitOfWork, IRepository<InhouseTransferModel> nkdcnbRepo, IUtilitiesService utilitiesService, IRepository<ScaleModel> scaleRepo,
+        public SaveNKDCNBCommandHandler(IUnitOfWork unitOfWork, IRepository<InhouseTransferModel> nkdcnbRepo, ICommonService utilitiesService, IRepository<ScaleModel> scaleRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<WeighSessionModel> weightSsRepo,
                                         IRepository<DetailOutboundDeliveryModel> detailOdRepo, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {

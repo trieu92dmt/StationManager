@@ -2,7 +2,7 @@
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -70,14 +70,14 @@ namespace MES.Application.Commands.NNVL
         private readonly IRepository<ComponentImportModel> _nnvlgcRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<PurchaseOrderDetailModel> _detailPoRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<PlantModel> _plantRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
         public UpdateNNVLCommandHandler(IUnitOfWork unitOfWork, IRepository<ComponentImportModel> nnvlgcRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                        IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<PurchaseOrderDetailModel> detailPoRepo,
+                                        IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService, IRepository<PurchaseOrderDetailModel> detailPoRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo, IRepository<TruckInfoModel> truckRepo)
         {
             _unitOfWork = unitOfWork;

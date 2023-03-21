@@ -1,20 +1,12 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
-using Core.Implements;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
-using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.XNVLGC
 {
@@ -89,7 +81,7 @@ namespace MES.Application.Commands.XNVLGC
         private readonly IRepository<ComponentExportModel> _xnvlgcRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<PurchaseOrderDetailModel> _detailPoRepo;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
@@ -99,7 +91,7 @@ namespace MES.Application.Commands.XNVLGC
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveXNVLGCCommandHandler(IUnitOfWork unitOfWork, IRepository<ComponentExportModel> xnvlgcRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                        IRepository<ScaleModel> scaleRepo, IUtilitiesService utilitiesService, IRepository<PurchaseOrderDetailModel> detailPoRepo,
+                                        IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService, IRepository<PurchaseOrderDetailModel> detailPoRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo, IRepository<TruckInfoModel> truckRepo,
                                         IRepository<VendorModel> vendorRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {

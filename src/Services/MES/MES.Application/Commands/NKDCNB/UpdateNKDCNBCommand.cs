@@ -2,7 +2,7 @@
 using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -78,11 +78,11 @@ namespace MES.Application.Commands.NKDCNB
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<DimDateModel> _dimDateRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
 
         public UpdateNKDCNBCommandHandler(IUnitOfWork unitOfWork, IRepository<InhouseTransferModel> nkdcnbRepo, IRepository<OutboundDeliveryModel> odRepo,
                                           IRepository<DetailOutboundDeliveryModel> detailDORepo, IRepository<ProductModel> prdRepo, IRepository<StorageLocationModel> slocRepo,
-                                          IRepository<DimDateModel> dimDateRepo, IUtilitiesService utilitiesService)
+                                          IRepository<DimDateModel> dimDateRepo, ICommonService utilitiesService)
         {
             _unitOfWork = unitOfWork;
             _nkdcnbRepo = nkdcnbRepo;

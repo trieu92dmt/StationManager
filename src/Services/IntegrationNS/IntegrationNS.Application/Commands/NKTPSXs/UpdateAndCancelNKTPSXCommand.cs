@@ -3,7 +3,7 @@ using Core.Interfaces.Databases;
 using Core.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;

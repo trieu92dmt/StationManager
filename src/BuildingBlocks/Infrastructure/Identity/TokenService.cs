@@ -1,7 +1,6 @@
 ﻿using Core.Commons;
 using Core.Exceptions;
 using Core.Identity;
-using Core.Jwt;
 using Core.Properties;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
@@ -11,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Shared.Identity;
 using Shared.Identity.Permissions;
+using Shared.Jwt;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -115,7 +115,7 @@ namespace Infrastructure.Identity
                 token.WebPermission.PageModel = token.WebPermission.PageModel.DistinctBy(x => x.PageId).ToList();
             }
 
-            token.Permission = JwtHelpers.GetMenuMobileList(model.AccountId);
+            token.Permission = SpHelper.GetMenuMobileList(model.AccountId);
             token.Token = GenerateJwt(GetSigningCredentials(), token);
             #endregion
 

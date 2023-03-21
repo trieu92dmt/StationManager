@@ -1,8 +1,8 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -72,14 +72,14 @@ namespace MES.Application.Commands.OutboundDelivery
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _detailODRepo;
         private readonly IRepository<OutboundDeliveryModel> _obRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
         private readonly IRepository<Document_Image_Mapping> _docImgRepo;
 
         public SaveGoodsReturnCommandHandler(IUnitOfWork unitOfWork, IRepository<GoodsReturnModel> nkhtRepo, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, IRepository<DetailOutboundDeliveryModel> detailODRepo,
-                                             IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService, IRepository<ProductModel> prodRepo,
+                                             IRepository<OutboundDeliveryModel> obRepo, ICommonService utilitiesService, IRepository<ProductModel> prodRepo,
                                              IRepository<WeighSessionChoseModel> weightSsChoseRepo, IRepository<Document_Image_Mapping> docImgRepo)
         {
             _unitOfWork = unitOfWork;

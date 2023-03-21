@@ -1,16 +1,13 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
-using Grpc.Core;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Net.WebSockets;
-using System.Reflection.Metadata;
 
 namespace MES.Application.Commands.MES
 {
@@ -72,14 +69,14 @@ namespace MES.Application.Commands.MES
         private readonly IRepository<ProductModel> _prdRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
                                       IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                      IUtilitiesService utilitiesService, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                      ICommonService utilitiesService, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;

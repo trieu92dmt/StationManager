@@ -2,7 +2,7 @@
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
+using Core.Commons;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -56,7 +56,7 @@ namespace MES.Application.Commands.OutboundDelivery
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<WeighSessionModel> _weightSsRepo;
         private readonly IRepository<ScaleModel> _scaleRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<ReceiptFromProductionModel> _nktpsxRepo;
         private readonly IRepository<WorkOrderModel> _woRepo;
@@ -64,7 +64,7 @@ namespace MES.Application.Commands.OutboundDelivery
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNKTPSXCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
-                                             IRepository<ScaleModel> scaleRepo,IUtilitiesService utilitiesService,
+                                             IRepository<ScaleModel> scaleRepo,ICommonService utilitiesService,
                                              IRepository<ProductModel> prodRepo, IRepository<ReceiptFromProductionModel> nktpsxRepo,
                                              IRepository<WorkOrderModel> woRepo, IRepository<StorageLocationModel> slocRepo,
                                              IRepository<WeighSessionChoseModel> weightSsChoseRepo)

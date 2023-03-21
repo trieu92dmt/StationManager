@@ -1,8 +1,8 @@
-﻿using Core.Exceptions;
+﻿using Core.Commons;
+using Core.Exceptions;
 using Core.Extensions;
 using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
-using Core.Utilities;
 using Infrastructure.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -73,14 +73,14 @@ namespace MES.Application.Commands.XKLXH
         private readonly IRepository<DetailOutboundDeliveryModel> _detailODRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<OutboundDeliveryModel> _obRepo;
-        private readonly IUtilitiesService _utilitiesService;
+        private readonly ICommonService _utilitiesService;
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveXKLXHCommandHandler(IUnitOfWork unitOfWork, IRepository<ExportByCommandModel> xklxhRepo, IRepository<WeighSessionModel> weightSsRepo,
                                        IRepository<ScaleModel> scaleRepo, IRepository<DetailOutboundDeliveryModel> detailODRepo, IRepository<StorageLocationModel> slocRepo,
-                                       IRepository<OutboundDeliveryModel> obRepo, IUtilitiesService utilitiesService, IRepository<ProductModel> prodRepo,
+                                       IRepository<OutboundDeliveryModel> obRepo, ICommonService utilitiesService, IRepository<ProductModel> prodRepo,
                                        IRepository<TruckInfoModel> truckInfoRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
         {
             _unitOfWork = unitOfWork;

@@ -1,11 +1,11 @@
 ﻿using Core.Attributes;
 using Core.Extensions;
-using Core.Jwt;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using MediatR;
 using MES.API.Configures;
 using Microsoft.EntityFrameworkCore;
+using Shared.Jwt;
 using System.Reflection;
 
 namespace MES.API.Extensions

@@ -53,6 +53,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\Core\Core.csproj" />
+		<ProjectReference Include="..\..\..\BuildingBlocks\DTOs\DTOs.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\MES.Application\MES.Application.csproj" />
 	</ItemGroup>

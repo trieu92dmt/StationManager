@@ -55,6 +55,14 @@ namespace Core.Extensions
                 return this._configuration["DomainUploadUrl"];
             }
         }
+
+        public string WeighSessionUrl
+        {
+            get
+            {
+                return this._configuration["WeighSessionUrl"];
+            }
+        }
     }
 
 }

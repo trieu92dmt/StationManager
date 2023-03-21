@@ -1,6 +1,7 @@
 ﻿using Core.Attributes;
 using Core.Extensions;
 using Core.Jwt;
+using DTOs.Configurations;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using MediatR;
@@ -13,7 +14,7 @@ namespace MES.API.Extensions
     public static class ServiceExtensions
     {
         private static string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
+     
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             //CORS
@@ -29,7 +30,7 @@ namespace MES.API.Extensions
 
             services.AddControllers();
             services.AddJWTTokenServices(configuration);
-
+            services.AddHttpClient();
             //MediatR
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -64,6 +65,6 @@ namespace MES.API.Extensions
             services.AddApiVersioning();
 
             return services;
-        }
+        }      
     }
 }

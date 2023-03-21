@@ -1,6 +1,4 @@
-﻿using Infrastructure.Data;
-
-namespace IntegrationNS.API.Extensions
+﻿namespace IntegrationNS.API.Extensions
 {
     public static class LoggingRequestResponseExtensions
     {

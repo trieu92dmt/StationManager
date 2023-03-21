@@ -1,10 +1,13 @@
 ﻿using Azure;
 using Azure.Core;
+using Core.Extensions;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using Newtonsoft.Json;
+using System.Net.Http;
 using System.Security.Cryptography.Xml;
 
 namespace MES.Application.Queries
@@ -385,6 +388,7 @@ namespace MES.Application.Queries
         private readonly IRepository<DetailWorkOrderModel> _dtWoRepo;
         private readonly IRepository<WeighSessionModel> _weighSsRepo;
         private readonly IRepository<DimDateModel> _dimdateRepo;
+        private readonly HttpClient _httpClient;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
                            IRepository<PurchasingOrgModel> purOrgRepo, IRepository<PurchasingGroupModel> purGrRepo, IRepository<VendorModel> vendorRepo,
@@ -394,7 +398,8 @@ namespace MES.Application.Queries
                            IRepository<OrderTypeModel> oTypeRep, IRepository<WorkOrderModel> workOrderRep, IRepository<ReservationModel> rsRepo,
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
                            IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo, IRepository<ExportByCommandModel> xklxhRepo,
-                           IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo, IRepository<WeighSessionModel> weighSsRepo, IRepository<DimDateModel> dimdateRepo)
+                           IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo, IRepository<WeighSessionModel> weighSsRepo, 
+                           IRepository<DimDateModel> dimdateRepo, IHttpClientFactory httpClientFactory)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -424,6 +429,8 @@ namespace MES.Application.Queries
             _dtWoRepo = dtWoRepo;
             _weighSsRepo = weighSsRepo;
             _dimdateRepo = dimdateRepo;
+            _httpClient = httpClientFactory.CreateClient();
+
         }
 
         #region Get DropdownMaterial
@@ -1139,24 +1146,39 @@ namespace MES.Application.Queries
         /// <returns></returns>
         public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
         {
-            var response = await _scaleRepo.GetQuery(x => 
-                                                          //Lọc theo từ khóa
-                                                          (!string.IsNullOrEmpty(keyword) ? x.ScaleCode.Contains(keyword) || x.ScaleName.Contains(keyword) : true) &&
-                                                          //Lấy theo mã nhà máy
-                                                          (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
-                                    .OrderBy(x => x.ScaleCode)
-                                    .Select(x => new DropdownWeightHeadResponse
-                                    {
-                                        //Mã đầu cân
-                                        Key = x.ScaleCode,
-                                        //Mã đầu cân | Tên đầu cân
-                                        Value = $"{x.ScaleCode} | {x.ScaleName}",
-                                        Data = x.ScaleType.Value == true ? true : false,
-                                        //Loại cân
-                                        Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
-                                    }).AsNoTracking().ToListAsync();
+            //GET data weigh session
+            var domainWS = new ConfigManager().WeighSessionUrl;
+            var url = $"{domainWS}?keyword={keyword}&plantCode={plantCode}&type={type}";
 
-            return response;
+            var weighSessionData = await _httpClient.GetAsync(url);
+            var weighSessionResponse = await weighSessionData.Content.ReadAsStringAsync();
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            var result = JsonConvert.DeserializeObject<List<DropdownWeightHeadResponse>>(weighSessionResponse, jsonSettings);
+
+            //var response = await _scaleRepo.GetQuery(x => 
+            //                                              //Lọc theo từ khóa
+            //                                              (!string.IsNullOrEmpty(keyword) ? x.ScaleCode.Contains(keyword) || x.ScaleName.Contains(keyword) : true) &&
+            //                                              //Lấy theo mã nhà máy
+            //                                              (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
+            //                        .OrderBy(x => x.ScaleCode)
+            //                        .Select(x => new DropdownWeightHeadResponse
+            //                        {
+            //                            //Mã đầu cân
+            //                            Key = x.ScaleCode,
+            //                            //Mã đầu cân | Tên đầu cân
+            //                            Value = $"{x.ScaleCode} | {x.ScaleName}",
+            //                            Data = x.ScaleType.Value == true ? true : false,
+            //                            //Loại cân
+            //                            Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
+            //                        }).AsNoTracking().ToListAsync();
+
+            return result;
         }
 
         //public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)

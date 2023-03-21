@@ -25,7 +25,7 @@ using IntegrationNS.Application.Commands.WorkOrder;
 using IntegrationNS.Application.Commands.XTHLSXs;
 using IntegrationNS.Application.DTOs;
 using IntegrationNS.Application.Queries;
-using Core.Models;
+using DTOs.Models;
 using Core.Properties;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

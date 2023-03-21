@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Core.Exceptions;
-using Core.Models;
+using DTOs.Models;
 using Core.Properties;
 
 namespace Core.Attributes

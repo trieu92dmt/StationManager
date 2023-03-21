@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using DTOs.Models;
 using Core.Properties;
 using Core.SeedWork;
 using MediatR;

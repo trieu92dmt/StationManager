@@ -39,6 +39,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DTOs\DTOs.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Update="Properties\CommonResource.Designer.cs">
 			<DependentUpon>CommonResource.resx</DependentUpon>
 			<DesignTime>True</DesignTime>

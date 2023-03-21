@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DTOs.Models;
+using DTOs.WeighSession;
+using Microsoft.AspNetCore.Mvc;
 using WeighSession.API.Repositories.Interfaces;
 
 namespace WeighSession.API.Controllers
@@ -13,11 +15,15 @@ namespace WeighSession.API.Controllers
         {
             _repository = repository;
         }
-        [HttpGet("get-weigh-session")]
+        [HttpGet("get-weight-head")]
         public async Task<IActionResult> GetListWeightHeadByPlant(string keyword, string plantCode, string type)
         {
-            var result = await _repository.GetWeighSessionAsync(keyword, plantCode, type);
-            return Ok(result);
+            var result = await _repository.GetWeightHeadAsync(keyword, plantCode, type);
+            return Ok(new ApiSuccessResponse<IList<WeightHeadResponse>>
+            {
+                Data = result,
+                IsSuccess = true
+            });
         }
     }
 }

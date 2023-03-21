@@ -1,6 +1,6 @@
 ﻿using Core.Extensions;
 using Core.Interfaces.Databases;
-using Core.Models;
+using DTOs.Models;
 using Core.Properties;
 using Core.SeedWork.Repositories;
 using Core.Utilities;

@@ -4,6 +4,6 @@ namespace WeighSession.API.Repositories.Interfaces
 {
     public interface IWeighSessionRepository
     {
-        Task<List<WeighSessionResponse>> GetWeighSessionAsync(string keyWord, string plantCode, string type);
+        Task<List<WeightHeadResponse>> GetWeightHeadAsync(string keyWord, string plantCode, string type);
     }
 }

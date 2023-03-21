@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using DTOs.Models;
 using MES.Application.DTOs.Common;
 using MES.Application.Queries;
 using MES.Application.Services;

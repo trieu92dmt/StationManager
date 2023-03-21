@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using DTOs.Models;
 using Core.Properties;
 using MES.Application.DTOs.Common;
 using MES.Application.Queries;
@@ -580,9 +580,9 @@ namespace MES.API.Controllers
         /// <param name="DateTo">Đến ngày</param>
         /// <returns></returns>
         [HttpGet("list-weigh-session-code")]
-        public async Task<IActionResult> GetDropdownWeighSessionCodeAsync(string ScaleCode, DateTime? DateFrom, DateTime? DateTo)
+        public async Task<IActionResult> GetDropdownWeighSessionCodeAsync(string keyword, string ScaleCode, DateTime? DateFrom, DateTime? DateTo)
         {
-            var dropdownList = await _commonQuery.GetDropdownWeighSessionCode(ScaleCode, DateFrom, DateTo);
+            var dropdownList = await _commonQuery.GetDropdownWeighSessionCode(keyword, ScaleCode, DateFrom, DateTo);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion

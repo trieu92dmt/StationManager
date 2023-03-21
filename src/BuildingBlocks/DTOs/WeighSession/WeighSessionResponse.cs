@@ -1,6 +1,6 @@
 ﻿namespace DTOs.WeighSession
 {
-    public class WeighSessionResponse
+    public class WeightHeadResponse
     {
         public string Key { get; set; }
         public string Value { get; set; }

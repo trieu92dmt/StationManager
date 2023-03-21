@@ -1,7 +1,9 @@
 ﻿using Azure;
 using Azure.Core;
 using Core.Extensions;
+using Core.Models;
 using Core.SeedWork.Repositories;
+using DTOs.Models;
 using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
@@ -332,11 +334,12 @@ namespace MES.Application.Queries
         /// <summary>
         /// Dropdown Id đợt cân
         /// </summary>
+        /// <param name="keyword">Mã đầu cân</param>
         /// <param name="ScaleCode">Mã đầu cân</param>
         /// <param name="DateFrom">Từ ngày</param>
         /// <param name="DateTo">Đến ngày</param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetDropdownWeighSessionCode(string ScaleCode, DateTime? DateFrom, DateTime? DateTo);
+        Task<List<CommonResponse>> GetDropdownWeighSessionCode(string keyword, string ScaleCode, DateTime? DateFrom, DateTime? DateTo);
     }
 
     #region Response
@@ -1148,7 +1151,7 @@ namespace MES.Application.Queries
         {
             //GET data weigh session
             var domainWS = new ConfigManager().WeighSessionUrl;
-            var url = $"{domainWS}?keyword={keyword}&plantCode={plantCode}&type={type}";
+            var url = $"{domainWS}get-weight-head?keyword={keyword}&plantCode={plantCode}&type={type}";
 
             var weighSessionData = await _httpClient.GetAsync(url);
             var weighSessionResponse = await weighSessionData.Content.ReadAsStringAsync();
@@ -1159,26 +1162,12 @@ namespace MES.Application.Queries
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
 
-            var result = JsonConvert.DeserializeObject<List<DropdownWeightHeadResponse>>(weighSessionResponse, jsonSettings);
+            var result = JsonConvert.DeserializeObject<ApiSuccessResponse<List<DropdownWeightHeadResponse>>>(weighSessionResponse, jsonSettings);
 
-            //var response = await _scaleRepo.GetQuery(x => 
-            //                                              //Lọc theo từ khóa
-            //                                              (!string.IsNullOrEmpty(keyword) ? x.ScaleCode.Contains(keyword) || x.ScaleName.Contains(keyword) : true) &&
-            //                                              //Lấy theo mã nhà máy
-            //                                              (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
-            //                        .OrderBy(x => x.ScaleCode)
-            //                        .Select(x => new DropdownWeightHeadResponse
-            //                        {
-            //                            //Mã đầu cân
-            //                            Key = x.ScaleCode,
-            //                            //Mã đầu cân | Tên đầu cân
-            //                            Value = $"{x.ScaleCode} | {x.ScaleName}",
-            //                            Data = x.ScaleType.Value == true ? true : false,
-            //                            //Loại cân
-            //                            Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
-            //                        }).AsNoTracking().ToListAsync();
+            if (!result.IsSuccess)
+                return null;
 
-            return result;
+            return result?.Data;
         }
 
         //public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
@@ -2349,7 +2338,7 @@ namespace MES.Application.Queries
         /// <param name="DateFrom">Từ ngày</param>
         /// <param name="DateTo">Đến ngày</param>
         /// <returns></returns>
-        public async Task<List<CommonResponse>> GetDropdownWeighSessionCode(string ScaleCode, DateTime? DateFrom, DateTime? DateTo)
+        public async Task<List<CommonResponse>> GetDropdownWeighSessionCode(string keyword, string ScaleCode, DateTime? DateFrom, DateTime? DateTo)
         {
             //Get query đimdate
             var dimdate = _dimdateRepo.GetQuery().AsNoTracking();
@@ -2374,6 +2363,8 @@ namespace MES.Application.Queries
 
             //Lấy đợt cân
             return await _weighSsRepo.GetQuery(x => 
+                                             //Lọc theo keyword
+                                             (!string.IsNullOrEmpty(keyword) ? x.WeighSessionCode.Contains(keyword) : true) &&
                                              //Lọc theo đầu cân
                                              (!string.IsNullOrEmpty(ScaleCode) ? x.ScaleCode == ScaleCode : true) &&
                                              //Theo ngày cân

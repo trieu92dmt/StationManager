@@ -2,7 +2,7 @@
 using Authentication.Application.DTOs;
 using Authentication.Application.Queries;
 using Core.Jwt.Models;
-using Core.Models;
+using DTOs.Models;
 using Core.Properties;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

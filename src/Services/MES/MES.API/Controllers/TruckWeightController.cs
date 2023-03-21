@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using DTOs.Models;
 using Core.Properties;
 using MediatR;
 using MES.Application.Commands.TruckInfo;

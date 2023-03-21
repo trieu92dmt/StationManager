@@ -39,7 +39,6 @@
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.17.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.7" />
 		<PackageReference Include="NetCore.AutoRegisterDi" Version="2.1.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.17.0" />
 		<PackageReference Include="System.ServiceModel.Duplex" Version="4.8.*" />
 		<PackageReference Include="System.ServiceModel.Federation" Version="4.8.*" />
@@ -53,6 +52,7 @@
 		<ProjectReference Include="..\..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\Core\Core.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
+		<ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
 		<ProjectReference Include="..\MES.Application\MES.Application.csproj" />
 	</ItemGroup>
 

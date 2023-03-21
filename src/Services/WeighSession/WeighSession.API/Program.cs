@@ -16,10 +16,18 @@ try
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseDeveloperExceptionPage();
+        //app.UseSwaggerAuthorized();
+        app.UseSwagger(options =>
+        {
+            options.SerializeAsV2 = true;
+        });
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "TLG - WS - API");
+        });
     }
 
     app.UseHttpsRedirection();

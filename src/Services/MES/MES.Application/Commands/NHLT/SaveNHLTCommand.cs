@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MES.Application.Services;
 
 namespace MES.Application.Commands.NHLT
 {
@@ -81,13 +82,14 @@ namespace MES.Application.Commands.NHLT
         private readonly IRepository<GoodsReceiptTypeTModel> _nhltRepo;
         private readonly IRepository<DetailOutboundDeliveryModel> _odDetailRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
+        private readonly IWeighSessionService _weighSessionService;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
 
         public SaveNHLTCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo, IRepository<TruckInfoModel> truckRepo,
                                       IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService,
                                       IRepository<ProductModel> prodRepo, IRepository<GoodsReceiptTypeTModel> nhltRepo,
                                       IRepository<DetailOutboundDeliveryModel> odDetailRepo, IRepository<StorageLocationModel> slocRepo,
-                                      IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                      IRepository<WeighSessionChoseModel> weightSsChoseRepo, IWeighSessionService weighSessionService)
         {
             _unitOfWork = unitOfWork;
             _weightSsRepo = weightSsRepo;
@@ -99,6 +101,7 @@ namespace MES.Application.Commands.NHLT
             _odDetailRepo = odDetailRepo;
             _slocRepo = slocRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _weighSessionService = weighSessionService;
         }
 
         public async Task<bool> Handle(SaveNHLTCommand request, CancellationToken cancellationToken)
@@ -107,7 +110,7 @@ namespace MES.Application.Commands.NHLT
             var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
             //Get query cân
-            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+            //var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
 
             //Products
             var prods = _prodRepo.GetQuery().AsNoTracking();
@@ -185,11 +188,11 @@ namespace MES.Application.Commands.NHLT
                 }
 
                 //Lấy ra cân hiện tại
-                var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
+                var scale = await _weighSessionService.GetDetailScale(item.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                                    await _weighSessionService.GetDetailWeighSession(item.WeightHeadCode) : null;
 
                 //Lấy ra component
                 //Lấy ra outbound detail

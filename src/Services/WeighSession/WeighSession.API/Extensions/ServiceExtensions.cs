@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.SeedWork.Repositories;
+using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using WeighSession.API.Repositories;
 using WeighSession.API.Repositories.Interfaces;
 using WeighSession.Infrastructure.Models;
@@ -17,6 +19,7 @@ namespace WeighSession.API.Extensions
             });
 
             services.AddTransient<DataCollectionContext>();
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
             services.AddScoped<IWeighSessionRepository, WeighSessionRepository>();
 
             return services;

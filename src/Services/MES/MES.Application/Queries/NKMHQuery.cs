@@ -9,8 +9,13 @@ using MES.Application.DTOs.MES.NKMH;
 using MES.Application.DTOs.MES.Scale;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Shared.Models;
+using Shared.WeighSession;
+using System.Net.Http;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace MES.Application.Queries
 {
@@ -59,11 +64,13 @@ namespace MES.Application.Queries
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
         private readonly IRepository<WeighSessionChoseModel> _weighSsChoseRepo;
+        private readonly HttpClient _httpClient;
 
         public NKMHQuery(IRepository<GoodsReceiptModel> nkmhRep, IRepository<ProductModel> prdRep, IRepository<PurchaseOrderMasterModel> poRep,
                          IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<AccountModel> userRep, IRepository<VendorModel> vendorRep,
                          IRepository<WeighSessionModel> weighSsRepo, IRepository<ScaleModel> scaleRepo, IRepository<CatalogModel> cataRepo,
-                         IRepository<StorageLocationModel> slocRepo, IRepository<TruckInfoModel> truckInfoRepo, IRepository<WeighSessionChoseModel> weighSsChoseRepo)
+                         IRepository<StorageLocationModel> slocRepo, IRepository<TruckInfoModel> truckInfoRepo, IRepository<WeighSessionChoseModel> weighSsChoseRepo,
+                         IHttpClientFactory httpClientFactory)
         {
             _nkmhRep = nkmhRep;
             _prdRep = prdRep;
@@ -77,6 +84,7 @@ namespace MES.Application.Queries
             _slocRepo = slocRepo;
             _truckInfoRepo = truckInfoRepo;
             _weighSsChoseRepo = weighSsChoseRepo;
+            _httpClient = httpClientFactory.CreateClient();
         }
 
 
@@ -491,27 +499,49 @@ namespace MES.Application.Queries
 
         public async Task<GetWeighNumResponse> GetWeighNum(string weightHeadCode)
         {
-            //Lấy đầu cân
-            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == weightHeadCode);
+            //GET data weigh session
+            var domainWS = new ConfigManager().WeighSessionUrl;
+            var url = $"{domainWS}get-weight-num?weightHeadCode={weightHeadCode}";
 
-            var Now = DateTime.Now.ToString("yyyyMMdd");
+            var weighSessionData = await _httpClient.GetAsync(url);
+            var weighSessionResponse = await weighSessionData.Content.ReadAsStringAsync();
 
-            //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
-            var weighSs = _weighSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode && x.DateKey == Now).OrderByDescending(x => x.OrderIndex).FirstOrDefault();
-
-            //Check đầu đã được chọn
-            var weighSsChose = weighSs != null ? _weighSsChoseRepo.FindOneAsync(x => x.ScaleCode == weighSs.ScaleCode && x.DateKey == Now && x.OrderIndex == weighSs.OrderIndex) : null;
-
-            var result = new GetWeighNumResponse
+            var jsonSettings = new JsonSerializerSettings
             {
-                Weight = weighSs != null ? weighSs.TotalWeight : 0,
-                WeightQuantity = weighSs != null ? weighSs.TotalNumberOfWeigh : 0,
-                StartTime = weighSs != null ? weighSs.StartTime : null,
-                Status = weighSs != null ? weighSs.Status : "",
-                isSuccess = weighSsChose != null ? true : false
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
             };
 
-            return result;
+            var result = JsonConvert.DeserializeObject<ApiSuccessResponse<GetWeighNumResponse>>(weighSessionResponse, jsonSettings);
+
+            if (!result.IsSuccess)
+                return null;
+
+            return result.Data;
+
+            #region Code cũ khi chưa tách 2 database
+            //Lấy đầu cân
+            //var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == weightHeadCode);
+
+            //var Now = DateTime.Now.ToString("yyyyMMdd");
+
+            ////Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
+            //var weighSs = _weighSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode && x.DateKey == Now).OrderByDescending(x => x.OrderIndex).FirstOrDefault();
+
+            ////Check đầu đã được chọn
+            //var weighSsChose = weighSs != null ? _weighSsChoseRepo.FindOneAsync(x => x.ScaleCode == weighSs.ScaleCode && x.DateKey == Now && x.OrderIndex == weighSs.OrderIndex) : null;
+
+            //var result = new GetWeighNumResponse
+            //{
+            //    Weight = weighSs != null ? weighSs.TotalWeight : 0,
+            //    WeightQuantity = weighSs != null ? weighSs.TotalNumberOfWeigh : 0,
+            //    StartTime = weighSs != null ? weighSs.StartTime : null,
+            //    Status = weighSs != null ? weighSs.Status : "",
+            //    isSuccess = weighSsChose != null ? true : false
+            //};
+
+            //return result;
+            #endregion
         }
 
         public async Task<GetDataByPoPoItemResponse> GetDataByPoAndPoItem(string po, string poItem)

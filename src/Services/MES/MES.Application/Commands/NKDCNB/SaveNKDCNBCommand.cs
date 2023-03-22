@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MES.Application.Services;
 
 namespace MES.Application.Commands.NKDCNB
 {
@@ -82,10 +83,11 @@ namespace MES.Application.Commands.NKDCNB
         private readonly IRepository<DetailOutboundDeliveryModel> _detailOdRepo;
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
+        private readonly IWeighSessionService _weighSessionService;
 
         public SaveNKDCNBCommandHandler(IUnitOfWork unitOfWork, IRepository<InhouseTransferModel> nkdcnbRepo, ICommonService utilitiesService, IRepository<ScaleModel> scaleRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                        IRepository<DetailOutboundDeliveryModel> detailOdRepo, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                        IRepository<DetailOutboundDeliveryModel> detailOdRepo, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo, IWeighSessionService weighSessionService)
         {
             _unitOfWork = unitOfWork;
             _nkdcnbRepo = nkdcnbRepo;
@@ -97,6 +99,7 @@ namespace MES.Application.Commands.NKDCNB
             _detailOdRepo = detailOdRepo;
             _truckRepo = truckRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _weighSessionService = weighSessionService;
         }
 
         public async Task<bool> Handle(SaveNKDCNBCommand request, CancellationToken cancellationToken)
@@ -105,7 +108,7 @@ namespace MES.Application.Commands.NKDCNB
             var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
             //Get query cân
-            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+            //var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
 
             //Products
             var prods = _prodRepo.GetQuery().AsNoTracking();
@@ -188,11 +191,11 @@ namespace MES.Application.Commands.NKDCNB
                                                              x.OutboundDeliveryItem == item.OutboundDeliveryItem : false);
 
                 //Lấy ra cân hiện tại
-                var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
+                var scale = await _weighSessionService.GetDetailScale(item.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                                    await _weighSessionService.GetDetailWeighSession(item.WeightHeadCode) : null;
 
                 //Nếu có đợt cân thì lưu vào bảng mapping
                 //if (weightSession != null)

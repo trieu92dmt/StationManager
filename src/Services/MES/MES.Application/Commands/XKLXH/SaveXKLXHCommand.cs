@@ -5,6 +5,7 @@ using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using MES.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -77,11 +78,13 @@ namespace MES.Application.Commands.XKLXH
         private readonly IRepository<ProductModel> _prodRepo;
         private readonly IRepository<TruckInfoModel> _truckInfoRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
+        private readonly IWeighSessionService _weighSessionService;
 
         public SaveXKLXHCommandHandler(IUnitOfWork unitOfWork, IRepository<ExportByCommandModel> xklxhRepo, IRepository<WeighSessionModel> weightSsRepo,
                                        IRepository<ScaleModel> scaleRepo, IRepository<DetailOutboundDeliveryModel> detailODRepo, IRepository<StorageLocationModel> slocRepo,
                                        IRepository<OutboundDeliveryModel> obRepo, ICommonService utilitiesService, IRepository<ProductModel> prodRepo,
-                                       IRepository<TruckInfoModel> truckInfoRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                       IRepository<TruckInfoModel> truckInfoRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo, 
+                                       IWeighSessionService weighSessionService)
         {
             _unitOfWork = unitOfWork;
             _xklxhRepo = xklxhRepo;
@@ -94,6 +97,7 @@ namespace MES.Application.Commands.XKLXH
             _prodRepo = prodRepo;
             _truckInfoRepo = truckInfoRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _weighSessionService = weighSessionService;
         }
 
         public async Task<bool> Handle(SaveXKLXHCommand request, CancellationToken cancellationToken)
@@ -102,7 +106,7 @@ namespace MES.Application.Commands.XKLXH
             var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
             //Get query cân
-            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+            //var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
 
             //Products
             var prods = _prodRepo.GetQuery().AsNoTracking();
@@ -182,11 +186,11 @@ namespace MES.Application.Commands.XKLXH
                 }
 
                 //Lấy ra cân hiện tại
-                var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
+                var scale = await _weighSessionService.GetDetailScale(item.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                                    await _weighSessionService.GetDetailWeighSession(item.WeightHeadCode) : null;
 
                 //Lấy ra outbound detail
                 var detailOb = !string.IsNullOrEmpty(item.OutboundDelivery) ?

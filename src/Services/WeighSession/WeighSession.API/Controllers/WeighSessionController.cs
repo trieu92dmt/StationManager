@@ -25,5 +25,37 @@ namespace WeighSession.API.Controllers
                 IsSuccess = true
             });
         }
+
+        [HttpGet("get-weight-num")]
+        public async Task<IActionResult> GetWeightNum(string weightHeadCode)
+        {
+            var result = await _repository.GetWeighNum(weightHeadCode);
+            return Ok(new ApiSuccessResponse<GetWeighNumResponse>
+            {
+                Data = result,
+                IsSuccess = true
+            });
+        }
+        [HttpGet("get-scale-by-code")]
+        public async Task<IActionResult> GetScaleByCode(string ScaleCode)
+        {
+            var result = await _repository.GetScaleByCode(ScaleCode);
+            return Ok(new ApiSuccessResponse<ScaleDetailResponse>
+            {
+                Data = result,
+                IsSuccess = true
+            });
+        }
+
+        [HttpGet("get-weigh-session-by-scale-code")]
+        public async Task<IActionResult> GeWeighSessionByScaleCode(string ScaleCode)
+        {
+            var result = await _repository.GeWeighSessionByScaleCode(ScaleCode);
+            return Ok(new ApiSuccessResponse<WeighSessionDetailResponse>
+            {
+                Data = result,
+                IsSuccess = true
+            });
+        }
     }
 }

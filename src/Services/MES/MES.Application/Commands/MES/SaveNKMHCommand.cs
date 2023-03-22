@@ -5,6 +5,7 @@ using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using MES.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -72,11 +73,13 @@ namespace MES.Application.Commands.MES
         private readonly ICommonService _utilitiesService;
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
+        private readonly IWeighSessionService _weighSessionService;
 
         public SaveNKMHCommandHandler(IRepository<GoodsReceiptModel> nkRep, IUnitOfWork unitOfWork,
                                       IRepository<PurchaseOrderDetailModel> poDetailRep, IRepository<StorageLocationModel> slocRepo,
                                       IRepository<ProductModel> prdRepo, IRepository<ScaleModel> scaleRepo, IRepository<WeighSessionModel> weightSsRepo,
-                                      ICommonService utilitiesService, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                      ICommonService utilitiesService, IRepository<TruckInfoModel> truckRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo,
+                                      IWeighSessionService weighSessionService)
         {
             _nkRep = nkRep;
             _unitOfWork = unitOfWork;
@@ -88,6 +91,7 @@ namespace MES.Application.Commands.MES
             _utilitiesService = utilitiesService;
             _truckRepo = truckRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _weighSessionService = weighSessionService;
         }
         public async Task<bool> Handle(SaveNKMHCommand request, CancellationToken cancellationToken)
         {
@@ -100,7 +104,7 @@ namespace MES.Application.Commands.MES
             var nkmh = await _nkRep.GetQuery().ToListAsync();
 
             //Get query cân
-            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+            //var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
 
             //Last index dùng để tạo số phiếu cân tự sinh
             var lastIndex = nkmh.Count >0 ? nkmh.OrderBy(x => x.WeitghtVote).LastOrDefault().WeitghtVote.Substring(1) : "1000000";
@@ -177,11 +181,13 @@ namespace MES.Application.Commands.MES
                 }
 
                 //Lấy ra cân hiện tại
-                var scale = scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
+                var scale = await _weighSessionService.GetDetailScale(x.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
-                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                                    await _weighSessionService.GetDetailWeighSession(x.WeightHeadCode) : null;
+                                    //!string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                                    //weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
                 ////Nếu có đợt cân thì lưu vào bảng mapping
                 //if (weightSession != null)

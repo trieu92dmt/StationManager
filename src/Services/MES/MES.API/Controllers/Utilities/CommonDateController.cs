@@ -12,9 +12,9 @@ namespace MES.API.Controllers.Utilities
     public class CommonDateController : ControllerBase
     {
         private readonly ICommonQuery _commonQuery;
-        private readonly ICommonDateService _commonDateService;
+        private readonly CommonDateService _commonDateService;
 
-        public CommonDateController(ICommonQuery commonQuery, ICommonDateService commonDateService)
+        public CommonDateController(ICommonQuery commonQuery, CommonDateService commonDateService)
         {
             _commonQuery = commonQuery;
             _commonDateService = commonDateService;

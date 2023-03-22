@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MES.Application.DTOs.MES.NKMH
+﻿namespace Shared.WeighSession
 {
     public class GetWeighNumResponse
     {
+
         //Trọng lượng cân
         public decimal? Weight { get; set; }
         //Số lần cân

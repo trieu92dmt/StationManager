@@ -6,6 +6,7 @@ using MES.Application.DTOs.MES.NKMH;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
+using Shared.WeighSession;
 
 namespace MES.API.Controllers
 {

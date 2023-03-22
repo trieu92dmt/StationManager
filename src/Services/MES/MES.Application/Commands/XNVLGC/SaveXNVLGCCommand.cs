@@ -5,6 +5,7 @@ using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using MES.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -89,11 +90,13 @@ namespace MES.Application.Commands.XNVLGC
         private readonly IRepository<TruckInfoModel> _truckRepo;
         private readonly IRepository<VendorModel> _vendorRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
+        private readonly IWeighSessionService _weighSessionService;
 
         public SaveXNVLGCCommandHandler(IUnitOfWork unitOfWork, IRepository<ComponentExportModel> xnvlgcRepo, IRepository<WeighSessionModel> weightSsRepo,
                                         IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService, IRepository<PurchaseOrderDetailModel> detailPoRepo,
                                         IRepository<ProductModel> prodRepo, IRepository<StorageLocationModel> slocRepo, IRepository<PlantModel> plantRepo, IRepository<TruckInfoModel> truckRepo,
-                                        IRepository<VendorModel> vendorRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                        IRepository<VendorModel> vendorRepo, IRepository<WeighSessionChoseModel> weightSsChoseRepo, 
+                                        IWeighSessionService weighSessionService)
         {
             _unitOfWork = unitOfWork;
             _xnvlgcRepo = xnvlgcRepo;
@@ -107,6 +110,7 @@ namespace MES.Application.Commands.XNVLGC
             _truckRepo = truckRepo;
             _vendorRepo = vendorRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _weighSessionService = weighSessionService;
         }
 
         public async Task<bool> Handle(SaveXNVLGCCommand request, CancellationToken cancellationToken)
@@ -115,7 +119,7 @@ namespace MES.Application.Commands.XNVLGC
             var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
             //Get query cân
-            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+            //var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
 
             //Products
             var prods = _prodRepo.GetQuery().AsNoTracking();
@@ -201,11 +205,11 @@ namespace MES.Application.Commands.XNVLGC
                                                                                                 x.POLine == item.PurchaseOrderItem).FirstOrDefault() : null;
 
                 //Lấy ra cân hiện tại
-                var scale = !string.IsNullOrEmpty(item.WeightHeadCode) ? scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode) : null;
+                var scale = await _weighSessionService.GetDetailScale(item.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                                    await _weighSessionService.GetDetailWeighSession(item.WeightHeadCode) : null;
 
                 //Nếu có đợt cân thì lưu vào bảng mapping
                 //if (weightSession != null)

@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using MES.Application.Services;
 
 namespace MES.Application.Commands.OutboundDelivery
 {
@@ -62,12 +63,13 @@ namespace MES.Application.Commands.OutboundDelivery
         private readonly IRepository<WorkOrderModel> _woRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
+        private readonly IWeighSessionService _weighSessionService;
 
         public SaveNKTPSXCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo,ICommonService utilitiesService,
                                              IRepository<ProductModel> prodRepo, IRepository<ReceiptFromProductionModel> nktpsxRepo,
                                              IRepository<WorkOrderModel> woRepo, IRepository<StorageLocationModel> slocRepo,
-                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo, IWeighSessionService weighSessionService)
         {
             _unitOfWork = unitOfWork;
             _weightSsRepo = weightSsRepo;
@@ -78,6 +80,7 @@ namespace MES.Application.Commands.OutboundDelivery
             _woRepo = woRepo;
             _slocRepo = slocRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _weighSessionService = weighSessionService;
         }
 
         public async Task<bool> Handle(SaveNKTPSXCommand request, CancellationToken cancellationToken)
@@ -161,11 +164,11 @@ namespace MES.Application.Commands.OutboundDelivery
                 }
 
                 //Lấy ra cân hiện tại
-                var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
+                var scale = await _weighSessionService.GetDetailScale(item.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                                    await _weighSessionService.GetDetailWeighSession(item.WeightHeadCode) : null;
 
                 //Lấy product
                 var material = prods.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.MaterialCode)).ProductCode;

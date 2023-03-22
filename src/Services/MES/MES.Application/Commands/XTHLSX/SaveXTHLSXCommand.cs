@@ -5,6 +5,7 @@ using Core.Interfaces.Databases;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using MES.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,12 +64,13 @@ namespace MES.Application.Commands.XTHLSX
         private readonly IRepository<DetailWorkOrderModel> _woDetailRepo;
         private readonly IRepository<StorageLocationModel> _slocRepo;
         private readonly IRepository<WeighSessionChoseModel> _weightSsChoseRepo;
+        private readonly IWeighSessionService _weighSessionService;
 
         public SaveXTHLSXCommandHandler(IUnitOfWork unitOfWork, IRepository<WeighSessionModel> weightSsRepo,
                                              IRepository<ScaleModel> scaleRepo, ICommonService utilitiesService,
                                              IRepository<ProductModel> prodRepo, IRepository<IssueForProductionModel> xthlsxRepo,
                                              IRepository<DetailWorkOrderModel> woDetailRepo, IRepository<StorageLocationModel> slocRepo,
-                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo)
+                                             IRepository<WeighSessionChoseModel> weightSsChoseRepo, IWeighSessionService weighSessionService)
         {
             _unitOfWork = unitOfWork;
             _weightSsRepo = weightSsRepo;
@@ -79,6 +81,7 @@ namespace MES.Application.Commands.XTHLSX
             _woDetailRepo = woDetailRepo;
             _slocRepo = slocRepo;
             _weightSsChoseRepo = weightSsChoseRepo;
+            _weighSessionService = weighSessionService;
         }
 
         public async Task<bool> Handle(SaveXTHLSXCommand request, CancellationToken cancellationToken)
@@ -87,7 +90,7 @@ namespace MES.Application.Commands.XTHLSX
             var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
             //Get query cân
-            var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
+            //var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
 
             //Products
             var prods = _prodRepo.GetQuery().AsNoTracking();
@@ -161,11 +164,11 @@ namespace MES.Application.Commands.XTHLSX
                 }
 
                 //Lấy ra cân hiện tại
-                var scale = scales.FirstOrDefault(x => x.ScaleCode == item.WeightHeadCode);
+                var scale = await _weighSessionService.GetDetailScale(item.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(item.WeightHeadCode) && scale != null ?
-                                 weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                                    await _weighSessionService.GetDetailWeighSession(item.WeightHeadCode) : null;
 
                 //Lấy ra component
                 var detailWo = !string.IsNullOrEmpty(item.WorkOrder) && !string.IsNullOrEmpty(item.Component) ?

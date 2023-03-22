@@ -6,7 +6,7 @@ using Shared.Models;
 
 namespace Authentication.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
     [ApiController]
     public class AuthController : ControllerBase

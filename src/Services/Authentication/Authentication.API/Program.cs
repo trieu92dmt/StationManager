@@ -1,6 +1,8 @@
 using Authentication.API.Extensions;
 using Common.Logging;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,22 +18,49 @@ try
     builder.Services.AddInfrastructureServices(builder.Configuration);
     builder.Services.AddJwtAuthentication();   
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(option =>
+    {
+        option.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "TLG - MES API",
+            Version = "v1"
+        });
+
+
+    }); ;
+    builder.Services.AddApiVersioning();
 
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
+
+    // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseDeveloperExceptionPage();
+        //app.UseSwaggerAuthorized();
+        app.UseSwagger(options =>
+        {
+            options.SerializeAsV2 = true;
+        });
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "TLG - AUTH - API");
+        });
     }
+
+    app.UseRouting();
 
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
 
-    app.MapControllers();
+    //app.MapControllers();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapDefaultControllerRoute();
+    });
 
     app.Run();
 }

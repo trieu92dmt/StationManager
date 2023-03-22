@@ -265,6 +265,7 @@ namespace MES.Application.Commands.MES
                         TransportUnit = poLine?.TransportUnit,
                         //Id cân xe tải
                         TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,
+                        TruckQuantity = x.TruckQuantity,
                         //Số cân đầu vào
                         InputWeight = x.InputWeight,
                         OutputWeight = x.OutputWeight,

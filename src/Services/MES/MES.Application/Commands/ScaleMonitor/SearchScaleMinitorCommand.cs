@@ -1,4 +1,7 @@
-﻿using Core.Extensions;
+﻿using Core.Exceptions;
+using Core.Extensions;
+using Core.Properties;
+using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
@@ -6,11 +9,13 @@ using MES.Application.Queries;
 using Newtonsoft.Json;
 using Shared.Models;
 using Shared.WeighSession;
+using System.Text;
 
 namespace MES.Application.Commands.ScaleMonitor
 {
-    public class SearchScaleMinitorCommand : IRequest<List<SearchScaleMonitorResponse>>
+    public class SearchScaleMinitorCommand : IRequest<SearchScaleMonitorResponse2>
     {
+        public PagingQuery Paging { get; set; } = new PagingQuery();
         //Plant
         public string PlantFrom { get; set; }
         public string PlantTo { get; set; }
@@ -24,7 +29,7 @@ namespace MES.Application.Commands.ScaleMonitor
         public DateTime? RecordTimeTo { get; set; }
     }
 
-    public class SearchScaleMinitorCommandHandler : IRequestHandler<SearchScaleMinitorCommand, List<SearchScaleMonitorResponse>>
+    public class SearchScaleMinitorCommandHandler : IRequestHandler<SearchScaleMinitorCommand, SearchScaleMonitorResponse2>
     {
         private readonly IRepository<ScaleMonitorModel> _scaleMonitorRepo;
         private readonly HttpClient _httpClient;
@@ -35,7 +40,7 @@ namespace MES.Application.Commands.ScaleMonitor
             _httpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<List<SearchScaleMonitorResponse>> Handle(SearchScaleMinitorCommand request, CancellationToken cancellationToken)
+        public async Task<SearchScaleMonitorResponse2> Handle(SearchScaleMinitorCommand request, CancellationToken cancellationToken)
         {
             //GET data weigh session
             var domainWS = new ConfigManager().WeighSessionUrl;
@@ -44,9 +49,9 @@ namespace MES.Application.Commands.ScaleMonitor
             //Convert request to json
             var json = JsonConvert.SerializeObject(request);
             //Conver json to dictionary<string, string> => form
-            var content = new FormUrlEncodedContent(JsonConvert.DeserializeObject<Dictionary<string, string>>(json));
+            var requestBody = new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json");
 
-            var scaleMonitorData = await _httpClient.PostAsync(url, content);
+            var scaleMonitorData = await _httpClient.PostAsync(url, requestBody);
             var scaleMonitorResponse = await scaleMonitorData.Content.ReadAsStringAsync();
 
             var jsonSettings = new JsonSerializerSettings
@@ -55,12 +60,9 @@ namespace MES.Application.Commands.ScaleMonitor
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
 
-            var result = JsonConvert.DeserializeObject<ApiSuccessResponse<List<SearchScaleMonitorResponse>>>(scaleMonitorResponse, jsonSettings);
+            var responseWS = JsonConvert.DeserializeObject<SearchScaleMonitorResponse2>(scaleMonitorResponse, jsonSettings);
 
-            if (!result.IsSuccess)
-                return null;
-
-            return result?.Data;
+            return responseWS;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Core.SeedWork;
+using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
 using Shared.WeighSession;
 using WeighSession.API.DTOs;
@@ -63,11 +65,7 @@ namespace WeighSession.API.Controllers
         public async Task<IActionResult> SearchScaleMonitor([FromBody] SearchScaleMinitorRequest request)
         {
             var result = await _repository.SearchScaleMonitor(request);
-            return Ok(new ApiSuccessResponse<IList<SearchScaleMonitorResponse>>
-            {
-                Data = result,
-                IsSuccess = true
-            });
+            return Ok(result);
         }
     }
 }

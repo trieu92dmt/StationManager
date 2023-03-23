@@ -1,4 +1,5 @@
-﻿using Shared.WeighSession;
+﻿using Core.SeedWork;
+using Shared.WeighSession;
 using WeighSession.API.DTOs;
 
 namespace WeighSession.API.Repositories.Interfaces
@@ -40,7 +41,7 @@ namespace WeighSession.API.Repositories.Interfaces
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<List<SearchScaleMonitorResponse>> SearchScaleMonitor(SearchScaleMinitorRequest request);
+        Task<SearchScaleMonitorResponse2> SearchScaleMonitor(SearchScaleMinitorRequest request);
 
     }
 }

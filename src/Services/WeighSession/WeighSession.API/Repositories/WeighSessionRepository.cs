@@ -124,8 +124,10 @@ namespace WeighSession.API.Repositories
             };
         }
 
-        public async Task<List<SearchScaleMonitorResponse>> SearchScaleMonitor(SearchScaleMinitorRequest request)
+        public async Task<SearchScaleMonitorResponse2> SearchScaleMonitor(SearchScaleMinitorRequest request)
         {
+            var result = new SearchScaleMonitorResponse2();
+
             //Get query
             var query = _weiMonitorRepo.GetQuery().AsNoTracking();
 
@@ -188,7 +190,34 @@ namespace WeighSession.API.Repositories
                 Type = x.Type
             }).ToListAsync();
 
-            return data;
+            #region Phân trang
+            var totalRecords = data.Count();
+
+            //Sorting
+            var dataSorting = PagingSorting.Sorting(request.Paging, data.AsQueryable());
+            //Phân trang
+            var responsePaginated = PaginatedList<SearchScaleMonitorResponse>.Create(dataSorting, request.Paging.Offset, request.Paging.PageSize);
+            var res = new PagingResultSP<SearchScaleMonitorResponse>(responsePaginated, totalRecords, request.Paging.PageIndex, request.Paging.PageSize);
+
+            //Đánh số thứ tự
+            if (res.Data.Any())
+            {
+                int i = request.Paging.Offset;
+                foreach (var item in res.Data)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+
+            result.Data = res.Data.ToList();
+            result.TotalCount = res.Paging.TotalCount;
+            result.TotalPages = res.Paging.TotalPages;
+            result.PageSize = res.Paging.PageSize;
+            result.PageIndex = res.Paging.PageIndex;
+
+            #endregion
+            return result;
         }
     }
 }

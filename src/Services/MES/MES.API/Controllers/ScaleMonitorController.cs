@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MES.Application.Commands.ScaleMonitor;
+using MES.Application.DTOs.MES;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
 using Shared.WeighSession;
@@ -28,9 +29,12 @@ namespace MES.API.Controllers
         {
             var response = await _mediator.Send(command);
 
-            return Ok(new ApiSuccessResponse<List<SearchScaleMonitorResponse>>
+            return Ok(new ApiSuccessResponse<IList<SearchScaleMonitorResponse>>
             {
-                Data = response
+                Data = response.Data,
+                RecordsTotal = response.TotalCount,
+                PagesCount = response.TotalPages,
+                ResultsCount = response.PageSize
             });
         }
     }

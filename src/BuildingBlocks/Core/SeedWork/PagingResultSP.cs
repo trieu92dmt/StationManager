@@ -6,7 +6,6 @@ namespace Core.SeedWork
     {
         public PagingSP Paging { get; set; }
         public IList<T> Data { get; set; }
-        public List<object> Charts { get; set; } = new List<object>();
 
         public PagingResultSP()
         {

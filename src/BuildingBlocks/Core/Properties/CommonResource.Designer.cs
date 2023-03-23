@@ -88,6 +88,15 @@ namespace Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; thất bại..
+        /// </summary>
+        public static string Msg_Fail {
+            get {
+                return ResourceManager.GetString("Msg_Fail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File rỗng. Vui lòng chọn file khác !.
         /// </summary>
         public static string Msg_FileEmpty {

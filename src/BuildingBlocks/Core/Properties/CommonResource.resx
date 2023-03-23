@@ -126,6 +126,9 @@
   <data name="Msg_Existed" xml:space="preserve">
     <value>"{0}" đã tồn tại !</value>
   </data>
+  <data name="Msg_Fail" xml:space="preserve">
+    <value>"{0}" thất bại.</value>
+  </data>
   <data name="Msg_FileEmpty" xml:space="preserve">
     <value>File rỗng. Vui lòng chọn file khác !</value>
   </data>

@@ -109,6 +109,9 @@ namespace WeighSession.API.Repositories
             //Lấy đợt cân
             var weighSession = await _weiSsRepo.FindOneAsync(x => x.ScaleCode == scaleCode && x.SessionCheck == 0);
 
+            if (weighSession == null)
+                return null;
+
             return new WeighSessionDetailResponse
             {
                 WeighSessionCode = weighSession.WeighSessionCode,

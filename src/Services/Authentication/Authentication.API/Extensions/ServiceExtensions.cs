@@ -15,6 +15,7 @@ namespace Authentication.API.Extensions
 {
     public static class ServiceExtensions
     {
+        private static string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services,
             IConfiguration configuration)
         {
@@ -27,6 +28,16 @@ namespace Authentication.API.Extensions
 
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            //CORS
+            var origins = configuration.GetValue<string>("AllowedOrigins").Split(";");
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins(origins).AllowAnyMethod().AllowAnyHeader();
+                                  });
+            });
 
             services.AddDbContext<EntityDataContext>(options =>
             {

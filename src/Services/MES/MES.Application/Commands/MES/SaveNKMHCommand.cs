@@ -181,7 +181,7 @@ namespace MES.Application.Commands.MES
                 }
 
                 //Lấy ra cân hiện tại
-                var scale = await _weighSessionService.GetDetailScale(x.WeightHeadCode);//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
+                var scale = !string.IsNullOrEmpty(x.WeightHeadCode) ? await _weighSessionService.GetDetailScale(x.WeightHeadCode) : null;//scales.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode);
 
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?

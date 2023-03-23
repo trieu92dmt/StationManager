@@ -1,4 +1,5 @@
 ﻿using Shared.WeighSession;
+using WeighSession.API.DTOs;
 
 namespace WeighSession.API.Repositories.Interfaces
 {
@@ -33,5 +34,13 @@ namespace WeighSession.API.Repositories.Interfaces
         /// <param name="scaleCode"></param>
         /// <returns></returns>
         Task<WeighSessionDetailResponse> GeWeighSessionByScaleCode(string scaleCode);
+
+        /// <summary>
+        /// Giám sát hoạt động cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<List<SearchScaleMonitorResponse>> SearchScaleMonitor(SearchScaleMinitorRequest request);
+
     }
 }

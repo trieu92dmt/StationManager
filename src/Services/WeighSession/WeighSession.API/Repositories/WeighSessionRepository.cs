@@ -1,9 +1,10 @@
-﻿using Core.SeedWork.Repositories;
+﻿using Core.SeedWork;
+using Core.SeedWork.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Shared.WeighSession;
+using WeighSession.API.DTOs;
 using WeighSession.API.Repositories.Interfaces;
 using WeighSession.Infrastructure.Models;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace WeighSession.API.Repositories
 {
@@ -11,12 +12,15 @@ namespace WeighSession.API.Repositories
     {
         private readonly IRepository<ScaleModel, DataCollectionContext> _scaleRepo;
         private readonly IRepository<WeighSessionModel, DataCollectionContext> _weiSsRepo;
+        private readonly IRepository<WeightMonitorModel, DataCollectionContext> _weiMonitorRepo;
 
         public WeighSessionRepository(IRepository<ScaleModel, DataCollectionContext> scaleRepo, 
-                                      IRepository<WeighSessionModel, DataCollectionContext> weiSsRepo)
+                                      IRepository<WeighSessionModel, DataCollectionContext> weiSsRepo,
+                                      IRepository<WeightMonitorModel, DataCollectionContext> weiMonitorRepo)
         {
             _scaleRepo = scaleRepo;
             _weiSsRepo = weiSsRepo;
+            _weiMonitorRepo = weiMonitorRepo;
         }
 
         public async Task<ScaleDetailResponse> GetScaleByCode(string scaleCode)
@@ -115,6 +119,73 @@ namespace WeighSession.API.Repositories
                 EndTime = weighSession.EndTime,
                 TotalNumberOfWeigh = weighSession.TotalNumberOfWeigh,
             };
+        }
+
+        public async Task<List<SearchScaleMonitorResponse>> SearchScaleMonitor(SearchScaleMinitorRequest request)
+        {
+            //Get query
+            var query = _weiMonitorRepo.GetQuery().AsNoTracking();
+
+            //Lọc theo plant
+            if (!string.IsNullOrEmpty(request.PlantFrom))
+            {
+                //Không có to thì search 1
+                if (string.IsNullOrEmpty(request.PlantFrom))
+                    request.PlantTo = request.PlantFrom;
+
+                query = query.Where(x => x.PlantCode.CompareTo(request.PlantFrom) >= 0 &&
+                                         x.PlantCode.CompareTo(request.PlantFrom) <= 0);
+            }
+
+            //Lọc theo đầu cân
+            if (!string.IsNullOrEmpty(request.WeightHeadCodeFrom))
+            {
+                //Không có to thì search 1
+                if (string.IsNullOrEmpty(request.WeightHeadCodeFrom))
+                    request.WeightHeadCodeTo = request.WeightHeadCodeFrom;
+
+                query = query.Where(x => x.ScaleCode.CompareTo(request.WeightHeadCodeFrom) >= 0 &&
+                                         x.ScaleCode.CompareTo(request.WeightHeadCodeTo) <= 0);
+            }
+
+            //Lọc theo loại
+            if (!string.IsNullOrEmpty(request.Type))
+            {
+                query = query.Where(x => x.Type == request.Type);
+            }
+
+            //Lọc theo ngày giờ ghi nhận
+            if (request.RecordTimeFrom.HasValue)
+            {
+                if (!request.RecordTimeTo.HasValue) request.RecordTimeTo = request.RecordTimeFrom.Value.Date.AddDays(1).AddSeconds(-1);
+                query = query.Where(x => x.CreateTime >= request.RecordTimeFrom &&
+                                         x.CreateTime <= request.RecordTimeTo);
+            }
+
+            //Lấy data
+            var data = await query.OrderBy(x => x.ScaleCode).ThenByDescending(x => x.CreateTime).Select(x => new SearchScaleMonitorResponse
+            {
+                //Mã đầu cân
+                WeightHeadCode = x.ScaleCode,
+                //Id đợt cân
+                WeightSessionId = x.WeightSessionCode,
+                //Trọng lượng cân
+                Weight = x.Weight,
+                //Plant
+                Plant = x.PlantCode,
+                //Đơn vị
+                Unit = "",
+                //TG bắt đầu
+                StartTime = x.StartTime,
+                //TG kết thúc
+                EndTime = x.EndTime,
+                //Thời gian ghi nhận
+                RecordTime = x.CreateTime,
+                //Loại
+                Type = x.Type
+            }).ToListAsync();
+
+            return data;
         }
     }
 }

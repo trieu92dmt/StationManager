@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using MES.Application.Commands.ScaleMonitor;
-using MES.Application.DTOs.MES.ScaleMonitor;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
+using Shared.WeighSession;
 
 namespace MES.API.Controllers
 {

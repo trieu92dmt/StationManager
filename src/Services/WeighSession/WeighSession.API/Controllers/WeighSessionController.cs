@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
 using Shared.WeighSession;
+using WeighSession.API.DTOs;
 using WeighSession.API.Repositories.Interfaces;
 
 namespace WeighSession.API.Controllers
@@ -52,6 +53,17 @@ namespace WeighSession.API.Controllers
         {
             var result = await _repository.GeWeighSessionByScaleCode(ScaleCode);
             return Ok(new ApiSuccessResponse<WeighSessionDetailResponse>
+            {
+                Data = result,
+                IsSuccess = true
+            });
+        }
+
+        [HttpPost("get-weigh-monitor-by-scale-code")]
+        public async Task<IActionResult> SearchScaleMonitor([FromBody] SearchScaleMinitorRequest request)
+        {
+            var result = await _repository.SearchScaleMonitor(request);
+            return Ok(new ApiSuccessResponse<IList<SearchScaleMonitorResponse>>
             {
                 Data = result,
                 IsSuccess = true

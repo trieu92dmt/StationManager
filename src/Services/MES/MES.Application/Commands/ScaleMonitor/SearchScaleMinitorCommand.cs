@@ -1,10 +1,11 @@
-﻿using Core.SeedWork.Repositories;
+﻿using Core.Extensions;
+using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
-using MES.Application.DTOs.MES.ScaleMonitor;
-using Microsoft.EntityFrameworkCore;
-using System.Net.WebSockets;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using MES.Application.Queries;
+using Newtonsoft.Json;
+using Shared.Models;
+using Shared.WeighSession;
 
 namespace MES.Application.Commands.ScaleMonitor
 {
@@ -26,77 +27,40 @@ namespace MES.Application.Commands.ScaleMonitor
     public class SearchScaleMinitorCommandHandler : IRequestHandler<SearchScaleMinitorCommand, List<SearchScaleMonitorResponse>>
     {
         private readonly IRepository<ScaleMonitorModel> _scaleMonitorRepo;
+        private readonly HttpClient _httpClient;
 
-        public SearchScaleMinitorCommandHandler(IRepository<ScaleMonitorModel> scaleMonitorRepo)
+        public SearchScaleMinitorCommandHandler(IRepository<ScaleMonitorModel> scaleMonitorRepo, IHttpClientFactory httpClientFactory)
         {
             _scaleMonitorRepo = scaleMonitorRepo;
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<List<SearchScaleMonitorResponse>> Handle(SearchScaleMinitorCommand request, CancellationToken cancellationToken)
         {
-            //Get query
-            var query = _scaleMonitorRepo.GetQuery().AsNoTracking();
+            //GET data weigh session
+            var domainWS = new ConfigManager().WeighSessionUrl;
+            var url = $"{domainWS}get-weigh-monitor-by-scale-code";
 
-            //Lọc theo plant
-            if (!string.IsNullOrEmpty(request.PlantFrom))
+            //Convert request to json
+            var json = JsonConvert.SerializeObject(request);
+            //Conver json to dictionary<string, string> => form
+            var content = new FormUrlEncodedContent(JsonConvert.DeserializeObject<Dictionary<string, string>>(json));
+
+            var scaleMonitorData = await _httpClient.PostAsync(url, content);
+            var scaleMonitorResponse = await scaleMonitorData.Content.ReadAsStringAsync();
+
+            var jsonSettings = new JsonSerializerSettings
             {
-                //Không có to thì search 1
-                if (string.IsNullOrEmpty(request.PlantFrom))
-                    request.PlantTo = request.PlantFrom;
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
 
-                query = query.Where(x => x.Plant.CompareTo(request.PlantFrom) >= 0 &&
-                                         x.Plant.CompareTo(request.PlantFrom) <= 0);
-            }
+            var result = JsonConvert.DeserializeObject<ApiSuccessResponse<List<SearchScaleMonitorResponse>>>(scaleMonitorResponse, jsonSettings);
 
-            //Lọc theo đầu cân
-            if (!string.IsNullOrEmpty(request.WeightHeadCodeFrom))
-            {
-                //Không có to thì search 1
-                if (string.IsNullOrEmpty(request.WeightHeadCodeFrom))
-                    request.WeightHeadCodeTo = request.WeightHeadCodeFrom;
+            if (!result.IsSuccess)
+                return null;
 
-                query = query.Where(x => x.Scale.ScaleCode.CompareTo(request.WeightHeadCodeFrom) >= 0 &&
-                                         x.Scale.ScaleCode.CompareTo(request.WeightHeadCodeTo) <= 0);
-            }
-
-            //Lọc theo loại
-            if (!string.IsNullOrEmpty(request.Type))
-            { 
-                query = query.Where(x => x.Type == request.Type);
-            }
-
-            //Lọc theo ngày giờ ghi nhận
-            if (request.RecordTimeFrom.HasValue)
-            {
-                if (!request.RecordTimeTo.HasValue) request.RecordTimeTo = request.RecordTimeFrom.Value.Date.AddDays(1).AddSeconds(-1);
-                query = query.Where(x => x.RecordTime >= request.RecordTimeFrom &&
-                                         x.RecordTime <= request.RecordTimeTo);
-            }
-
-            //Lấy data
-            var data = await query.OrderBy(x => x.Scale.ScaleCode).ThenByDescending(x => x.RecordTime).Select(x => new SearchScaleMonitorResponse
-            {
-                //Mã đầu cân
-                WeightHeadCode = x.Scale.ScaleCode,
-                //Id đợt cân
-                WeightSessionId = x.WeightSessionCode,
-                //Trọng lượng cân
-                Weight = x.Weight,
-                //Plant
-                Plant = x.Plant,
-                //Đơn vị
-                Unit = "",
-                //TG bắt đầu
-                StartTime = x.StartTime,
-                //TG kết thúc
-                EndTime = x.EndTime,
-                //Thời gian ghi nhận
-                RecordTime = x.RecordTime,
-                //Loại
-                Type = x.Type
-            }).ToListAsync();
-
-            return data;
+            return result?.Data;
         }
     }
 }

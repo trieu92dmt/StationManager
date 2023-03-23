@@ -55,6 +55,7 @@ try
 
     app.UseAuthorization();
 
+    app.UseCors("_myAllowSpecificOrigins");
     //app.MapControllers();
 
     app.UseEndpoints(endpoints =>

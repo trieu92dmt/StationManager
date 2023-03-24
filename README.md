@@ -59,3 +59,9 @@
    - Web: https://tlg-mes-fe.isdcorp.vn/
 	+ username = admin
 	+ password = isd@2023
+
+
+## Command using window service
+```Powershell
+installutil.exe C:\Working\TLG.API\src\Services\WeighSessionFactory\WSFactory.Service\bin\Debug\WSFactory.Service.exe
+```

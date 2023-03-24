@@ -48,7 +48,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeighSession.API", "src\Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\BuildingBlocks\Shared\Shared.csproj", "{D97DBCFA-BDD9-498B-95A2-C2C2E173EC69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.API", "src\Services\Authentication\Authentication.API\Authentication.API.csproj", "{A6254D8D-186D-42A8-A956-EDFC297AD1AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.API", "src\Services\Authentication\Authentication.API\Authentication.API.csproj", "{A6254D8D-186D-42A8-A956-EDFC297AD1AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WeighSessionFactory", "WeighSessionFactory", "{FE7D241D-DBCC-49DF-8BB7-4368780EF3A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSFactory.Service", "src\Services\WeighSessionFactory\WSFactory.Service\WSFactory.Service.csproj", "{A64838DD-C13B-467F-9318-0BCFD9633C38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +104,10 @@ Global
 		{A6254D8D-186D-42A8-A956-EDFC297AD1AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6254D8D-186D-42A8-A956-EDFC297AD1AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6254D8D-186D-42A8-A956-EDFC297AD1AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A64838DD-C13B-467F-9318-0BCFD9633C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A64838DD-C13B-467F-9318-0BCFD9633C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A64838DD-C13B-467F-9318-0BCFD9633C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A64838DD-C13B-467F-9318-0BCFD9633C38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +133,8 @@ Global
 		{B0C302C7-EE84-4D2C-8A72-B28008A7D333} = {51F08526-BEE1-4BF4-B1F1-A890CE186071}
 		{D97DBCFA-BDD9-498B-95A2-C2C2E173EC69} = {5196D45B-6AA9-4CC4-AC21-336C167C3F55}
 		{A6254D8D-186D-42A8-A956-EDFC297AD1AC} = {4115EBFB-0D8B-4C32-B658-5C711C5247A1}
+		{FE7D241D-DBCC-49DF-8BB7-4368780EF3A5} = {B6018DB4-5C5C-4B8E-B6DF-7FFEB8DAF19F}
+		{A64838DD-C13B-467F-9318-0BCFD9633C38} = {FE7D241D-DBCC-49DF-8BB7-4368780EF3A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD436992-6C52-4C3B-8DDA-98E985E5CB15}

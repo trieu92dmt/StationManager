@@ -67,5 +67,42 @@ namespace WeighSession.API.Controllers
             var result = await _repository.SearchScaleMonitor(request);
             return Ok(result);
         }
+
+        [HttpPost("search-scale")]
+        public async Task<IActionResult> SearchScale([FromBody] SearchScaleRequest request)
+        {
+            var result = await _repository.SearchScale(request);
+            return Ok(result);
+        }
+
+        [HttpPost("save-scale")]
+        public async Task<IActionResult> SaveScale([FromBody] SaveScaleRequest request)
+        {
+            var result = await _repository.SaveScale(request);
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = result.IsSuccess,
+                Message = result.Message,
+                IsSuccess = result.IsSuccess
+            });
+        }
+
+        [HttpPost("update-scale")]
+        public async Task<IActionResult> UpdateScale([FromBody] UpdateScaleRequest request)
+        {
+            var result = await _repository.UpdateScale(request);
+            return Ok(new ApiSuccessResponse<bool>
+            {
+                Data = result,
+                IsSuccess = result
+            });
+        }
+
+        [HttpPost("scale-status-report")]
+        public async Task<IActionResult> ScaleStatusReport ([FromBody] ScaleStatusReportRequest request)
+        {
+            var result = await _repository.ScaleStatusReport(request);
+            return Ok(result);
+        }
     }
 }

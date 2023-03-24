@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace Shared.WeighSession
 {
-    public class ScaleDetailResponse
+    public class ScaleDataResponse
     {
-        //Id đầu cân
+        //STT
+        public int STT { get; set; }
+        //Id
         public Guid ScaleId { get; set; }
         //Nhà máy
         public string Plant { get; set; }
-        //Tên nhà máy
-        public string PlantName { get; set; }
-        //Nhà máy | Tên nhà máy
-        public string PlantFmt => !string.IsNullOrEmpty(Plant) && !string.IsNullOrEmpty(PlantName) ? $"{Plant} | {PlantName}" : "";
         //Mã đầu cân
         public string ScaleCode { get; set; }
         //Tên đầu cân
@@ -26,9 +25,14 @@ namespace Shared.WeighSession
         public bool isTruckScale { get; set; }
         //Trạng thái
         public bool Status { get; set; }
-        //Note
-        public string Note { get; set; }
-        //List màn hình đã chọn
-        public List<string> Screens { get; set; } = new List<string>();
+    }
+
+    public class ScaleListResponse
+    {
+        //Danh sách cân
+        public List<ScaleDataResponse> Scales { get; set; } = new List<ScaleDataResponse>();
+        public int FilterResultsCount { get; set; }
+        public int TotalResultsCount { get; set; }
+        public int TotalPagesCount { get; set; }
     }
 }

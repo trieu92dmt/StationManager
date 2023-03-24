@@ -1,4 +1,5 @@
 ﻿using Core.SeedWork;
+using Shared.Models;
 using Shared.WeighSession;
 using WeighSession.API.DTOs;
 
@@ -42,6 +43,34 @@ namespace WeighSession.API.Repositories.Interfaces
         /// <param name="request"></param>
         /// <returns></returns>
         Task<SearchScaleMonitorResponse2> SearchScaleMonitor(SearchScaleMinitorRequest request);
+
+        /// <summary>
+        /// Search danh sách cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ScaleListResponse> SearchScale(SearchScaleRequest request);
+
+        /// <summary>
+        /// Lưu cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ApiResponse> SaveScale(SaveScaleRequest request);
+
+        /// <summary>
+        /// Cập nhật cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<bool> UpdateScale(UpdateScaleRequest request);
+
+        /// <summary>
+        /// BC trạng thái cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<List<ScaleStatusReportResponse>> ScaleStatusReport(ScaleStatusReportRequest request);
 
     }
 }

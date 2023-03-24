@@ -2,13 +2,8 @@
 using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
-using MES.Application.DTOs.MES.Scale;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared.WeighSession;
 
 namespace MES.Application.Queries
 {
@@ -47,7 +42,7 @@ namespace MES.Application.Queries
             return new ScaleDetailResponse
             {
                 //Id cân
-                ScaleId = scale.ScaleId,
+                //ScaleId = scale.ScaleId,
                 //Nhà máy
                 Plant = scale.Plant,
                 //Tên nhà máy

@@ -1,7 +1,10 @@
-﻿using Core.SeedWork;
+﻿using Core.Properties;
+using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Shared.Models;
 using Shared.WeighSession;
+using System.Threading;
 using WeighSession.API.DTOs;
 using WeighSession.API.Repositories.Interfaces;
 using WeighSession.Infrastructure.Models;
@@ -13,14 +16,17 @@ namespace WeighSession.API.Repositories
         private readonly IRepository<ScaleModel, DataCollectionContext> _scaleRepo;
         private readonly IRepository<WeighSessionModel, DataCollectionContext> _weiSsRepo;
         private readonly IRepository<WeightMonitorModel, DataCollectionContext> _weiMonitorRepo;
+        private readonly DataCollectionContext _context;
 
         public WeighSessionRepository(IRepository<ScaleModel, DataCollectionContext> scaleRepo, 
                                       IRepository<WeighSessionModel, DataCollectionContext> weiSsRepo,
-                                      IRepository<WeightMonitorModel, DataCollectionContext> weiMonitorRepo)
+                                      IRepository<WeightMonitorModel, DataCollectionContext> weiMonitorRepo,
+                                      DataCollectionContext context)
         {
             _scaleRepo = scaleRepo;
             _weiSsRepo = weiSsRepo;
             _weiMonitorRepo = weiMonitorRepo;
+            _context = context;
         }
 
         public async Task<ScaleDetailResponse> GetScaleByCode(string scaleCode)
@@ -124,9 +130,154 @@ namespace WeighSession.API.Repositories
             };
         }
 
+        public async Task<ApiResponse> SaveScale(SaveScaleRequest request)
+        {
+            //Tạo response
+            var response = new ApiResponse()
+            {
+                Code = 200,
+                IsSuccess = true,
+                Message = String.Format(CommonResource.Msg_Success, "Thêm mới cân"),
+                Data = true
+            };
+
+            //Duyệt list scale đầu vào
+            //Checkk tồn tại
+            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == request.ScaleCode);
+
+            //Query screen
+            //var screens = _screenRepo.GetQuery().AsNoTracking();
+
+            if (scale != null)
+            {
+                response.IsSuccess = false;
+                response.Message = $"Scale {request.ScaleCode} đã tồn tại";
+                response.Data = false;
+                return response;
+            }
+
+            //Không tồn tại thì tạo mới
+            scale = new Infrastructure.Models.ScaleModel
+            {
+                //ScaleId = Guid.NewGuid(),
+                Plant = request.Plant,
+                ScaleCode = request.ScaleCode,
+                ScaleName = request.ScaleName,
+                ScaleType = request.isIntegrated,
+                IsCantai = request.isTruckScale,
+                Actived = true
+            };
+
+            //var mapping = new List<Screen_Scale_MappingModel>();
+            ////Thêm mapping cân và màn hình
+            //foreach (var item in request.Screens)
+            //{
+            //    mapping.Add(new Screen_Scale_MappingModel
+            //    {
+            //        Screen_Scale_Mapping_Id = Guid.NewGuid(),
+            //        ScreenId = screens.FirstOrDefault(x => x.ScreenCode == item).ScreenId,
+            //        ScaleId = scale.ScaleId
+            //    });
+            //}
+
+
+            _scaleRepo.Add(scale);
+            //_screenScaleRepo.AddRange(mapping);
+            await _context.SaveChangesAsync();
+
+            //Trả response
+            return response;
+        }
+
+        public async Task<List<ScaleStatusReportResponse>> ScaleStatusReport(ScaleStatusReportRequest request)
+        {
+            //Get query theo cân
+            var scaleQuery = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(request.Plant) ? x.Plant == request.Plant : true) &&
+                                            (request.ScaleCode != null && request.ScaleCode.Any() ? request.ScaleCode.Contains(x.ScaleCode) : true))
+                                       .Select(x => new ScaleStatusReportResponse()
+                                       {
+                                           Plant = x.Plant,
+                                           ScaleCode = x.ScaleCode,
+                                           isIntegrate = x.ScaleType.HasValue ? x.ScaleType.Value : false,
+                                           //Status = scMonitor.Type == "C" ? "Connect" : scMonitor.Type == "D" ? "Disconnect" : scMonitor.Type == "S" ? "Start" : "Reset",
+                                           //StartTime = scMonitor.StartTime,
+                                           //WeighSession = scMonitor.WeightSessionCode
+                                           Status = "",
+                                           StartTime = null,
+                                           WeighSession = ""
+                                       }).ToListAsync();
+            //Gán số thứ tự
+            int index = 0;
+            foreach (var scale in scaleQuery)
+            {
+                scale.STT = ++index;
+            };
+
+            return scaleQuery;
+        }
+
+        public async Task<ScaleListResponse> SearchScale(SearchScaleRequest request)
+        {
+            var query = await _scaleRepo.GetQuery(x =>
+                                                 //Lọc theo plant
+                                                 (!string.IsNullOrEmpty(request.Plant) ? x.Plant == request.Plant : true) &&
+                                                 //Lọc theo mã đầu cân
+                                                 (!string.IsNullOrEmpty(request.ScaleCode) ? x.ScaleCode == request.ScaleCode : true) &&
+                                                 (request.Status.HasValue ? x.Actived == request.Status : true))
+                                  .OrderBy(x => x.Plant).ThenBy(x => x.ScaleCode)
+                                  .Select(x => new ScaleDataResponse
+                                  {
+                                      //ScaleId = x.ScaleId,
+                                      //Plant
+                                      Plant = x.Plant,
+                                      //Mã đầu cân
+                                      ScaleCode = x.ScaleCode,
+                                      //Tên đầu cân
+                                      ScaleName = x.ScaleName,
+                                      //Cân tích hợp
+                                      isIntegrated = x.ScaleType == true ? true : false,
+                                      //Cân xe tải
+                                      isTruckScale = x.IsCantai == true ? true : false,
+                                      //Trạng thái
+                                      Status = x.Actived == true ? true : false
+                                  }).ToListAsync();
+
+            int filterResultsCount = 0;
+            int totalResultsCount = 0;
+            int totalPagesCount = 0;
+
+            var response = new ScaleListResponse();
+
+
+            //Lấy danh sách TestTarget có phân trang
+            var res = CustomSearch.CustomSearchFunc<ScaleDataResponse>(request.Paging, out filterResultsCount, out totalResultsCount, out totalPagesCount, query.AsQueryable(), "STT");
+
+            //Đánh số thứ tự
+            if (res != null && res.Count() > 0)
+            {
+                int i = request.Paging.offset;
+                foreach (var item in res)
+                {
+                    i++;
+                    item.STT = i;
+                }
+            }
+
+            response.Scales = res;
+            response.FilterResultsCount = filterResultsCount;
+            response.TotalResultsCount = totalResultsCount;
+            response.TotalPagesCount = totalPagesCount;
+
+            return response;
+
+        }
+
         public async Task<SearchScaleMonitorResponse2> SearchScaleMonitor(SearchScaleMinitorRequest request)
         {
             var result = new SearchScaleMonitorResponse2();
+
+            //Get query đợt cân
+            var weiSsQuery = _weiSsRepo.GetQuery().AsNoTracking();
 
             //Get query
             var query = _weiMonitorRepo.GetQuery().AsNoTracking();
@@ -181,9 +332,11 @@ namespace WeighSession.API.Repositories
                 //Đơn vị
                 Unit = "",
                 //TG bắt đầu
-                StartTime = x.StartTime,
+                //StartTime = weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode) != null ?
+                            //weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode).StartTime : null,
                 //TG kết thúc
-                EndTime = x.EndTime,
+                //EndTime = weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode) != null ?
+                          //weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode).EndTime : null,
                 //Thời gian ghi nhận
                 RecordTime = x.CreateTime,
                 //Loại
@@ -218,6 +371,50 @@ namespace WeighSession.API.Repositories
 
             #endregion
             return result;
+        }
+
+        public async Task<bool> UpdateScale(UpdateScaleRequest request)
+        {
+            //Get query screen
+            //var screenQuery = _screenRepo.GetQuery().AsNoTracking();
+
+            //Lấy ra scale cần chỉnh sửa
+            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == request.Scales[0].ScaleCode);
+
+            //cập nhật
+            //Tên đầu cân
+            scale.ScaleName = request.Scales[0].ScaleName;
+            //Loại cân
+            scale.ScaleType = request.Scales[0].isIntegrated;
+            //Là cân xe tải ?
+            scale.IsCantai = request.Scales[0].isTruckScale;
+            scale.Actived = request.Scales[0].isActived;
+
+
+            //Thêm mapping giữa màn hình và cân
+            //Lấy ra danh sách đã mapping
+            //var mappings = _mappingRepo.GetQuery().Where(x => x.ScaleId == scale.ScaleId);
+            //Xóa những mapping đã có
+            //_mappingRepo.RemoveRange(mappings);
+            //Tạo mới mapping
+            //var listMap = new List<Screen_Scale_MappingModel>();
+            //foreach (var item in request.Scales[0].Screens)
+            //{
+            //    listMap.Add(new Screen_Scale_MappingModel
+            //    {
+            //        Screen_Scale_Mapping_Id = Guid.NewGuid(),
+            //        ScaleId = request.Scales[0].ScaleId,
+            //        ScreenId = screenQuery.FirstOrDefault(x => x.ScreenCode == item).ScreenId,
+            //        Actived = true
+            //    });
+            //}
+            //Thêm mới
+            //_mappingRepo.AddRange(listMap);
+
+            await _context.SaveChangesAsync();
+
+            //Trả response
+            return true;
         }
     }
 }

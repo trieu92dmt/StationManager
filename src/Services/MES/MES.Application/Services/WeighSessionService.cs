@@ -1,7 +1,9 @@
 ﻿using Core.Extensions;
+using MES.Application.Commands.Scale;
 using Newtonsoft.Json;
 using Shared.Models;
 using Shared.WeighSession;
+using System.Text;
 
 namespace MES.Application.Services
 {
@@ -20,6 +22,13 @@ namespace MES.Application.Services
         /// <param name="ScaleCode">Đầu cân</param>
         /// <returns></returns>
         Task<WeighSessionDetailResponse> GetDetailWeighSession(string ScaleCode);
+
+        /// <summary>
+        /// Service call api search cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ScaleListResponse> SearchScale(SearchScaleCommand request);
     }
     public class WeighSessionService : IWeighSessionService
     {
@@ -73,6 +82,31 @@ namespace MES.Application.Services
                 return null;
 
             return result?.Data;
+        }
+
+        public async Task<ScaleListResponse> SearchScale(SearchScaleCommand request)
+        {
+            //GET data weigh session
+            var domainWS = new ConfigManager().WeighSessionUrl;
+            var url = $"{domainWS}search-scale";
+
+            //Convert request to json
+            var json = JsonConvert.SerializeObject(request);
+            //Conver json to dictionary<string, string> => form
+            var requestBody = new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json");
+
+            var scaleData = await _httpClient.PostAsync(url, requestBody);
+            var scaleResponse = await scaleData.Content.ReadAsStringAsync();
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            var response = JsonConvert.DeserializeObject<ScaleListResponse>(scaleResponse, jsonSettings);
+
+            return response;
         }
     }
 }

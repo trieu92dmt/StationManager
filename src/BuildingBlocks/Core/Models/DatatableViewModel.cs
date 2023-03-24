@@ -3,8 +3,8 @@
     public class DatatableViewModel
     {
 
-        public int pageIndex { protected get; set; }
-        public int pageSize { protected get; set; }
+        public int pageIndex { get; set; }
+        public int pageSize { get; set; }
         public int offset
         {
             get

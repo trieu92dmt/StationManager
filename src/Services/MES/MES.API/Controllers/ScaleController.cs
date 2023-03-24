@@ -1,10 +1,10 @@
 ﻿using Core.Properties;
 using MediatR;
 using MES.Application.Commands.Scale;
-using MES.Application.DTOs.MES.Scale;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
+using Shared.WeighSession;
 
 namespace MES.API.Controllers
 {
@@ -36,9 +36,9 @@ namespace MES.API.Controllers
             return Ok(new ApiSuccessResponse<ScaleListResponse> { 
                 Data = response, 
                 Message = string.Format(CommonResource.Msg_Success, "Get data scale"),
-                RecordsTotal = response.PagingRep.TotalResultsCount,
-                ResultsCount = response.PagingRep.FilterResultsCount,
-                PagesCount = response.PagingRep.TotalPagesCount
+                RecordsTotal = response.TotalResultsCount,
+                ResultsCount = response.FilterResultsCount,
+                PagesCount = response.TotalPagesCount
             });
         }
         #endregion
@@ -94,6 +94,21 @@ namespace MES.API.Controllers
             var response = await _mediator.Send(request);
 
             return Ok(new ApiSuccessResponse<bool> { Data = response, Message = string.Format(CommonResource.Msg_Success, "Chỉnh sửa thông tin cân") });
+        }
+        #endregion
+
+        #region Báo cáo tình trạng cân
+        /// <summary>
+        /// Báo cáo tình trạng cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("scale-status-report")]
+        public async Task<IActionResult> ScaleStatusReport([FromBody] ScaleStatusReportCommand request)
+        {
+            var response = await _mediator.Send(request);
+
+            return Ok(new ApiSuccessResponse<List<ScaleStatusReportResponse>> { Data = response, IsSuccess = true });
         }
         #endregion
     }

@@ -534,8 +534,8 @@ namespace MES.Application.Queries
                 response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
                                           .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&  //Lọc plant
                                                                                                                    //Lọc od from to
-                                                      (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
-                                                      x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0) &&
+                                                      (!string.IsNullOrEmpty(odFrom) ? x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
+                                                                                                                x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0 : true) &&
                                                       //Theo shiptoparty
                                                       (!string.IsNullOrEmpty(shipToPartyFrom) ? (x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
                                                                                                 x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0) : true) &&
@@ -1851,6 +1851,29 @@ namespace MES.Application.Queries
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
                                                     .Where(x => 
+                                                                (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                                //Lấy delivery đã hoàn tất giao dịch
+                                                                x.OutboundDelivery.GoodsMovementSts == "C" &&
+                                                                x.GoodsMovementSts == "C" &&
+                                                                //Lọc theo po
+                                                                (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                                                 x.ReferenceDocument1.CompareTo(poTo) <= 0 : true)
+                                                                )
+                                                    .OrderBy(x => x.OutboundDelivery.ShiptoParty)
+                                                    .Select(x => new CommonResponse
+                                                    {
+                                                        Key = x.OutboundDelivery.DeliveryType,
+                                                        Value = $"{x.OutboundDelivery.DeliveryType} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OutboundDelivery.DeliveryType).ShortText}"
+                                                    }).AsNoTracking().ToListAsync();
+                return NKDCNBResponse.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            //Màn hình nhập kho phụ phẩm phế phẩm
+            else if (type == "NKPPPP")
+            {
+                var NKDCNBResponse = await _dtOdRepo.GetQuery()
+                                                    .Include(x => x.OutboundDelivery)
+                                                    //Lọc delivery type
+                                                    .Where(x =>
                                                                 (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&

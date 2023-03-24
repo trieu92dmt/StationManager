@@ -1596,7 +1596,7 @@ namespace MES.Application.Queries
             soTo = !string.IsNullOrEmpty(soFrom) && string.IsNullOrEmpty(soTo) ? soFrom : soTo;
 
             //Nếu chỉ search poFrom thì search
-            poFrom = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
+            poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
 
             var response = new List<CommonResponse>();
 

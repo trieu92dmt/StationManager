@@ -1398,10 +1398,10 @@ namespace MES.Application.Queries
             shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : shipToPartyTo;
 
             //Nếu chỉ search poFrom thì search 1
-            poFrom = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
+            poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
 
             //Nếu chỉ search shipToPartyFrom thì search 1
-            shipToPartyFrom = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : shipToPartyTo;
+            shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : shipToPartyTo;
 
             //Nếu chỉ search material from thì search 1
             materialTo = !string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo) ? materialFrom : materialTo;

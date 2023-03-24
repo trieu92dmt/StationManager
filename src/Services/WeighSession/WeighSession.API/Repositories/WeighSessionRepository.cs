@@ -62,7 +62,7 @@ namespace WeighSession.API.Repositories
 
             var result = new GetWeighNumResponse
             {
-                Weight = weighSs != null ? weighSs.TotalWeight : 0,
+                Weight = weighSs != null ? weighSs.TotalWeight/1000 : 0,
                 WeightQuantity = weighSs != null ? weighSs.TotalNumberOfWeigh : 0,
                 StartTime = weighSs != null ? weighSs.StartTime : null,
                 Status = weighSs != null ? weighSs.SessionCheck == 0 ? "DANGCAN" : "DACAN" : "",

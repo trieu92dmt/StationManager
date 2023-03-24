@@ -107,7 +107,7 @@ namespace MES.Application.Commands.MES
             //var scales = _scaleRepo.GetQuery(x => x.ScaleType == true).AsNoTracking();
 
             //Last index dùng để tạo số phiếu cân tự sinh
-            var lastIndex = nkmh.Count >0 ? nkmh.OrderBy(x => x.WeitghtVote).LastOrDefault().WeitghtVote.Substring(1) : "1000000";
+            var lastIndex = nkmh.Count > 0 ? nkmh.OrderBy(x => x.WeitghtVote).LastOrDefault().WeitghtVote.Substring(1) : "1000000";
 
             //Dữ liệu đợt cân
             var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
@@ -154,11 +154,11 @@ namespace MES.Application.Commands.MES
                     if (!x.BagQuantity.HasValue || x.BagQuantity <= 0)
                     {
                         throw new ISDException("Số lượng bao phải lớn hơn 0");
-                    }    
-                    if (!x.SingleWeight.HasValue || x.SingleWeight <=0)
+                    }
+                    if (!x.SingleWeight.HasValue || x.SingleWeight <= 0)
                     {
                         throw new ISDException("Đơn trọng phải lớn hơn 0");
-                    }   
+                    }
                 }
                 #endregion
 
@@ -186,8 +186,8 @@ namespace MES.Application.Commands.MES
                 //Lấy ra đợt cân
                 var weightSession = !string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
                                     await _weighSessionService.GetDetailWeighSession(x.WeightHeadCode) : null;
-                                    //!string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
-                                    //weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
+                //!string.IsNullOrEmpty(x.WeightHeadCode) && scale != null ?
+                //weightSs.Where(x => x.ScaleCode == scale.ScaleCode).OrderByDescending(x => x.OrderIndex).FirstOrDefault() : null;
 
                 ////Nếu có đợt cân thì lưu vào bảng mapping
                 //if (weightSession != null)
@@ -230,71 +230,71 @@ namespace MES.Application.Commands.MES
                 //    record.Description = x.Description;
                 //}
                 //else
-                    //Save data nhập kho mua hàng
-                    _nkRep.Add(new GoodsReceiptModel
-                    {
-                        GoodsReceiptId = GoodsReceiptId,
-                        //Số lô
-                        Batch = x.Batch,
-                        //POLine
-                        PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
-                        //Mã đầu cân
-                        WeightHeadCode = x.WeightHeadCode,
-                        DateKey = weightSession != null && scale != null ?
-                                   weightSession.DateKey : null,
-                        OrderIndex = weightSession != null && scale != null ?
-                                   weightSession.OrderIndex : null,
-                        //PlantCode
-                        PlantCode = x.PlantCode,
-                        //Material Desc
-                        MaterialCode = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductCode,
-                        MaterialCodeInt = long.Parse(x.MaterialCode),
-                        //Sloc code
-                        SlocCode = x.SlocCode,
-                        //Sloc Name
-                        SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null,
-                        //SL bao
-                        BagQuantity = x.BagQuantity,
-                        //Đơn trọng
-                        SingleWeight = x.SingleWeight,
-                        //Trọng lượng cân
-                        Weight = x.Weight,
-                        //Confirm Qty
-                        ConfirmQty = x.ConfirmQty,
-                        //Số lần cân
-                        QuantityWeitght = x.QuantityWeight,
-                        //Sl kèm bao bì
-                        QuantityWithPackaging = x.QuantityWithPackaging,
-                        //Số phương tiện
-                        VehicleCode = x.VehicleCode,
-                        //Đơn vị vận chuyển
-                        TransportUnit = poLine?.TransportUnit,
-                        //Id cân xe tải
-                        TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,
-                        TruckQuantity = x.TruckQuantity,
-                        //Số cân đầu vào
-                        InputWeight = x.InputWeight,
-                        OutputWeight = x.OutputWeight,
-                        //Ghi chú
-                        Description = x.Description,
-                        //Hình ảnh
-                        //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
-                        Img = string.IsNullOrEmpty(imgPath) ? "" : imgPath,
-                        //document date = document date po
-                        DocumentDate = x.PoDetailId.HasValue && x.PoDetailId != Guid.Empty ? poLine.PurchaseOrder.DocumentDate : null,
-                        //Số phiếu cân
-                        WeitghtVote = $"N{long.Parse(lastIndex) + index}",
-                        //Common
-                        
-                        CreateTime = DateTime.Now,
-                        CreateBy = TokenExtensions.GetAccountId(),
-                        Actived = true,
-                        //Status
-                        Status = "NOT",
-                        //Start Time - End Time
-                        StartTime = weightSession != null ? weightSession.StartTime : DateTime.Now,
-                        EndTime = x.BagQuantity.HasValue && x.BagQuantity > 0 && x.SingleWeight.HasValue && x.SingleWeight > 0 ? null : DateTime.Now,
-                    });
+                //Save data nhập kho mua hàng
+                _nkRep.Add(new GoodsReceiptModel
+                {
+                    GoodsReceiptId = GoodsReceiptId,
+                    //Số lô
+                    Batch = x.Batch,
+                    //POLine
+                    PurchaseOrderDetailId = poLine?.PurchaseOrderDetailId,
+                    //Mã đầu cân
+                    WeightHeadCode = x.WeightHeadCode,
+                    DateKey = weightSession != null && scale != null ?
+                               weightSession.DateKey : null,
+                    OrderIndex = weightSession != null && scale != null ?
+                               weightSession.OrderIndex : null,
+                    //PlantCode
+                    PlantCode = x.PlantCode,
+                    //Material Desc
+                    MaterialCode = materials.FirstOrDefault(m => m.ProductCodeInt == long.Parse(x.MaterialCode)).ProductCode,
+                    MaterialCodeInt = long.Parse(x.MaterialCode),
+                    //Sloc code
+                    SlocCode = x.SlocCode,
+                    //Sloc Name
+                    SlocName = !x.SlocCode.IsNullOrEmpty() ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : null,
+                    //SL bao
+                    BagQuantity = x.BagQuantity,
+                    //Đơn trọng
+                    SingleWeight = x.SingleWeight,
+                    //Trọng lượng cân
+                    Weight = x.Weight,
+                    //Confirm Qty
+                    ConfirmQty = x.ConfirmQty,
+                    //Số lần cân
+                    QuantityWeitght = x.QuantityWeight,
+                    //Sl kèm bao bì
+                    QuantityWithPackaging = x.QuantityWithPackaging,
+                    //Số phương tiện
+                    VehicleCode = x.VehicleCode,
+                    //Đơn vị vận chuyển
+                    TransportUnit = poLine?.TransportUnit,
+                    //Id cân xe tải
+                    TruckInfoId = x.TruckInfoId.HasValue ? x.TruckInfoId : null,
+                    TruckQuantity = x.TruckQuantity,
+                    //Số cân đầu vào
+                    InputWeight = x.InputWeight,
+                    OutputWeight = x.OutputWeight,
+                    //Ghi chú
+                    Description = x.Description,
+                    //Hình ảnh
+                    //Img = !string.IsNullOrEmpty(x.Image) ? System.Convert.FromBase64String(x.Image.Substring(x.Image.IndexOf(',')+1)) : null,
+                    Img = string.IsNullOrEmpty(imgPath) ? "" : imgPath,
+                    //document date = document date po
+                    DocumentDate = x.PoDetailId.HasValue && x.PoDetailId != Guid.Empty ? poLine.PurchaseOrder.DocumentDate : null,
+                    //Số phiếu cân
+                    WeitghtVote = $"N{long.Parse(lastIndex) + index}",
+                    //Common
+
+                    CreateTime = DateTime.Now,
+                    CreateBy = TokenExtensions.GetAccountId(),
+                    Actived = true,
+                    //Status
+                    Status = "NOT",
+                    //Start Time - End Time
+                    StartTime = weightSession != null ? weightSession.StartTime : DateTime.Now,
+                    EndTime = x.BagQuantity.HasValue && x.BagQuantity > 0 && x.SingleWeight.HasValue && x.SingleWeight > 0 ? null : DateTime.Now,
+                });
 
                 index++;
             }

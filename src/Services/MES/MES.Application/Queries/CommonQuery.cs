@@ -83,9 +83,12 @@ namespace MES.Application.Queries
         /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
-                                                                 string poFrom, string poTo,
-                                                                 string woFrom, string woTo,
-                                                                 string type);
+                                                                  string woFrom, string woTo,
+                                                                  string soFrom, string soTo,
+                                                                  string materialFrom, string materialTo,
+                                                                  string orderType,
+                                                                  string poFrom, string poTo,
+                                                                  string type);
 
         /// <summary>
         /// Dropdown component item theo WorkOrderCode

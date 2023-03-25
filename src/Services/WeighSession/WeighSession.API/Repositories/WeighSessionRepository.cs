@@ -50,10 +50,9 @@ namespace WeighSession.API.Repositories
             //Lấy đầu cân
             var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == scaleCode && x.ScaleType == true);
 
-            var Now = DateTime.Now.ToString("yyyyMMdd");
 
             //Lấy ra số cân của đầu cân có trạng thái đầu cân trong po
-            var weighSs = _weiSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode && x.DateKey == Now && x.SessionCheck  == 0)
+            var weighSs = _weiSsRepo.GetQuery(x => x.ScaleCode == scale.ScaleCode && x.SessionCheck  == 0)
                                     .OrderByDescending(x => x.OrderIndex)
                                     .FirstOrDefault();
 
@@ -62,7 +61,7 @@ namespace WeighSession.API.Repositories
 
             var result = new GetWeighNumResponse
             {
-                Weight = weighSs != null ? weighSs.TotalWeight/1000 : 0,
+                Weight = weighSs != null ? scale.Hsqd.HasValue ? weighSs.TotalWeight/scale.Hsqd : weighSs.TotalWeight : 0,
                 WeightQuantity = weighSs != null ? weighSs.TotalNumberOfWeigh : 0,
                 StartTime = weighSs != null ? weighSs.StartTime : null,
                 Status = weighSs != null ? weighSs.SessionCheck == 0 ? "DANGCAN" : "DACAN" : "",

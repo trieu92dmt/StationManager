@@ -83,9 +83,12 @@ namespace MES.Application.Queries
         /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
-                                                                 string poFrom, string poTo,
-                                                                 string woFrom, string woTo,
-                                                                 string type);
+                                                                  string woFrom, string woTo,
+                                                                  string soFrom, string soTo,
+                                                                  string materialFrom, string materialTo,
+                                                                  string orderType,
+                                                                  string poFrom, string poTo,
+                                                                  string type);
 
         /// <summary>
         /// Dropdown component item theo WorkOrderCode
@@ -700,7 +703,45 @@ namespace MES.Application.Queries
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+            #region NKPPPP
+            //Màn NKPPPP
+            //Khi lại màn hình là "NKPPPP" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
+            else if (type == "NKPPPP" && (!string.IsNullOrEmpty(orderType) || !string.IsNullOrEmpty(soFrom) || !string.IsNullOrEmpty(woFrom)))
+            {
+                //Tạo query
+                var NKPPPPResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder).Where(x =>
+                                                  //Lọc theo plant
+                                                  (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true) &&
+                                                  //Lọc theo order type
+                                                  (!string.IsNullOrEmpty(orderType) ? x.WorkOrder.OrderTypeCode == orderType : true) &&
+                                                  //Lọc theo sale order
+                                                  (!string.IsNullOrEmpty(soFrom) ? x.WorkOrder.SalesOrder.CompareTo(soFrom) >= 0 &&
+                                                                                   x.WorkOrder.SalesOrder.CompareTo(soTo) <= 0 : true) &&
+                                                  //Lọc theo workorder
+                                                  (!string.IsNullOrEmpty(woFrom) ? x.WorkOrder.WorkOrderCode.CompareTo(woFrom) >= 0 &&
+                                                                                   x.WorkOrder.WorkOrderCode.CompareTo(woTo) <= 0 : true) &&
+                                                  //Lọc theo điều kiện riêng từng màn hình
+                                                  //System Status bắt đầu bằng "REL"
+                                                  x.SystemStatus.StartsWith("REL") &&
+                                                  x.RequirementQuantiy <= 0)
+                                            .OrderBy(x => x.ProductCodeInt)
+                                            .Select(x => new DropdownMaterialResponse
+                                            {
+                                                //Material code
+                                                Key = x.ProductCodeInt.ToString(),
+                                                //Material code | material name
+                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                //Material name
+                                                Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                //Đơn vị
+                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                            }).ToListAsync();
 
+                return NKPPPPResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
             #region po
             if (!string.IsNullOrEmpty(poFrom))
             {
@@ -1355,6 +1396,32 @@ namespace MES.Application.Queries
 
                 return NKTPSXResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }
+            else if (type == "NKPPPP")
+            {
+                //Tạo query
+                var NKTPSXResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder)
+                                                  .Where(x =>
+                                                  //Lọc theo plant
+                                                  (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true) &&
+                                                  //Lọc theo order type
+                                                  (!string.IsNullOrEmpty(orderType) ? x.WorkOrder.OrderTypeCode == orderType : true) &&
+                                                  //Lọc theo điều kiện riêng từng màn hình
+                                                  //System Status bắt đầu bằng "REL"
+                                                  x.SystemStatus.StartsWith("REL") &&
+                                                  x.RequirementQuantiy <= 0 &&
+                                                  //Loại các line có tích DeletionFlag
+                                                  x.WorkOrder.DeletionFlag != "X" &&
+                                                  //Loại các line sales order trống
+                                                  x.WorkOrder.SalesOrder != null)
+                                    .OrderBy(x => x.WorkOrder.SalesOrder)
+                                    .Select(x => new CommonResponse
+                                    {
+                                        Key = x.WorkOrder.SalesOrder,
+                                        Value = soQuery.FirstOrDefault(p => p.SalesDocumentCode == x.WorkOrder.SalesOrder).SalesDocumentCode
+                                    }).AsNoTracking().ToListAsync();
+
+                return NKTPSXResponse.DistinctBy(x => x.Key).Take(10).ToList();
+            }
             return await _saleDocRepo.GetQuery(x => string.IsNullOrEmpty(keyword) ? true : x.SalesDocumentCode.Trim().ToLower().Contains(keyword.Trim().ToLower()))
                                          .OrderBy(x => x.SalesDocumentCode)
                                          .Select(x => new CommonResponse
@@ -1870,23 +1937,14 @@ namespace MES.Application.Queries
             //Màn hình nhập kho phụ phẩm phế phẩm
             else if (type == "NKPPPP")
             {
-                var NKDCNBResponse = await _dtOdRepo.GetQuery()
-                                                    .Include(x => x.OutboundDelivery)
-                                                    //Lọc delivery type
-                                                    .Where(x =>
-                                                                (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
-                                                                //Lấy delivery đã hoàn tất giao dịch
-                                                                x.OutboundDelivery.GoodsMovementSts == "C" &&
-                                                                x.GoodsMovementSts == "C" &&
-                                                                //Lọc theo po
-                                                                (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
-                                                                                                 x.ReferenceDocument1.CompareTo(poTo) <= 0 : true)
-                                                                )
-                                                    .OrderBy(x => x.OutboundDelivery.ShiptoParty)
+                var NKDCNBResponse = await _dtWoRepo.GetQuery(x => (x.SystemStatus.StartsWith("REL") && x.RequirementQuantiy <= 0) &&
+                                                                   (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true))
+                                                    .Include(x => x.WorkOrder)
+                                                    .OrderBy(x => x.WorkOrder.OrderTypeCode)
                                                     .Select(x => new CommonResponse
                                                     {
-                                                        Key = x.OutboundDelivery.DeliveryType,
-                                                        Value = $"{x.OutboundDelivery.DeliveryType} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OutboundDelivery.DeliveryType).ShortText}"
+                                                        Key = x.WorkOrder.OrderTypeCode,
+                                                        Value = $"{x.WorkOrder.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.WorkOrder.OrderTypeCode).ShortText}"
                                                     }).AsNoTracking().ToListAsync();
                 return NKDCNBResponse.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -1958,6 +2016,34 @@ namespace MES.Application.Queries
                                       Value = x.WorkOrderCodeInt.ToString()
                                   }).Take(20).ToListAsync();
             }
+            //Màn hình NKPPPP
+            else if (type == "NKPPPP")
+            {
+                var NKPPPPResponse = await _dtWoRepo.GetQuery().Include(x=> x.WorkOrder)
+                                                 .Where(x =>
+                                                           //Lọc theo plant
+                                                           x.WorkOrder.Plant == plant &&
+                                                           //Điều kiện riêng từng màn hình
+                                                           x.SystemStatus.StartsWith("REL") && x.RequirementQuantiy <= 0 &&
+                                                           //Theo order type
+                                                           (!string.IsNullOrEmpty(orderType) ? x.WorkOrder.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&
+                                                           //Theo keyword
+                                                           (!string.IsNullOrEmpty(keyword) ? x.WorkOrder.WorkOrderCode.Trim().ToUpper().Contains(keyword.Trim().ToUpper()) : true) &&
+                                                           //Theo material
+                                                           //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                           //x.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                                           //Theo sales order
+                                                           (!string.IsNullOrEmpty(soFrom) ? x.WorkOrder.SalesOrder.CompareTo(soFrom) >= 0 &&
+                                                                                            x.WorkOrder.SalesOrder.CompareTo(soTo) <= 0 : true)
+                                                           )
+                                  .OrderBy(x => x.WorkOrder.WorkOrderCode)
+                                  .Select(x => new CommonResponse
+                                  {
+                                      Key = x.WorkOrder.WorkOrderCode,
+                                      Value = x.WorkOrder.WorkOrderCodeInt.ToString()
+                                  }).ToListAsync();
+                return NKPPPPResponse.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(20).ToList();
+            }
             var result = await _workOrderRep.GetQuery(x =>
                                                            //Lọc theo plant
                                                            x.Plant == plant &&
@@ -1998,6 +2084,9 @@ namespace MES.Application.Queries
         public async Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
                                                                               string poFrom, string poTo,
                                                                               string woFrom, string woTo,
+                                                                              string soFrom, string soTo,
+                                                                              string materialFrom, string materialTo,
+                                                                              string orderType,
                                                                               string type)
         {
             var response = new List<DropdownMaterialResponse>();
@@ -2057,6 +2146,55 @@ namespace MES.Application.Queries
                                         //Đơn vị
                                         Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
                                     }).ToListAsync();
+            }
+            #endregion
+            #region NKPPPP                
+            //Nhập kho phụ phẩm
+            else if (type == "NKPPPP")
+            {
+                //Check nếu ko search field to thì gán to = from
+                if (!string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo))
+                    materialTo = materialFrom;
+
+                //Check nếu ko search field to thì gán to = from
+                if (!string.IsNullOrEmpty(soFrom) && string.IsNullOrEmpty(soTo))
+                    soTo = soFrom;
+
+                //Check nếu ko search field to thì gán to = from
+                if (!string.IsNullOrEmpty(woFrom) && string.IsNullOrEmpty(woTo))
+                    woTo = woFrom;
+
+                //Tạo query
+                var NKPPPPResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder).Where(x =>
+                                                  //Lọc theo plant
+                                                  (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true) &&
+                                                  //Lọc theo material
+                                                  (!string.IsNullOrEmpty(materialFrom) ? x.WorkOrder.ProductCodeInt >= long.Parse(materialFrom) &&
+                                                                                         x.WorkOrder.ProductCodeInt <= long.Parse(materialTo) : true) &&
+                                                  //Lọc theo order type
+                                                  (!string.IsNullOrEmpty(orderType) ? x.WorkOrder.OrderTypeCode == orderType : true) &&
+                                                  //Lọc theo sale order
+                                                  (!string.IsNullOrEmpty(soFrom) ? x.WorkOrder.SalesOrder.CompareTo(soFrom) >= 0 &&
+                                                                                   x.WorkOrder.SalesOrder.CompareTo(soTo) <= 0 : true) &&
+                                                  //Lọc theo workorder
+                                                  (!string.IsNullOrEmpty(woFrom) ? x.WorkOrder.WorkOrderCode.CompareTo(woFrom) >= 0 &&
+                                                                                   x.WorkOrder.WorkOrderCode.CompareTo(woTo) <= 0 : true) &&
+                                                  //Lọc theo điều kiện riêng từng màn hình
+                                                  //System Status bắt đầu bằng "REL"
+                                                  x.SystemStatus.StartsWith("REL") &&
+                                                  x.RequirementQuantiy <= 0)
+                                            .OrderBy(x => x.ProductCodeInt)
+                                            .Select(x => new DropdownMaterialResponse
+                                            {
+                                                //Material code
+                                                Key = x.ProductCodeInt.ToString(),
+                                                //Material code | material name
+                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                //Material name
+                                                Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                //Đơn vị
+                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                            }).ToListAsync();
             }
             #endregion
             else

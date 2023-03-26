@@ -100,7 +100,11 @@ namespace MES.Application.Commands.WeighSession
                         //Thời gian kết thúc
                         EndTime = ds.Tables[0].Rows[i][8] != DBNull.Value ? (DateTime)ds.Tables[0].Rows[i][8] : null,
                         //Trọng lượng cân
-                        TotalWeight = ds.Tables[0].Rows[i][9] != DBNull.Value ? decimal.Parse(ds.Tables[0].Rows[i][9].ToString()) : 0,
+                        TotalWeight = ds.Tables[0].Rows[i][9] != DBNull.Value ? 
+                                      ds.Tables[0].Rows[i][17] != DBNull.Value ? 
+                                      decimal.Parse(ds.Tables[0].Rows[i][9].ToString())/decimal.Parse(ds.Tables[0].Rows[i][17].ToString()) : 
+                                      decimal.Parse(ds.Tables[0].Rows[i][9].ToString())
+                                      : 0,
                         //Confirm quantity
                         ConfirmQuantity = ds.Tables[0].Rows[i][10] != DBNull.Value ? decimal.Parse(ds.Tables[0].Rows[i][10].ToString()) : 0,
                         //Ghi chú

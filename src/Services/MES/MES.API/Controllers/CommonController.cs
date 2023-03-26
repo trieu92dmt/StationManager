@@ -111,9 +111,18 @@ namespace MES.API.Controllers
         public async Task<IActionResult> GetListComponent(string keyword, string plant,
                                                           string poFrom, string poTo,
                                                           string woFrom, string woTo,
+                                                          string soFrom, string soTo,
+                                                          string materialFrom, string materialTo,
+                                                          string orderType,
                                                           string type)
         {
-            var dropdownList = await _commonQuery.GetDropdownComponent(keyword, plant, poFrom, poTo, woFrom, woTo, type);
+            var dropdownList = await _commonQuery.GetDropdownComponent(keyword, plant,
+                                                                       poFrom, poTo,
+                                                                       woFrom, woTo, 
+                                                                       soFrom, soTo,
+                                                                       materialFrom, materialTo,
+                                                                       orderType,
+                                                                       type);
             return Ok(new ApiSuccessResponse<List<DropdownMaterialResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách component") });
         }
         #endregion

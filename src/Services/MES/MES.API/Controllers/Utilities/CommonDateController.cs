@@ -1,4 +1,6 @@
-﻿using MES.Application.DTOs.Common;
+﻿using MediatR;
+using MES.Application.Commands.WeighSessionFactory;
+using MES.Application.DTOs.Common;
 using MES.Application.Queries;
 using MES.Application.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +15,13 @@ namespace MES.API.Controllers.Utilities
     {
         private readonly ICommonQuery _commonQuery;
         private readonly ICommonDateService _commonDateService;
+        private readonly IMediator _mediator;
 
-        public CommonDateController(ICommonQuery commonQuery, ICommonDateService commonDateService)
+        public CommonDateController(ICommonQuery commonQuery, ICommonDateService commonDateService, IMediator mediator)
         {
             _commonQuery = commonQuery;
             _commonDateService = commonDateService;
+            _mediator = mediator;
         }
 
         [HttpGet("GetDateByCommonDate")]
@@ -41,6 +45,18 @@ namespace MES.API.Controllers.Utilities
             var response = await _commonQuery.GetCommonDate();
 
             return Ok(new ApiSuccessResponse<List<CommonResponse>>()
+            {
+                Data = response
+            });
+
+        }
+
+        [HttpPost("factory-scale")]
+        public async Task<IActionResult> FactoryScale(FactoryCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            return Ok(new ApiSuccessResponse<bool>()
             {
                 Data = response
             });

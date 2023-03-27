@@ -84,11 +84,12 @@ namespace MES.Application.Queries
         /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         Task<List<DropdownMaterialResponse>> GetDropdownComponent(string keyword, string plant,
+                                                                  string poFrom, string poTo,
                                                                   string woFrom, string woTo,
                                                                   string soFrom, string soTo,
                                                                   string materialFrom, string materialTo,
                                                                   string orderType,
-                                                                  string poFrom, string poTo,
+                                                                  string vendorFrom, string vendorTo,
                                                                   string type);
 
         /// <summary>
@@ -685,10 +686,13 @@ namespace MES.Application.Queries
                                                                 (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
                                                                                                  x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
                                                                 //Lọc theo shiptoparty
-                                                                (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyFrom) >= 0 &&
-                                                                                                          x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                                (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                                          x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
                                                                 //Lọc theo deliveryType
-                                                                (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true)
+                                                                (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true) &&
+                                                                //Lọc theo od
+                                                                (!string.IsNullOrEmpty(odFrom) ? x.OutboundDelivery.DeliveryCode.CompareTo(poFrom) >= 0 &&
+                                                                                                 x.OutboundDelivery.DeliveryCode.CompareTo(poTo) <= 0 : true)
                                                                 )
                                                     .OrderBy(x => x.OutboundDelivery.DeliveryCodeInt)
                                                     .Select(x => new DropdownMaterialResponse
@@ -817,6 +821,53 @@ namespace MES.Application.Queries
                                                }).AsNoTracking().ToListAsync();
 
                 return XCKResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
+            #region XNVLGC
+            //Màn xuất nguyên vật liệu gia công
+            //Khi lại màn hình là "XNVLGC" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
+            else if (type == "XNVLGC" && (!string.IsNullOrEmpty(vendorFrom) || !string.IsNullOrEmpty(poFrom)))
+            {
+                //Get list po code từ bảng reservation
+                var pos = await _dtRsRepo.GetQuery().Select(x => x.PurchasingDoc).AsNoTracking().ToListAsync();
+
+                //Get data
+                var XNVLGCResponse = await _poDetailRepo.GetQuery()
+                                            .Include(x => x.PurchaseOrder)
+                                            .Where(x =>
+                                                        //Theo plant
+                                                        (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&
+                                                        //Chỉ lấy những po nằm trong reservation
+                                                        pos.Contains(x.PurchaseOrder.PurchaseOrderCode) &&
+                                                        //Theo vendor
+                                                        (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 &&
+                                                                                             x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
+                                                        //Theo PuchaseOrder
+                                                        (!string.IsNullOrEmpty(poFrom) ? x.PurchaseOrder.PurchaseOrderCodeInt >= long.Parse(poFrom) &&
+                                                                                         x.PurchaseOrder.PurchaseOrderCodeInt <= long.Parse(poTo) : true) &&
+                                                        //Loại các line đã hoàn tất chuyển kho
+                                                        x.DeliveryCompleted != "X" &&
+                                                        //Loại các line đã đánh dấu xóa
+                                                        x.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.DeletionInd != "X" &&
+                                                        //Lấy các line đã được duyệt
+                                                        x.PurchaseOrder.ReleaseIndicator == "R")
+                                               .OrderBy(x => x.ProductCodeInt)
+                                               .Select(x => new DropdownMaterialResponse
+                                               {
+                                                   //Material code
+                                                   Key = x.ProductCodeInt.ToString(),
+                                                   //Material code | material name
+                                                   Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                   //Material name
+                                                   Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                   //Đơn vị
+                                                   Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                               }).AsNoTracking().ToListAsync();
+
+                return XNVLGCResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -964,7 +1015,42 @@ namespace MES.Application.Queries
                                                 //Mã vendor | Tên vendor
                                                 Value = $"{x.PurchaseOrder.VendorCode} | {vendors.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode).VendorName}"
                                             })
-                                            .AsNoTracking().ToArrayAsync();
+                                            .AsNoTracking().ToListAsync();
+
+                //Lọc theo từ khóa
+                return res.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            //Màn xuất xnvl gia công
+            if (type == "XNVLGC")
+            {
+
+                //Get list po code từ bảng reservation
+                var pos = await _dtRsRepo.GetQuery().Select(x => x.PurchasingDoc).AsNoTracking().ToListAsync();
+
+                //Get data 
+                var res = await _poDetailRepo.GetQuery()
+                                            .Include(x => x.PurchaseOrder)
+                                            .Where(x => 
+                                                        //Lọc theo plant
+                                                        x.PurchaseOrder.Plant == plant &&
+                                                        //Chỉ lấy những po nằm trong reservation
+                                                        pos.Contains(x.PurchaseOrder.PurchaseOrderCode) &&
+                                                        //Lọc các chứng từ có po type là Z003
+                                                        x.PurchaseOrder.POType == "Z003" &&
+                                                        //Loại trừ cái chứng từ đã hoàn thành giao dịch
+                                                        x.DeliveryCompleted != "X" &&
+                                                        //Loại các line đã đánh dấu xóa
+                                                        x.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.ReleaseIndicator == "R")
+                                            .Select(x => new CommonResponse
+                                            {
+                                                //Mã vendor
+                                                Key = x.PurchaseOrder.VendorCode,
+                                                //Mã vendor | Tên vendor
+                                                Value = $"{x.PurchaseOrder.VendorCode} | {vendors.FirstOrDefault(v => v.VendorCode == x.PurchaseOrder.VendorCode).VendorName}"
+                                            })
+                                            .AsNoTracking().ToListAsync();
                 //Lọc theo từ khóa
                 return res.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -1081,10 +1167,20 @@ namespace MES.Application.Queries
 
                 return NKDCNBResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }   
+            //Màn xuất nvl gia công
             else if (type == "XNVLGC")
             {
-                return await _poMasterRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                //Get list po code từ bảng reservation
+                var pos = await _dtRsRepo.GetQuery().Select(x => x.PurchasingDoc).AsNoTracking().ToListAsync();
+
+                var XNVLGCResponse = await _poMasterRepo.GetQuery(x =>     
+                                                             //Lọc theo keyword
+                                                             (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
+                                                             //Lọc theo plant
                                                              (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                             //Chỉ lấy những po nằm trong reservation
+                                                             pos.Contains(x.PurchaseOrderCode) &&
+                                                             //Lọc theo po type
                                                              (x.POType == "Z003") &&
                                                              (x.ReleaseIndicator == "R") &&
                                                              (x.DeletionInd != "L")).Include(x => x.PurchaseOrderDetailModel)
@@ -1095,6 +1191,8 @@ namespace MES.Application.Queries
                                             Key = x.PurchaseOrderCode,
                                             Value = x.PurchaseOrderCodeInt.ToString()
                                         }).AsNoTracking().ToListAsync();
+
+                return XNVLGCResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }
             //Màn nhập kho mua hàng
             else if (type == "NKMH")
@@ -1598,17 +1696,11 @@ namespace MES.Application.Queries
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&
                                                                 x.GoodsMovementSts == "C" &&
-                                                                //Lọc theo po
-                                                                (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
-                                                                                                 x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
                                                                 //Lọc theo shiptoparty
-                                                                (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyFrom) >= 0 &&
-                                                                                                          x.OutboundDelivery.ShippingPoint.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                                (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                                          x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
                                                                 //Lọc theo deliveryType
-                                                                (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true) &&
-                                                                //Lọc theo material
-                                                                (!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
-                                                                                                       x.ProductCodeInt >= long.Parse(materialTo) : true)
+                                                                (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true)
                                                                 )
                                                     .OrderBy(x => x.OutboundDelivery.DeliveryCodeInt)
                                                     .Select(x => new CommonResponse
@@ -1624,7 +1716,6 @@ namespace MES.Application.Queries
                 //Gán giá trị cho biến deliveryType khi searh màn hình NHLT
                 var NHLTdeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9" };
                 query = query.Where(x => x.Plant == plant && 
-                                         x.OutboundDelivery.PODStatus == "A" &&
                                          NHLTdeliveryType.Contains(x.OutboundDelivery.DeliveryType));
             } 
             //Ở màn hình ghi nhận cân xe tải không lấy dropdown theo master data => lấy theo dữ liệu đã lưu
@@ -2159,6 +2250,7 @@ namespace MES.Application.Queries
                                                                               string soFrom, string soTo,
                                                                               string materialFrom, string materialTo,
                                                                               string orderType,
+                                                                              string vendorFrom, string vendorTo,
                                                                               string type)
         {
             var response = new List<DropdownMaterialResponse>();
@@ -2176,9 +2268,38 @@ namespace MES.Application.Queries
                     poTo = poFrom;
                 }
 
-                response = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
-                                          .Where(x => (!string.IsNullOrEmpty(plant) ? x.Reservation.Plant == plant : true) &&                                                    //Lọc plant
-                                                      (!string.IsNullOrEmpty(poFrom) ? x.PurchasingDoc.CompareTo(poFrom) >= 0 && x.PurchasingDoc.CompareTo(poTo) <= 0 : true) && //Lọc po from to
+                //Check nếu ko search field to thì gán to = from
+                if (!string.IsNullOrEmpty(materialFrom) && string.IsNullOrEmpty(materialTo))
+                    materialTo = materialFrom;
+
+                //Check nếu ko search field to thì gán to = from
+                if (!string.IsNullOrEmpty(vendorFrom) && string.IsNullOrEmpty(vendorTo))
+                    vendorTo = vendorFrom;
+
+                //Get data
+                var pos = await _poDetailRepo.GetQuery()
+                                            .Include(x => x.PurchaseOrder)
+                                            .Where(x =>
+                                                        //Theo plant
+                                                        (!string.IsNullOrEmpty(plant) ? x.PurchaseOrder.Plant == plant : true) &&
+                                                        //Theo vendor
+                                                        (!string.IsNullOrEmpty(vendorFrom) ? x.PurchaseOrder.VendorCode.CompareTo(vendorFrom) >= 0 &&
+                                                                                             x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
+                                                        //Theo PuchaseOrder
+                                                        (!string.IsNullOrEmpty(poFrom) ? x.PurchaseOrder.PurchaseOrderCodeInt >= long.Parse(poFrom) &&
+                                                                                         x.PurchaseOrder.PurchaseOrderCodeInt <= long.Parse(poTo) : true) &&
+                                                        //Loại các line đã hoàn tất chuyển kho
+                                                        x.DeliveryCompleted != "X" &&
+                                                        //Loại các line đã đánh dấu xóa
+                                                        x.DeletionInd != "X" &&
+                                                        x.PurchaseOrder.DeletionInd != "X" &&
+                                                        //Lấy các line đã được duyệt
+                                                        x.PurchaseOrder.ReleaseIndicator == "R")
+                                            .Select(x => x.PurchaseOrder.PurchaseOrderCode).AsNoTracking().ToListAsync();
+
+                var XNVLGCResponse = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
+                                          .Where(x => 
+                                                      (!string.IsNullOrEmpty(poFrom) ? pos.Contains(x.PurchasingDoc) : true) && //Lọc po from to
                                                       x.PurchasingDoc != null && x.Item != null)   
                                         .OrderBy(x => x.MaterialCodeInt)
                                         .Select(x => new DropdownMaterialResponse
@@ -2192,7 +2313,8 @@ namespace MES.Application.Queries
                                             //Đơn vị
                                             Unit = products.FirstOrDefault(p => p.ProductCode == x.Material).Unit
                                         }).ToListAsync();
-                
+
+                return XNVLGCResponse.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
             #region XTHLSX                

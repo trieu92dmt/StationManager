@@ -114,6 +114,7 @@ namespace MES.API.Controllers
                                                           string soFrom, string soTo,
                                                           string materialFrom, string materialTo,
                                                           string orderType,
+                                                          string vendorFrom, string vendorTo,
                                                           string type)
         {
             var dropdownList = await _commonQuery.GetDropdownComponent(keyword, plant,
@@ -122,6 +123,7 @@ namespace MES.API.Controllers
                                                                        soFrom, soTo,
                                                                        materialFrom, materialTo,
                                                                        orderType,
+                                                                       vendorFrom, vendorTo,
                                                                        type);
             return Ok(new ApiSuccessResponse<List<DropdownMaterialResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách component") });
         }

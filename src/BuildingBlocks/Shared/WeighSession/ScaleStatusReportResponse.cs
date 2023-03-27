@@ -8,6 +8,8 @@
         public string Plant { get; set; }
         //Đầu cân
         public string ScaleCode { get; set; }
+        public string ScaleName { get; set; }
+        public string ScaleFmt => !string.IsNullOrEmpty(ScaleCode) && !string.IsNullOrEmpty(ScaleName) ? $"{ScaleCode} | {ScaleName}" : "";
         //Cân tích hợp
         public bool isIntegrate { get; set; }
         //Trạng thái

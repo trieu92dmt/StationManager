@@ -73,6 +73,12 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     if (xthlsx is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xuất tiêu hao lệnh sản xuất");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XthlsxId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xthlsx.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xthlsx.MaterialDocument))// && string.IsNullOrEmpty(xthlsx.ReverseDocument))

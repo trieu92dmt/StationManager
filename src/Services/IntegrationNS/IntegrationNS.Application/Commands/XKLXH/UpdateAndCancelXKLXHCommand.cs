@@ -77,6 +77,12 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     if (xklxh is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu xuất kho theo lệnh xuất hàng");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xklxh.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XklxhId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xklxh.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xklxh.MaterialDocument))

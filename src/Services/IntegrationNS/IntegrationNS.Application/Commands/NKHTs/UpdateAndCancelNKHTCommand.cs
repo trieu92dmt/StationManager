@@ -76,6 +76,11 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     if (nkht is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho hàng trả");
 
+                    if (!string.IsNullOrEmpty(nkht.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkhtId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkht.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkht.MaterialDocument))// && string.IsNullOrEmpty(nkht.ReverseDocument))

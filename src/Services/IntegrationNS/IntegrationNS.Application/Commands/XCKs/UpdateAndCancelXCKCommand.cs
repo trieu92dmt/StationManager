@@ -77,6 +77,12 @@ namespace IntegrationNS.Application.Commands.XCKs
                     if (xck is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu xuất chuyển kho");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xck.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XckId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xck.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xck.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))

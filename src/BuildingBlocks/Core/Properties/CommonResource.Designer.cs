@@ -61,6 +61,15 @@ namespace Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;{0} đã bị cancel&quot;.
+        /// </summary>
+        public static string Msg_Canceled {
+            get {
+                return ResourceManager.GetString("Msg_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File không đúng định dạng. Vui lòng chọn file đúng định dạng có đuôi là .xlsx hoặc .xls!.
         /// </summary>
         public static string Msg_CheckExtensionFileExcel {

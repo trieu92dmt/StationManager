@@ -73,6 +73,12 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     if (nkpppp is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho phụ phẩm phế phẩm");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkppppId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkpppp.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkpppp.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))

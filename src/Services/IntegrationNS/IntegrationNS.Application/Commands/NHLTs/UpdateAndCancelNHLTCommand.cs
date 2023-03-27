@@ -76,6 +76,13 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     if (nhlt is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập hàng loại T");
 
+
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nhlt.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NhltId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nhlt.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nhlt.MaterialDocument))//) && string.IsNullOrEmpty(nhlt.ReverseDocument))
@@ -107,6 +114,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     nhltNew.ReverseDocument = null;
 
                     _nhltRep.Add(nhltNew);
+                    
                 }
             }
             else

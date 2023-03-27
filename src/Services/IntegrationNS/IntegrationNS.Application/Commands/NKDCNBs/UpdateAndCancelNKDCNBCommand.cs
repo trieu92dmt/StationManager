@@ -78,6 +78,11 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     if (nkdcnb is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho điều chuyển nội bộ");
 
+
+                    if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkdcnbId}");
+                    }
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkdcnb.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument))//) && string.IsNullOrEmpty(nkdcnb.ReverseDocument))

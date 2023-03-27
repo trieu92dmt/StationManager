@@ -81,6 +81,13 @@ namespace IntegrationNS.Application.Commands.NCKs
                     if (nck is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập chuyển kho");
 
+
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nck.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NckId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nck.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nck.MaterialDocument))// && string.IsNullOrEmpty(nck.ReverseDocument))
@@ -88,15 +95,15 @@ namespace IntegrationNS.Application.Commands.NCKs
                     //else if (!string.IsNullOrEmpty(nck.ReverseDocument))
                     //    nck.Status = "NOT";
                     nck.LastEditTime = DateTime.Now;
-
+                    
                     //Tạo line mới
                     //Clone object
                     var serialized = JsonConvert.SerializeObject(nck);
                     var nckNew = JsonConvert.DeserializeObject<WarehouseImportTransferModel>(serialized);
-
+                    
                     //Chứng từ
                     var document = documentQuery.FirstOrDefault(x => x.MaterialDocId == nck.MaterialDocId);
-
+                    
                     nckNew.WarehouseImportTransferId = Guid.NewGuid();
                     //Sau khi reverse line được tạo mới sẽ lấy số batch theo chứng từ. Line được tạo mới chỉ bị mất matdoc và reverse doc
                     nckNew.Batch = document.Batch;
@@ -113,8 +120,9 @@ namespace IntegrationNS.Application.Commands.NCKs
                     nckNew.Status = "NOT";
                     nckNew.MaterialDocument = null;
                     nckNew.ReverseDocument = null;
-
+                    
                     _nckRep.Add(nckNew);
+                    
                 }
             }
             else

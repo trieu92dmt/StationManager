@@ -70,6 +70,12 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     if (nkmh is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho mua hàng");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nkmh.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkmhId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkmh.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkmh.MaterialDocument))// && string.IsNullOrEmpty(nkmh.ReverseDocument))
@@ -105,6 +111,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     nkmhNew.MaterialDocument = null;
                     nkmhNew.ReverseDocument = null;
 
+                    _nkmhRep.Add(nkmhNew);
+                    
+
                     #region code cũ
                     //var nkmhNew = new GoodsReceiptModel
                     //{
@@ -139,8 +148,6 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //    Actived = true
                     //};
                     #endregion
-
-                    _nkmhRep.Add(nkmhNew);
                 }
             }
             else

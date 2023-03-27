@@ -81,6 +81,12 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     if (xnvlgc is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu xuất nguyên vật liệu gia công");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xnvlgc.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XnvlgcId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xnvlgc.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xnvlgc.MaterialDocument))//) && string.IsNullOrEmpty(xnvlgc.ReverseDocument))

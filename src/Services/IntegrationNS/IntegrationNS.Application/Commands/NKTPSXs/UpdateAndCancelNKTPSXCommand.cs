@@ -79,6 +79,12 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     if (nktpsx is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho tp sản xuất");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nktpsx.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NktpsxId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nktpsx.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nktpsx.MaterialDocument))// && string.IsNullOrEmpty(nktpsx.ReverseDocument))

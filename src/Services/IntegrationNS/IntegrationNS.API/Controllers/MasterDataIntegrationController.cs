@@ -1107,7 +1107,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nktpsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKTPSX MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
-        ///                   "materialDocumentItem": "string",
+        ///                   "materialDocumentItem": "string"
         ///                 }
         ///               ]
         ///             }

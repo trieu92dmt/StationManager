@@ -199,7 +199,8 @@ namespace WeighSession.API.Repositories
                                        .Select(x => new ScaleStatusReportResponse()
                                        {
                                            Plant = x.Plant,
-                                           ScaleCode = $"{x.ScaleCode} | {x.ScaleName}",
+                                           ScaleCode = x.ScaleCode,
+                                           ScaleName = x.ScaleName,
                                            isIntegrate = x.ScaleType.HasValue ? x.ScaleType.Value : false,
                                        }).ToListAsync();
 
@@ -208,11 +209,11 @@ namespace WeighSession.API.Repositories
             int index = 0;
             foreach (var scale in scaleQuery)
             {
-                scale.Status = scMonitorQuery.FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "C" ? "Connect" :
-                         scMonitorQuery.FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "S" ? "Start" :
-                         scMonitorQuery.FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "R" ? "Reset" : "Disconect";
-                scale.StartTime = scMonitorQuery.FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.StartTime ?? null;
-                scale.WeighSession = scMonitorQuery.FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.WeightSessionCode ?? "";
+                scale.Status = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "C" ? "Connect" :
+                         scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "S" ? "Start" :
+                         scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "R" ? "Reset" : "Disconect";
+                scale.StartTime = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.StartTime ?? null;
+                scale.WeighSession = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.WeightSessionCode ?? "";
                 scale.STT = ++index;
             };
 

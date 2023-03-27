@@ -23,7 +23,7 @@ namespace WSFactory.Service
         {
             InitializeComponent();
             connectionStringRiceFactoryDatabase = "Data Source=192.168.181.50;Initial Catalog=RiceFactoryDatabase_2017;User ID=citek;Password=123456;TrustServerCertificate=true";
-            connectionStringDataCollection = "Data Source=192.168.180.5;Initial Catalog=TLG_MES;User ID=ISD_IT;Password=pm123@abcd;TrustServerCertificate=true";
+            connectionStringDataCollection = "Data Source=192.168.180.5;Initial Catalog=DataCollection;User ID=ISD_IT;Password=pm123@abcd;TrustServerCertificate=true";
         }
 
         protected override void OnStart(string[] args)
@@ -130,7 +130,6 @@ namespace WSFactory.Service
                                  (line2Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line1Respone.StartTime, line1Respone.EndTime, 0));
                         }
                     }
-
                     connection.Close();
                 }
 
@@ -202,19 +201,24 @@ namespace WSFactory.Service
                         connectionDataCollection.Close();
                     }
                 }
+
+                string pathLog = "C:\\WebData\\WSFactory.Service\\log-success-wsfservice.txt";
+                using (StreamWriter writer = new StreamWriter(pathLog, true))
+                {
+                    writer.WriteLine($"WSF.Service is called success on {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}");
+                    writer.Close();
+                }
             }
 
             catch (Exception ex)
             {
-                string pathLog = "C:\\log-fail-wsfservice.txt";
+                string pathLog = "C:\\WebData\\WSFactory.Service\\log-fail-wsfservice.txt";
                 using (StreamWriter writer = new StreamWriter(pathLog, true))
                 {
                     writer.WriteLine($"WSF.Service is called fail on {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}. Error: {ex.Message} ");
                     writer.Close();
                 }
-                throw;
             }
         }
-
     }
 }

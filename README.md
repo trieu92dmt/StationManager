@@ -63,7 +63,7 @@
 
 ## Command using window service
 ```Powershell
-cd: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+cd C:\Windows\Microsoft.NET\Framework64\v4.0.30319
 ```
 
 ```Powershell

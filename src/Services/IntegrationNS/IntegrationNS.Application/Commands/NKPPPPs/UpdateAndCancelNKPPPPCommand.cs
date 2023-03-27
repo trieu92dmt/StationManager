@@ -22,6 +22,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
         public Guid NkppppId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -162,6 +163,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     //Cập nhật Batch và MaterialDocument
                     nkpppp.Batch = item.Batch;
                     nkpppp.MaterialDocument = item.MaterialDocument;
+                    nkpppp.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkpppp.TotalQuantity = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.WorkOrder.TargetQuantity : 0;
                     nkpppp.RequirementQuantiy = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.RequirementQuantiy : 0;
                     nkpppp.QuantityWithdrawn = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.QuantityWithdrawn : 0;

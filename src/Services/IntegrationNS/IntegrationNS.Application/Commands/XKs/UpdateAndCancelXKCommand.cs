@@ -25,6 +25,7 @@ namespace IntegrationNS.Application.Commands.XKs
         public Guid XkId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -138,6 +139,7 @@ namespace IntegrationNS.Application.Commands.XKs
                     xk.DeliveredQuantity = xk.DetailReservation.QtyWithdrawn;
                     xk.OpenQuantity = xk.TotalQuantity - xk.OpenQuantity;
                     xk.MaterialDocument = item.MaterialDocument;
+                    xk.MaterialDocumentItem = item.MaterialDocumentItem;
                     if (!string.IsNullOrEmpty(xk.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
                         xk.Status = "POST";
                     //else if (!string.IsNullOrEmpty(xck.ReverseDocument))

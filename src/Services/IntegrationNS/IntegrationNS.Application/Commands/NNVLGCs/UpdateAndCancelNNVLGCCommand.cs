@@ -21,6 +21,7 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
         public Guid NnvlgcId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -121,6 +122,7 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                     //Cập nhật Batch và MaterialDocument
                     nnvlgc.Batch = item.Batch;
                     nnvlgc.MaterialDocument = item.MaterialDocument;
+                    nnvlgc.MaterialDocumentItem = item.MaterialDocumentItem;
                     if (!string.IsNullOrEmpty(nnvlgc.MaterialDocument))// && string.IsNullOrEmpty(nnvlgc.ReverseDocument))
                         nnvlgc.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nnvlgc.ReverseDocument))

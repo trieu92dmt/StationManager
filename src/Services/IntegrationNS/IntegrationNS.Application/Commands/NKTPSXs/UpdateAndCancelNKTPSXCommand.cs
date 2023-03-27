@@ -28,6 +28,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
         public Guid NktpsxId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -169,6 +170,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     //Cập nhật Batch và MaterialDocument
                     nktpsx.Batch = item.Batch;
                     nktpsx.MaterialDocument = item.MaterialDocument;
+                    nktpsx.MaterialDocumentItem = item.MaterialDocumentItem;
                     nktpsx.TotalQuantity = nktpsx.WorkOrderId.HasValue ? nktpsx.WorkOrder.TargetQuantity : 0;
                     nktpsx.DeliveryQuantity = nktpsx.WorkOrderId.HasValue ? nktpsx.WorkOrder.DeliveredQuantity : 0;
                     nktpsx.OpenQuantity = nktpsx.TotalQuantity - nktpsx.DeliveryQuantity;

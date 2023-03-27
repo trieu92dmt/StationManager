@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
         public Guid NhltId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -135,6 +136,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     //Cập nhật Batch và MaterialDocument
                     nhlt.Batch = item.Batch;
                     nhlt.MaterialDocument = item.MaterialDocument;
+                    nhlt.MaterialDocumentItem = item.MaterialDocumentItem;
                     if (!string.IsNullOrEmpty(nhlt.MaterialDocument))// && string.IsNullOrEmpty(nhlt.ReverseDocument))
                         nhlt.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nhlt.ReverseDocument))

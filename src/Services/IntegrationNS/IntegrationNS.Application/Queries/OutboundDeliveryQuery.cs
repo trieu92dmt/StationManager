@@ -205,8 +205,9 @@ namespace IntegrationNS.Application.Queries
                 ChangeById = x.LastEditBy,
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 ChangeOn = x.LastEditTime,
-                MatDoc = x.MaterialDocument,
-                ReverseDoc = x.ReverseDocument,
+                MatDoc = x.MaterialDocument ?? "",
+                MatDocItem = x.MaterialDocumentItem ?? "",
+                ReverseDoc = x.ReverseDocument ?? "",
                 isDelete = x.Status == "DEL" ? true : false
 
             }).ToListAsync();

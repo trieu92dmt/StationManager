@@ -281,6 +281,8 @@ namespace IntegrationNS.Application.Commands.XKs
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //34 Material Doc
                 MatDoc = x.MaterialDocument ?? "",
+                //Mat doc item
+                MatDocItem = x.MaterialDocumentItem ?? "",
                 //35 Reverse Doc
                 RevDoc = x.ReverseDocument ?? "",
                 isDelete = x.Status == "DEL" ? true : false

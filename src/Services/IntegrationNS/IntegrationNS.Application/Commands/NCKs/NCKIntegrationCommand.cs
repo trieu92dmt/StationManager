@@ -269,6 +269,8 @@ namespace IntegrationNS.Application.Commands.NCKs
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //Material doc
                 MatDoc = x.MaterialDocument,
+                //MatDocItem
+                MatDocItem = x.MaterialDocumentItem,
                 //Reverse doc
                 RevDoc = x.ReverseDocument
             }).ToListAsync();

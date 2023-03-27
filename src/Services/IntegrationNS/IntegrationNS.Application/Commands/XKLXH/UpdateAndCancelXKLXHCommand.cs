@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
         public Guid XklxhId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -135,6 +136,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     //Cập nhật Batch và MaterialDocument
                     xklxh.Batch = item.Batch;
                     xklxh.MaterialDocument = item.MaterialDocument;
+                    xklxh.MaterialDocumentItem = item.MaterialDocumentItem;
                     xklxh.TotalQuantity = xklxh.DetailODId.HasValue ? xklxh.DetailOD.DeliveryQuantity : 0;
                     xklxh.DeliveryQuantity = xklxh.DetailODId.HasValue ? xklxh.DetailOD.PickedQuantityPUoM : 0;
                     xklxh.OpenQuantity = xklxh.TotalQuantity - xklxh.OpenQuantity;

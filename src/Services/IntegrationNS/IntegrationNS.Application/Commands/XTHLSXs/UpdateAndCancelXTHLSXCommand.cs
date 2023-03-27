@@ -22,6 +22,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
         public Guid XthlsxId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -161,6 +162,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     //Cập nhật Batch và MaterialDocument
                     xthlsx.Batch = item.Batch;
                     xthlsx.MaterialDocument = item.MaterialDocument;
+                    xthlsx.MaterialDocumentItem = item.MaterialDocumentItem;
                     xthlsx.TotalQuantity = xthlsx.DetailWorkOrder.WorkOrder.TargetQuantity;
                     xthlsx.RequirementQuantiy = xthlsx.RequirementQuantiy;
                     xthlsx.QuantityWithdrawn = xthlsx.QuantityWithdrawn;

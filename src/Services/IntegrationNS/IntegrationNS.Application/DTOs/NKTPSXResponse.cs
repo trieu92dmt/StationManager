@@ -75,6 +75,8 @@ namespace IntegrationNS.Application.DTOs
         public string ChangeBy { get; set; }
         //Material Doc
         public string MaterialDoc { get; set; }
+        //Material Doc item
+        public string MaterialDocItem { get; set; }
         //Reverse Doc
         public string ReverseDoc { get; set; }
         //Đánh dấu xóa

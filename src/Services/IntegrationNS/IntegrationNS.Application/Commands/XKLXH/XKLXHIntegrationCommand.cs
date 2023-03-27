@@ -299,6 +299,8 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //Material doc
                 MatDoc = x.MaterialDocument,
+                //Mat doc item
+                MatDocItem = x.MaterialDocumentItem,
                 //Reverse doc
                 RevDoc = x.ReverseDocument,
                 //Đánh dấu xóa

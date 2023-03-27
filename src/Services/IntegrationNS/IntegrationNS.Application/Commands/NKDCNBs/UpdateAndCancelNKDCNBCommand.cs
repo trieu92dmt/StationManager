@@ -25,6 +25,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
         public Guid NkdcnbId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -171,6 +172,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     //Cập nhật Batch và MaterialDocument
                     nkdcnb.Batch = item.Batch;
                     nkdcnb.MaterialDocument = item.MaterialDocument;
+                    nkdcnb.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkdcnb.TotalQuantity = nkdcnb.DetailODId.HasValue ? nkdcnb.DetailOD.DeliveryQuantity : 0;
                     nkdcnb.DeliveredQuantity = nkdcnb.DetailODId.HasValue ? nkdcnbs.Where(n => n.DetailODId == nkdcnb.DetailODId).Sum(n => n.ConfirmQty.Value) : 0;
                     nkdcnb.OpenQuantity = nkdcnb.TotalQuantity - nkdcnb.DeliveredQuantity;

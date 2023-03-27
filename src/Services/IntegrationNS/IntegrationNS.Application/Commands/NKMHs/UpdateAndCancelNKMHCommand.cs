@@ -20,6 +20,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public Guid NkmhId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -168,6 +169,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //Cập nhật Batch và MaterialDocument
                     nkmh.Batch = item.Batch;
                     nkmh.MaterialDocument = item.MaterialDocument;
+                    nkmh.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkmh.TotalQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.OrderQuantity : 0;
                     nkmh.DeliveryQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.QuantityReceived : 0;
                     nkmh.OpenQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.OpenQuantity : 0;

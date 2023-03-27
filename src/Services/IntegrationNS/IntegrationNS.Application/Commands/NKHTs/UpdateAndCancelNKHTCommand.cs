@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
         public Guid NkhtId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -168,6 +169,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     //Cập nhật Batch và MaterialDocument
                     nkht.Batch = item.Batch;
                     nkht.MaterialDocument = item.MaterialDocument;
+                    nkht.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkht.TotalQuantity = nkht.DetailODId.HasValue ? nkht.DetailOD.DeliveryQuantity : 0;
                     nkht.DeliveredQuantity = nkht.DetailODId.HasValue ? nkht.DetailOD.PickedQuantityPUoM : 0;
                     nkht.OpenQuantity = nkht.TotalQuantity - nkht.DeliveredQuantity;

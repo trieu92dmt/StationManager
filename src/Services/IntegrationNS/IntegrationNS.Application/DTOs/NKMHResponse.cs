@@ -47,6 +47,7 @@
         public string LastEditBy { get; set; }
         public DateTime? WeightDate { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 }

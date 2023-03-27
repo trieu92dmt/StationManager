@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
         public Guid XnvlgcId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -145,6 +146,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     //Cập nhật Batch và MaterialDocument
                     xnvlgc.Batch = item.Batch;
                     xnvlgc.MaterialDocument = item.MaterialDocument;
+                    xnvlgc.MaterialDocumentItem = item.MaterialDocumentItem;
                     xnvlgc.TotalQuantity = xnvlgc.PurchaseOrderDetailId.HasValue ? xnvlgc.PurchaseOrderDetail.OrderQuantity : 0;
                     xnvlgc.RequirementQuantity = xnvlgc.PurchaseOrderDetailId.HasValue ? reservations.FirstOrDefault(x => x.PurchasingDoc == xnvlgc.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode &&
                                                                                                                           x.Item == xnvlgc.PurchaseOrderDetail.POLine).RequirementQty : 0;

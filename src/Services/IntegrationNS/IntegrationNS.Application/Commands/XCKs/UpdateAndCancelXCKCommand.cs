@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.XCKs
         public Guid XckId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -137,6 +138,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                     //Cập nhật Batch và MaterialDocument
                     xck.Batch = item.Batch;
                     xck.MaterialDocument = item.MaterialDocument;
+                    xck.MaterialDocumentItem = item.MaterialDocumentItem;
                     xck.TotalQuantity = xck.DetailReservationId.HasValue ? xck.DetailReservation.RequirementQty : 0;
                     xck.DeliveredQuantity = xck.DetailReservationId.HasValue ? xck.DetailReservation.QtyWithdrawn : 0;
                     xck.OpenQuantity = xck.TotalQuantity - xck.DeliveredQuantity;

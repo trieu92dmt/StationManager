@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.NCKs
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
         public string ReverseDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
     }
 
 
@@ -143,6 +144,7 @@ namespace IntegrationNS.Application.Commands.NCKs
                     //Cập nhật Batch và MaterialDocument
                     nck.Batch = item.Batch;
                     nck.MaterialDocument = item.MaterialDocument;
+                    nck.MaterialDocumentItem = item.MaterialDocumentItem;
                     nck.TotalQuantity = nck.MaterialDocId.HasValue ? matDoc313Query.Where(x => x.MaterialDocCode == nck.MaterialDoc.MaterialDocCode && 
                                                                                                x.ItemAutoCreated == "X").Sum(x => x.Quantity) : 0;  
                     //nck.DeliveryQuantity = nck.MaterialDocId.HasValue ? 

@@ -271,7 +271,7 @@ namespace MES.Application.Queries
         /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
-        Task<List<CommonResponse>> GetReservation(string keyword, string plant);
+        Task<List<CommonResponse>> GetReservation(string keyword, string plant, string type);
 
         /// <summary>
         /// Dropdown Customer
@@ -581,40 +581,41 @@ namespace MES.Application.Queries
                 //Delivery Type lấy ra
                 var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
-                var xklxhResponse = await _dtOdRepo.GetQuery()
-                                .Include(x => x.OutboundDelivery)
+                var xklxhResponse = await _xklxhRepo.GetQuery()
+                                .Include(x => x.DetailOD)
+                                .ThenInclude(x => x.OutboundDelivery)
                                 .Where(x => //Search theo delivery type
-                                            (xklxhDeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                            (xklxhDeliveryType.Contains(x.DetailOD.OutboundDelivery.DeliveryType)) &&
                                             //Theo delivery type
-                                            (!string.IsNullOrEmpty(deliveryType) ? x.OutboundDelivery.DeliveryType == deliveryType : true) &&
+                                            (!string.IsNullOrEmpty(deliveryType) ? x.DetailOD.OutboundDelivery.DeliveryType == deliveryType : true) &&
                                             //Theo plant
-                                            (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                            (!string.IsNullOrEmpty(plant) ? x.DetailOD.Plant == plant : true) &&
                                             //Theo po
-                                            (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
-                                                                             x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
+                                            (!string.IsNullOrEmpty(poFrom) ? x.DetailOD.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                             x.DetailOD.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
                                             //Theo so
-                                            (!string.IsNullOrEmpty(soFrom) ? x.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
-                                                                             x.ReferenceDocument1.CompareTo(soTo) <= 0 : true) &&
+                                            (!string.IsNullOrEmpty(soFrom) ? x.DetailOD.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
+                                                                             x.DetailOD.ReferenceDocument1.CompareTo(soTo) <= 0 : true) &&
                                             //Theo Shiptoparty
-                                            (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
-                                                                                      x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                            (!string.IsNullOrEmpty(shipToPartyFrom) ? x.DetailOD.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                      x.DetailOD.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
                                             //Theo od
-                                            (!string.IsNullOrEmpty(odFrom) ? x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
-                                                                             x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0 : true) &&
+                                            (!string.IsNullOrEmpty(odFrom) ? x.DetailOD.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 &&
+                                                                             x.DetailOD.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0 : true) &&
                                             //Điều kiện riêng của màn hình xklxh
                                             //Đã hoàn tất giao dịch
-                                            (x.OutboundDelivery.GoodsMovementSts != "C"))
-                                 .OrderBy(x => x.ProductCodeInt)
+                                            (x.DetailOD.OutboundDelivery.GoodsMovementSts != "C"))
+                                 .OrderBy(x => x.DetailOD.ProductCodeInt)
                                  .Select(x => new DropdownMaterialResponse
                                  {
                                      //Material code
-                                     Key = x.ProductCodeInt.ToString(),
+                                     Key = x.DetailOD.ProductCodeInt.ToString(),
                                      //Material code | material name
-                                     Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                     Value = $"{x.DetailOD.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.DetailOD.ProductCode).ProductName}",
                                      //Material name
-                                     Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                     Name = products.FirstOrDefault(p => p.ProductCode == x.DetailOD.ProductCode).ProductName,
                                      //Đơn vị
-                                     Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                     Unit = products.FirstOrDefault(p => p.ProductCode == x.DetailOD.ProductCode).Unit
                                  }).ToListAsync();
 
                 return xklxhResponse.Where(x => //Theo Keyword
@@ -779,46 +780,6 @@ namespace MES.Application.Queries
                 return NKPPPPResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
-            }
-            #endregion
-            #region wo
-            else if (!string.IsNullOrEmpty(woFrom))
-            {
-                //Check nếu ko search field to thì gán to = from
-                if (string.IsNullOrEmpty(woTo))
-                    woTo = woFrom;
-
-                response = await _workOrderRep.GetQuery()
-                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                         //Lọc plant
-                                                    (x.WorkOrderCode.CompareTo(woFrom) >= 0 && x.WorkOrderCode.CompareTo(woTo) <= 0))   //Lọc from to
-                                    .OrderBy(x => x.ProductCode)
-                                    .Select(x => new DropdownMaterialResponse
-                                    {
-                                        Key = x.ProductCodeInt.ToString(),
-                                        Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
-                                        Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
-                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
-                                    }).ToListAsync();
-            }
-            #endregion
-            #region reservation
-            else if (!string.IsNullOrEmpty(resFrom))
-            {
-                //Check nếu ko search field to thì gán to = from
-                if (string.IsNullOrEmpty(resTo))
-                    resTo = resFrom;
-
-                response = await _dtRsRepo.GetQuery().Include(x => x.Reservation)
-                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Reservation.Plant == plant : true) &&                                           //Lọc plant
-                                                    (x.Reservation.ReservationCode.CompareTo(resFrom) >= 0 && x.Reservation.ReservationCode.CompareTo(resTo) <= 0))   //Lọc from to
-                                    .OrderBy(x => x.Material)
-                                    .Select(x => new DropdownMaterialResponse
-                                    {
-                                        Key = x.MaterialCodeInt.ToString(),
-                                        Value = $"{x.MaterialCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName}",
-                                        Name = products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName,
-                                        Unit = products.FirstOrDefault(p => p.ProductCode == x.Material).Unit
-                                    }).ToListAsync();
             }
             #endregion
             else
@@ -1343,25 +1304,26 @@ namespace MES.Application.Queries
                 var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
                 
-                var xklxhResponse = await _dtOdRepo.GetQuery()
-                                .Include(x => x.OutboundDelivery)
+                var xklxhResponse = await _xklxhRepo.GetQuery()
+                                .Include(x => x.DetailOD)
+                                .ThenInclude(x => x.OutboundDelivery)
                                 .Where(x => //Search theo delivery type
-                                            (xklxhDeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                            (xklxhDeliveryType.Contains(x.DetailOD.OutboundDelivery.DeliveryType)) &&
                                             //Theo plant
-                                            (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                            (!string.IsNullOrEmpty(plant) ? x.DetailOD.Plant == plant : true) &&
                                             //Điều kiện riêng của màn hình xklxh
-                                            (x.OutboundDelivery.GoodsMovementSts != "C") &&
+                                            (x.DetailOD.OutboundDelivery.GoodsMovementSts != "C") &&
                                             //Bỏ các line k có reference
-                                            (x.ReferenceDocument1 != null) &&
-                                            (soQuery.FirstOrDefault(p => p.SalesDocumentCode == x.ReferenceDocument1) != null) &&
+                                            (x.DetailOD.ReferenceDocument1 != null) &&
+                                            (soQuery.FirstOrDefault(p => p.SalesDocumentCode == x.DetailOD.ReferenceDocument1) != null) &&
                                             //Theo Keyword
-                                            (!string.IsNullOrEmpty(keyword) ? x.ReferenceDocument1.Contains(keyword) : true)
+                                            (!string.IsNullOrEmpty(keyword) ? x.DetailOD.ReferenceDocument1.Contains(keyword) : true)
                                             )
-                                 .OrderBy(x => x.ReferenceDocument1)
+                                 .OrderBy(x => x.DetailOD.ReferenceDocument1)
                                  .Select(x => new CommonResponse
                                  {
-                                     Key = x.ReferenceDocument1,
-                                     Value = soQuery.FirstOrDefault(p => p.SalesDocumentCode == x.ReferenceDocument1).SalesDocumentCode
+                                     Key = x.DetailOD.ReferenceDocument1,
+                                     Value = soQuery.FirstOrDefault(p => p.SalesDocumentCode == x.DetailOD.ReferenceDocument1).SalesDocumentCode
                                  })
                                 .AsNoTracking().ToListAsync();
 
@@ -1518,29 +1480,30 @@ namespace MES.Application.Queries
                 //Delivery Type lấy ra
                 var NKHTdeliveryType = new List<string>() { "ZLR1", "ZLR2", "ZLR3", "ZLR4", "ZLR5", "ZLR6", "ZNDH" };
 
-                var NKHTresponse = await _dtOdRepo.GetQuery()
-                                       .Include(x => x.OutboundDelivery)
-                                       .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) && //Plant
+                var NKHTresponse = await _xklxhRepo.GetQuery()
+                                       .Include(x => x.DetailOD)
+                                       .ThenInclude(x => x.OutboundDelivery)
+                                       .Where(x => (!string.IsNullOrEmpty(plant) ? x.DetailOD.Plant == plant : true) && //Plant
                                                    //Lọc theo từ khóa
-                                                   (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
+                                                   (string.IsNullOrEmpty(keyword) ? true : x.DetailOD.OutboundDelivery.DeliveryCode.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
                                                    //Theo sales order
-                                                   (!string.IsNullOrEmpty(salesOrderFrom) ? x.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 &&  
-                                                                                            x.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true) &&
+                                                   (!string.IsNullOrEmpty(salesOrderFrom) ? x.DetailOD.ReferenceDocument1.CompareTo(salesOrderFrom) >= 0 &&  
+                                                                                            x.DetailOD.ReferenceDocument1.CompareTo(salesOrderTo) <= 0 : true) &&
                                                    //Theo ship to party
-                                                   (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&      
-                                                                                             x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                   (!string.IsNullOrEmpty(shipToPartyFrom) ? x.DetailOD.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&      
+                                                                                             x.DetailOD.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
                                                    //Theo material
                                                    //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
                                                                                           //x.ProductCodeInt <= long.Parse(materialTo) : true) &&
                                                    //Theo delivery type
-                                                   (NKHTdeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                                   (NKHTdeliveryType.Contains(x.DetailOD.OutboundDelivery.DeliveryType)) &&
                                                    //Loại các line đã hoàn tất giao dịch
-                                                   x.GoodsMovementSts != "C")
-                                       .OrderBy(x => x.OutboundDelivery.DeliveryCode)
+                                                   x.DetailOD.GoodsMovementSts != "C")
+                                       .OrderBy(x => x.DetailOD.OutboundDelivery.DeliveryCode)
                                        .Select(x => new CommonResponse
                                        {
-                                           Key = x.OutboundDelivery.DeliveryCode,
-                                           Value = x.OutboundDelivery.DeliveryCodeInt.ToString()
+                                           Key = x.DetailOD.OutboundDelivery.DeliveryCode,
+                                           Value = x.DetailOD.OutboundDelivery.DeliveryCodeInt.ToString()
                                        }).AsNoTracking().ToListAsync();
                 return NKHTresponse.DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -1726,30 +1689,31 @@ namespace MES.Application.Queries
                 //Query shiptoparty
                 var shipToPartys = _vendorRepo.GetQuery().AsNoTracking();
 
-                var xklxhResponse = await _dtOdRepo.GetQuery()
-                                .Include(x => x.OutboundDelivery)
+                var xklxhResponse = await _xklxhRepo.GetQuery()
+                                .Include(x => x.DetailOD)
+                                .ThenInclude(x => x.OutboundDelivery)
                                 .Where(x => //Search theo delivery type
-                                            (xklxhDeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                            (xklxhDeliveryType.Contains(x.DetailOD.OutboundDelivery.DeliveryType)) &&
                                             //Theo plant
-                                            (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                            (!string.IsNullOrEmpty(plant) ? x.DetailOD.Plant == plant : true) &&
                                             //Điều kiện riêng của màn hình xklxh
-                                            (x.OutboundDelivery.GoodsMovementSts != "C") &&
+                                            (x.DetailOD.OutboundDelivery.GoodsMovementSts != "C") &&
                                             //Theo po
-                                            (!string.IsNullOrEmpty(poFrom) ? x.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
-                                                                             x.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
+                                            (!string.IsNullOrEmpty(poFrom) ? x.DetailOD.ReferenceDocument1.CompareTo(poFrom) >= 0 &&
+                                                                             x.DetailOD.ReferenceDocument1.CompareTo(poTo) <= 0 : true) &&
                                             //Theo so
-                                            (!string.IsNullOrEmpty(soFrom) ? x.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
-                                                                             x.ReferenceDocument1.CompareTo(soTo) <= 0 : true) &&
-                                            (x.OutboundDelivery.ShiptoParty != null) &&
+                                            (!string.IsNullOrEmpty(soFrom) ? x.DetailOD.ReferenceDocument1.CompareTo(soFrom) >= 0 &&
+                                                                             x.DetailOD.ReferenceDocument1.CompareTo(soTo) <= 0 : true) &&
+                                            (x.DetailOD.OutboundDelivery.ShiptoParty != null) &&
                                             //Theo Keyword
-                                            (!string.IsNullOrEmpty(keyword) ? x.OutboundDelivery.ShiptoPartyName.Contains(keyword) ||
-                                                                              x.OutboundDelivery.SoldtoParty.Contains(keyword) : true)
+                                            (!string.IsNullOrEmpty(keyword) ? x.DetailOD.OutboundDelivery.ShiptoPartyName.Contains(keyword) ||
+                                                                              x.DetailOD.OutboundDelivery.SoldtoParty.Contains(keyword) : true)
                                             )
-                                 .OrderBy(x => x.OutboundDelivery.ShiptoParty)
+                                 .OrderBy(x => x.DetailOD.OutboundDelivery.ShiptoParty)
                                  .Select(x => new CommonResponse
                                  {
-                                     Key = x.OutboundDelivery.ShiptoParty,
-                                     Value = $"{x.OutboundDelivery.ShiptoParty} | {x.OutboundDelivery.ShiptoPartyName}"
+                                     Key = x.DetailOD.OutboundDelivery.ShiptoParty,
+                                     Value = $"{x.DetailOD.OutboundDelivery.ShiptoParty} | {x.DetailOD.OutboundDelivery.ShiptoPartyName}"
                                  })
                                 .AsNoTracking().ToListAsync();
 
@@ -1890,20 +1854,21 @@ namespace MES.Application.Queries
                 //Delivery Type lấy ra
                 var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
-                var xklxhResponse = await _dtOdRepo.GetQuery()
-                                .Include(x => x.OutboundDelivery)
+                var xklxhResponse = await _xklxhRepo.GetQuery()
+                                .Include(x => x.DetailOD)
+                                .ThenInclude(x => x.OutboundDelivery)
                                 .Where(x => //Search theo delivery type
-                                            (xklxhDeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                            (xklxhDeliveryType.Contains(x.DetailOD.OutboundDelivery.DeliveryType)) &&
                                             //Theo plant
-                                            (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                            (!string.IsNullOrEmpty(plant) ? x.PlantCode == plant : true) &&
                                             //Điều kiện riêng của màn hình xklxh
                                             //Loại các line đã hoàn tất giao dịch
-                                            (x.OutboundDelivery.GoodsMovementSts != "C"))
-                                 .OrderBy(x => x.OutboundDelivery.DeliveryType)
+                                            (x.DetailOD.OutboundDelivery.GoodsMovementSts != "C"))
+                                 .OrderBy(x => x.DetailOD.OutboundDelivery.DeliveryType)
                                  .Select(x => new CommonResponse
                                  {
-                                     Key = x.OutboundDelivery.DeliveryType,
-                                     Value = $"{x.OutboundDelivery.DeliveryType} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OutboundDelivery.DeliveryType).ShortText}" 
+                                     Key = x.DetailOD.OutboundDelivery.DeliveryType,
+                                     Value = $"{x.DetailOD.OutboundDelivery.DeliveryType} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.DetailOD.OutboundDelivery.DeliveryType).ShortText}" 
                                  })
                                 .AsNoTracking().ToListAsync();
 
@@ -2327,9 +2292,10 @@ namespace MES.Application.Queries
         /// <param name="keyword">Từ khóa tìm kiếm gần đúng</param>
         /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
-        public async Task<List<CommonResponse>> GetReservation(string keyword, string plant)
+        public async Task<List<CommonResponse>> GetReservation(string keyword, string plant, string type)
         {
-            return await _rsRepo.GetQuery(x => 
+
+            return await _rsRepo.GetQuery(x =>
                                                //Lọc theo từ khóa
                                                (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
                                                //Lọc theo plant
@@ -2340,6 +2306,7 @@ namespace MES.Application.Queries
                                     Key = x.ReservationCode,
                                     Value = x.ReservationCodeInt.ToString()
                                 }).AsNoTracking().ToListAsync();
+
         }
 
         #endregion

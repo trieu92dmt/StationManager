@@ -99,6 +99,7 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                     //-------------------------//
                     nnvlgcNew.Status = "NOT";
                     nnvlgcNew.MaterialDocument = null;
+                    nnvlgcNew.MaterialDocumentItem = null;
                     nnvlgcNew.ReverseDocument = null;
 
                     _nnvlgcRep.Add(nnvlgcNew);

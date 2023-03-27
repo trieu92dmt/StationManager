@@ -96,6 +96,7 @@ namespace IntegrationNS.Application.Commands.NKs
                     //-------------------------//
                     nkNew.Status = "NOT";
                     nkNew.MaterialDocument = null;
+                    nkNew.MaterialDocumentItem = null;
                     nkNew.ReverseDocument = null;
 
 

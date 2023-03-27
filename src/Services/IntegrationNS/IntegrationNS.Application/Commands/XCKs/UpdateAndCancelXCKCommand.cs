@@ -115,6 +115,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                     xckNew.DeliveredQuantity = 0;
                     xckNew.OpenQuantity = 0;
                     xckNew.MaterialDocument = null;
+                    xckNew.MaterialDocumentItem = null;
                     xckNew.ReverseDocument = null;
 
                     _xckRep.Add(xckNew);

@@ -116,6 +116,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     nktpsxNew.DeliveryQuantity = 0;
                     nktpsxNew.OpenQuantity = 0;
                     nktpsxNew.MaterialDocument = null;
+                    nktpsxNew.MaterialDocumentItem = null;
                     nktpsxNew.ReverseDocument = null;
 
 

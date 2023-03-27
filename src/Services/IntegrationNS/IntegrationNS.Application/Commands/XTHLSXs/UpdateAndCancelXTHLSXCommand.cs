@@ -111,6 +111,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     xthlsxNew.RequirementQuantiy = 0;
                     xthlsxNew.QuantityWithdrawn = 0;
                     xthlsxNew.MaterialDocument = null;
+                    xthlsxNew.MaterialDocumentItem = null;
                     xthlsxNew.ReverseDocument = null;
 
                     #region code cũ

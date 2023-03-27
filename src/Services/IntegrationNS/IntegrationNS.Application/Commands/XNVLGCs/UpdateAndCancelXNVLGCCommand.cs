@@ -121,6 +121,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     xnvlgcNew.TotalQuantity = 0;
                     xnvlgcNew.RequirementQuantity = 0;
                     xnvlgcNew.MaterialDocument = null;
+                    xnvlgcNew.MaterialDocumentItem = null;
                     xnvlgcNew.ReverseDocument = null;
 
                     _xnvlgcRep.Add(xnvlgcNew);

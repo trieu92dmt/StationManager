@@ -113,6 +113,7 @@ namespace IntegrationNS.Application.Commands.XKs
                     xkNew.DeliveredQuantity = 0;
                     xkNew.OpenQuantity = 0;
                     xkNew.MaterialDocument = null;
+                    xkNew.MaterialDocumentItem = null;
                     xkNew.ReverseDocument = null;
 
                     _xkRep.Add(xkNew);

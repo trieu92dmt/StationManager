@@ -115,6 +115,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     nkdcnbNew.DeliveredQuantity = 0;
                     nkdcnbNew.OpenQuantity = 0;
                     nkdcnbNew.MaterialDocument = null;
+                    nkdcnbNew.MaterialDocumentItem = null;
                     nkdcnbNew.ReverseDocument = null;
 
                     #region code cũ

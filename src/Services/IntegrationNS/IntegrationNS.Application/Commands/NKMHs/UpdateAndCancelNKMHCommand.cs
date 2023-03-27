@@ -110,6 +110,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     nkmhNew.DeliveryQuantity = 0;
                     nkmhNew.OpenQuantity = 0;
                     nkmhNew.MaterialDocument = null;
+                    nkmhNew.MaterialDocumentItem = null;
                     nkmhNew.ReverseDocument = null;
 
                     _nkmhRep.Add(nkmhNew);

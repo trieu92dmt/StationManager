@@ -111,6 +111,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     nkppppNew.RequirementQuantiy = 0;
                     nkppppNew.QuantityWithdrawn = 0;
                     nkppppNew.MaterialDocument = null;
+                    nkppppNew.MaterialDocumentItem = null;
                     nkppppNew.ReverseDocument = null;
 
                     #region code cũ

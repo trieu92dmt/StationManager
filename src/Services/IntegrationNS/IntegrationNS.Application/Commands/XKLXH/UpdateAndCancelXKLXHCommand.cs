@@ -113,6 +113,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     xklxhNew.DeliveryQuantity = 0;
                     xklxhNew.OpenQuantity = 0;
                     xklxhNew.MaterialDocument = null;
+                    xklxhNew.MaterialDocumentItem = null;
                     xklxhNew.ReverseDocument = null;
 
                     _xklxhRep.Add(xklxhNew);

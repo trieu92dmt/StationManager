@@ -113,6 +113,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     nkhtNew.DeliveredQuantity = 0;
                     nkhtNew.OpenQuantity = 0;
                     nkhtNew.MaterialDocument = null;
+                    nkhtNew.MaterialDocumentItem = null;
                     nkhtNew.ReverseDocument = null;
                     #region code cũ
                     //var nkhtNew = new GoodsReturnModel

@@ -112,6 +112,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     //-------------------------//
                     nhltNew.Status = "NOT";
                     nhltNew.MaterialDocument = null;
+                    nhltNew.MaterialDocumentItem = null;
                     nhltNew.ReverseDocument = null;
 
                     _nhltRep.Add(nhltNew);

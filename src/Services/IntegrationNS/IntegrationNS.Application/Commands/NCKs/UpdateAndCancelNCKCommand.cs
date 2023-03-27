@@ -120,6 +120,7 @@ namespace IntegrationNS.Application.Commands.NCKs
                     //nckNew.OpenQuantity = 0;
                     nckNew.Status = "NOT";
                     nckNew.MaterialDocument = null;
+                    nckNew.MaterialDocumentItem = null;
                     nckNew.ReverseDocument = null;
                     
                     _nckRep.Add(nckNew);

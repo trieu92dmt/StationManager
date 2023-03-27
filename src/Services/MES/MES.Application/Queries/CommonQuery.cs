@@ -475,6 +475,9 @@ namespace MES.Application.Queries
             //Chỉ search poFrom thì search 1
             poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
 
+            //Chỉ search poFrom thì search 1
+            resTo = !string.IsNullOrEmpty(resFrom) && string.IsNullOrEmpty(resTo) ? resFrom : resTo;
+
             //Chỉ search woFrom thì search 1
             woTo = !string.IsNullOrEmpty(woFrom) && string.IsNullOrEmpty(woTo) ? woFrom : woTo;
 
@@ -778,6 +781,42 @@ namespace MES.Application.Queries
                                             }).ToListAsync();
 
                 return NKPPPPResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
+            #region XCK
+            //Màn xuất chuyển kho
+            //Khi lại màn hình là "XCK" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
+            else if (type == "XCK" && !string.IsNullOrEmpty(resTo))
+            {
+                //Tạo query
+                var XCKResponse = await _dtRsRepo.GetQuery()
+                                           .Include(x => x.Reservation)
+                                           .Where(x =>
+                                                       //Lọc theo reservation from to
+                                                       (!string.IsNullOrEmpty(resFrom) ? x.Reservation.ReservationCode.CompareTo(resFrom) >= 0 &&
+                                                                                         x.Reservation.ReservationCode.CompareTo(resTo) <= 0 : true) &&
+                                                       //Lấy các reservation có movement type là 311 313
+                                                       (x.MovementType == "311" || x.MovementType == "313") &&
+                                                       //Loại trừ các reservation đã hoàn tất chuyển kho
+                                                       (x.Reservation.FinalIssue != "X") &&
+                                                       //Loại trừ các reservation đã đánh dấu xóa
+                                                       (x.ItemDeleted != "X"))
+                                               .OrderBy(x => x.MaterialCodeInt)
+                                               .Select(x => new DropdownMaterialResponse
+                                               {
+                                                   //Material code
+                                                   Key = x.MaterialCodeInt.ToString(),
+                                                   //Material code | material name
+                                                   Value = $"{x.MaterialCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName}",
+                                                   //Material name
+                                                   Name = products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName,
+                                                   //Đơn vị
+                                                   Unit = products.FirstOrDefault(p => p.ProductCode == x.Material).Unit
+                                               }).AsNoTracking().ToListAsync();
+
+                return XCKResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -2291,7 +2330,6 @@ namespace MES.Application.Queries
         /// <returns></returns>
         public async Task<List<CommonResponse>> GetReservation(string keyword, string plant, string type)
         {
-
             return await _rsRepo.GetQuery(x =>
                                                //Lọc theo từ khóa
                                                (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&
@@ -2302,7 +2340,7 @@ namespace MES.Application.Queries
                                 {
                                     Key = x.ReservationCode,
                                     Value = x.ReservationCodeInt.ToString()
-                                }).AsNoTracking().ToListAsync();
+                                }).AsNoTracking().Take(10).ToListAsync();
 
         }
 

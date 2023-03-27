@@ -1089,28 +1089,32 @@ namespace MES.Application.Queries
                 //Query po
                 var poQuery = _poMasterRepo.GetQuery().AsNoTracking();
 
-                var xklxhResponse = await _dtOdRepo.GetQuery()
-                                .Include(x => x.OutboundDelivery)
+                var listReference = await _xklxhRepo.GetQuery()
+                                .Include(x => x.DetailOD)
+                                .ThenInclude(x => x.OutboundDelivery)
                                 .Where(x => //Search theo delivery type
-                                            (xklxhDeliveryType.Contains(x.OutboundDelivery.DeliveryType)) &&
+                                            (xklxhDeliveryType.Contains(x.DetailOD.OutboundDelivery.DeliveryType)) &&
                                             //Theo plant
-                                            (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                            (!string.IsNullOrEmpty(plant) ? x.DetailOD.Plant == plant : true) &&
                                             //Điều kiện riêng của màn hình xklxh
-                                            (x.OutboundDelivery.GoodsMovementSts != "C") &&
+                                            (x.DetailOD.OutboundDelivery.GoodsMovementSts != "C") &&
                                             //Bỏ các line k có reference
-                                            (x.ReferenceDocument1 != null) &&
-                                            (poQuery.FirstOrDefault(p => p.PurchaseOrderCode == x.ReferenceDocument1) != null) &&
+                                            (x.DetailOD.ReferenceDocument1 != null) &&
+                                            (poQuery.FirstOrDefault(p => p.PurchaseOrderCode == x.DetailOD.ReferenceDocument1) != null) &&
                                             //Theo Keyword
-                                            (!string.IsNullOrEmpty(keyword) ? x.ReferenceDocument1.Contains(keyword) ||
-                                                                              x.ReferenceDocument1.Contains(keyword) : true)
+                                            (!string.IsNullOrEmpty(keyword) ? x.DetailOD.ReferenceDocument1.Contains(keyword) ||
+                                                                              x.DetailOD.ReferenceDocument1.Contains(keyword) : true)
                                             )
-                                 .OrderBy(x => x.ReferenceDocument1)
-                                 .Select(x => new CommonResponse
-                                 {
-                                     Key = x.ReferenceDocument1,
-                                     Value = poQuery.FirstOrDefault(p => p.PurchaseOrderCode == x.ReferenceDocument1).PurchaseOrderCodeInt.ToString()
-                                 })
+                                 .OrderBy(x => x.DetailOD.ReferenceDocument1)
+                                 .Select(x => x.DetailOD.ReferenceDocument1)
                                 .AsNoTracking().ToListAsync();
+
+                var xklxhResponse = await _obDeliveryRepo.GetQuery(x => listReference.Contains(x.DeliveryCode))
+                                                      .Select(x => new CommonResponse
+                                                      {
+                                                          Key = x.DeliveryCode,
+                                                          Value = x.DeliveryCodeInt.ToString()
+                                                      }).AsNoTracking().ToListAsync();
 
                 return xklxhResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -1304,7 +1308,7 @@ namespace MES.Application.Queries
                 var xklxhDeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9", "ZLFA", "ZNLC", "ZNLN", "ZXDH" };
 
                 
-                var xklxhResponse = await _xklxhRepo.GetQuery()
+                var listReference = await _xklxhRepo.GetQuery()
                                 .Include(x => x.DetailOD)
                                 .ThenInclude(x => x.OutboundDelivery)
                                 .Where(x => //Search theo delivery type
@@ -1320,12 +1324,15 @@ namespace MES.Application.Queries
                                             (!string.IsNullOrEmpty(keyword) ? x.DetailOD.ReferenceDocument1.Contains(keyword) : true)
                                             )
                                  .OrderBy(x => x.DetailOD.ReferenceDocument1)
-                                 .Select(x => new CommonResponse
-                                 {
-                                     Key = x.DetailOD.ReferenceDocument1,
-                                     Value = soQuery.FirstOrDefault(p => p.SalesDocumentCode == x.DetailOD.ReferenceDocument1).SalesDocumentCode
-                                 })
+                                 .Select(x => x.DetailOD.ReferenceDocument1)
                                 .AsNoTracking().ToListAsync();
+
+                var xklxhResponse = await _saleDocRepo.GetQuery(x => listReference.Contains(x.SalesDocumentCode))
+                                                      .Select(x => new CommonResponse
+                                                      {
+                                                          Key = x.SalesDocumentCode,
+                                                          Value = x.SalesDocumentCode
+                                                      }).AsNoTracking().ToListAsync();
 
                 return xklxhResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }

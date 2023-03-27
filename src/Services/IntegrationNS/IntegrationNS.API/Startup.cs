@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using IntegrationNS.API.Extensions;
 using IntegrationNS.Application.Mapping;
+using ISD.Middlewares;
 
 namespace IntegrationNS.API
 {
@@ -80,7 +81,7 @@ namespace IntegrationNS.API
             if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseSwaggerAuthorized();
+                app.UseSwaggerAuthorized();
                 app.UseSwagger(options =>
                 {
                     options.SerializeAsV2 = true;

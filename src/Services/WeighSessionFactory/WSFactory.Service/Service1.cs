@@ -23,7 +23,7 @@ namespace WSFactory.Service
         {
             InitializeComponent();
             connectionStringRiceFactoryDatabase = "Data Source=192.168.181.50;Initial Catalog=RiceFactoryDatabase_2017;User ID=citek;Password=123456;TrustServerCertificate=true";
-            connectionStringDataCollection = "Data Source=192.168.100.233;Initial Catalog=DataCollection;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
+            connectionStringDataCollection = "Data Source=192.168.180.5;Initial Catalog=TLG_MES;User ID=ISD_IT;Password=pm123@abcd;TrustServerCertificate=true";
         }
 
         protected override void OnStart(string[] args)
@@ -44,6 +44,7 @@ namespace WSFactory.Service
             var dateNow = DateTime.Now;
             var dateKey = DateTime.Now.ToString("yyyyMMdd");
 
+            //Format date
             DateTime startTime = dateNow.Date;
             DateTime endTime = dateNow.Date.AddDays(1).AddSeconds(-1);
 

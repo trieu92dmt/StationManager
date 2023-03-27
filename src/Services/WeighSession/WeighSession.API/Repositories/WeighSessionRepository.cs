@@ -199,7 +199,7 @@ namespace WeighSession.API.Repositories
                                        .Select(x => new ScaleStatusReportResponse()
                                        {
                                            Plant = x.Plant,
-                                           ScaleCode = x.ScaleCode,
+                                           ScaleCode = $"{x.ScaleCode} | {x.ScaleName}",
                                            isIntegrate = x.ScaleType.HasValue ? x.ScaleType.Value : false,
                                        }).ToListAsync();
 

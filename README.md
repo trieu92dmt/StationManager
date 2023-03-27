@@ -63,5 +63,9 @@
 
 ## Command using window service
 ```Powershell
-installutil.exe C:\Working\TLG.API\src\Services\WeighSessionFactory\WSFactory.Service\bin\Debug\WSFactory.Service.exe
+cd: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+```
+
+```Powershell
+command: installutil.exe C:\Working\TLG.API\src\Services\WeighSessionFactory\WSFactory.Service\bin\Debug\WSFactory.Service.exe
 ```

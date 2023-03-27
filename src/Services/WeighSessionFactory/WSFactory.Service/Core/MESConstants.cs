@@ -1,4 +1,4 @@
-﻿namespace Core.Constants
+﻿namespace WSFactory.Service.Core
 {
     public static class MESConstants
     {

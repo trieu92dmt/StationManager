@@ -1,51 +1,31 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using MediatR;
+using Newtonsoft.Json;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.ServiceProcess;
-using System.Timers;
-using WSFactory.Service.DTOs;
-using static WSFactory.Service.Core.MESConstants;
+using static Core.Constants.MESConstants;
 
-namespace WSFactory.Service
+namespace MES.Application.Commands.WeighSessionFactory
 {
-    [RunInstaller(true)]
-    public partial class Service1 : ServiceBase
+    public class FactoryCommand : IRequest<bool>
     {
-        private Timer backupTimer;
+        
+    }
+
+    public class FactoryCommandHandler : IRequestHandler<FactoryCommand, bool>
+    {
         private string connectionStringDataCollection;
         private string connectionStringRiceFactoryDatabase;
-        public Service1()
+        public FactoryCommandHandler()
         {
-            InitializeComponent();
             connectionStringRiceFactoryDatabase = "Data Source=192.168.181.50;Initial Catalog=RiceFactoryDatabase_2017;User ID=citek;Password=123456;TrustServerCertificate=true";
-            connectionStringDataCollection = "Data Source=192.168.180.5;Initial Catalog=TLG_MES;User ID=ISD_IT;Password=pm123@abcd;TrustServerCertificate=true";
+            connectionStringDataCollection = "Data Source=192.168.100.233;Initial Catalog=DataCollection;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
         }
-
-        protected override void OnStart(string[] args)
-        {
-            backupTimer = new Timer(60000); // 1 min interval
-            backupTimer.Elapsed += new ElapsedEventHandler(OnBackupTimerElapsed);
-            backupTimer.Enabled = true;
-        }
-
-        protected override void OnStop()
-        {
-            backupTimer.Enabled = false;
-            backupTimer.Dispose();
-        }
-
-        private void OnBackupTimerElapsed(object sender, ElapsedEventArgs e)
+        public async Task<bool> Handle(FactoryCommand request, CancellationToken cancellationToken)
         {
             var dateNow = DateTime.Now;
             var dateKey = DateTime.Now.ToString("yyyyMMdd");
 
-            //Format date
-            DateTime startTime = dateNow.Date;
+            DateTime startTime = new DateTime(2023, 3, 15);
             DateTime endTime = dateNow.Date.AddDays(1).AddSeconds(-1);
 
             try
@@ -99,7 +79,7 @@ namespace WSFactory.Service
                         SqlDataAdapter adapterLine3 = new SqlDataAdapter(line_3Command, connection);
                         adapterLine3.Fill(dsLine3);
                         var jsonStringLine3 = JsonConvert.SerializeObject(dsLine3);
-                        var line3Respone = JsonConvert.DeserializeObject<List<Line3Response>>(jsonStringLine3, jsonSettings).FirstOrDefault();
+                        var line3Respone = JsonConvert.DeserializeObject<List<Line1And2Response>>(jsonStringLine3, jsonSettings).FirstOrDefault();
 
                         if (line1Respone.V_Product_1 == 0 && line1Respone.V_Material == 0)
                         {
@@ -113,7 +93,7 @@ namespace WSFactory.Service
 
                             //Data cân thành phẩm - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line3Respone.V_Product_1_1), line2Respone.StartTime, line2Respone.EndTime, 0));
+                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line2Respone.V_Product_1), line2Respone.StartTime, line2Respone.EndTime, 0));
                         }
                         else
                         {
@@ -127,11 +107,12 @@ namespace WSFactory.Service
 
                             //Data cân thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
                         }
                     }
 
                     connection.Close();
+
                 }
 
                 if (weighSessions.Any())
@@ -165,8 +146,7 @@ namespace WSFactory.Service
 
                             DataTable dbIndex = new DataTable();
                             var queryOrderIndex = $"SELECT [DateKey], [OrderIndex] FROM WeighSessionModel WHERE (StartTime >= '{startTime}') AND (StartTime<='{endTime}')" +
-                                                  $"AND ScaleCode = '{item.ScaleCode}' AND WeighSessionCode = '{weighSessionCode}' " +
-                                                  $"ORDER BY OrderIndex DESC";
+                                                  $"AND ScaleCode = '{item.ScaleCode}' ORDER BY OrderIndex DESC";
                             SqlDataAdapter adapterIndex = new SqlDataAdapter(queryOrderIndex, connectionDataCollection);
                             adapterIndex.Fill(dbIndex);
 
@@ -198,12 +178,16 @@ namespace WSFactory.Service
                                 SqlCommand commandUpdate = new SqlCommand(sql, connectionDataCollection);
                                 commandUpdate.ExecuteNonQuery();
                             }
+
+                            
                         }
+
                         connectionDataCollection.Close();
                     }
                 }
-            }
 
+                return true;
+            }
             catch (Exception ex)
             {
                 string pathLog = "C:\\log-fail-wsfservice.txt";
@@ -215,6 +199,48 @@ namespace WSFactory.Service
                 throw;
             }
         }
+    }
+    public class WeighSessionRefactoryResponse
+    {
+        public WeighSessionRefactoryResponse(int lotNumber, string scaleCode, decimal? totalWeight, DateTime? startTime, DateTime? endTime, int sessionCheck)
+        {
+            LotNumber = lotNumber;
+            ScaleCode = scaleCode;
+            TotalWeight = totalWeight;
+            StartTime = startTime;
+            EndTime = endTime;
+            SessionCheck = sessionCheck;
+        }
+        public int LotNumber { get; set; }
+        public string ScaleCode { get; set; }
+        public decimal? TotalWeight { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public int SessionCheck { get; set; }
+    }
 
+    public class TbSession
+    {
+        public int Id { get; set; }
+        public int LotNumber { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+    }
+
+    public class Line1And2Response : TbSession
+    {
+        public float V_Material { get; set; }  //Data 150Kg Cân nguyên liệu đầu vào để sản xuất số 1
+        public float V_Product_1 { get; set; }   //Data 150Kg Cân thành phẩm đầu ra 1
+    }
+
+    public class Line3Response : TbSession
+    {
+        public float V_Product_1_1 { get; set; }  //Data 150Kg Cân tấm thành phẩm đầu ra 1 và 2
+    }
+
+    public class WeighSessionResponse
+    {
+        public string DateKey { get; set; }
+        public int? OrderIndex { get; set; }
     }
 }

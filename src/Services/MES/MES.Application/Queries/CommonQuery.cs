@@ -3,6 +3,7 @@ using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.DTOs.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph;
 using Newtonsoft.Json;
 using Shared.Models;
 using System.Linq;
@@ -284,7 +285,7 @@ namespace MES.Application.Queries
         /// <param name="odTo">OutboundDelivery</param>
         /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
-        Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string type);
+        Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string resFrom, string resTo, string type);
 
         /// <summary>
         /// Dropdown loại hoạt động cân
@@ -913,6 +914,49 @@ namespace MES.Application.Queries
                                          }).AsNoTracking().ToListAsync();
 
                 return NHLTResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
+
+            #region XK
+            //Màn xuất khác
+            else if (type == "XK")
+            {
+                //Movement type xk
+                var movementType = new List<string> { "Z42", "Z44", "Z46", "201" };
+
+                //Tạo query
+                var XKResponse = await _dtRsRepo.GetQuery()
+                                         .Include(x => x.Reservation)
+                                         .Where(x =>
+                                                     //Lọc theo plant
+                                                     x.Reservation.Plant == plant &&
+                                                     //Lọc theo Movement type
+                                                     movementType.Contains(x.MovementType) &&
+                                                     //Lọc theo reservation
+                                                     (!string.IsNullOrEmpty(resFrom) ? x.Reservation.ReservationCode.CompareTo(resFrom) >= 0 &&
+                                                                                       x.Reservation.ReservationCode.CompareTo(resTo) <= 0 : true) &&
+                                                     //Lọc theo customer
+                                                     (!string.IsNullOrEmpty(shipToPartyFrom) ? x.Reservation.Customer.CompareTo(shipToPartyFrom) >=0 &&
+                                                                                               x.Reservation.Customer.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                     x.Reservation.FinalIssue != "X" &&
+                                                     x.ItemDeleted != "X" &&
+                                                     x.Reservation.Customer != null)
+                                         .OrderBy(x => x.MaterialCodeInt)
+                                         .Select(x => new DropdownMaterialResponse
+                                         {
+                                             //Material code
+                                             Key = x.MaterialCodeInt.ToString(),
+                                             //Material code | material name
+                                             Value = $"{x.MaterialCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName}",
+                                             //Material name
+                                             Name = products.FirstOrDefault(p => p.ProductCode == x.Material).ProductName,
+                                             //Đơn vị
+                                             Unit = products.FirstOrDefault(p => p.ProductCode == x.Material).Unit
+                                         }).AsNoTracking().ToListAsync();
+
+                return XKResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -2525,16 +2569,20 @@ namespace MES.Application.Queries
                 var movementType = new List<string> { "Z42", "Z44", "Z46", "201" };
 
                 //Tạo query
-                var query = _dtRsRepo.GetQuery()
+                return await _dtRsRepo.GetQuery()
                                          .Include(x => x.Reservation)
                                          .Where(x =>
                                                      //Lọc theo plant
-                                                     x.Reservation.ReceivingPlant == plant &&
+                                                     x.Reservation.Plant == plant &&
                                                      //Lọc theo Movement type
                                                      movementType.Contains(x.MovementType) &&
                                                      x.Reservation.FinalIssue != "X" &&
                                                      x.ItemDeleted != "X")
-                                         .AsNoTracking();
+                                         .Select(x => new CommonResponse
+                                         {
+                                             Key = x.Reservation.ReservationCode,
+                                             Value = x.Reservation.ReservationCodeInt.ToString()
+                                         }).AsNoTracking().Take(10).ToListAsync();
             }
             return await _rsRepo.GetQuery(x =>
                                                //Lọc theo từ khóa
@@ -2589,9 +2637,15 @@ namespace MES.Application.Queries
         /// <param name="odTo">OutboundDelivery</param>
         /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
-        public async Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string type)
+        public async Task<List<Common3Response>> GetDropdownCustomer(string keyword, string plant, string odFrom, string odTo, string resFrom, string resTo, string type)
         {
             var response = new List<Common3Response>();
+
+            //Nếu ko search to thì search 1
+            resTo = !string.IsNullOrEmpty(resFrom) && string.IsNullOrEmpty(resTo) ? resFrom : resTo;
+
+            //Get query customer
+            var queryCustomer = _custRepo.GetQuery().AsNoTracking();
 
             //Màn hình nhập hàng loại T
             if (type == "NHLT")
@@ -2616,6 +2670,36 @@ namespace MES.Application.Queries
                                             //Ship to party Name
                                             Name = x.OutboundDelivery.ShiptoPartyName
                                         }).AsNoTracking().ToListAsync();   
+            }
+            //Màn xuất khác
+            else if (type == "XK")
+            {
+                //Movement type xk
+                var movementType = new List<string> { "Z42", "Z44", "Z46", "201" };
+
+                //Tạo query
+                var query = _dtRsRepo.GetQuery()
+                                         .Include(x => x.Reservation)
+                                         .Where(x =>
+                                                     //Lọc theo plant
+                                                     x.Reservation.Plant == plant &&
+                                                     //Lọc theo Movement type
+                                                     movementType.Contains(x.MovementType) &&
+                                                     //Lọc theo reservation
+                                                     (!string.IsNullOrEmpty(resFrom) ? x.Reservation.ReservationCode.CompareTo(resFrom) >= 0 &&
+                                                                                       x.Reservation.ReservationCode.CompareTo(resTo) <= 0 : true) &&
+                                                     x.Reservation.FinalIssue != "X" &&
+                                                     x.ItemDeleted != "X" &&
+                                                     x.Reservation.Customer != null)
+                                         .Select(x => new Common3Response
+                                         {
+                                             //Ship to party
+                                             Key = x.Reservation.Customer,
+                                             //Ship to party | Ship to party Name
+                                             Value = $"{x.Reservation.Customer} | {queryCustomer.FirstOrDefault(c => c.CustomerNumber == x.Reservation.Customer).CustomerName}",
+                                             //Ship to party Name
+                                             Name = queryCustomer.FirstOrDefault(c => c.CustomerNumber == x.Reservation.Customer).CustomerName
+                                         }).AsNoTracking().ToListAsync();
             }
             //Không có loại màn hình thì search tất cả của bảng master data
             else

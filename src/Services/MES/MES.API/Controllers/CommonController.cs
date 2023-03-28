@@ -487,9 +487,9 @@ namespace MES.API.Controllers
         /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-customer")]
-        public async Task<IActionResult> GetCustomerAsync(string keyword, string plant, string odFrom, string odTo, string type)
+        public async Task<IActionResult> GetCustomerAsync(string keyword, string plant, string odFrom, string odTo, string resFrom, string resTo, string type)
         {
-            var dropdownList = await _commonQuery.GetDropdownCustomer(keyword, plant, odFrom, odTo, type);
+            var dropdownList = await _commonQuery.GetDropdownCustomer(keyword, plant, odFrom, odTo, resFrom, resTo, type);
             return Ok(new ApiSuccessResponse<List<Common3Response>> { Data = dropdownList });
         }
         #endregion

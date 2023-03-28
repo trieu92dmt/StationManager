@@ -531,6 +531,7 @@ namespace MES.Application.Queries
                 return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region NKHT
             //Màn hình nhập kho hàng trả
             //Khi lại màn hình là "NKHT" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -572,6 +573,7 @@ namespace MES.Application.Queries
                 return response.Where(x => (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region XKLXH
             //Màn hình xuất kho theo lệnh xuất hàng
             //Khi lại màn hình là "XKLXH" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -627,6 +629,7 @@ namespace MES.Application.Queries
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region NKTPSX
             //Màn hình nhập kho thành phẩm sản xuất
             //Khi lại màn hình là "NKTPSX" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -670,6 +673,7 @@ namespace MES.Application.Queries
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region NKDCNB
             //Màn hình nhập kho điều chuyển nội bộ
             //Khi lại màn hình là "NKDCNB" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -711,6 +715,7 @@ namespace MES.Application.Queries
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region NKPPPP
             //Màn NKPPPP
             //Khi lại màn hình là "NKPPPP" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -750,6 +755,7 @@ namespace MES.Application.Queries
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region XTHLSX
             //Màn XTHLSX
             //Khi lại màn hình là "XTHLSX" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -789,6 +795,7 @@ namespace MES.Application.Queries
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region XCK
             //Màn xuất chuyển kho
             //Khi lại màn hình là "XCK" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -825,6 +832,7 @@ namespace MES.Application.Queries
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             #endregion
+
             #region XNVLGC
             //Màn xuất nguyên vật liệu gia công
             //Khi lại màn hình là "XNVLGC" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
@@ -868,6 +876,43 @@ namespace MES.Application.Queries
                                                }).AsNoTracking().ToListAsync();
 
                 return XNVLGCResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
+            }
+            #endregion
+
+            #region NHLT
+            //Màn nhập hàng loại T
+            //Khi lại màn hình là "NHLT" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
+            else if (type == "XCK" && (!string.IsNullOrEmpty(shipToPartyFrom) || !string.IsNullOrEmpty(odFrom)))
+            {
+                //Gán giá trị cho biến deliveryType khi searh màn hình NHLT
+                var NHLTdeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9" };
+                var NHLTResponse = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                         .Where(x => x.Plant == plant &&
+                                                     x.OutboundDelivery.PODStatus == "A" &&
+                                                     //Lọc theo customer
+                                                     (string.IsNullOrEmpty(shipToPartyFrom) || (x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                               x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0)) &&
+                                                     //Lọc theo outbound delivery
+                                                     (string.IsNullOrEmpty(odFrom) || (x.OutboundDelivery.DeliveryCodeInt >= long.Parse(odFrom) &&
+                                                                                       x.OutboundDelivery.DeliveryCodeInt <= long.Parse(odTo))) &&
+                                                     //Lọc theo delivery type
+                                                     NHLTdeliveryType.Contains(x.OutboundDelivery.DeliveryType))
+                                         .OrderBy(x => x.ProductCodeInt)
+                                         .Select(x => new DropdownMaterialResponse
+                                         {
+                                             //Material code
+                                             Key = x.ProductCodeInt.ToString(),
+                                             //Material code | material name
+                                             Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                             //Material name
+                                             Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                             //Đơn vị
+                                             Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                         }).AsNoTracking().ToListAsync();
+
+                return NHLTResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -1590,6 +1635,7 @@ namespace MES.Application.Queries
             //Nếu chỉ search shiptoparty from thì search 1
             shipToPartyTo = !string.IsNullOrEmpty(shipToPartyFrom) && string.IsNullOrEmpty(shipToPartyTo) ? shipToPartyFrom : shipToPartyTo;
 
+
             //Nếu chỉ search poFrom thì search 1
             poTo = !string.IsNullOrEmpty(poFrom) && string.IsNullOrEmpty(poTo) ? poFrom : poTo;
 
@@ -1706,17 +1752,37 @@ namespace MES.Application.Queries
                                                     .Select(x => new CommonResponse
                                                     {
                                                         Key = x.OutboundDelivery.DeliveryCode,
-                                                        Value = $"{x.OutboundDelivery.DeliveryCode} | {x.OutboundDelivery.DeliveryCodeInt.ToString()}"
+                                                        Value = x.OutboundDelivery.DeliveryCode
                                                     }).AsNoTracking().ToListAsync();
-                return NKDCNBResponse.DistinctBy(x => x.Key).Take(10).ToList();
+                return NKDCNBResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Key.Contains(keyword) ||
+                                                                                  x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
             }
             //Màn hình nhập hàng loại T
             else if (type == "NHLT")
             {
                 //Gán giá trị cho biến deliveryType khi searh màn hình NHLT
                 var NHLTdeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9" };
-                query = query.Where(x => x.Plant == plant && 
-                                         NHLTdeliveryType.Contains(x.OutboundDelivery.DeliveryType));
+                var NHLTResponse = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
+                                         .Where(x => x.Plant == plant && 
+                                                     x.OutboundDelivery.PODStatus == "A" &&
+                                                     //Lọc theo customer
+                                                     (!string.IsNullOrEmpty(shipToPartyFrom) ? x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyFrom) >= 0 &&
+                                                                                               x.OutboundDelivery.ShiptoParty.CompareTo(shipToPartyTo) <= 0 : true) &&
+                                                     //Lọc theo delivery type
+                                                     NHLTdeliveryType.Contains(x.OutboundDelivery.DeliveryType))
+                                         .OrderBy(x => x.OutboundDelivery.DeliveryCodeInt)
+                                                    .Select(x => new CommonResponse
+                                                    {
+                                                        Key = x.OutboundDelivery.DeliveryCode,
+                                                        Value = x.OutboundDelivery.DeliveryCode
+                                                    }).AsNoTracking().ToListAsync(); ;
+
+                return NHLTResponse.Where(x => //Theo Keyword
+                                                (!string.IsNullOrEmpty(keyword) ? x.Key.Contains(keyword) ||
+                                                                                  x.Value.Contains(keyword) : true)
+                                          ).DistinctBy(x => x.Key).Take(10).ToList();
             } 
             //Ở màn hình ghi nhận cân xe tải không lấy dropdown theo master data => lấy theo dữ liệu đã lưu
             else if (type == "GNCXT")
@@ -2512,17 +2578,17 @@ namespace MES.Application.Queries
             //Màn hình nhập hàng loại T
             if (type == "NHLT")
             {
-                //Chỉ search odFrom là search 1
-                if (!string.IsNullOrEmpty(odFrom) && string.IsNullOrEmpty(odTo))
-                    odTo = odFrom;
+                //Gán giá trị cho biến deliveryType khi searh màn hình NHLT
+                var NHLTdeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9" };
 
                 response = await _dtOdRepo.GetQuery().Include(x => x.OutboundDelivery)
                                         .Where(x =>
                                                     //Lọc plant
                                                     (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&                                                          
-                                                    //Lọc od from
-                                                    (!string.IsNullOrEmpty(odFrom) ? (x.OutboundDelivery.DeliveryCode.CompareTo(odFrom) >= 0 && 
-                                                                                      x.OutboundDelivery.DeliveryCode.CompareTo(odTo) <= 0) : true))   
+                                                    //Lọc delivery type
+                                                    (NHLTdeliveryType.Contains(x.OutboundDelivery.DeliveryType) &&
+                                                    (x.OutboundDelivery.PODStatus == "A"))
+                                                    )   
                                         .Select(x => new Common3Response
                                         {
                                             //Ship to party

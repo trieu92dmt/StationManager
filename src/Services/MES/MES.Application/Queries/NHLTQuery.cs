@@ -359,7 +359,7 @@ namespace MES.Application.Queries
 
             //Get query material
             var materialQuery = _prodRepo.GetQuery().AsNoTracking();
-            var materials = _prodRepo.GetQuery(x => string.IsNullOrEmpty(command.MaterialFrom) ? false : true).AsNoTracking();
+            //var materials = _prodRepo.GetQuery(x => string.IsNullOrEmpty(command.MaterialFrom) ? false : true).AsNoTracking();
 
             //Get query detail od
             var detailOds = _dtOdRepo.GetQuery(x => string.IsNullOrEmpty(command.OutboundDeliveryFrom) ? false : true)
@@ -369,7 +369,7 @@ namespace MES.Application.Queries
                                                  x.Plant == command.Plant).AsNoTracking();
 
             //Get query customer
-            var customers = _cusRepo.GetQuery(x => string.IsNullOrEmpty(command.CustomerFrom) ? false : true).AsNoTracking();
+            //var customers = _cusRepo.GetQuery(x => string.IsNullOrEmpty(command.CustomerFrom) ? false : true).AsNoTracking();
 
             //Get query sloc
             var slocs = _slocRepo.GetQuery().AsNoTracking();
@@ -390,8 +390,8 @@ namespace MES.Application.Queries
                     command.CustomerTo = command.CustomerFrom;
                 }
 
-                customers = customers.Where(x => x.CustomerNumber.CompareTo(command.CustomerFrom) >= 0 &&
-                                                 x.CustomerNumber.CompareTo(command.CustomerTo) <= 0);
+                detailOds = detailOds.Where(x => x.OutboundDelivery.ShiptoParty.CompareTo(command.CustomerFrom) >= 0 &&
+                                                 x.OutboundDelivery.ShiptoParty.CompareTo(command.CustomerTo) <= 0);
             }
 
             //Get data theo Outbound delivery
@@ -417,7 +417,7 @@ namespace MES.Application.Queries
                     command.MaterialTo = command.MaterialFrom;
                 }
 
-                materials = materials.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                detailOds = detailOds.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
                                                  x.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
@@ -432,41 +432,34 @@ namespace MES.Application.Queries
                                                  x.OutboundDelivery.DocumentDate <= command.DocumentDateTo);
             }
 
-            var query = (from p in plants
-                        join m in materials on p.PlantCode equals m.PlantCode into mtr
-                        from mtrs in mtr.DefaultIfEmpty()
-                        join d in detailOds on p.PlantCode equals d.Plant into dtOd
-                        from dtOds in dtOd.DefaultIfEmpty()
-                        join c in customers on p.SaleOrgCode equals c.SaleOrgCode into saleOrg
-                        from sales in saleOrg.DefaultIfEmpty()
-                        select new GetInputDataResponse
+            var query = detailOds.Select(x => new GetInputDataResponse
                         {
                             //Id = Guid.NewGuid(),
                             //Plant
-                            Plant = p.PlantCode,
+                            Plant = x.Plant,
                             //Customer
-                            Customer = sales != null ? sales.CustomerNumber : "",
+                            Customer = x.OutboundDelivery.ShiptoParty ?? "",
                             //Customer name
-                            CustomerName = sales != null ? sales.CustomerName : "",
+                            CustomerName = x.OutboundDelivery.ShiptoPartyName ?? "",
                             //Material
-                            Material = dtOds != null ? dtOds.ProductCodeInt.ToString() : mtrs.ProductCodeInt.ToString(),
+                            Material = x.ProductCodeInt.ToString(),
                             //Material desc
-                            MaterialDesc = dtOds != null ? materialQuery.FirstOrDefault(x => x.ProductCode == dtOds.ProductCode).ProductName : mtrs.ProductName,
+                            MaterialDesc = !string.IsNullOrEmpty(x.ProductCode) ? materialQuery.FirstOrDefault(x => x.ProductCode == x.ProductCode).ProductName : "",
                             //UoM
-                            Unit = mtrs != null ? mtrs.Unit : materialQuery.FirstOrDefault(x => x.ProductCode == dtOds.ProductCode).Unit,
+                            Unit = x.Unit ?? "",
                             //Outbound Delivery
-                            OutboundDelivery = dtOds != null ? dtOds.OutboundDelivery.DeliveryCode : "",
+                            OutboundDelivery = x.OutboundDelivery.DeliveryCode ?? "",
                             //Outbound Delivery Item
-                            OutboundDeliveryItem = dtOds != null ? dtOds.OutboundDeliveryItem : "",
+                            OutboundDeliveryItem = x.OutboundDeliveryItem ?? "",
                             //Batch
-                            Batch = dtOds != null ? dtOds.Batch : "",
+                            Batch = x.Batch ?? "",
                             //Số phương tiện
-                            VehicleCode = dtOds != null ? dtOds.OutboundDelivery.VehicleCode : "",
+                            VehicleCode = x.OutboundDelivery.VehicleCode ?? "",
                             //Sloc
-                            Sloc = dtOds != null ? dtOds.StorageLocation : "",
-                            SlocName = !string.IsNullOrEmpty(dtOds.StorageLocation) ? slocs.FirstOrDefault(s => s.StorageLocationCode == dtOds.StorageLocation).StorageLocationName : "",
+                            Sloc = x.StorageLocation ?? "",
+                            SlocName = !string.IsNullOrEmpty(x.StorageLocation) ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.StorageLocation).StorageLocationName : "",
                             //Document Date
-                            DocumentDate = dtOds != null ? dtOds.OutboundDelivery.DocumentDate : null
+                            DocumentDate = x.OutboundDelivery.DocumentDate
                         });
 
 

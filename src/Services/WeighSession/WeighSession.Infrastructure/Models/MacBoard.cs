@@ -10,5 +10,6 @@ namespace WeighSession.Infrastructure.Models
         public int Id { get; set; }
         public string MacAddress { get; set; }
         public int? Boardid { get; set; }
+        public string Detail { get; set; }
     }
 }

@@ -33,6 +33,10 @@ namespace WeighSession.Infrastructure.Models
 
                 entity.Property(e => e.Boardid).HasColumnName("boardid");
 
+                entity.Property(e => e.Detail)
+                    .HasMaxLength(50)
+                    .HasColumnName("detail");
+
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()
                     .HasColumnName("id");

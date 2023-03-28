@@ -190,6 +190,9 @@ namespace WeighSession.API.Repositories
 
         public async Task<List<ScaleStatusReportResponse>> ScaleStatusReport(ScaleStatusReportRequest request)
         {
+            //Get query đợt cân
+            var weighSs = _weiSsRepo.GetQuery().AsNoTracking();
+
             //Get query giám sát cân
             var scMonitorQuery = await _weiMonitorRepo.GetQuery().AsNoTracking().ToListAsync();
 
@@ -209,11 +212,14 @@ namespace WeighSession.API.Repositories
             int index = 0;
             foreach (var scale in scaleQuery)
             {
+                var weighSessionCode = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.WeightSessionCode;
+
                 scale.Status = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "C" ? "Connect" :
                          scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "S" ? "Start" :
                          scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "R" ? "Reset" : "Disconect";
-                //scale.StartTime = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.StartTime ?? null;
-                scale.WeighSession = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.WeightSessionCode ?? "";
+                scale.StartTime =  !string.IsNullOrEmpty(weighSessionCode) ? 
+                                    weighSs.FirstOrDefault(w => w.WeighSessionCode == weighSessionCode).StartTime : null;
+                scale.WeighSession = weighSessionCode ?? "";
                 scale.STT = ++index;
             };
 
@@ -337,10 +343,10 @@ namespace WeighSession.API.Repositories
                 Unit = "",
                 //TG bắt đầu
                 //StartTime = weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode) != null ?
-                            //weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode).StartTime : null,
+                //            weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode).StartTime : null,
                 //TG kết thúc
                 //EndTime = weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode) != null ?
-                          //weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode).EndTime : null,
+                //          weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == x.WeightSessionCode).EndTime : null,
                 //Thời gian ghi nhận
                 RecordTime = x.CreateTime,
                 //Loại
@@ -364,6 +370,9 @@ namespace WeighSession.API.Repositories
                 {
                     i++;
                     item.STT = i;
+                    //Thêm start time end time
+                    item.StartTime = !string.IsNullOrEmpty(item.WeightSessionId) ? weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == item.WeightSessionId).StartTime : null;
+                    item.EndTime = !string.IsNullOrEmpty(item.WeightSessionId) ? weiSsQuery.FirstOrDefault(w => w.WeighSessionCode == item.WeightSessionId).EndTime : null;
                 }
             }
 

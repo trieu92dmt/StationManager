@@ -9,7 +9,7 @@
    "OutputContextPath": null,
    "OutputPath": "Models",
    "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": "WeighSession.Infrastructure",
+   "ProjectRootNamespace": "WeighSession.API",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
    "SelectedToBeGenerated": 0,

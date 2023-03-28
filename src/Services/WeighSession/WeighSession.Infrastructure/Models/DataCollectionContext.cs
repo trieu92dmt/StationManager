@@ -141,13 +141,9 @@ namespace WeighSession.Infrastructure.Models
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.EndTime).HasColumnType("datetime");
-
                 entity.Property(e => e.PlantCode).HasMaxLength(50);
 
                 entity.Property(e => e.ScaleCode).HasMaxLength(50);
-
-                entity.Property(e => e.StartTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Type).HasMaxLength(50);
 

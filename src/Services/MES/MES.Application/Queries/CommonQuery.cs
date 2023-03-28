@@ -2518,6 +2518,24 @@ namespace MES.Application.Queries
         /// <returns></returns>
         public async Task<List<CommonResponse>> GetReservation(string keyword, string plant, string type)
         {
+            //Màn xuất khác
+            if (type == "XK")
+            {
+                //Movement type xk
+                var movementType = new List<string> { "Z42", "Z44", "Z46", "201" };
+
+                //Tạo query
+                var query = _dtRsRepo.GetQuery()
+                                         .Include(x => x.Reservation)
+                                         .Where(x =>
+                                                     //Lọc theo plant
+                                                     x.Reservation.ReceivingPlant == plant &&
+                                                     //Lọc theo Movement type
+                                                     movementType.Contains(x.MovementType) &&
+                                                     x.Reservation.FinalIssue != "X" &&
+                                                     x.ItemDeleted != "X")
+                                         .AsNoTracking();
+            }
             return await _rsRepo.GetQuery(x =>
                                                //Lọc theo từ khóa
                                                (!string.IsNullOrEmpty(keyword) ? x.ReservationCode.ToLower().Contains(keyword.ToLower().Trim()) : true) &&

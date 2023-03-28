@@ -212,7 +212,7 @@ namespace WeighSession.API.Repositories
                 scale.Status = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "C" ? "Connect" :
                          scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "S" ? "Start" :
                          scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "R" ? "Reset" : "Disconect";
-                scale.StartTime = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.StartTime ?? null;
+                //scale.StartTime = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.StartTime ?? null;
                 scale.WeighSession = scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.WeightSessionCode ?? "";
                 scale.STT = ++index;
             };
@@ -290,18 +290,18 @@ namespace WeighSession.API.Repositories
             if (!string.IsNullOrEmpty(request.PlantFrom))
             {
                 //Không có to thì search 1
-                if (string.IsNullOrEmpty(request.PlantFrom))
+                if (string.IsNullOrEmpty(request.PlantTo))
                     request.PlantTo = request.PlantFrom;
 
                 query = query.Where(x => x.PlantCode.CompareTo(request.PlantFrom) >= 0 &&
-                                         x.PlantCode.CompareTo(request.PlantFrom) <= 0);
+                                         x.PlantCode.CompareTo(request.PlantTo) <= 0);
             }
 
             //Lọc theo đầu cân
             if (!string.IsNullOrEmpty(request.WeightHeadCodeFrom))
             {
                 //Không có to thì search 1
-                if (string.IsNullOrEmpty(request.WeightHeadCodeFrom))
+                if (string.IsNullOrEmpty(request.WeightHeadCodeTo))
                     request.WeightHeadCodeTo = request.WeightHeadCodeFrom;
 
                 query = query.Where(x => x.ScaleCode.CompareTo(request.WeightHeadCodeFrom) >= 0 &&

@@ -12,8 +12,6 @@ namespace WeighSession.Infrastructure.Models
         public string ScaleCode { get; set; }
         public string WeightSessionCode { get; set; }
         public decimal? Weight { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
         public DateTime? CreateTime { get; set; }
         public string Type { get; set; }
     }

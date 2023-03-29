@@ -218,7 +218,7 @@ namespace WeighSession.API.Repositories
                          scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "S" ? "Start" :
                          scMonitorQuery.OrderByDescending(x => x.CreateTime).FirstOrDefault(s => s.ScaleCode == scale.ScaleCode)?.Type == "R" ? "Reset" : "Disconect";
                 scale.StartTime =  !string.IsNullOrEmpty(weighSessionCode) ? 
-                                    weighSs.FirstOrDefault(w => w.WeighSessionCode == weighSessionCode).StartTime : null;
+                                    weighSs.FirstOrDefault(w => w.WeighSessionCode == weighSessionCode)?.StartTime : null;
                 scale.WeighSession = weighSessionCode ?? "";
                 scale.STT = ++index;
             };

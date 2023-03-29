@@ -5,14 +5,6 @@ using MES.Application.Commands.NK;
 using MES.Application.DTOs.Common;
 using MES.Application.DTOs.MES.NK;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Queries
 {

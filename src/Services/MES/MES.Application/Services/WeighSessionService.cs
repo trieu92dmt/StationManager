@@ -29,6 +29,20 @@ namespace MES.Application.Services
         /// <param name="request"></param>
         /// <returns></returns>
         Task<ScaleListResponse> SearchScale(SearchScaleCommand request);
+
+        /// <summary>
+        /// Service call api save cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ApiResponse> SaveScale(SaveScaleCommand request);
+
+        /// <summary>
+        /// Service call api update cân
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<bool> UpdateScale(UpdateScaleCommand request);
     }
     public class WeighSessionService : IWeighSessionService
     {
@@ -107,6 +121,57 @@ namespace MES.Application.Services
             var response = JsonConvert.DeserializeObject<ScaleListResponse>(scaleResponse, jsonSettings);
 
             return response;
+
+        }
+
+        public async Task<ApiResponse> SaveScale(SaveScaleCommand request)
+        {
+            //GET data weigh session
+            var domainWS = new ConfigManager().WeighSessionUrl;
+            var url = $"{domainWS}save-scale";
+
+            //Convert request to json
+            var json = JsonConvert.SerializeObject(request);
+            //Conver json to dictionary<string, string> => form
+            var requestBody = new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json");
+
+            var scaleData = await _httpClient.PostAsync(url, requestBody);
+            var scaleResponse = await scaleData.Content.ReadAsStringAsync();
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            var response = JsonConvert.DeserializeObject<ApiResponse>(scaleResponse, jsonSettings);
+
+            return response;
+        }
+
+        public async Task<bool> UpdateScale(UpdateScaleCommand request)
+        {
+            //GET data weigh session
+            var domainWS = new ConfigManager().WeighSessionUrl;
+            var url = $"{domainWS}update-scale";
+
+            //Convert request to json
+            var json = JsonConvert.SerializeObject(request);
+            //Conver json to dictionary<string, string> => form
+            var requestBody = new System.Net.Http.StringContent(json, Encoding.UTF8, "application/json");
+
+            var scaleData = await _httpClient.PostAsync(url, requestBody);
+            var scaleResponse = await scaleData.Content.ReadAsStringAsync();
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            var response = JsonConvert.DeserializeObject<ApiSuccessResponse<bool>>(scaleResponse, jsonSettings);
+
+            return response.IsSuccess;
         }
     }
 }

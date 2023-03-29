@@ -50,9 +50,9 @@ namespace MES.API.Controllers
         /// <param name="ScaleId"></param>
         /// <returns></returns>
         [HttpGet("get-detail-scale")]
-        public async Task<IActionResult> GetScaleInfoAsync(Guid ScaleId)
+        public async Task<IActionResult> GetScaleInfoAsync(string ScaleCode)
         {
-            var response = await _query.GetScaleDetail(ScaleId);
+            var response = await _query.GetScaleDetail(ScaleCode);
 
             return Ok(new ApiSuccessResponse<ScaleDetailResponse>
             {

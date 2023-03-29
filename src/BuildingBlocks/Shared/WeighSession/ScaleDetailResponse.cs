@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.WeighSession
+﻿namespace Shared.WeighSession
 {
     public class ScaleDetailResponse
     {
@@ -15,7 +9,7 @@ namespace Shared.WeighSession
         //Tên nhà máy
         public string PlantName { get; set; }
         //Nhà máy | Tên nhà máy
-        public string PlantFmt => !string.IsNullOrEmpty(Plant) && !string.IsNullOrEmpty(PlantName) ? $"{Plant} | {PlantName}" : "";
+        public string PlantFmt { get; set; }
         //Mã đầu cân
         public string ScaleCode { get; set; }
         //Tên đầu cân

@@ -2,23 +2,35 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace WeighSession.Infrastructure.Models
 {
     public partial class ScaleModel
     {
+        [Key]
+        [StringLength(50)]
         public string ScaleCode { get; set; }
+        [StringLength(50)]
         public string ScaleName { get; set; }
         public bool? ScaleType { get; set; }
         public bool? IsCantai { get; set; }
+        [StringLength(50)]
         public string Plant { get; set; }
+        [StringLength(50)]
         public string Unit { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
         public Guid? CreateBy { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime? LastEditTime { get; set; }
         public Guid? LastEditBy { get; set; }
         public bool? Actived { get; set; }
+        [StringLength(500)]
         public string Note { get; set; }
-        public decimal? Hsqd { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? HSQD { get; set; }
     }
 }

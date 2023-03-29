@@ -3,6 +3,7 @@ using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using MES.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 using System.ComponentModel.DataAnnotations;
@@ -34,72 +35,44 @@ namespace MES.Application.Commands.Scale
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<ScreenModel> _screenRepo;
         private readonly IRepository<Screen_Scale_MappingModel> _screenScaleRepo;
+        private readonly IWeighSessionService _weiSsService;
 
-        public SaveScaleCommadHandler(IUnitOfWork unitOfWork, IRepository<ScaleModel> scaleRepo, IRepository<ScreenModel> screenRepo, IRepository<Screen_Scale_MappingModel> screenScaleRepo)
+        public SaveScaleCommadHandler(IUnitOfWork unitOfWork, IRepository<ScaleModel> scaleRepo, IRepository<ScreenModel> screenRepo, 
+                                      IRepository<Screen_Scale_MappingModel> screenScaleRepo, IWeighSessionService weiSsService)
         {
             _unitOfWork = unitOfWork;
             _scaleRepo = scaleRepo;
             _screenRepo = screenRepo;
             _screenScaleRepo = screenScaleRepo;
+            _weiSsService = weiSsService;
         }
 
         public async Task<ApiResponse> Handle(SaveScaleCommand request, CancellationToken cancellationToken)
         {
-            //Tạo response
-            var response = new ApiResponse()
+            //REsponse call service
+            var serviceResponse = await _weiSsService.SaveScale(request);
+
+            if (serviceResponse.IsSuccess)
             {
-                Code = 200,
-                IsSuccess = true,
-                Message = String.Format(CommonResource.Msg_Success, "Thêm mới cân"),
-                Data = true
-            };
-
-            //Duyệt list scale đầu vào
-            //Checkk tồn tại
-            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == request.ScaleCode);
-
-            //Query screen
-            var screens = _screenRepo.GetQuery().AsNoTracking();
-
-            if (scale != null)
-            {
-                response.IsSuccess = false;
-                response.Message = $"Scale {request.ScaleCode} đã tồn tại";
-                response.Data = false;
-                return response;
-            }
-
-            //Không tồn tại thì tạo mới
-            scale = new ScaleModel
-            {
-                ScaleId = Guid.NewGuid(),
-                Plant = request.Plant,
-                ScaleCode = request.ScaleCode,
-                ScaleName = request.ScaleName,
-                ScaleType = request.isIntegrated,
-                isCantai = request.isTruckScale,
-                Actived = true
-            };
-
-            var mapping = new List<Screen_Scale_MappingModel>();
-            //Thêm mapping cân và màn hình
-            foreach (var item in request.Screens)
-            {
-                mapping.Add(new Screen_Scale_MappingModel
+                var mapping = new List<Screen_Scale_MappingModel>();
+                //Thêm mapping cân và màn hình
+                foreach (var item in request.Screens)
                 {
-                    Screen_Scale_Mapping_Id = Guid.NewGuid(),
-                    ScreenId = screens.FirstOrDefault(x => x.ScreenCode == item).ScreenId,
-                    ScaleId = scale.ScaleId
-                });
-            }
+                    mapping.Add(new Screen_Scale_MappingModel
+                    {
+                        Screen_Scale_Mapping_Id = Guid.NewGuid(),
+                        ScaleCode = request.ScaleCode,
+                        ScreenCode = item
+                    });
+                }
 
+                _screenScaleRepo.AddRange(mapping);
+            }    
 
-            _scaleRepo.Add(scale);
-            _screenScaleRepo.AddRange(mapping);
             await _unitOfWork.SaveChangesAsync();
 
             //Trả response
-            return response;
+            return serviceResponse;
 
         }
     }

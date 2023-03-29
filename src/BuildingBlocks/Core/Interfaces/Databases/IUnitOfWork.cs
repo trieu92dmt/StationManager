@@ -6,4 +6,11 @@
         Task<int> SaveChangesAsync();
         Task Dispose();
     }
+
+    public interface IUnitOfWork<TContext>
+    {
+        int SaveChanges();
+        Task<int> SaveChangesAsync();
+        Task Dispose();
+    }
 }

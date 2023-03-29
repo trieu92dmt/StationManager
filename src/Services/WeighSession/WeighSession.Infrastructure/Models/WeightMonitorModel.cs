@@ -2,17 +2,27 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace WeighSession.Infrastructure.Models
 {
     public partial class WeightMonitorModel
     {
+        [Key]
         public Guid WeightMonitorCode { get; set; }
+        [StringLength(50)]
         public string PlantCode { get; set; }
+        [StringLength(50)]
         public string ScaleCode { get; set; }
+        [StringLength(50)]
         public string WeightSessionCode { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
         public decimal? Weight { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime? CreateTime { get; set; }
+        [StringLength(50)]
         public string Type { get; set; }
     }
 }

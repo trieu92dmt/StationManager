@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WeighSession.Infrastructure.Models
 {
-    public partial class WeighSessionDetailModel
+    public partial class WeighSessionDetailFactoryModel
     {
         [Key]
         public Guid WeighSessionDetailCode { get; set; }
@@ -25,7 +25,7 @@ namespace WeighSession.Infrastructure.Models
         public string ScaleCode { get; set; }
 
         [ForeignKey("WeighSessionCode")]
-        [InverseProperty("WeighSessionDetailModel")]
-        public virtual WeighSessionModel WeighSessionCodeNavigation { get; set; }
+        [InverseProperty("WeighSessionDetailFactoryModel")]
+        public virtual WeighSessionFactoryModel WeighSessionCodeNavigation { get; set; }
     }
 }

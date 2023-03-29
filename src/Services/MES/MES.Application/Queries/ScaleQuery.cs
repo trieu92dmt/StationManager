@@ -2,64 +2,57 @@
 using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
+using MES.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Shared.WeighSession;
+using System.ComponentModel.DataAnnotations;
 
 namespace MES.Application.Queries
 {
     public interface IScaleQuery
     {
         /// <summary>
-        /// Lấy chi tiết cân theo id
+        /// Lấy chi tiết cân theo code
         /// </summary>
-        /// <param name="scaleId"></param>
+        /// <param name="scaleCode"></param>
         /// <returns></returns>
-        Task<ScaleDetailResponse> GetScaleDetail(Guid scaleId);
+        Task<ScaleDetailResponse> GetScaleDetail(string scaleCode);
     }
 
     public class ScaleQuery : IScaleQuery
     {
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<PlantModel> _plantRepo;
+        private readonly IWeighSessionService _weighSsService;
+        private readonly IRepository<Screen_Scale_MappingModel> _scaleScreenMappingRepo;
 
-        public ScaleQuery(IRepository<ScaleModel> scaleRepo, IRepository<PlantModel> plantRepo)
+        public ScaleQuery(IRepository<ScaleModel> scaleRepo, IRepository<PlantModel> plantRepo, IWeighSessionService weighSsService, 
+                          IRepository<Screen_Scale_MappingModel> scaleScreenMappingRepo)
         {
             _scaleRepo = scaleRepo;
             _plantRepo = plantRepo;
+            _weighSsService = weighSsService;
+            _scaleScreenMappingRepo = scaleScreenMappingRepo;
         }
 
-        public async Task<ScaleDetailResponse> GetScaleDetail(Guid scaleId)
+        public async Task<ScaleDetailResponse> GetScaleDetail(string scaleCode)
         {
+            var scale = await _weighSsService.GetDetailScale(scaleCode);
+
             //Get query plant
             var plantQuery = _plantRepo.GetQuery().AsNoTracking();
 
-            //Check tồn tại cân
-            var scale = await _scaleRepo.GetQuery().Include(x => x.Screen_Scale_MappingModel).ThenInclude(x => x.Screen).FirstOrDefaultAsync(s => s.ScaleId == scaleId);
+            //Lấy danh sách màn hình
+            var screen = await _scaleScreenMappingRepo.GetQuery(x => x.ScaleCode == scaleCode).Select(x => x.ScreenCode).AsNoTracking().ToListAsync();
 
-            if (scale == null)
-                throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Cân"));
+            //Danh sách màn hình
+            scale.Screens = screen;
+            //Plant name
+            scale.PlantName = plantQuery.FirstOrDefault(x => x.PlantCode == scale.Plant).PlantName;
+            //Plant fmt
+            scale.PlantFmt = !string.IsNullOrEmpty(scale.Plant) && !string.IsNullOrEmpty(scale.PlantName) ? $"{scale.Plant} | {scale.PlantName}" : "";
 
-            return new ScaleDetailResponse
-            {
-                //Id cân
-                //ScaleId = scale.ScaleId,
-                //Nhà máy
-                Plant = scale.Plant,
-                //Tên nhà máy
-                PlantName = plantQuery.FirstOrDefault(x => x.PlantCode == scale.Plant).PlantName,
-                //Mã cân
-                ScaleCode = scale.ScaleCode,
-                //Tên cân
-                ScaleName = scale.ScaleName,
-                //Cân tích hợp
-                isIntegrated = scale.ScaleType == true ? true : false,
-                //Cân xe tải
-                isTruckScale = scale.isCantai == true ? true : false,
-                //Trạng thái
-                Status = scale.Actived == true ? true : false,
-                //List màn hình đã chọn
-                Screens = scale.Screen_Scale_MappingModel.Where(m => m.ScaleId == scale.ScaleId).Select(m => m.Screen.ScreenCode).ToList()
-            };
+            return scale;
         }
     }
 }

@@ -79,12 +79,7 @@ namespace WeighSession.API.Controllers
         public async Task<IActionResult> SaveScale([FromBody] SaveScaleRequest request)
         {
             var result = await _repository.SaveScale(request);
-            return Ok(new ApiSuccessResponse<bool>
-            {
-                Data = result.IsSuccess,
-                Message = result.Message,
-                IsSuccess = result.IsSuccess
-            });
+            return Ok(result);
         }
 
         [HttpPost("update-scale")]

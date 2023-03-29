@@ -2679,16 +2679,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Screen_Scale_MappingModel>(entity =>
             {
                 entity.Property(e => e.Screen_Scale_Mapping_Id).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Scale)
-                    .WithMany(p => p.Screen_Scale_MappingModel)
-                    .HasForeignKey(d => d.ScaleId)
-                    .HasConstraintName("FK_Screen_Scale_MappingModel_ScaleModel");
-
-                entity.HasOne(d => d.Screen)
-                    .WithMany(p => p.Screen_Scale_MappingModel)
-                    .HasForeignKey(d => d.ScreenId)
-                    .HasConstraintName("FK_Screen_Scale_MappingModel_ScreenModel");
             });
 
             modelBuilder.Entity<SearchResultDetailTemplateModel>(entity =>

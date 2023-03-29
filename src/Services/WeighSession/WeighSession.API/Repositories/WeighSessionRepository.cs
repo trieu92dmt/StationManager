@@ -1,10 +1,10 @@
-﻿using Core.Properties;
+﻿using Core.Interfaces.Databases;
+using Core.Properties;
 using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 using Shared.WeighSession;
-using System.Threading;
 using WeighSession.API.DTOs;
 using WeighSession.API.Repositories.Interfaces;
 using WeighSession.Infrastructure.Models;
@@ -17,16 +17,18 @@ namespace WeighSession.API.Repositories
         private readonly IRepository<WeighSessionModel, DataCollectionContext> _weiSsRepo;
         private readonly IRepository<WeightMonitorModel, DataCollectionContext> _weiMonitorRepo;
         private readonly DataCollectionContext _context;
+        private readonly IUnitOfWork<DataCollectionContext> _unitOfWork;
 
         public WeighSessionRepository(IRepository<ScaleModel, DataCollectionContext> scaleRepo, 
                                       IRepository<WeighSessionModel, DataCollectionContext> weiSsRepo,
                                       IRepository<WeightMonitorModel, DataCollectionContext> weiMonitorRepo,
-                                      DataCollectionContext context)
+                                      DataCollectionContext context, IUnitOfWork<DataCollectionContext> unitOfWork)
         {
             _scaleRepo = scaleRepo;
             _weiSsRepo = weiSsRepo;
             _weiMonitorRepo = weiMonitorRepo;
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ScaleDetailResponse> GetScaleByCode(string scaleCode)
@@ -39,7 +41,13 @@ namespace WeighSession.API.Repositories
                 ScaleCode = scale.ScaleCode,
                 ScaleName = scale.ScaleName,
                 Plant = scale.Plant,
-                Note = scale.Note
+                Note = scale.Note,
+                //Cân xe tải
+                isTruckScale = scale.IsCantai.Value == true ? true : false,
+                //Cân tích hợp
+                isIntegrated = scale.ScaleType.Value == true ? true : false,
+                //Trạng thái
+                Status = scale.Actived.Value == true ? true : false,
             };
 
             return result;
@@ -61,7 +69,7 @@ namespace WeighSession.API.Repositories
 
             var result = new GetWeighNumResponse
             {
-                Weight = weighSs != null ? scale.Hsqd.HasValue ? weighSs.TotalWeight/scale.Hsqd : weighSs.TotalWeight : 0,
+                Weight = weighSs != null ? scale.HSQD.HasValue ? weighSs.TotalWeight/scale.HSQD : weighSs.TotalWeight : 0,
                 WeightQuantity = weighSs != null ? weighSs.TotalNumberOfWeigh : 0,
                 StartTime = weighSs != null ? weighSs.StartTime : null,
                 Status = weighSs != null ? weighSs.SessionCheck == 0 ? "DANGCAN" : "DACAN" : "",
@@ -144,9 +152,6 @@ namespace WeighSession.API.Repositories
             //Checkk tồn tại
             var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == request.ScaleCode);
 
-            //Query screen
-            //var screens = _screenRepo.GetQuery().AsNoTracking();
-
             if (scale != null)
             {
                 response.IsSuccess = false;
@@ -155,8 +160,7 @@ namespace WeighSession.API.Repositories
                 return response;
             }
 
-            //Không tồn tại thì tạo mới
-            scale = new Infrastructure.Models.ScaleModel
+            var entity = new ScaleModel
             {
                 //ScaleId = Guid.NewGuid(),
                 Plant = request.Plant,
@@ -167,22 +171,10 @@ namespace WeighSession.API.Repositories
                 Actived = true
             };
 
-            //var mapping = new List<Screen_Scale_MappingModel>();
-            ////Thêm mapping cân và màn hình
-            //foreach (var item in request.Screens)
-            //{
-            //    mapping.Add(new Screen_Scale_MappingModel
-            //    {
-            //        Screen_Scale_Mapping_Id = Guid.NewGuid(),
-            //        ScreenId = screens.FirstOrDefault(x => x.ScreenCode == item).ScreenId,
-            //        ScaleId = scale.ScaleId
-            //    });
-            //}
 
-
-            _scaleRepo.Add(scale);
-            //_screenScaleRepo.AddRange(mapping);
+            _context.ScaleModel.Add(entity);
             await _context.SaveChangesAsync();
+
 
             //Trả response
             return response;
@@ -392,7 +384,7 @@ namespace WeighSession.API.Repositories
             //var screenQuery = _screenRepo.GetQuery().AsNoTracking();
 
             //Lấy ra scale cần chỉnh sửa
-            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleCode == request.Scales[0].ScaleCode);
+            var scale = await _context.ScaleModel.FirstOrDefaultAsync(x => x.ScaleCode == request.Scales[0].ScaleCode);
 
             //cập nhật
             //Tên đầu cân

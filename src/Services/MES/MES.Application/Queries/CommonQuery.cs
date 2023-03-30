@@ -1325,7 +1325,7 @@ namespace MES.Application.Queries
                                             (x.OutboundDelivery.GoodsMovementSts != "C") &&
                                             //Bỏ các line k có reference
                                             (x.ReferenceDocument1 != null) &&
-                                            (poQuery.FirstOrDefault(p => p.PurchaseOrderCode == x.ReferenceDocument1) != null) &&
+                                            (poQuery.Count(p => p.PurchaseOrderCode == x.ReferenceDocument1) > 0) &&
                                             //Theo Keyword
                                             (!string.IsNullOrEmpty(keyword) ? x.ReferenceDocument1.Contains(keyword) ||
                                                                               x.ReferenceDocument1.Contains(keyword) : true)
@@ -1333,8 +1333,8 @@ namespace MES.Application.Queries
                                  .OrderBy(x => x.ReferenceDocument1)
                                  .Select(x => new CommonResponse
                                  {
-                                     Key = x.OutboundDelivery.DeliveryCode,
-                                     Value = x.OutboundDelivery.DeliveryCodeInt.ToString()
+                                     Key = x.ReferenceDocument1,
+                                     Value = long.Parse(x.ReferenceDocument1).ToString()
                                  }).AsNoTracking().ToListAsync();
 
                 return xklxhResponse.DistinctBy(x => x.Key).Take(10).ToList();

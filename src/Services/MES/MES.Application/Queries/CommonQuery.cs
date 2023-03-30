@@ -391,6 +391,7 @@ namespace MES.Application.Queries
         private readonly IRepository<WeighSessionModel> _weighSsRepo;
         private readonly IRepository<DimDateModel> _dimdateRepo;
         private readonly IRepository<ExportByCommandModel> _xklxhRepo;
+        private readonly IRepository<Screen_Scale_MappingModel> _screenScaleRepo;
         private readonly HttpClient _httpClient;
 
         public CommonQuery(IRepository<PlantModel> plantRepo, IRepository<SaleOrgModel> saleOrgRepo, IRepository<ProductModel> prodRepo,
@@ -402,7 +403,8 @@ namespace MES.Application.Queries
                            IRepository<CatalogModel> cataRepo, IRepository<DetailReservationModel> dtRsRepo, IRepository<MaterialDocumentModel> matDocRepo,
                            IRepository<DetailOutboundDeliveryModel> dtOdRepo, IRepository<PurchaseOrderDetailModel> poDetailRepo,
                            IRepository<ScreenModel> screenRepo, IRepository<DetailWorkOrderModel> dtWoRepo, IRepository<WeighSessionModel> weighSsRepo, 
-                           IRepository<DimDateModel> dimdateRepo, IHttpClientFactory httpClientFactory, IRepository<ExportByCommandModel> xklxhRepo)
+                           IRepository<DimDateModel> dimdateRepo, IHttpClientFactory httpClientFactory, IRepository<ExportByCommandModel> xklxhRepo,
+                           IRepository<Screen_Scale_MappingModel> screenScaleRepo)
         {
             _plantRepo = plantRepo;
             _saleOrgRepo = saleOrgRepo;
@@ -432,6 +434,7 @@ namespace MES.Application.Queries
             _weighSsRepo = weighSsRepo;
             _dimdateRepo = dimdateRepo;
             _xklxhRepo = xklxhRepo;
+            _screenScaleRepo = screenScaleRepo;
             _httpClient = httpClientFactory.CreateClient();
 
         }
@@ -1367,50 +1370,49 @@ namespace MES.Application.Queries
         /// <param name="plantCode">Mã nhà máy</param>
         /// <param name="type">Tên màn hình</param>
         /// <returns></returns>
-        public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
-        {
-            //GET data weigh session
-            var domainWS = new ConfigManager().WeighSessionUrl;
-            var url = $"{domainWS}get-weight-head?keyword={keyword}&plantCode={plantCode}&type={type}";
-
-            var weighSessionData = await _httpClient.GetAsync(url);
-            var weighSessionResponse = await weighSessionData.Content.ReadAsStringAsync();
-
-            var jsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore
-            };
-
-            var result = JsonConvert.DeserializeObject<ApiSuccessResponse<List<DropdownWeightHeadResponse>>>(weighSessionResponse, jsonSettings);
-
-            if (!result.IsSuccess)
-                return null;
-
-            return result?.Data;
-        }
-
         //public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
         //{
-        //    //Lấy danh sách id cân theo màn hình
-        //    var scaleIds = !string.IsNullOrEmpty(type) ? _screenRepo.GetQuery().Include(x => x.Screen_Scale_MappingModel)
-        //                                                .FirstOrDefault(x => x.ScreenCode == type)?.Screen_Scale_MappingModel.Select(x => x.ScaleId) : null;
+        //    //GET data weigh session
+        //    var domainWS = new ConfigManager().WeighSessionUrl;
+        //    var url = $"{domainWS}get-weight-head?keyword={keyword}&plantCode={plantCode}&type={type}";
 
+        //    var weighSessionData = await _httpClient.GetAsync(url);
+        //    var weighSessionResponse = await weighSessionData.Content.ReadAsStringAsync();
 
-        //    var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
-        //                                                  (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true) &&
-        //                                                  (!string.IsNullOrEmpty(type) ? scaleIds != null ? scaleIds.Contains(x.ScaleId) : true : true))
-        //                            .OrderBy(x => x.ScaleCode)
-        //                            .Select(x => new DropdownWeightHeadResponse
-        //                            {
-        //                                Key = x.ScaleCode,
-        //                                Value = $"{x.ScaleCode} | {x.ScaleName}",
-        //                                Data = x.ScaleType.Value == true ? true : false,
-        //                                Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
-        //                            }).AsNoTracking().ToListAsync();
+        //    var jsonSettings = new JsonSerializerSettings
+        //    {
+        //        NullValueHandling = NullValueHandling.Ignore,
+        //        MissingMemberHandling = MissingMemberHandling.Ignore
+        //    };
 
-        //    return response;
+        //    var result = JsonConvert.DeserializeObject<ApiSuccessResponse<List<DropdownWeightHeadResponse>>>(weighSessionResponse, jsonSettings);
+
+        //    if (!result.IsSuccess)
+        //        return null;
+
+        //    return result?.Data;
         //}
+
+        public async Task<List<DropdownWeightHeadResponse>> GetDropdownWeightHeadByPlant(string keyword, string plantCode, string type)
+        {
+            //Lấy danh sách id cân theo màn hình
+            var scaleCodes = _screenScaleRepo.GetQuery(x => !string.IsNullOrEmpty(type) ? x.ScreenCode == type : false).Select(x => x.ScaleCode);
+
+
+            var response = await _scaleRepo.GetQuery(x => (!string.IsNullOrEmpty(keyword) ? x.ScaleName.Contains(keyword) : true) &&
+                                                          (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true) &&
+                                                          (scaleCodes.Any() ? scaleCodes.Contains(x.ScaleCode) : true))
+                                    .OrderBy(x => x.ScaleCode)
+                                    .Select(x => new DropdownWeightHeadResponse
+                                    {
+                                        Key = x.ScaleCode,
+                                        Value = $"{x.ScaleCode} | {x.ScaleName}",
+                                        Data = x.ScaleType.Value == true ? true : false,
+                                        Type = x.isCantai == true ? "CANXETAI" : (x.ScaleType == true ? "TICHHOP" : "KHONGTICHHOP")
+                                    }).AsNoTracking().ToListAsync();
+
+            return response;
+        }
         #endregion
 
         #region Dropdown Sloc

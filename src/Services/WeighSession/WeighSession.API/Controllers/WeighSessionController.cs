@@ -18,10 +18,10 @@ namespace WeighSession.API.Controllers
         {
             _repository = repository;
         }
-        [HttpGet("get-weight-head")]
-        public async Task<IActionResult> GetListWeightHeadByPlant(string keyword, string plantCode, string type)
+        [HttpPost("get-weight-head")]
+        public async Task<IActionResult> GetListWeightHeadByPlant(GetDropdownWeighHeadRequest command)
         {
-            var result = await _repository.GetWeightHeadAsync(keyword, plantCode, type);
+            var result = await _repository.GetWeightHeadAsync(command);
             return Ok(new ApiSuccessResponse<IList<WeightHeadResponse>>
             {
                 Data = result,

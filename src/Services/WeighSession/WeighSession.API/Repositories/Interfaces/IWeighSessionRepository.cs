@@ -10,11 +10,9 @@ namespace WeighSession.API.Repositories.Interfaces
         /// <summary>
         /// Dropdown đầu cân
         /// </summary>
-        /// <param name="keyWord">Từ khóa</param>
-        /// <param name="plantCode">Mã nhà máy</param>
-        /// <param name="type"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        Task<List<WeightHeadResponse>> GetWeightHeadAsync(string keyWord, string plantCode, string type);
+        Task<List<WeightHeadResponse>> GetWeightHeadAsync(GetDropdownWeighHeadRequest request);
 
         /// <summary>
         /// Lấy số cân

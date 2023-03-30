@@ -8,6 +8,7 @@ using Shared.WeighSession;
 using WeighSession.API.DTOs;
 using WeighSession.API.Repositories.Interfaces;
 using WeighSession.Infrastructure.Models;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace WeighSession.API.Repositories
 {
@@ -79,13 +80,14 @@ namespace WeighSession.API.Repositories
             return result;
         }
 
-        public async Task<List<WeightHeadResponse>> GetWeightHeadAsync(string keyWord, string plantCode, string type)
+        public async Task<List<WeightHeadResponse>> GetWeightHeadAsync(GetDropdownWeighHeadRequest request)
         {
             var result = await _scaleRepo.GetQuery(x =>
-                                              //Lọc theo từ khóa
-                                              (!string.IsNullOrEmpty(keyWord) ? x.ScaleCode.Contains(keyWord) || x.ScaleName.Contains(keyWord) : true) &&
+            //Lọc theo từ khóa
+                                              (!string.IsNullOrEmpty(request.KeyWord) ? x.ScaleCode.Contains(request.KeyWord) || x.ScaleName.Contains(request.KeyWord) : true) &&
                                               //Lấy theo mã nhà máy
-                                              (!string.IsNullOrEmpty(plantCode) ? x.Plant == plantCode : true))
+                                              (!string.IsNullOrEmpty(request.Plant) ? x.Plant == request.Plant : true) &&
+                                              (request.ScaleCodes.Any() ? request.ScaleCodes.Contains(x.ScaleCode) : true))
                                            .OrderBy(x => x.ScaleCode).Select(x => new WeightHeadResponse
                                            {
                                                //Mã đầu cân

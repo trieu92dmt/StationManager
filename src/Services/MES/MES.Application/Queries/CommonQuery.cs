@@ -719,8 +719,8 @@ namespace MES.Application.Queries
 
             #region NKPPPP
             //Màn NKPPPP
-            //Khi lại màn hình là "NKPPPP" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
-            else if (type == "NKPPPP" && (!string.IsNullOrEmpty(orderType) || !string.IsNullOrEmpty(soFrom) || !string.IsNullOrEmpty(woFrom)))
+            //Khi loại màn hình là "NKPPPP" thì chỉ search theo chứng từ
+            else if (type == "NKPPPP")
             {
                 //Tạo query
                 var NKPPPPResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder).Where(x =>
@@ -2238,8 +2238,9 @@ namespace MES.Application.Queries
                                                            //Lọc theo plant
                                                            x.Plant == plant &&
                                                            //Điều kiện riêng từng màn hình
+                                                           x.SystemStatus.StartsWith("REL") &&
                                                            (!x.SystemStatus.StartsWith("REL CNF")) &&
-                                                           (!x.SystemStatus.StartsWith("TECO")) &&
+                                                           (!x.SystemStatus.StartsWith("REL TECO")) &&
                                                            (x.DeletionFlag != "X") &&
                                                            //Theo order type
                                                            (!string.IsNullOrEmpty(orderType) ? x.OrderTypeCode.Trim().ToUpper().Contains(orderType.Trim().ToUpper()) : true) &&

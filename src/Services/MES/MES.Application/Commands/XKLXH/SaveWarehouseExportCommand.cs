@@ -50,9 +50,9 @@ namespace MES.Application.Commands.XKLXH
 
                 //Update
                 //SL bao
-                nklxh.BagQuantity = item.BagQuantity ?? 0;
+                nklxh.BagQuantity2 = item.BagQuantity ?? 0;
                 //Đơn trọng
-                nklxh.SingleWeight = item.SingleWeight ?? 0;
+                nklxh.SingleWeight2 = item.SingleWeight ?? 0;
                 nklxh.ConfirmQty = item.ConfirmQty ?? 0;
                 //SL kèm bao bì
                 nklxh.QuantityWithPackaging = item.QuantityWithPackage ?? 0;

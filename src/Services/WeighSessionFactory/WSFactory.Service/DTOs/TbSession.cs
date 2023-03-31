@@ -40,6 +40,7 @@ namespace WSFactory.Service.DTOs
 
     public class WeighSessionResponse
     {
+        public int? TotalNumberOfWeigh { get; set; }
         public string DateKey { get; set; }
         public int? OrderIndex { get; set; }
     }

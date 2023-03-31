@@ -17,15 +17,16 @@ namespace MES.Application.Commands.WeighSessionFactory
         private string connectionStringRiceFactoryDatabase;
         public FactoryCommandHandler()
         {
-            connectionStringRiceFactoryDatabase = "Data Source=192.168.181.50;Initial Catalog=RiceFactoryDatabase_2017;User ID=citek;Password=123456;TrustServerCertificate=true";
+            connectionStringRiceFactoryDatabase = "Data Source=192.168.100.233;Initial Catalog=RiceFactoryDatabase_2017;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
             connectionStringDataCollection = "Data Source=192.168.100.233;Initial Catalog=DataCollection;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
         }
         public async Task<bool> Handle(FactoryCommand request, CancellationToken cancellationToken)
         {
-            var dateNow = DateTime.Now;
+            var dateNow = DateTime.Now.AddDays(-8);
             var dateKey = DateTime.Now.ToString("yyyyMMdd");
 
-            DateTime startTime = new DateTime(2023, 3, 15);
+            //Format date
+            DateTime startTime = dateNow.Date;
             DateTime endTime = dateNow.Date.AddDays(1).AddSeconds(-1);
 
             try
@@ -54,8 +55,22 @@ namespace MES.Application.Commands.WeighSessionFactory
                     var jsonStringTbSession = JsonConvert.SerializeObject(ds);
                     var sessionRespone = JsonConvert.DeserializeObject<List<TbSession>>(jsonStringTbSession, jsonSettings);
 
+                    var sss = new List<TbSession>()
+                    {
+                        new TbSession
+                        {
+                            LotNumber = 1171
+                        },
+                        new TbSession
+                        {
+                            LotNumber = 1172
+                        }
+                    };
+                        
+
+
                     //Data cân
-                    foreach (var session in sessionRespone)
+                    foreach (var session in sss)
                     {
                         //Data 150Kg Cân nguyên liệu đầu vào để sản xuất, Cân thành phẩm đầu ra số 1 và 2
                         DataTable dsLine1 = new DataTable();
@@ -79,9 +94,9 @@ namespace MES.Application.Commands.WeighSessionFactory
                         SqlDataAdapter adapterLine3 = new SqlDataAdapter(line_3Command, connection);
                         adapterLine3.Fill(dsLine3);
                         var jsonStringLine3 = JsonConvert.SerializeObject(dsLine3);
-                        var line3Respone = JsonConvert.DeserializeObject<List<Line1And2Response>>(jsonStringLine3, jsonSettings).FirstOrDefault();
+                        var line3Respone = JsonConvert.DeserializeObject<List<Line3Response>>(jsonStringLine3, jsonSettings).FirstOrDefault();
 
-                        if (line1Respone.V_Product_1 == 0 && line1Respone.V_Material == 0)
+                        if (line1Respone.V_Product_1 == 0 && line1Respone.V_Material == 0 && (line2Respone.V_Product_1 != 0 || line2Respone.V_Material != 0))
                         {
                             //Data cân NVL đầu vào - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
@@ -93,7 +108,7 @@ namespace MES.Application.Commands.WeighSessionFactory
 
                             //Data cân thành phẩm - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line2Respone.V_Product_1), line2Respone.StartTime, line2Respone.EndTime, 0));
+                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line3Respone.V_Product_1_1), line2Respone.StartTime, line2Respone.EndTime, 0));
                         }
                         else
                         {
@@ -107,12 +122,10 @@ namespace MES.Application.Commands.WeighSessionFactory
 
                             //Data cân thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line1Respone.StartTime, line1Respone.EndTime, 0));
                         }
                     }
-
                     connection.Close();
-
                 }
 
                 if (weighSessions.Any())
@@ -145,15 +158,17 @@ namespace MES.Application.Commands.WeighSessionFactory
                             var weighSessionCode = $"{item.ScaleCode}-{dateKey}-{item.LotNumber}";
 
                             DataTable dbIndex = new DataTable();
-                            var queryOrderIndex = $"SELECT [DateKey], [OrderIndex] FROM WeighSessionModel WHERE (StartTime >= '{startTime}') AND (StartTime<='{endTime}')" +
-                                                  $"AND ScaleCode = '{item.ScaleCode}' ORDER BY OrderIndex DESC";
+                            var queryOrderIndex = $"SELECT [DateKey], [OrderIndex], [TotalNumberOfWeigh] FROM WeighSessionModel WHERE " +
+                                                  $"ScaleCode = '{item.ScaleCode}' AND WeighSessionCode = '{weighSessionCode}' " +
+                                                  $"ORDER BY OrderIndex DESC";
                             SqlDataAdapter adapterIndex = new SqlDataAdapter(queryOrderIndex, connectionDataCollection);
                             adapterIndex.Fill(dbIndex);
 
-                            var jsonStringIndex = JsonConvert.SerializeObject(ds);
+                            var jsonStringIndex = JsonConvert.SerializeObject(dbIndex);
                             var indexRespone = JsonConvert.DeserializeObject<List<WeighSessionResponse>>(jsonStringIndex, jsonSettings).FirstOrDefault();
 
-                            if (!indexRespone.OrderIndex.HasValue)
+                            //Save new weigh session
+                            if (indexRespone == null)
                             {
                                 string sql = $"UPDATE WeighSessionModel SET SessionCheck = 1 WHERE ScaleCode = '{item.ScaleCode}'";
                                 SqlCommand commandUpdate = new SqlCommand(sql, connectionDataCollection);
@@ -173,24 +188,31 @@ namespace MES.Application.Commands.WeighSessionFactory
                             }
                             else
                             {
-                                string sql = $"UPDATE WeighSessionModel SET TotalWeight = {item.TotalWeight} WHERE ScaleCode = '{item.ScaleCode}' AND" +
-                                             $"WeighSessionCode = {weighSessionCode}";
+                                string sql = $"UPDATE WeighSessionModel SET TotalWeight = {item.TotalWeight}, " +
+                                             $"StartTime = '{item.StartTime}', EndTime = '{item.EndTime}' " +
+                                             $"WHERE ScaleCode = '{item.ScaleCode}' AND " +
+                                             $" WeighSessionCode = '{weighSessionCode}'";
                                 SqlCommand commandUpdate = new SqlCommand(sql, connectionDataCollection);
                                 commandUpdate.ExecuteNonQuery();
                             }
-
-                            
                         }
-
                         connectionDataCollection.Close();
                     }
                 }
 
+                string pathLog = "C:\\WebData\\WSFactory.Service\\log-success-wsfservice.txt";
+                using (StreamWriter writer = new StreamWriter(pathLog, true))
+                {
+                    writer.WriteLine($"WSF.Service is called success on {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}");
+                    writer.Close();
+                }
+
                 return true;
             }
+
             catch (Exception ex)
             {
-                string pathLog = "C:\\log-fail-wsfservice.txt";
+                string pathLog = "C:\\WebData\\WSFactory.Service\\log-fail-wsfservice.txt";
                 using (StreamWriter writer = new StreamWriter(pathLog, true))
                 {
                     writer.WriteLine($"WSF.Service is called fail on {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}. Error: {ex.Message} ");

@@ -101,7 +101,7 @@ namespace WSFactory.Service
                         var jsonStringLine3 = JsonConvert.SerializeObject(dsLine3);
                         var line3Respone = JsonConvert.DeserializeObject<List<Line3Response>>(jsonStringLine3, jsonSettings).FirstOrDefault();
 
-                        if (line1Respone.V_Product_1 == 0 && line1Respone.V_Material == 0)
+                        if ((line1Respone.V_Product_1 == 0 && line1Respone.V_Material == 0) && (line2Respone.V_Product_1 != 0 || line2Respone.V_Material != 0))
                         {
                             //Data cân NVL đầu vào - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
@@ -119,15 +119,15 @@ namespace WSFactory.Service
                         {
                             //Data cân NVL đầu vào - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                (line2Respone.LotNumber, ScaleProduction.NVL_Input1, Convert.ToDecimal(line1Respone.V_Material), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                (line1Respone.LotNumber, ScaleProduction.NVL_Input1, Convert.ToDecimal(line1Respone.V_Material), line1Respone.StartTime, line1Respone.EndTime, 0));
 
                             //Data cân thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.NVL_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (line1Respone.LotNumber, ScaleProduction.NVL_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
 
                             //Data cân thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (line1Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line1Respone.StartTime, line1Respone.EndTime, 0));
                         }
                     }
                     connection.Close();
@@ -163,16 +163,17 @@ namespace WSFactory.Service
                             var weighSessionCode = $"{item.ScaleCode}-{dateKey}-{item.LotNumber}";
 
                             DataTable dbIndex = new DataTable();
-                            var queryOrderIndex = $"SELECT [DateKey], [OrderIndex] FROM WeighSessionModel WHERE (StartTime >= '{startTime}') AND (StartTime<='{endTime}')" +
-                                                  $"AND ScaleCode = '{item.ScaleCode}' AND WeighSessionCode = '{weighSessionCode}' " +
+                            var queryOrderIndex = $"SELECT [DateKey], [OrderIndex], [TotalNumberOfWeigh] FROM WeighSessionModel WHERE " +
+                                                  $"ScaleCode = '{item.ScaleCode}' AND WeighSessionCode = '{weighSessionCode}' " +
                                                   $"ORDER BY OrderIndex DESC";
                             SqlDataAdapter adapterIndex = new SqlDataAdapter(queryOrderIndex, connectionDataCollection);
                             adapterIndex.Fill(dbIndex);
 
-                            var jsonStringIndex = JsonConvert.SerializeObject(ds);
+                            var jsonStringIndex = JsonConvert.SerializeObject(dbIndex);
                             var indexRespone = JsonConvert.DeserializeObject<List<WeighSessionResponse>>(jsonStringIndex, jsonSettings).FirstOrDefault();
 
-                            if (!indexRespone.OrderIndex.HasValue)
+                            //Save new weigh session
+                            if (indexRespone == null)
                             {
                                 string sql = $"UPDATE WeighSessionModel SET SessionCheck = 1 WHERE ScaleCode = '{item.ScaleCode}'";
                                 SqlCommand commandUpdate = new SqlCommand(sql, connectionDataCollection);
@@ -192,8 +193,10 @@ namespace WSFactory.Service
                             }
                             else
                             {
-                                string sql = $"UPDATE WeighSessionModel SET TotalWeight = {item.TotalWeight} WHERE ScaleCode = '{item.ScaleCode}' AND" +
-                                             $"WeighSessionCode = {weighSessionCode}";
+                                string sql = $"UPDATE WeighSessionModel SET TotalWeight = {item.TotalWeight}, " +
+                                             $"StartTime = '{item.StartTime}', EndTime = '{item.EndTime}' " +
+                                             $"WHERE ScaleCode = '{item.ScaleCode}' AND " +
+                                             $" WeighSessionCode = '{weighSessionCode}'";
                                 SqlCommand commandUpdate = new SqlCommand(sql, connectionDataCollection);
                                 commandUpdate.ExecuteNonQuery();
                             }
@@ -202,7 +205,7 @@ namespace WSFactory.Service
                     }
                 }
 
-                string pathLog = "C:\\WebData\\WSFactory.Service\\log-success-wsfservice.txt";
+                string pathLog = "C:\\WebData\\WSFactory.Service\\Logs\\log-success-wsfservice.txt";
                 using (StreamWriter writer = new StreamWriter(pathLog, true))
                 {
                     writer.WriteLine($"WSF.Service is called success on {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}");
@@ -212,7 +215,7 @@ namespace WSFactory.Service
 
             catch (Exception ex)
             {
-                string pathLog = "C:\\WebData\\WSFactory.Service\\log-fail-wsfservice.txt";
+                string pathLog = "C:\\WebData\\WSFactory.Service\\Logs\\log-fail-wsfservice.txt";
                 using (StreamWriter writer = new StreamWriter(pathLog, true))
                 {
                     writer.WriteLine($"WSF.Service is called fail on {DateTime.Now.ToString("dd/MM/yyyy HH:mm")}. Error: {ex.Message} ");

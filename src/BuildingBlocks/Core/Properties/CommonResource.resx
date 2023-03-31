@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Msg_Canceled" xml:space="preserve">
+    <value>"{0} đã bị cancel"</value>
+  </data>
   <data name="Msg_CheckExtensionFileExcel" xml:space="preserve">
     <value>File không đúng định dạng. Vui lòng chọn file đúng định dạng có đuôi là .xlsx hoặc .xls!</value>
   </data>

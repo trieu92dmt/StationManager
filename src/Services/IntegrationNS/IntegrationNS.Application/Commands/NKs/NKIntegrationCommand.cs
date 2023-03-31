@@ -222,6 +222,8 @@ namespace IntegrationNS.Application.Commands.NKs
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //34 Material Doc
                 MaterialDoc = x.MaterialDocument ?? "",
+                //Mat doc item
+                MaterialDocItem = x.MaterialDocumentItem ?? "",
                 //35 Reverse Doc
                 ReverseDoc = x.ReverseDocument ?? "",
             }).ToListAsync();

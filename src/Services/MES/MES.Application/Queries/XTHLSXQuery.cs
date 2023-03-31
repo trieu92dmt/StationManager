@@ -460,6 +460,8 @@ namespace MES.Application.Queries
                 Status = status.FirstOrDefault(s => s.CatalogCode == x.Status).CatalogText_vi,
                 //28 Số phiếu cân
                 WeightVote = x.WeightVote ?? "",
+                //Sale order
+                SalesOrder = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.SalesOrder : "",
                 //29 Thời gian bắt đầu
                 StartTime = x.StartTime ?? null,
                 //30 Thời gian kết thúc

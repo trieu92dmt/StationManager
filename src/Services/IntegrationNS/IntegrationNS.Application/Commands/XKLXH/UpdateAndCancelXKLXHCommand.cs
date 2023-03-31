@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
         public Guid XklxhId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -77,6 +78,12 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     if (xklxh is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu xuất kho theo lệnh xuất hàng");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xklxh.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XklxhId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xklxh.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xklxh.MaterialDocument))
@@ -106,6 +113,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     xklxhNew.DeliveryQuantity = 0;
                     xklxhNew.OpenQuantity = 0;
                     xklxhNew.MaterialDocument = null;
+                    xklxhNew.MaterialDocumentItem = null;
                     xklxhNew.ReverseDocument = null;
 
                     _xklxhRep.Add(xklxhNew);
@@ -129,6 +137,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                     //Cập nhật Batch và MaterialDocument
                     xklxh.Batch = item.Batch;
                     xklxh.MaterialDocument = item.MaterialDocument;
+                    xklxh.MaterialDocumentItem = item.MaterialDocumentItem;
                     xklxh.TotalQuantity = xklxh.DetailODId.HasValue ? xklxh.DetailOD.DeliveryQuantity : 0;
                     xklxh.DeliveryQuantity = xklxh.DetailODId.HasValue ? xklxh.DetailOD.PickedQuantityPUoM : 0;
                     xklxh.OpenQuantity = xklxh.TotalQuantity - xklxh.OpenQuantity;

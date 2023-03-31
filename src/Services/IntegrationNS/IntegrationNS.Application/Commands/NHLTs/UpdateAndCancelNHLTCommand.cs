@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
         public Guid NhltId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -76,6 +77,13 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     if (nhlt is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập hàng loại T");
 
+
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nhlt.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NhltId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nhlt.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nhlt.MaterialDocument))//) && string.IsNullOrEmpty(nhlt.ReverseDocument))
@@ -104,9 +112,11 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     //-------------------------//
                     nhltNew.Status = "NOT";
                     nhltNew.MaterialDocument = null;
+                    nhltNew.MaterialDocumentItem = null;
                     nhltNew.ReverseDocument = null;
 
                     _nhltRep.Add(nhltNew);
+                    
                 }
             }
             else
@@ -127,6 +137,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
                     //Cập nhật Batch và MaterialDocument
                     nhlt.Batch = item.Batch;
                     nhlt.MaterialDocument = item.MaterialDocument;
+                    nhlt.MaterialDocumentItem = item.MaterialDocumentItem;
                     if (!string.IsNullOrEmpty(nhlt.MaterialDocument))// && string.IsNullOrEmpty(nhlt.ReverseDocument))
                         nhlt.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nhlt.ReverseDocument))

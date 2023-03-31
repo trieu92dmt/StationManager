@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.XCKs
         public Guid XckId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -77,6 +78,12 @@ namespace IntegrationNS.Application.Commands.XCKs
                     if (xck is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu xuất chuyển kho");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xck.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XckId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xck.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xck.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
@@ -108,6 +115,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                     xckNew.DeliveredQuantity = 0;
                     xckNew.OpenQuantity = 0;
                     xckNew.MaterialDocument = null;
+                    xckNew.MaterialDocumentItem = null;
                     xckNew.ReverseDocument = null;
 
                     _xckRep.Add(xckNew);
@@ -131,6 +139,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                     //Cập nhật Batch và MaterialDocument
                     xck.Batch = item.Batch;
                     xck.MaterialDocument = item.MaterialDocument;
+                    xck.MaterialDocumentItem = item.MaterialDocumentItem;
                     xck.TotalQuantity = xck.DetailReservationId.HasValue ? xck.DetailReservation.RequirementQty : 0;
                     xck.DeliveredQuantity = xck.DetailReservationId.HasValue ? xck.DetailReservation.QtyWithdrawn : 0;
                     xck.OpenQuantity = xck.TotalQuantity - xck.DeliveredQuantity;

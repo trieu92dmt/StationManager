@@ -22,6 +22,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
         public Guid XthlsxId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -73,6 +74,12 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     if (xthlsx is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Dữ liệu xuất tiêu hao lệnh sản xuất");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xthlsx.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XthlsxId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xthlsx.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xthlsx.MaterialDocument))// && string.IsNullOrEmpty(xthlsx.ReverseDocument))
@@ -104,6 +111,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     xthlsxNew.RequirementQuantiy = 0;
                     xthlsxNew.QuantityWithdrawn = 0;
                     xthlsxNew.MaterialDocument = null;
+                    xthlsxNew.MaterialDocumentItem = null;
                     xthlsxNew.ReverseDocument = null;
 
                     #region code cũ
@@ -155,6 +163,7 @@ namespace IntegrationNS.Application.Commands.XTHLSXs
                     //Cập nhật Batch và MaterialDocument
                     xthlsx.Batch = item.Batch;
                     xthlsx.MaterialDocument = item.MaterialDocument;
+                    xthlsx.MaterialDocumentItem = item.MaterialDocumentItem;
                     xthlsx.TotalQuantity = xthlsx.DetailWorkOrder.WorkOrder.TargetQuantity;
                     xthlsx.RequirementQuantiy = xthlsx.RequirementQuantiy;
                     xthlsx.QuantityWithdrawn = xthlsx.QuantityWithdrawn;

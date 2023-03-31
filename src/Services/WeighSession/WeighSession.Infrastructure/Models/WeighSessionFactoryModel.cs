@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WeighSession.Infrastructure.Models
 {
-    public partial class WeighSessionModel
+    public partial class WeighSessionFactoryModel
     {
-        public WeighSessionModel()
+        public WeighSessionFactoryModel()
         {
-            WeighSessionDetailModel = new HashSet<WeighSessionDetailModel>();
+            WeighSessionDetailFactoryModel = new HashSet<WeighSessionDetailFactoryModel>();
         }
 
         [Key]
@@ -35,6 +35,6 @@ namespace WeighSession.Infrastructure.Models
         public int? SessionCheck { get; set; }
 
         [InverseProperty("WeighSessionCodeNavigation")]
-        public virtual ICollection<WeighSessionDetailModel> WeighSessionDetailModel { get; set; }
+        public virtual ICollection<WeighSessionDetailFactoryModel> WeighSessionDetailFactoryModel { get; set; }
     }
 }

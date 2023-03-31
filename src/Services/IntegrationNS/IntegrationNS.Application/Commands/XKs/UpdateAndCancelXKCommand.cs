@@ -25,6 +25,7 @@ namespace IntegrationNS.Application.Commands.XKs
         public Guid XkId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -75,6 +76,12 @@ namespace IntegrationNS.Application.Commands.XKs
                     if (xk is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu xuất khác");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xk.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XkId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xk.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xk.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
@@ -106,6 +113,7 @@ namespace IntegrationNS.Application.Commands.XKs
                     xkNew.DeliveredQuantity = 0;
                     xkNew.OpenQuantity = 0;
                     xkNew.MaterialDocument = null;
+                    xkNew.MaterialDocumentItem = null;
                     xkNew.ReverseDocument = null;
 
                     _xkRep.Add(xkNew);
@@ -132,6 +140,7 @@ namespace IntegrationNS.Application.Commands.XKs
                     xk.DeliveredQuantity = xk.DetailReservation.QtyWithdrawn;
                     xk.OpenQuantity = xk.TotalQuantity - xk.OpenQuantity;
                     xk.MaterialDocument = item.MaterialDocument;
+                    xk.MaterialDocumentItem = item.MaterialDocumentItem;
                     if (!string.IsNullOrEmpty(xk.MaterialDocument))// && string.IsNullOrEmpty(xck.ReverseDocument))
                         xk.Status = "POST";
                     //else if (!string.IsNullOrEmpty(xck.ReverseDocument))

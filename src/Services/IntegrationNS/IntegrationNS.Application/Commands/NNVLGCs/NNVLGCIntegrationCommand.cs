@@ -203,6 +203,8 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                 ChangeOn = x.LastEditTime ?? null,
                 //34 Material Doc
                 MaterialDoc = x.MaterialDocument ?? null,
+                //Mat doc item
+                MaterialDocItem = x.MaterialDocumentItem ?? null,
                 //35 Reverse Doc
                 ReverseDoc = x.ReverseDocument ?? null,
                 isDelete = x.Status == "DEL" ? true : false

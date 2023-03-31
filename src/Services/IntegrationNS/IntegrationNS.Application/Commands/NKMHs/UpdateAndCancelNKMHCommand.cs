@@ -20,6 +20,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public Guid NkmhId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -70,6 +71,12 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     if (nkmh is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho mua hàng");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nkmh.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkmhId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkmh.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkmh.MaterialDocument))// && string.IsNullOrEmpty(nkmh.ReverseDocument))
@@ -103,7 +110,11 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     nkmhNew.DeliveryQuantity = 0;
                     nkmhNew.OpenQuantity = 0;
                     nkmhNew.MaterialDocument = null;
+                    nkmhNew.MaterialDocumentItem = null;
                     nkmhNew.ReverseDocument = null;
+
+                    _nkmhRep.Add(nkmhNew);
+                    
 
                     #region code cũ
                     //var nkmhNew = new GoodsReceiptModel
@@ -139,8 +150,6 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //    Actived = true
                     //};
                     #endregion
-
-                    _nkmhRep.Add(nkmhNew);
                 }
             }
             else
@@ -161,6 +170,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                     //Cập nhật Batch và MaterialDocument
                     nkmh.Batch = item.Batch;
                     nkmh.MaterialDocument = item.MaterialDocument;
+                    nkmh.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkmh.TotalQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.OrderQuantity : 0;
                     nkmh.DeliveryQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.QuantityReceived : 0;
                     nkmh.OpenQuantity = nkmh.PurchaseOrderDetailId.HasValue ? nkmh.PurchaseOrderDetail.OpenQuantity : 0;

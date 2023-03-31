@@ -21,6 +21,7 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
         public Guid NnvlgcId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -69,6 +70,12 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                     if (nnvlgc is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập nguyên vật liệu gia công");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nnvlgc.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NnvlgcId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nnvlgc.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nnvlgc.MaterialDocument))//) && string.IsNullOrEmpty(nnvlgc.ReverseDocument))
@@ -92,6 +99,7 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                     //-------------------------//
                     nnvlgcNew.Status = "NOT";
                     nnvlgcNew.MaterialDocument = null;
+                    nnvlgcNew.MaterialDocumentItem = null;
                     nnvlgcNew.ReverseDocument = null;
 
                     _nnvlgcRep.Add(nnvlgcNew);
@@ -115,6 +123,7 @@ namespace IntegrationNS.Application.Commands.NNVLGCs
                     //Cập nhật Batch và MaterialDocument
                     nnvlgc.Batch = item.Batch;
                     nnvlgc.MaterialDocument = item.MaterialDocument;
+                    nnvlgc.MaterialDocumentItem = item.MaterialDocumentItem;
                     if (!string.IsNullOrEmpty(nnvlgc.MaterialDocument))// && string.IsNullOrEmpty(nnvlgc.ReverseDocument))
                         nnvlgc.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nnvlgc.ReverseDocument))

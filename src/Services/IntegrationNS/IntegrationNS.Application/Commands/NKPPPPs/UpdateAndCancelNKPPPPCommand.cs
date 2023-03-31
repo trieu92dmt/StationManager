@@ -22,6 +22,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
         public Guid NkppppId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -73,6 +74,12 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     if (nkpppp is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho phụ phẩm phế phẩm");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkppppId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkpppp.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkpppp.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
@@ -104,6 +111,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     nkppppNew.RequirementQuantiy = 0;
                     nkppppNew.QuantityWithdrawn = 0;
                     nkppppNew.MaterialDocument = null;
+                    nkppppNew.MaterialDocumentItem = null;
                     nkppppNew.ReverseDocument = null;
 
                     #region code cũ
@@ -156,6 +164,7 @@ namespace IntegrationNS.Application.Commands.NKPPPPs
                     //Cập nhật Batch và MaterialDocument
                     nkpppp.Batch = item.Batch;
                     nkpppp.MaterialDocument = item.MaterialDocument;
+                    nkpppp.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkpppp.TotalQuantity = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.WorkOrder.TargetQuantity : 0;
                     nkpppp.RequirementQuantiy = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.RequirementQuantiy : 0;
                     nkpppp.QuantityWithdrawn = nkpppp.DetailWorkOrderId.HasValue ? nkpppp.DetailWorkOrder.QuantityWithdrawn : 0;

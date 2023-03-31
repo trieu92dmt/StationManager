@@ -67,6 +67,8 @@ namespace IntegrationNS.Application.DTOs
         public string ChangeBy { get; set; }
         //Material Doc
         public string MaterialDoc { get; set; }
+        //Mat doc item
+        public string MaterialDocItem { get; set; }
         //Reverse Doc
         public string ReverseDoc { get; set; }
         //Số xe tải

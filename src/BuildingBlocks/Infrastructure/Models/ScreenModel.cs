@@ -11,11 +11,6 @@ namespace Infrastructure.Models
     [Table("ScreenModel", Schema = "DataCollection")]
     public partial class ScreenModel
     {
-        public ScreenModel()
-        {
-            Screen_Scale_MappingModel = new HashSet<Screen_Scale_MappingModel>();
-        }
-
         [Key]
         public Guid ScreenId { get; set; }
         [StringLength(50)]
@@ -24,8 +19,5 @@ namespace Infrastructure.Models
         public string ScreenName { get; set; }
         public int? OrderIndex { get; set; }
         public bool? Actived { get; set; }
-
-        [InverseProperty("Screen")]
-        public virtual ICollection<Screen_Scale_MappingModel> Screen_Scale_MappingModel { get; set; }
     }
 }

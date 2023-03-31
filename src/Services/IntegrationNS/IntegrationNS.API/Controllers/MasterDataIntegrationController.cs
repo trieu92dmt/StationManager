@@ -1037,6 +1037,7 @@ namespace IntegrationNS.API.Controllers
         ///                       "changeById": null,
         ///                       "changeBy": "",
         ///                       "materialDoc": "",
+        ///                       "materialDocItem": "",
         ///                       "reverseDoc": "",
         ///                       "isDelete": false,
         ///                       "isEdit": false
@@ -1084,6 +1085,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nktpsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKTPSX MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string",
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -1105,6 +1107,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nktpsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKTPSX MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": "string"
         ///                 }
         ///               ]
         ///             }
@@ -1235,44 +1238,50 @@ namespace IntegrationNS.API.Controllers
         ///                   "code": 200,
         ///                   "data": [
         ///                     {
-        ///                       "plant": "A100",                            - Plant
-        ///                       "purchaseOrderCode": "4010000204",          - Purchase Order
-        ///                       "weightVote": "000001",                     - Số phiếu cân
-        ///                       "weightId": "9000122005",                   - ID đợt cân
-        ///                       "poType": "",                               - PO Type
-        ///                       "purchasingOrg": "A001",                    - Purchasing Organization
-        ///                       "purchasingGroup": "101",                   - Purchasing Group
-        ///                       "vendorCode": "2100000000",                 - Vendor 
-        ///                       "material": null,                           - Material
-        ///                       "documentDate": "2022-12-15T00:00:00",      - DocumentDate
-        ///                       "poItem": "10",                             - Purchase Order Item
-        ///                       "storageLocation": null,                    - Storage Location
-        ///                       "batch": null,                              - Batch
-        ///                       "vehicleCode": "66C - 3591",                - Số phương tiện
-        ///                       "orderQuantity": 0,                         - Order Quantity
-        ///                       "openQuantity": 0,                          - Open Quantity
-        ///                       "bagQuantity": 0,                           - Số lượng bao
-        ///                       "singleWeight": 0,                          - Đơn trọng
-        ///                       "weightHeadCode": "DC01",                   - Mã đầu cân
-        ///                       "weight": 1000,                             - Trọng lượng cân
-        ///                       "confirmQty": 3000,                         - Confirm Qty
-        ///                       "quantityWithPackaging": 3005,              - Số lượng kèm bao bì
-        ///                       "quantityWeitght": 20,                      - Số lần cân
-        ///                       "totalQuantity": 20000,                     - Total Quantity
-        ///                       "deliveredQuantity": 0,                     - Delivered Quantity
-        ///                       "truckQuantity": 0,                         - Số xe tải
-        ///                       "inputWeight": 0,                           - Số cân đầu vào
-        ///                       "outputWeight": 0,                          - Số cân đầu ra
-        ///                       "description": "Chất lượng A",              - Ghi chú
-        ///                       "image": null,                              - Hình ảnh
-        ///                       "status": "Chưa tạo giao dịch",             - Trạng thái
-        ///                       "startTime": "2022-12-16T08:00:00",         - Thời gian bắt đầu
-        ///                       "endTime": "2022-12-16T08:30:00",           - Thời gian kết thúc
-        ///                       "createTime": "2022-12-22T10:05:17.03",     - Create On
-        ///                       "createBy": long.pt,                        - Create By
-        ///                       "lastEditTime": null,                       - Change On
-        ///                       "lastEditBy": null                          - Change By
-        ///                      }
+        ///                       "nkmhId": "00000000-0000-0000-0000-000000000000",
+        ///                       "plant": "A100",
+        ///                       "purchaseOrderCode": "4010001092",
+        ///                       "weightVote": "N1000071",
+        ///                       "weightId": "",
+        ///                       "poType": "Z001",
+        ///                       "purchasingOrg": "A001",
+        ///                       "purchasingGroup": "101",
+        ///                       "vendorCode": "2100000002",
+        ///                       "material": "000000002300000001",
+        ///                       "documentDate": "2023-03-05T00:00:00",
+        ///                       "poItem": "00010",
+        ///                       "storageLocation": "A125",
+        ///                       "batch": null,
+        ///                       "vehicleCode": "abc",
+        ///                       "transportUnit": "",
+        ///                       "orderQuantity": 1000000,
+        ///                       "openQuantity": 1000000,
+        ///                       "bagQuantity": null,
+        ///                       "singleWeight": null,
+        ///                       "weightHeadCode": "A100_1",
+        ///                       "weight": null,
+        ///                       "confirmQty": 100,
+        ///                       "quantityWithPackaging": 110,
+        ///                       "quantityWeitght": 0,
+        ///                       "totalQuantity": 1000000,
+        ///                       "deliveredQuantity": 0,
+        ///                       "truckQuantity": null,
+        ///                       "inputWeight": null,
+        ///                       "outputWeight": null,
+        ///                       "description": null,
+        ///                       "image": "Upload/NKMH/202303/2023-03-10T13-30-12f8566fe7-d110-4c2f-858e-18a8568b2793.jpg",
+        ///                       "status": "NOT",
+        ///                       "startTime": "2023-03-04T07:00:00",
+        ///                       "endTime": "2023-03-07T08:40:49.67",
+        ///                       "createTime": "2023-03-07T08:40:49.67",
+        ///                       "createBy": "admin",
+        ///                       "lastEditTime": "2023-03-07T08:47:14.637",
+        ///                       "lastEditBy": "admin",
+        ///                       "weightDate": null,
+        ///                       "materialDocument": null,
+        ///                       "materialDocumentItem": null,
+        ///                       "reverseDocument": null
+        ///                     }
         ///                     ]
         ///                 }
         /// </remarks>
@@ -1310,6 +1319,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKMH MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string",
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -1331,6 +1341,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nkmhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKMH MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": "string",
         ///                 }
         ///               ]
         ///             }
@@ -1583,7 +1594,8 @@ namespace IntegrationNS.API.Controllers
         ///           "createOn": null,
         ///           "changeById": null,
         ///           "changeBy": "",
-        ///           "matDoc": null,
+        ///           "matDoc": null
+        ///           "matDocItem": null,
         ///           "reverseDoc": null,
         ///           "isDelete": false
         ///         }
@@ -1630,6 +1642,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKHT MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string",
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -1651,6 +1664,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nkhtId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKHT MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": "",
         ///                 }
         ///               ]
         ///             }
@@ -1951,6 +1965,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "materialDoc": "",
+        ///               "materialDocItem": "",
         ///               "reverseDoc": "",
         ///               "scheduleStartTime": null,
         ///               "scheduleFinishTime": null,
@@ -2000,6 +2015,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nkppppId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKPPPP MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string",
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -2021,6 +2037,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nkppppId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKPPPP MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": "",
         ///                 }
         ///               ]
         ///             }
@@ -2119,6 +2136,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "materialDoc": "",
+        ///               "materialDocItem": "",
         ///               "reverseDoc": "",
         ///               "scheduleStartTime": null,
         ///               "scheduleFinishTime": null,
@@ -2168,6 +2186,7 @@ namespace IntegrationNS.API.Controllers
         ///               "xthlsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XTHLSX MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string",
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -2189,6 +2208,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "xthlsxId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XTHLSX MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": "",
         ///                 }
         ///               ]
         ///             }
@@ -2293,6 +2313,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "matDoc": "",
+        ///               "matDocItem": "",
         ///               "revDoc": "",
         ///               "isDelete": false,
         ///               "isEdit": true
@@ -2340,6 +2361,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nkdcnbId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKDCNB MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string"
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -2361,6 +2383,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nkdcnbId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NKDCNB MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -2466,6 +2489,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "matDoc": null,
+        ///               "matDocItem": null,
         ///               "revDoc": null,
         ///               "isDelete": false,
         ///               "isEdit": true
@@ -2513,6 +2537,7 @@ namespace IntegrationNS.API.Controllers
         ///               "xckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XCK MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string"
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -2534,6 +2559,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "xckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XCK MES
         ///                   "batch": "",
         ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -2639,6 +2665,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "matDoc": null,
+        ///               "matDocItem": null,
         ///               "revDoc": null,
         ///               "isDelete": false,
         ///               "isEdit": false
@@ -2686,6 +2713,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NCK MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string",
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -2707,6 +2735,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nckId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NCK MES
         ///                   "batch": "",
         ///                   "materialDocument": ""
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -2799,6 +2828,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "materialDoc": "",
+        ///               "materialDocItem": "",
         ///               "reverseDoc": "",
         ///               "truckInfoId": null,
         ///               "truckNumber": null,
@@ -2849,6 +2879,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string"
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -2870,6 +2901,7 @@ namespace IntegrationNS.API.Controllers
         ///                   "nkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NK MES
         ///                   "batch": "",
         ///                   "materialDocument": ""
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -2978,6 +3010,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "matDoc": "",
+        ///               "matDocItem": "",
         ///               "revDoc": "",
         ///               "isDelete": false
         ///             }
@@ -3024,6 +3057,7 @@ namespace IntegrationNS.API.Controllers
         ///               "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XK MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string"
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -3044,7 +3078,8 @@ namespace IntegrationNS.API.Controllers
         ///                 {
         ///                   "xkId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XK MES
         ///                   "batch": "",
-        ///                   "materialDocument": ""
+        ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -3155,6 +3190,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": "d3d0cb44-0e76-40d0-8d90-d960dfbdd53a",
         ///               "changeBy": "admin",
         ///               "matDoc": null,
+        ///               "matDocItem": null,
         ///               "revDoc": null,
         ///               "isDelete": false
         ///             }
@@ -3201,6 +3237,7 @@ namespace IntegrationNS.API.Controllers
         ///               "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string"
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -3221,7 +3258,8 @@ namespace IntegrationNS.API.Controllers
         ///                 {
         ///                   "xklxhId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XKLXH MES
         ///                   "batch": "",
-        ///                   "materialDocument": ""
+        ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -3316,6 +3354,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeById": null,
         ///               "changeBy": "",
         ///               "matDoc": null,
+        ///               "matDocItem": null,
         ///               "revDoc": null,
         ///               "isDelete": false,
         ///               "isEdit": true,
@@ -3370,6 +3409,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nhltId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NHLT MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string"
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -3390,7 +3430,8 @@ namespace IntegrationNS.API.Controllers
         ///                 {
         ///                   "nhltId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NHLT MES
         ///                   "batch": "",
-        ///                   "materialDocument": ""
+        ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -3427,13 +3468,70 @@ namespace IntegrationNS.API.Controllers
         ///     Params: 
         ///             + version : 1
         ///     Body:         
-        /// 
+        ///             {
+        ///               "plant": "string",
+        ///               "vendorFrom": "string",
+        ///               "vendorTo": "string",
+        ///               "materialFrom": "string",
+        ///               "materialTo": "string",
+        ///               "weightHeadCode": "string",
+        ///               "weightVotes": [
+        ///                 "string"
+        ///               ],
+        ///               "weightDateFrom": "2023-03-27T06:20:51.039Z",
+        ///               "weightDateTo": "2023-03-27T06:20:51.039Z",
+        ///               "createBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        ///               "status": "string"
+        ///             }
         ///
         /// OUTPUT
         /// 
         ///         {   
         ///           "code": 200,
         ///           "data": [
+        ///             {
+        ///               "nnvlId": "3db91049-267f-472a-ae5b-4fcb793d9d90",
+        ///               "plant": "A100",
+        ///               "plantName": "TAL",
+        ///               "vendor": "1000A100",
+        ///               "vendorName": "Nhà máy Ðồng Tháp",
+        ///               "material": "2000000000",
+        ///               "materialDesc": "Lúa tươi ST21 ĐX 22_B1_PP.01",
+        ///               "sloc": "",
+        ///               "slocName": "",
+        ///               "slocFmt": "",
+        ///               "batch": "",
+        ///               "bagQuantity": 0,
+        ///               "singleWeight": 0,
+        ///               "weightHeadCode": "A100_1",
+        ///               "weight": 0,
+        ///               "confirmQty": 2500.5,
+        ///               "quantityWithPackage": 0,
+        ///               "vehicleCode": "",
+        ///               "transportUnit": "",
+        ///               "quantityWeight": 0,
+        ///               "unit": "KG",
+        ///               "truckInfoId": "5591ba97-36d3-4dad-b51b-a9c443f90c53",
+        ///               "truckNumber": "66C-2703",
+        ///               "inputWeight": 2500.5,
+        ///               "outputWeight": 0,
+        ///               "description": "",
+        ///               "image": "",
+        ///               "status": "Chưa tạo giao dịch",
+        ///               "weightVote": "X1000028",
+        ///               "startTime": "2023-03-17T10:30:36",
+        ///               "endTime": "2023-03-27T09:53:25.867",
+        ///               "createById": "472db545-a8a1-4fcc-bfc3-3ee2aebe52a0",
+        ///               "createBy": "admin",
+        ///               "createOn": "2023-03-27T09:53:25.873",
+        ///               "changeById": null,
+        ///               "changeBy": "",
+        ///               "changeOn": null,
+        ///               "materialDoc": null,
+        ///               "materialDocItem": null,
+        ///               "reverseDoc": null,
+        ///               "isDelete": false
+        ///             }
         ///           ],
         ///           "message": "\"nhập NVL GC\" thành công.",
         ///           "isSuccess": true,
@@ -3477,6 +3575,7 @@ namespace IntegrationNS.API.Controllers
         ///               "nnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NNVLGC MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string",
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -3497,7 +3596,8 @@ namespace IntegrationNS.API.Controllers
         ///                 {
         ///                   "nnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID NNVLGC MES
         ///                   "batch": "",
-        ///                   "materialDocument": ""
+        ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }
@@ -3609,6 +3709,7 @@ namespace IntegrationNS.API.Controllers
         ///               "changeBy": "",
         ///               "changeOn": null,
         ///               "materialDoc": null,
+        ///               "materialDocItem": null,
         ///               "reverseDoc": null,
         ///               "isDelete": false
         ///             }
@@ -3655,6 +3756,7 @@ namespace IntegrationNS.API.Controllers
         ///               "xnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XNVLGC MES
         ///               "batch": "string",
         ///               "materialDocument": "string",
+        ///               "materialDocumentItem": "string"
         ///             }  
         ///             
         ///             -- Hủy phiếu
@@ -3675,7 +3777,8 @@ namespace IntegrationNS.API.Controllers
         ///                 {
         ///                   "xnvlgcId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",        - ID XNVLGC MES
         ///                   "batch": "",
-        ///                   "materialDocument": ""
+        ///                   "materialDocument": "",
+        ///                   "materialDocumentItem": ""
         ///                 }
         ///               ]
         ///             }

@@ -68,6 +68,8 @@ namespace IntegrationNS.Application.DTOs
         public string ChangeBy { get; set; }
         //Material doc
         public string MatDoc { get; set; }
+        //Mat doc item
+        public string MatDocItem { get; set; }
         //Reverse doc
         public string RevDoc { get; set; }
         //Đánh dấu xóa

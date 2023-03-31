@@ -16,17 +16,17 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string ProductCode { get; set; }
         public long? ProductCodeInt { get; set; }
-        [StringLength(50)]
+        [StringLength(255)]
         public string ProductName { get; set; }
         [StringLength(50)]
         public string PlantCode { get; set; }
         [StringLength(50)]
         public string ProductGroupCode { get; set; }
-        [StringLength(50)]
+        [StringLength(255)]
         public string ProductGroupDesc { get; set; }
         [StringLength(50)]
         public string ProductTypeCode { get; set; }
-        [StringLength(50)]
+        [StringLength(255)]
         public string ProductTypeName { get; set; }
         [StringLength(50)]
         public string Unit { get; set; }

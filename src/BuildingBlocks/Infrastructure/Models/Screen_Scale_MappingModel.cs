@@ -13,15 +13,10 @@ namespace Infrastructure.Models
     {
         [Key]
         public Guid Screen_Scale_Mapping_Id { get; set; }
-        public Guid? ScreenId { get; set; }
-        public Guid? ScaleId { get; set; }
+        [StringLength(50)]
+        public string ScreenCode { get; set; }
+        [StringLength(50)]
+        public string ScaleCode { get; set; }
         public bool? Actived { get; set; }
-
-        [ForeignKey("ScaleId")]
-        [InverseProperty("Screen_Scale_MappingModel")]
-        public virtual ScaleModel Scale { get; set; }
-        [ForeignKey("ScreenId")]
-        [InverseProperty("Screen_Scale_MappingModel")]
-        public virtual ScreenModel Screen { get; set; }
     }
 }

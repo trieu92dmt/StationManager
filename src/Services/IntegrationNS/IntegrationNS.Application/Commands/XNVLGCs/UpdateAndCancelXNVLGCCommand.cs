@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
         public Guid XnvlgcId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -81,6 +82,12 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     if (xnvlgc is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu xuất nguyên vật liệu gia công");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(xnvlgc.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.XnvlgcId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     xnvlgc.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(xnvlgc.MaterialDocument))//) && string.IsNullOrEmpty(xnvlgc.ReverseDocument))
@@ -114,6 +121,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     xnvlgcNew.TotalQuantity = 0;
                     xnvlgcNew.RequirementQuantity = 0;
                     xnvlgcNew.MaterialDocument = null;
+                    xnvlgcNew.MaterialDocumentItem = null;
                     xnvlgcNew.ReverseDocument = null;
 
                     _xnvlgcRep.Add(xnvlgcNew);
@@ -139,6 +147,7 @@ namespace IntegrationNS.Application.Commands.XNVLGCs
                     //Cập nhật Batch và MaterialDocument
                     xnvlgc.Batch = item.Batch;
                     xnvlgc.MaterialDocument = item.MaterialDocument;
+                    xnvlgc.MaterialDocumentItem = item.MaterialDocumentItem;
                     xnvlgc.TotalQuantity = xnvlgc.PurchaseOrderDetailId.HasValue ? xnvlgc.PurchaseOrderDetail.OrderQuantity : 0;
                     xnvlgc.RequirementQuantity = xnvlgc.PurchaseOrderDetailId.HasValue ? reservations.FirstOrDefault(x => x.PurchasingDoc == xnvlgc.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode &&
                                                                                                                           x.Item == xnvlgc.PurchaseOrderDetail.POLine).RequirementQty : 0;

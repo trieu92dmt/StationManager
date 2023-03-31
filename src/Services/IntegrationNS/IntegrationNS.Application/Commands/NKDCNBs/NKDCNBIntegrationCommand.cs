@@ -296,6 +296,8 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //Material Doc
                 MatDoc = x.MaterialDocument ?? "",
+                //MatDocItem
+                MatDocItem = x.MaterialDocumentItem ?? "",
                 //Reverse Doc
                 RevDoc = x.ReverseDocument ?? "",
                 isDelete = x.Status == "DEL" ? true : false,

@@ -2,17 +2,25 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace WeighSession.Infrastructure.Models
 {
+    [Keyless]
     public partial class TrackerTable
     {
-        public int? EpochTime { get; set; }
+        public int? Epoch_time { get; set; }
+        [StringLength(25)]
+        [Unicode(false)]
         public string DateEvent { get; set; }
-        public string MacGateway { get; set; }
+        [StringLength(17)]
+        [Unicode(false)]
+        public string Mac_Gateway { get; set; }
         public int? Event { get; set; }
-        public int? BoardId { get; set; }
-        public int? TotalCount { get; set; }
-        public int? TotalWeight { get; set; }
+        public int? Board_ID { get; set; }
+        public int? totalCount { get; set; }
+        public int? totalWeight { get; set; }
     }
 }

@@ -114,6 +114,7 @@ namespace MES.API.Controllers
                                                           string soFrom, string soTo,
                                                           string materialFrom, string materialTo,
                                                           string orderType,
+                                                          string vendorFrom, string vendorTo,
                                                           string type)
         {
             var dropdownList = await _commonQuery.GetDropdownComponent(keyword, plant,
@@ -122,6 +123,7 @@ namespace MES.API.Controllers
                                                                        soFrom, soTo,
                                                                        materialFrom, materialTo,
                                                                        orderType,
+                                                                       vendorFrom, vendorTo,
                                                                        type);
             return Ok(new ApiSuccessResponse<List<DropdownMaterialResponse>> { Data = dropdownList, Message = string.Format(CommonResource.Msg_Success, "Lấy danh sách component") });
         }
@@ -467,9 +469,9 @@ namespace MES.API.Controllers
         /// <param name="plant">Nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-reservation")]
-        public async Task<IActionResult> GetReservationAsync(string keyword, string plant)
+        public async Task<IActionResult> GetReservationAsync(string keyword, string plant, string type)
         {
-            var dropdownList = await _commonQuery.GetReservation(keyword, plant);
+            var dropdownList = await _commonQuery.GetReservation(keyword, plant, type);
             return Ok(new ApiSuccessResponse<List<CommonResponse>> { Data = dropdownList });
         }
         #endregion
@@ -485,9 +487,9 @@ namespace MES.API.Controllers
         /// <param name="type">Tên nhà máy</param>
         /// <returns></returns>
         [HttpGet("list-customer")]
-        public async Task<IActionResult> GetCustomerAsync(string keyword, string plant, string odFrom, string odTo, string type)
+        public async Task<IActionResult> GetCustomerAsync(string keyword, string plant, string odFrom, string odTo, string resFrom, string resTo, string type)
         {
-            var dropdownList = await _commonQuery.GetDropdownCustomer(keyword, plant, odFrom, odTo, type);
+            var dropdownList = await _commonQuery.GetDropdownCustomer(keyword, plant, odFrom, odTo, resFrom, resTo, type);
             return Ok(new ApiSuccessResponse<List<Common3Response>> { Data = dropdownList });
         }
         #endregion

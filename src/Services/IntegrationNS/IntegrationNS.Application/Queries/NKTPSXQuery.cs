@@ -239,6 +239,8 @@ namespace IntegrationNS.Application.Queries
                 ChangeBy = x.LastEditBy.HasValue ? user.FirstOrDefault(a => a.AccountId == x.LastEditBy).FullName : "",
                 //Material Doc
                 MaterialDoc = x.MaterialDocument ?? "",
+                //Mat doc item
+                MaterialDocItem = x.MaterialDocumentItem ?? "",
                 //Reverse Doc
                 ReverseDoc = x.ReverseDocument ?? "",
                 isDelete = x.Status == "DEL" ? true : false,

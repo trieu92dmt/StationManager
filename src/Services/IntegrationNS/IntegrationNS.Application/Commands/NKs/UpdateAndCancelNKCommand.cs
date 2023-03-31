@@ -20,6 +20,7 @@ namespace IntegrationNS.Application.Commands.NKs
         public Guid NkId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -65,6 +66,13 @@ namespace IntegrationNS.Application.Commands.NKs
                     if (nk is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập khác");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nk.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkId}");
+                    }
+
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nk.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nk.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
@@ -88,6 +96,7 @@ namespace IntegrationNS.Application.Commands.NKs
                     //-------------------------//
                     nkNew.Status = "NOT";
                     nkNew.MaterialDocument = null;
+                    nkNew.MaterialDocumentItem = null;
                     nkNew.ReverseDocument = null;
 
 
@@ -112,6 +121,7 @@ namespace IntegrationNS.Application.Commands.NKs
                     //Cập nhật Batch và MaterialDocument
                     nk.Batch = item.Batch;
                     nk.MaterialDocument = item.MaterialDocument;
+                    nk.MaterialDocumentItem = item.MaterialDocumentItem;
                     if (!string.IsNullOrEmpty(nk.MaterialDocument))// && string.IsNullOrEmpty(nkpppp.ReverseDocument))
                         nk.Status = "POST";
                     //else if (!string.IsNullOrEmpty(nkpppp.ReverseDocument))

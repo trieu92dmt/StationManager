@@ -28,6 +28,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
         public Guid NktpsxId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -79,6 +80,12 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     if (nktpsx is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho tp sản xuất");
 
+                    //Nếu đã reverse thì không reverse nữa
+                    if (!string.IsNullOrEmpty(nktpsx.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NktpsxId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nktpsx.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nktpsx.MaterialDocument))// && string.IsNullOrEmpty(nktpsx.ReverseDocument))
@@ -109,6 +116,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     nktpsxNew.DeliveryQuantity = 0;
                     nktpsxNew.OpenQuantity = 0;
                     nktpsxNew.MaterialDocument = null;
+                    nktpsxNew.MaterialDocumentItem = null;
                     nktpsxNew.ReverseDocument = null;
 
 
@@ -163,6 +171,7 @@ namespace IntegrationNS.Application.Commands.NKTPSXs
                     //Cập nhật Batch và MaterialDocument
                     nktpsx.Batch = item.Batch;
                     nktpsx.MaterialDocument = item.MaterialDocument;
+                    nktpsx.MaterialDocumentItem = item.MaterialDocumentItem;
                     nktpsx.TotalQuantity = nktpsx.WorkOrderId.HasValue ? nktpsx.WorkOrder.TargetQuantity : 0;
                     nktpsx.DeliveryQuantity = nktpsx.WorkOrderId.HasValue ? nktpsx.WorkOrder.DeliveredQuantity : 0;
                     nktpsx.OpenQuantity = nktpsx.TotalQuantity - nktpsx.DeliveryQuantity;

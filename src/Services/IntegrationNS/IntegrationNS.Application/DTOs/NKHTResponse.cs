@@ -79,6 +79,8 @@ namespace IntegrationNS.Application.DTOs
         public DateTime? ChangeOn { get; set; }
         //Material Doc
         public string MatDoc { get; set; }
+        //Mat doc item
+        public string MatDocItem { get; set; }
         //Reverse Doc
         public string ReverseDoc { get; set; }
         //Đánh dấu xóa

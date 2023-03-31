@@ -1,16 +1,10 @@
 ﻿using Core.Interfaces.Databases;
-using Core.Models;
-using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MediatR;
+using MES.Application.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MES.Application.Commands.Scale
 {
@@ -22,8 +16,9 @@ namespace MES.Application.Commands.Scale
     public class ScaleUpdate
     {
         //Id
-        [Required]
         public Guid ScaleId { get; set; }
+        //Scale code
+        public string ScaleCode { get; set; }
         //ScaleName
         [Required]
         public string ScaleName { get; set; }
@@ -43,54 +38,50 @@ namespace MES.Application.Commands.Scale
         private readonly IRepository<ScaleModel> _scaleRepo;
         private readonly IRepository<Screen_Scale_MappingModel> _mappingRepo;
         private readonly IRepository<ScreenModel> _screenRepo;
+        private readonly IWeighSessionService _weiSsService;
 
         public UpdateScaleCommandHandler(IUnitOfWork unitOfWork, IRepository<ScaleModel> scaleRepo, IRepository<Screen_Scale_MappingModel> mappingRepo,
-                                         IRepository<ScreenModel> screenRepo)
+                                         IRepository<ScreenModel> screenRepo, IWeighSessionService weiSsService)
         {
             _unitOfWork = unitOfWork;
             _scaleRepo = scaleRepo;
             _mappingRepo = mappingRepo;
             _screenRepo = screenRepo;
+            _weiSsService = weiSsService;
         }
 
         public async Task<bool> Handle(UpdateScaleCommand request, CancellationToken cancellationToken)
         {
+            //Call service cập nhật
+            var rs = await _weiSsService.UpdateScale(request);
+
             //Get query screen
             var screenQuery = _screenRepo.GetQuery().AsNoTracking();
 
-            //Lấy ra scale cần chỉnh sửa
-            var scale = await _scaleRepo.FindOneAsync(x => x.ScaleId == request.Scales[0].ScaleId);
-
-            //cập nhật
-            //Tên đầu cân
-            scale.ScaleName = request.Scales[0].ScaleName;
-            //Loại cân
-            scale.ScaleType = request.Scales[0].isIntegrated;
-            //Là cân xe tải ?
-            scale.isCantai = request.Scales[0].isTruckScale;
-            scale.Actived = request.Scales[0].isActived;
-
-
-            //Thêm mapping giữa màn hình và cân
-            //Lấy ra danh sách đã mapping
-            var mappings = _mappingRepo.GetQuery().Where(x => x.ScaleId == scale.ScaleId);
-            //Xóa những mapping đã có
-            _mappingRepo.RemoveRange(mappings);
-            //Tạo mới mapping
-            var listMap = new List<Screen_Scale_MappingModel>();
-            foreach (var item in request.Scales[0].Screens) 
+            if (rs)
             {
-                listMap.Add(new Screen_Scale_MappingModel
+                //Thêm mapping giữa màn hình và cân
+                //Lấy ra danh sách đã mapping
+                var mappings = _mappingRepo.GetQuery().Where(x => x.ScaleCode == request.Scales[0].ScaleCode);
+                //Xóa những mapping đã có
+                _mappingRepo.RemoveRange(mappings);
+                //Tạo mới mapping
+                var listMap = new List<Screen_Scale_MappingModel>();
+                foreach (var item in request.Scales[0].Screens)
                 {
-                    Screen_Scale_Mapping_Id = Guid.NewGuid(),
-                    ScaleId = request.Scales[0].ScaleId,
-                    ScreenId = screenQuery.FirstOrDefault(x => x.ScreenCode == item).ScreenId,
-                    Actived =true
-                });
-            }
-            //Thêm mới
-            _mappingRepo.AddRange(listMap);
+                    listMap.Add(new Screen_Scale_MappingModel
+                    {
+                        Screen_Scale_Mapping_Id = Guid.NewGuid(),
+                        ScaleCode = request.Scales[0].ScaleCode,
+                        ScreenCode = item,
+                        Actived = true
+                    });
+                }
 
+                //Thêm mới
+                _mappingRepo.AddRange(listMap);
+            }    
+            
             await _unitOfWork.SaveChangesAsync();
 
             //Trả response

@@ -25,6 +25,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
         public Guid NkdcnbId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -78,6 +79,11 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     if (nkdcnb is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho điều chuyển nội bộ");
 
+
+                    if (!string.IsNullOrEmpty(nkdcnb.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkdcnbId}");
+                    }
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkdcnb.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkdcnb.MaterialDocument))//) && string.IsNullOrEmpty(nkdcnb.ReverseDocument))
@@ -109,6 +115,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     nkdcnbNew.DeliveredQuantity = 0;
                     nkdcnbNew.OpenQuantity = 0;
                     nkdcnbNew.MaterialDocument = null;
+                    nkdcnbNew.MaterialDocumentItem = null;
                     nkdcnbNew.ReverseDocument = null;
 
                     #region code cũ
@@ -166,6 +173,7 @@ namespace IntegrationNS.Application.Commands.NKDCNBs
                     //Cập nhật Batch và MaterialDocument
                     nkdcnb.Batch = item.Batch;
                     nkdcnb.MaterialDocument = item.MaterialDocument;
+                    nkdcnb.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkdcnb.TotalQuantity = nkdcnb.DetailODId.HasValue ? nkdcnb.DetailOD.DeliveryQuantity : 0;
                     nkdcnb.DeliveredQuantity = nkdcnb.DetailODId.HasValue ? nkdcnbs.Where(n => n.DetailODId == nkdcnb.DetailODId).Sum(n => n.ConfirmQty.Value) : 0;
                     nkdcnb.OpenQuantity = nkdcnb.TotalQuantity - nkdcnb.DeliveredQuantity;

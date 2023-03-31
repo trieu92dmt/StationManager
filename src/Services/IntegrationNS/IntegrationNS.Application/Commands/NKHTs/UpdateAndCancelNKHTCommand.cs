@@ -26,6 +26,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
         public Guid NkhtId { get; set; }
         public string Batch { get; set; }
         public string MaterialDocument { get; set; }
+        public string MaterialDocumentItem { get; set; }
         public string ReverseDocument { get; set; }
     }
 
@@ -76,6 +77,11 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     if (nkht is null)
                         throw new ISDException(CommonResource.Msg_NotFound, "Phiếu nhập kho hàng trả");
 
+                    if (!string.IsNullOrEmpty(nkht.ReverseDocument))
+                    {
+                        throw new ISDException(CommonResource.Msg_Canceled, $"Phiếu nhập kho {item.NkhtId}");
+                    }
+
                     //Cập nhật Batch và MaterialDocument và ReverseDocument
                     nkht.ReverseDocument = item.ReverseDocument;
                     if (!string.IsNullOrEmpty(nkht.MaterialDocument))// && string.IsNullOrEmpty(nkht.ReverseDocument))
@@ -107,6 +113,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     nkhtNew.DeliveredQuantity = 0;
                     nkhtNew.OpenQuantity = 0;
                     nkhtNew.MaterialDocument = null;
+                    nkhtNew.MaterialDocumentItem = null;
                     nkhtNew.ReverseDocument = null;
                     #region code cũ
                     //var nkhtNew = new GoodsReturnModel
@@ -163,6 +170,7 @@ namespace IntegrationNS.Application.Commands.NKHTs
                     //Cập nhật Batch và MaterialDocument
                     nkht.Batch = item.Batch;
                     nkht.MaterialDocument = item.MaterialDocument;
+                    nkht.MaterialDocumentItem = item.MaterialDocumentItem;
                     nkht.TotalQuantity = nkht.DetailODId.HasValue ? nkht.DetailOD.DeliveryQuantity : 0;
                     nkht.DeliveredQuantity = nkht.DetailODId.HasValue ? nkht.DetailOD.PickedQuantityPUoM : 0;
                     nkht.OpenQuantity = nkht.TotalQuantity - nkht.DeliveredQuantity;

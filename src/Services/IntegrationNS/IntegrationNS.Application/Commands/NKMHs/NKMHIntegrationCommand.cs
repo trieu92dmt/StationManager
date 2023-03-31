@@ -1,9 +1,8 @@
-﻿using IntegrationNS.Application.DTOs;
-using Core.SeedWork.Repositories;
+﻿using Core.SeedWork.Repositories;
 using Infrastructure.Models;
+using IntegrationNS.Application.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace IntegrationNS.Application.Commands.NKMHs
 {
@@ -255,6 +254,8 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 OpenQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.OpenQuantity : x.PurchaseOrderDetail?.OpenQuantity,
                                 //Mat Doc
                                 MaterialDocument = x.MaterialDocument,
+                                //Mat doc item
+                                MaterialDocumentItem = x.MaterialDocumentItem,
                                 //Reverse Doc
                                 ReverseDocument = x.ReverseDocument,
                                 

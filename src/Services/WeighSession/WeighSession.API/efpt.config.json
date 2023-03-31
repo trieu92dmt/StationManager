@@ -4,12 +4,12 @@
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,
-   "IncludeConnectionString": true,
+   "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
    "OutputPath": "Models",
    "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": "WeighSession.Infrastructure",
+   "ProjectRootNamespace": "WeighSession.API",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
    "SelectedToBeGenerated": 0,
@@ -27,15 +27,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[WeighSessionDetailFactoryModel]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[WeighSessionDetailModel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WeighSessionFactoryModel]",
          "ObjectType": 0
       },
       {
@@ -47,13 +39,13 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "SERVER-3.DataCollection",
+   "UiHint": "WIN-EJPGQRFHQHT.DataCollection",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
-   "UseDatabaseNames": true,
+   "UseDatabaseNames": false,
    "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
-   "UseFluentApiOnly": false,
+   "UseFluentApiOnly": true,
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": false,

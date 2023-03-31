@@ -117,6 +117,8 @@ namespace Infrastructure.Identity
 
             token.Permission = SpHelper.GetMenuMobileList(model.AccountId);
             token.Token = GenerateJwt(GetSigningCredentials(), token);
+
+            token.ExpiredTime = DateTime.Now.AddDays(1);
             #endregion
 
             return token;

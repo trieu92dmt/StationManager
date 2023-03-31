@@ -63,6 +63,22 @@ namespace Core.Extensions
                 return this._configuration["WeighSessionUrl"];
             }
         }
+
+        public string DomainMVC
+        {
+            get
+            {
+                return this._configuration["DomainMVC"];
+            }
+        }
+
+        public string DomainFE
+        {
+            get
+            {
+                return this._configuration["DomainFE"];
+            }
+        }
     }
 
 }

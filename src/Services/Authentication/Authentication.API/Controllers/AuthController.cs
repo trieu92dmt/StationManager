@@ -1,4 +1,5 @@
-﻿using Core.Identity;
+﻿using Core.Extensions;
+using Core.Identity;
 using Core.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Identity;
@@ -28,6 +29,12 @@ namespace Authentication.API.Controllers
         {
             //Get token
             var response = await _service.GetToken(request);
+
+            foreach (var item in response?.WebPermission?.PageModel)
+            {
+                item.DomainConfigUrl = item.DomainConfig == 1 ? new ConfigManager().DomainMVC : new ConfigManager().DomainFE;
+            }
+
             return Ok(new ApiSuccessResponse<TokenResponse>
             {
                 Data = response,

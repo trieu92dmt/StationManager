@@ -115,14 +115,7 @@ namespace Infrastructure.Identity
             {
                 token.WebPermission.PageModel = token.WebPermission.PageModel.DistinctBy(x => x.PageId).ToList();
             }
-
-
-            foreach (var item in token?.WebPermission?.PageModel)
-            {
-                item.DomainConfigUrl = item.DomainConfig == 1 ? new ConfigManager().DomainMVC : new ConfigManager().DomainFE;
-            }
-
-
+         
             token.Permission = SpHelper.GetMenuMobileList(model.AccountId);
             token.Token = GenerateJwt(GetSigningCredentials(), token);
 

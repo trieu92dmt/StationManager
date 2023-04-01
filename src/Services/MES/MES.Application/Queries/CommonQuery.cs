@@ -766,10 +766,10 @@ namespace MES.Application.Queries
             #region XTHLSX
             //Màn XTHLSX
             //Khi lại màn hình là "XTHLSX" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
-            else if (type == "XTHLSX" && (!string.IsNullOrEmpty(orderType) || !string.IsNullOrEmpty(soFrom) || !string.IsNullOrEmpty(woFrom)))
+            else if (type == "XTHLSX")
             {
                 //Tạo query
-                var NKPPPPResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder).Where(x =>
+                var XTHLSXResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder).Where(x =>
                                                   //Lọc theo plant
                                                   (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true) &&
                                                   //Lọc theo order type
@@ -788,16 +788,16 @@ namespace MES.Application.Queries
                                             .Select(x => new DropdownMaterialResponse
                                             {
                                                 //Material code
-                                                Key = x.ProductCodeInt.ToString(),
+                                                Key = x.WorkOrder.ProductCodeInt.ToString(),
                                                 //Material code | material name
-                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                Value = $"{x.WorkOrder.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).ProductName}",
                                                 //Material name
-                                                Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                Name = products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).ProductName,
                                                 //Đơn vị
-                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).Unit
                                             }).ToListAsync();
 
-                return NKPPPPResponse.Where(x => //Theo Keyword
+                return XTHLSXResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }

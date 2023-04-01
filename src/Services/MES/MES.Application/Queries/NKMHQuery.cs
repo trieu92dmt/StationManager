@@ -1,21 +1,15 @@
-﻿using Azure;
-using Core.Extensions;
+﻿using Core.Extensions;
 using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
-using MES.Application.DTOs.MES.Scale;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Shared.Models;
 using Shared.WeighSession;
-using System.Net.Http;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace MES.Application.Queries
 {

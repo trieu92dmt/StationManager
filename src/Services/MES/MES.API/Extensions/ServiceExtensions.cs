@@ -20,11 +20,14 @@ namespace MES.API.Extensions
             var origins = configuration.GetValue<string>("AllowedOrigins").Split(";");
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  builder =>
-                                  {
-                                      builder.WithOrigins(origins).AllowAnyMethod().AllowAnyHeader();
-                                  });
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
             });
 
             services.AddControllers();

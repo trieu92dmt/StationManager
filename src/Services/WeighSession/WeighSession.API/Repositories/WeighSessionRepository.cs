@@ -8,7 +8,6 @@ using Shared.WeighSession;
 using WeighSession.API.DTOs;
 using WeighSession.API.Repositories.Interfaces;
 using WeighSession.Infrastructure.Models;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace WeighSession.API.Repositories
 {

@@ -519,8 +519,8 @@ namespace MES.Application.Queries
                                                 x.DeliveryCompleted != "X" &&
                                                 //Loại các line đã đánh dấu xóa
                                                 x.DeletionInd != "X" &&
-                                                x.PurchaseOrder.DeletionInd != "X" &&
-                                                x.PurchaseOrder.ReleaseIndicator == "R") 
+                                                x.PurchaseOrder.DeletionInd != "X" 
+                                                /*x.PurchaseOrder.ReleaseIndicator == "R"*/) 
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
@@ -1099,7 +1099,7 @@ namespace MES.Application.Queries
                                                         x.DeletionInd != "X" &&
                                                         x.PurchaseOrder.DeletionInd != "X" &&
                                                         //Lấy các line đã được duyệt
-                                                        x.PurchaseOrder.ReleaseIndicator == "R" &&
+                                                        //x.PurchaseOrder.ReleaseIndicator == "R" &&
                                                         //Lấy các line vendor không bị trống
                                                         x.PurchaseOrder.VendorCode != null &&
                                                         x.PurchaseOrder.VendorCode != "")
@@ -1300,7 +1300,7 @@ namespace MES.Application.Queries
                                                                                                   x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
                                                              //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
                                                                                                     //x.ProductCodeInt <= long.Parse(materialTo) : true) && //Theo material
-                                                             (x.PurchaseOrder.ReleaseIndicator == "R") &&
+                                                             //(x.PurchaseOrder.ReleaseIndicator == "R") &&
                                                              (x.DeletionInd != "L") &&
                                                              (x.DeliveryCompleted != "X"))
                                         .OrderBy(x => x.PurchaseOrder.PurchaseOrderCode)

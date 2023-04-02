@@ -356,8 +356,8 @@ namespace MES.Application.Queries
                                             .Include(x => x.PurchaseOrder)
                                             .Where(x => x.DeliveryCompleted != "X" &&
                                                         x.DeletionInd != "X" &&
-                                                        x.PurchaseOrder.DeletionInd != "X" &&
-                                                        x.PurchaseOrder.ReleaseIndicator == "R")
+                                                        x.PurchaseOrder.DeletionInd != "X"
+                                                        /*x.PurchaseOrder.ReleaseIndicator == "R"*/)
                                             .AsNoTracking();
 
 

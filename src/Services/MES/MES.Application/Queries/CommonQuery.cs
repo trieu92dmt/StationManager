@@ -927,7 +927,7 @@ namespace MES.Application.Queries
 
             #region XK
             //Màn xuất khác
-            else if (type == "XK")
+            else if (type == "XK" && (!string.IsNullOrEmpty(resFrom) || (!string.IsNullOrEmpty(shipToPartyFrom))))
             {
                 //Movement type xk
                 var movementType = new List<string> { "Z42", "Z44", "Z46", "201" };
@@ -1196,9 +1196,9 @@ namespace MES.Application.Queries
                                                              x.DeliveryCompleted != "X" &&
                                                              //Loại các line đã đánh dấu xóa
                                                              x.DeletionInd != "X" &&
-                                                             x.PurchaseOrder.DeletionInd != "X" &&
+                                                             x.PurchaseOrder.DeletionInd != "X"
                                                              //Lấy các line đã duyệt
-                                                             x.PurchaseOrder.ReleaseIndicator == "R"
+                                                             //x.PurchaseOrder.ReleaseIndicator == "R"
                                                              )
                                         .OrderBy(x => x.PurchaseOrder.POType)
                                         .Select(x => new CommonResponse

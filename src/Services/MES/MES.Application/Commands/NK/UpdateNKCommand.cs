@@ -180,6 +180,8 @@ namespace MES.Application.Commands.NK
                         //Material
                         MaterialCode = !string.IsNullOrEmpty(item.Plant) ? material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode : "",
                         MaterialCodeInt = long.Parse(item.Material),
+                        //Customer
+                        Customer = item.Customer,
                         //Đầu cân
                         WeightHeadCode = item.WeightHeadCode,
                         //Số phiếu cân
@@ -226,6 +228,8 @@ namespace MES.Application.Commands.NK
                     nk.MaterialCode = material.FirstOrDefault(x => x.ProductCodeInt == long.Parse(item.Material)).ProductCode;
                     //Material Code Int
                     nk.MaterialCodeInt = long.Parse(item.Material);
+                    //Customer
+                    nk.Customer = item.Customer;
                     //Storage Location
                     nk.SlocCode = item.Sloc;
                     //Sloc Name

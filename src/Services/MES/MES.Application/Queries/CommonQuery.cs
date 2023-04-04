@@ -2153,7 +2153,7 @@ namespace MES.Application.Queries
                                    .Select(x => new CommonResponse
                                    {
                                        Key = x.OrderTypeCode,
-                                       Value = $"{x.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OrderTypeCode).ShortText}"
+                                       Value = $"{x.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OrderTypeCode && d.Category == "02").ShortText}"
                                    })
                                    .AsNoTracking().ToListAsync();
 

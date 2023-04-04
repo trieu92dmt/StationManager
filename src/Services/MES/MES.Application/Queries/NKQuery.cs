@@ -87,7 +87,7 @@ namespace MES.Application.Queries
                                                              CustomerName = customer != null ? customer.CustomerName : "",
                                                              Material = x.ProductCodeInt.ToString(),
                                                              MaterialDesc = x.ProductName,
-                                                             Unit = x.Unit
+                                                             Unit = x.Unit ?? "KG"
                                                          }).AsNoTracking().ToListAsync();
 
             //Tạo key
@@ -228,7 +228,7 @@ namespace MES.Application.Queries
                 //Số cân đầu ra
                 OutputWeight = x.OutputWeight ?? 0, 
                 //24 UOM
-                Unit = x.UOM ?? "",
+                Unit = x.UOM ?? "KG",
                 //25 Ghi chú
                 Description = x.Description ?? "",
                 //26 Hình ảnh

@@ -30,6 +30,8 @@ namespace MES.Application.Commands.OutboundDelivery
         public string SlocCode { get; set; }
         //SL bao
         public decimal? BagQuantity { get; set; }
+        //Số Batch
+        public string Batch { get; set; }
         //Đơn trọng
         public decimal? SingleWeight { get; set; }
         //Trọng lượng cân
@@ -208,6 +210,8 @@ namespace MES.Application.Commands.OutboundDelivery
                                weightSession.OrderIndex : null,
                     //6 WeightVote
                     WeightVote = $"N{long.Parse(lastIndex) + index}",
+                    // Batch
+                    Batch = item.Batch,
                     //7   BagQuantity
                     BagQuantity = item.BagQuantity,
                     //8   SingleWeight

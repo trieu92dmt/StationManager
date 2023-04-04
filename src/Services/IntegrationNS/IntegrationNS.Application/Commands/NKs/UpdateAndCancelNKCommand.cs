@@ -87,6 +87,7 @@ namespace IntegrationNS.Application.Commands.NKs
                     var nkNew = JsonConvert.DeserializeObject<OtherImportModel>(serialized);
 
                     nkNew.OtherImportId = Guid.NewGuid();
+                    nkNew.Batch = null;
                     //Dòng cũ có change by --> Dòng mới sẽ không có
                     nkNew.LastEditBy = null;
                     nkNew.LastEditTime = null;

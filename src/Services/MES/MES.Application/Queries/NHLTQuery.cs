@@ -249,7 +249,7 @@ namespace MES.Application.Queries
                 ScaleType = !string.IsNullOrEmpty(x.WeightHeadCode) ? scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).isCantai == true ? "CANXETAI" :
                                                                       scale.FirstOrDefault(s => s.ScaleCode == x.WeightHeadCode).ScaleType == true ? "TICHHOP" : "KHONGTICHHOP" : "KHONGTICHHOP",
                 //Số batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailODId.HasValue ? x.DetailOD.Batch  : "": x.Batch ?? "",
                 //Trọng lượng
                 Weight = x.Weight ?? 0,
                 //Confirm quantity

@@ -244,7 +244,7 @@ namespace MES.Application.Queries
                 //Kho
                 StorageLocation = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
                 //Số lô
-                Batch = x.Batch,
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.Batch :"" : x.Batch ?? "",
                 //SL bao
                 BagQuantity = x.BagQuantity,
                 //Đơn trọng

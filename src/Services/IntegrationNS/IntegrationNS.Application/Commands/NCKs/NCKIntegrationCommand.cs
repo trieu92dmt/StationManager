@@ -213,7 +213,7 @@ namespace IntegrationNS.Application.Commands.NCKs
                 Sloc = x.SlocCode ?? "",
                 SlocName = !string.IsNullOrEmpty(x.SlocCode) ? x.SlocName : "",
                 //Batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.MaterialDocId.HasValue ? x.MaterialDoc.Batch : "" : x.Batch ?? "",
                 //Sl bao
                 BagQuantity = x.BagQuantity.HasValue ? x.BagQuantity : 0,
                 //Đơn trọng

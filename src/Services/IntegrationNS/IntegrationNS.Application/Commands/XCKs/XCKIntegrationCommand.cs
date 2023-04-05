@@ -218,7 +218,7 @@ namespace IntegrationNS.Application.Commands.XCKs
                 ReceivingSloc = x.ReceivingSlocCode ?? "",
                 ReceivingSlocName = x.ReceivingSlocName ?? "",
                 //Batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailReservationId.HasValue ? x.DetailReservation.Batch : "" : x.Batch ?? "",
                 //DocumentDate
                 DocumentDate = x.DetailReservationId.HasValue ? x.DetailReservation.RequirementsDate : null,
                 //Sl bao

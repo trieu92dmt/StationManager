@@ -221,7 +221,7 @@ namespace IntegrationNS.Application.Commands.XKs
                 ReceivingSlocFmt = x.DetailReservationId.HasValue ?
                                    $"{x.DetailReservation.Reservation.ReceivingSloc} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.DetailReservation.Reservation.ReceivingSloc).StorageLocationName}" : "",
                 //14 Batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailReservationId.HasValue ? x.DetailReservation.Batch : "" : x.Batch ?? "",
                 //Special Stock
                 SpecialStock = x.SpecialStock ?? "",
                 //15 SL bao

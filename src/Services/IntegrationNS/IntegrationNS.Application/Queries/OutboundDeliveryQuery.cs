@@ -175,11 +175,14 @@ namespace IntegrationNS.Application.Queries
                 ShipToPartyName = x.DetailODId.HasValue ? x.DetailOD.OutboundDelivery.ShiptoPartyName : "",
                 OutboundDelivery = x.DetailODId.HasValue ? long.Parse(x.DetailOD.OutboundDelivery.DeliveryCode).ToString() : "",
                 OutboundDeliveryItem = x.DetailODId.HasValue ? x.DetailOD.OutboundDeliveryItem : "",
+                //Material
                 Material = x.MaterialCode,
                 MaterialDesc = prods.FirstOrDefault(p => p.ProductCode == x.MaterialCode).ProductName,
+                //Storage Location
                 Sloc = x.SlocCode,
                 SlocName = !string.IsNullOrEmpty(x.SlocCode) ? slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName : "",
-                Batch = x.Batch,
+                //Số lô
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailODId.HasValue ? x.DetailOD.Batch : "" : x.Batch ?? "",
                 SalesOrder = x.DetailODId.HasValue ? x.DetailOD.ReferenceDocument1 : "",
                 BagQuantity = x.BagQuantity,
                 SingleWeight = x.SingleWeight,

@@ -358,7 +358,7 @@ namespace MES.Application.Queries
                 //Sloc name
                 SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {slocs.FirstOrDefault(s => s.StorageLocationCode == x.SlocCode).StorageLocationName}",
                 //Số batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailODId.HasValue ? x.DetailOD.Batch : "" : x.Batch ?? "",
                 //Số lượng bao
                 BagQuantity = x.BagQuantity,
                 //Đơn trọng

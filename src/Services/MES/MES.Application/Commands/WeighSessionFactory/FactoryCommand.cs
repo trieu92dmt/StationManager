@@ -17,12 +17,16 @@ namespace MES.Application.Commands.WeighSessionFactory
         private string connectionStringRiceFactoryDatabase;
         public FactoryCommandHandler()
         {
-            connectionStringRiceFactoryDatabase = "Data Source=192.168.100.233;Initial Catalog=RiceFactoryDatabase_2017;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
-            connectionStringDataCollection = "Data Source=192.168.100.233;Initial Catalog=DataCollection;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
+            //connectionStringRiceFactoryDatabase = "Data Source=192.168.100.233;Initial Catalog=RiceFactoryDatabase_2017;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
+            //connectionStringDataCollection = "Data Source=192.168.100.233;Initial Catalog=DataCollection;User ID=isd;Password=pm123@abcd;TrustServerCertificate=true";
+
+
+            connectionStringRiceFactoryDatabase = "Data Source=192.168.180.5;Initial Catalog=RiceFactoryDatabase_2017;User ID=ISD_IT;Password=pm123@abcd;TrustServerCertificate=true";
+            connectionStringDataCollection = "Data Source=192.168.180.5;Initial Catalog=DataCollection;User ID=ISD_IT;Password=pm123@abcd;TrustServerCertificate=true";
         }
         public async Task<bool> Handle(FactoryCommand request, CancellationToken cancellationToken)
         {
-            var dateNow = DateTime.Now.AddDays(-8);
+            var dateNow = DateTime.Now;
             var dateKey = DateTime.Now.ToString("yyyyMMdd");
 
             //Format date
@@ -70,7 +74,7 @@ namespace MES.Application.Commands.WeighSessionFactory
 
 
                     //Data cân
-                    foreach (var session in sss)
+                    foreach (var session in sessionRespone)
                     {
                         //Data 150Kg Cân nguyên liệu đầu vào để sản xuất, Cân thành phẩm đầu ra số 1 và 2
                         DataTable dsLine1 = new DataTable();
@@ -106,23 +110,23 @@ namespace MES.Application.Commands.WeighSessionFactory
                             weighSessions.Add(new WeighSessionRefactoryResponse
                                  (line2Respone.LotNumber, ScaleProduction.NVL_Output2, Convert.ToDecimal(line2Respone.V_Product_1), line2Respone.StartTime, line2Respone.EndTime, 0));
 
-                            //Data cân thành phẩm - đầu cân 2
+                            //Data cân tấm thành phẩm - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line3Respone.V_Product_1_1), line2Respone.StartTime, line2Respone.EndTime, 0));
+                                 (line3Respone.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line3Respone.V_Product_1_1), line3Respone.StartTime, line3Respone.EndTime, 0));
                         }
                         else
                         {
                             //Data cân NVL đầu vào - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                (line2Respone.LotNumber, ScaleProduction.NVL_Input1, Convert.ToDecimal(line1Respone.V_Material), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                (line1Respone.LotNumber, ScaleProduction.NVL_Input1, Convert.ToDecimal(line1Respone.V_Material), line1Respone.StartTime, line1Respone.EndTime, 0));
 
                             //Data cân thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.NVL_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (line1Respone.LotNumber, ScaleProduction.NVL_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
 
-                            //Data cân thành phẩm - đầu cân 1
+                            //Data cân tấm thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (line3Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line3Respone.StartTime, line3Respone.EndTime, 0));
                         }
                     }
                     connection.Close();

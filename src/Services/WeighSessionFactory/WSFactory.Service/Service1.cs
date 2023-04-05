@@ -105,29 +105,29 @@ namespace WSFactory.Service
                         {
                             //Data cân NVL đầu vào - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                (line2Respone.LotNumber, ScaleProduction.NVL_Input2, Convert.ToDecimal(line2Respone.V_Material), line2Respone.StartTime, line2Respone.EndTime, 0));
+                                (session.LotNumber, ScaleProduction.NVL_Input2, Convert.ToDecimal(line2Respone.V_Material), line2Respone.StartTime, line2Respone.EndTime, 0));
 
                             //Data cân thành phẩm - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.NVL_Output2, Convert.ToDecimal(line2Respone.V_Product_1), line2Respone.StartTime, line2Respone.EndTime, 0));
+                                 (session.LotNumber, ScaleProduction.NVL_Output2, Convert.ToDecimal(line2Respone.V_Product_1), line2Respone.StartTime, line2Respone.EndTime, 0));
 
                             //Data cân thành phẩm - đầu cân 2
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line2Respone.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line3Respone.V_Product_1_1), line2Respone.StartTime, line2Respone.EndTime, 0));
+                                 (session.LotNumber, ScaleProduction.TTP_Output2, Convert.ToDecimal(line3Respone.V_Product_1_1), line3Respone.StartTime, line3Respone.EndTime, 0));
                         }
                         else
                         {
                             //Data cân NVL đầu vào - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                (line1Respone.LotNumber, ScaleProduction.NVL_Input1, Convert.ToDecimal(line1Respone.V_Material), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                (session.LotNumber, ScaleProduction.NVL_Input1, Convert.ToDecimal(line1Respone.V_Material), line1Respone.StartTime, line1Respone.EndTime, 0));
 
                             //Data cân thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line1Respone.LotNumber, ScaleProduction.NVL_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (session.LotNumber, ScaleProduction.NVL_Output1, Convert.ToDecimal(line1Respone.V_Product_1), line1Respone.StartTime, line1Respone.EndTime, 0));
 
                             //Data cân thành phẩm - đầu cân 1
                             weighSessions.Add(new WeighSessionRefactoryResponse
-                                 (line1Respone.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line1Respone.StartTime, line1Respone.EndTime, 0));
+                                 (session.LotNumber, ScaleProduction.TTP_Output1, Convert.ToDecimal(line3Respone.V_Product_1_1), line3Respone.StartTime, line3Respone.EndTime, 0));
                         }
                     }
                     connection.Close();

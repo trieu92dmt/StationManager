@@ -210,7 +210,7 @@ namespace MES.Application.Queries
                 ReceivingSloc = x.ReceivingSlocCode ?? "",
                 ReceivingSlocFmt = string.IsNullOrEmpty(x.ReceivingSlocCode) ? "" : $"{x.ReceivingSlocCode} | {x.ReceivingSlocName}",
                 //14 Batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailReservationId.HasValue ? x.DetailReservation.Batch : "" : x.Batch ?? "",
                 //Special Stock
                 SpecialStock = x.SpecialStock ?? "",
                 //15 SL bao

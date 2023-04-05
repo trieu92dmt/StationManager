@@ -215,7 +215,7 @@ namespace IntegrationNS.Application.Commands.NHLTs
                 //Đầu cân
                 WeightHeadCode = x.WeightHeadCode ?? "",
                 //Số batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailODId.HasValue ? x.DetailOD.Batch : "" : x.Batch ?? "",
                 //Trọng lượng
                 Weight = x.Weight ?? 0,
                 //Confirm quantity

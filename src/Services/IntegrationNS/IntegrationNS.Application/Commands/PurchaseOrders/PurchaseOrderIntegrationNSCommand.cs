@@ -214,6 +214,7 @@ namespace IntegrationNS.Application.Commands.PurchaseOrders
                             else
                             {
                                 detailPO.ProductCode = item.Material;
+                                detailPO.ProductCodeInt = long.Parse(item.Material);
                                 detailPO.Batch = item.Batch;
                                 detailPO.OrderQuantity = item.OrderQuantity ?? 0;
                                 detailPO.OpenQuantity = item.OpenQuantity ?? 0;

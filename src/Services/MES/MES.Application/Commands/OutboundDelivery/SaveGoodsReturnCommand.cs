@@ -163,6 +163,8 @@ namespace MES.Application.Commands.OutboundDelivery
                 var imgMapping = new List<Document_Image_Mapping>();
                 for (int i = 0; i < item.ListImage.Count(); i++)
                 {
+                    if (!string.IsNullOrEmpty(item.ListImage[i]))
+                    {
                         //Convert Base64 to Iformfile
                         byte[] bytes = Convert.FromBase64String(item.ListImage[i].Substring(item.ListImage[i].IndexOf(',') + 1));
                         MemoryStream stream = new MemoryStream(bytes);
@@ -178,7 +180,7 @@ namespace MES.Application.Commands.OutboundDelivery
                             Image = imagePath,
                             Actived = true
                         });
-                    
+                    }
                 }
                 //var imgPath = "";
                 //if (!string.IsNullOrEmpty(item.Image))

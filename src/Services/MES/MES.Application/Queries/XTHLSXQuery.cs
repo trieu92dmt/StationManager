@@ -423,7 +423,7 @@ namespace MES.Application.Queries
                 Sloc = x.SlocCode ?? "",
                 SlocName = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
                 //14 Batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.Batch : "" : x.Batch ?? "",
                 //15 SL bao
                 BagQuantity = x.BagQuantity ?? 0,
                 //16 Đơn trọng

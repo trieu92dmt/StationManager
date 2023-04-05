@@ -1,21 +1,15 @@
-﻿using Azure;
-using Core.Extensions;
+﻿using Core.Extensions;
 using Core.SeedWork;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
 using MES.Application.Commands.MES;
 using MES.Application.DTOs.MES;
 using MES.Application.DTOs.MES.NKMH;
-using MES.Application.DTOs.MES.Scale;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Shared.Models;
 using Shared.WeighSession;
-using System.Net.Http;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace MES.Application.Queries
 {
@@ -250,7 +244,7 @@ namespace MES.Application.Queries
                 //Kho
                 StorageLocation = string.IsNullOrEmpty(x.SlocCode) ? "" : $"{x.SlocCode} | {x.SlocName}",
                 //Số lô
-                Batch = x.Batch,
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.Batch :"" : x.Batch ?? "",
                 //SL bao
                 BagQuantity = x.BagQuantity,
                 //Đơn trọng
@@ -362,8 +356,8 @@ namespace MES.Application.Queries
                                             .Include(x => x.PurchaseOrder)
                                             .Where(x => x.DeliveryCompleted != "X" &&
                                                         x.DeletionInd != "X" &&
-                                                        x.PurchaseOrder.DeletionInd != "X" &&
-                                                        x.PurchaseOrder.ReleaseIndicator == "R")
+                                                        x.PurchaseOrder.DeletionInd != "X"
+                                                        /*x.PurchaseOrder.ReleaseIndicator == "R"*/)
                                             .AsNoTracking();
 
 

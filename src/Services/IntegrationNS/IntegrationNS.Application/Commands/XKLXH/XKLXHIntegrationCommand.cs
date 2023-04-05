@@ -233,7 +233,7 @@ namespace IntegrationNS.Application.Commands.XKLXH
                 Sloc = x.SlocCode ?? "",
                 SlocName = x.SlocName ?? "",
                 //Batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailODId.HasValue ? x.DetailOD.Batch : "" : x.Batch ?? "",
                 //Sl bao
                 BagQuantity = x.BagQuantity ?? 0,
                 //Đơn trọng

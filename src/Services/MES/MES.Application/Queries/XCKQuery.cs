@@ -366,7 +366,7 @@ namespace MES.Application.Queries
                 ReceivingSloc = x.ReceivingSlocCode ?? "",
                 ReceivingSlocName = !string.IsNullOrEmpty(x.ReceivingSlocCode) ? x.ReceivingSlocName : "",
                 //Batch
-                Batch = x.Batch ?? "",
+                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? x.DetailReservationId.HasValue ? x.DetailReservation.Batch : "" : x.Batch ?? "",
                 //Sl bao
                 BagQuantity = x.BagQuantity.HasValue ? x.BagQuantity : 0,
                 //Đơn trọng

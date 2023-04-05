@@ -519,8 +519,8 @@ namespace MES.Application.Queries
                                                 x.DeliveryCompleted != "X" &&
                                                 //Loại các line đã đánh dấu xóa
                                                 x.DeletionInd != "X" &&
-                                                x.PurchaseOrder.DeletionInd != "X" &&
-                                                x.PurchaseOrder.ReleaseIndicator == "R") 
+                                                x.PurchaseOrder.DeletionInd != "X" 
+                                                /*x.PurchaseOrder.ReleaseIndicator == "R"*/) 
                                     .OrderBy(x => x.ProductCode)
                                     .Select(x => new DropdownMaterialResponse
                                     {
@@ -766,10 +766,10 @@ namespace MES.Application.Queries
             #region XTHLSX
             //Màn XTHLSX
             //Khi lại màn hình là "XTHLSX" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
-            else if (type == "XTHLSX" && (!string.IsNullOrEmpty(orderType) || !string.IsNullOrEmpty(soFrom) || !string.IsNullOrEmpty(woFrom)))
+            else if (type == "XTHLSX")
             {
                 //Tạo query
-                var NKPPPPResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder).Where(x =>
+                var XTHLSXResponse = await _dtWoRepo.GetQuery().Include(x => x.WorkOrder).Where(x =>
                                                   //Lọc theo plant
                                                   (!string.IsNullOrEmpty(plant) ? x.WorkOrder.Plant == plant : true) &&
                                                   //Lọc theo order type
@@ -788,16 +788,16 @@ namespace MES.Application.Queries
                                             .Select(x => new DropdownMaterialResponse
                                             {
                                                 //Material code
-                                                Key = x.ProductCodeInt.ToString(),
+                                                Key = x.WorkOrder.ProductCodeInt.ToString(),
                                                 //Material code | material name
-                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                Value = $"{x.WorkOrder.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).ProductName}",
                                                 //Material name
-                                                Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                Name = products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).ProductName,
                                                 //Đơn vị
-                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).Unit
                                             }).ToListAsync();
 
-                return NKPPPPResponse.Where(x => //Theo Keyword
+                return XTHLSXResponse.Where(x => //Theo Keyword
                                                 (!string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true)
                                           ).DistinctBy(x => x.Key).Take(10).ToList();
             }
@@ -927,7 +927,7 @@ namespace MES.Application.Queries
 
             #region XK
             //Màn xuất khác
-            else if (type == "XK")
+            else if (type == "XK" && (!string.IsNullOrEmpty(resFrom) || (!string.IsNullOrEmpty(shipToPartyFrom))))
             {
                 //Movement type xk
                 var movementType = new List<string> { "Z42", "Z44", "Z46", "201" };
@@ -1099,7 +1099,7 @@ namespace MES.Application.Queries
                                                         x.DeletionInd != "X" &&
                                                         x.PurchaseOrder.DeletionInd != "X" &&
                                                         //Lấy các line đã được duyệt
-                                                        x.PurchaseOrder.ReleaseIndicator == "R" &&
+                                                        //x.PurchaseOrder.ReleaseIndicator == "R" &&
                                                         //Lấy các line vendor không bị trống
                                                         x.PurchaseOrder.VendorCode != null &&
                                                         x.PurchaseOrder.VendorCode != "")
@@ -1196,9 +1196,9 @@ namespace MES.Application.Queries
                                                              x.DeliveryCompleted != "X" &&
                                                              //Loại các line đã đánh dấu xóa
                                                              x.DeletionInd != "X" &&
-                                                             x.PurchaseOrder.DeletionInd != "X" &&
+                                                             x.PurchaseOrder.DeletionInd != "X"
                                                              //Lấy các line đã duyệt
-                                                             x.PurchaseOrder.ReleaseIndicator == "R"
+                                                             //x.PurchaseOrder.ReleaseIndicator == "R"
                                                              )
                                         .OrderBy(x => x.PurchaseOrder.POType)
                                         .Select(x => new CommonResponse
@@ -1300,7 +1300,7 @@ namespace MES.Application.Queries
                                                                                                   x.PurchaseOrder.VendorCode.CompareTo(vendorTo) <= 0 : true) &&
                                                              //(!string.IsNullOrEmpty(materialFrom) ? x.ProductCodeInt >= long.Parse(materialFrom) &&
                                                                                                     //x.ProductCodeInt <= long.Parse(materialTo) : true) && //Theo material
-                                                             (x.PurchaseOrder.ReleaseIndicator == "R") &&
+                                                             //(x.PurchaseOrder.ReleaseIndicator == "R") &&
                                                              (x.DeletionInd != "L") &&
                                                              (x.DeliveryCompleted != "X"))
                                         .OrderBy(x => x.PurchaseOrder.PurchaseOrderCode)
@@ -2153,7 +2153,7 @@ namespace MES.Application.Queries
                                    .Select(x => new CommonResponse
                                    {
                                        Key = x.OrderTypeCode,
-                                       Value = $"{x.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OrderTypeCode).ShortText}"
+                                       Value = $"{x.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.OrderTypeCode && d.Category == "02").ShortText}"
                                    })
                                    .AsNoTracking().ToListAsync();
 

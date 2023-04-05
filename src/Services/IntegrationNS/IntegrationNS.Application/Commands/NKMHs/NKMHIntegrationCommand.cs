@@ -244,7 +244,10 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Storage Location
                                 StorageLocation = x.SlocCode,
                                 //Số lô
-                                Batch = x.Batch,
+                                Batch = string.IsNullOrEmpty(x.MaterialDocument) ? 
+                                                        x.PurchaseOrderDetailId.HasValue ?
+                                                        x.PurchaseOrderDetail.Batch : "" : x.Batch ?? "",
+
                                 //Số phương tiện
                                 VehicleCode = x.VehicleCode,
                                 //Đơn vị vận tải

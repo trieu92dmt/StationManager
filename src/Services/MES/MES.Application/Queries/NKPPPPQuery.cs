@@ -138,7 +138,7 @@ namespace MES.Application.Queries
             //Theo Component
             if (!string.IsNullOrEmpty(command.Component))
             {
-                query = query.Where(x => x.ProductCode == command.Component);
+                query = query.Where(x => x.ProductCodeInt == long.Parse(command.Component));
             }
 
             //Theo Material
@@ -147,8 +147,8 @@ namespace MES.Application.Queries
                 //Nếu không có To thì search 1
                 if (string.IsNullOrEmpty(command.MaterialTo))
                     command.MaterialTo = command.MaterialFrom;
-                query = query.Where(x => x.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
-                                         x.ProductCodeInt <= long.Parse(command.MaterialTo));
+                query = query.Where(x => x.WorkOrder.ProductCodeInt >= long.Parse(command.MaterialFrom) &&
+                                         x.WorkOrder.ProductCodeInt <= long.Parse(command.MaterialTo));
             }
 
             //Theo lệnh sản xuát

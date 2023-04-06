@@ -748,13 +748,13 @@ namespace MES.Application.Queries
                                             .Select(x => new DropdownMaterialResponse
                                             {
                                                 //Material code
-                                                Key = x.ProductCodeInt.ToString(),
+                                                Key = x.WorkOrder.ProductCodeInt.ToString(),
                                                 //Material code | material name
-                                                Value = $"{x.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName}",
+                                                Value = $"{x.WorkOrder.ProductCodeInt} | {products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).ProductName}",
                                                 //Material name
-                                                Name = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).ProductName,
+                                                Name = products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).ProductName,
                                                 //Đơn vị
-                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.ProductCode).Unit
+                                                Unit = products.FirstOrDefault(p => p.ProductCode == x.WorkOrder.ProductCode).Unit
                                             }).ToListAsync();
 
                 return NKPPPPResponse.Where(x => //Theo Keyword
@@ -2208,7 +2208,7 @@ namespace MES.Application.Queries
                                                     .Select(x => new CommonResponse
                                                     {
                                                         Key = x.WorkOrder.OrderTypeCode,
-                                                        Value = $"{x.WorkOrder.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.WorkOrder.OrderTypeCode).ShortText}"
+                                                        Value = $"{x.WorkOrder.OrderTypeCode} | {oTypeQuery.FirstOrDefault(d => d.OrderTypeCode == x.WorkOrder.OrderTypeCode && d.Category == "02").ShortText}"
                                                     }).AsNoTracking().ToListAsync();
                 return XTHLSXResponse.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(10).ToList();
             }

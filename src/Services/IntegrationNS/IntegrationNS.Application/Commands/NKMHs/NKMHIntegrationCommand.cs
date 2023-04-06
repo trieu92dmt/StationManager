@@ -11,16 +11,16 @@ namespace IntegrationNS.Application.Commands.NKMHs
         public string Plant { get; set; }
         public string PurchasingOrg { get; set; }
 
-        public long? PurchasingGroupFrom { get; set; }
-        public long? PurchasingGroupTo { get; set; }
+        public string PurchasingGroupFrom { get; set; }
+        public string PurchasingGroupTo { get; set; }
 
-        public int? VendorFrom { get; set; }
-        public int? VendorTo { get; set; }
+        public string VendorFrom { get; set; }
+        public string VendorTo { get; set; }
         public string POType { get; set; }
-        public long? PurchaseOrderFrom { get; set; }
-        public long? PurchaseOrderTo { get; set; }
-        public long? MaterialFrom { get; set; }
-        public long? MaterialTo { get; set; }
+        public string PurchaseOrderFrom { get; set; }
+        public string PurchaseOrderTo { get; set; }
+        public string MaterialFrom { get; set; }
+        public string MaterialTo { get; set; }
 
         public DateTime? FromTime { get; set; }
         public DateTime? ToTime { get; set; }
@@ -73,89 +73,96 @@ namespace IntegrationNS.Application.Commands.NKMHs
 
             var users = _userRep.GetQuery().AsNoTracking();
 
-            var query = await _nkmhRep.GetQuery(x => request.FromTime.HasValue ? x.DocumentDate >= request.FromTime && x.DocumentDate <= request.ToTime : true)
-                                      .Include(x => x.PurchaseOrderDetail)
-                                      .ThenInclude(x => x.PurchaseOrder)
-                                      .AsNoTracking()
-                                      .ToListAsync();
+            var query = _nkmhRep.GetQuery()
+                                    .Include(x => x.PurchaseOrderDetail)
+                                    .ThenInclude(x => x.PurchaseOrder)
+                                    .AsNoTracking();
+
 
             //WeightSS
             var weightSs = _weightSsRepo.GetQuery().AsNoTracking();
 
-            //Search Plant
+            //Lọc theo plant
             if (!string.IsNullOrEmpty(request.Plant))
             {
-                query = query.Where(x => x.PlantCode == request.Plant).ToList();
+                query = query.Where(x => x.PlantCode == request.Plant);
             }
 
-            //Search PurchasingOrg
+            //Lọc theo purchasing organization
             if (!string.IsNullOrEmpty(request.PurchasingOrg))
             {
-                query = query.Where(x => x.PurchaseOrderDetail is null ? false :
-                                         x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrg).ToList();
+                //Nếu ko search to thì search 1
+                if (string.IsNullOrEmpty(request.PurchasingOrg)) request.PurchasingOrg = request.PurchasingOrg;
+                query = query.Where(x => x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg == request.PurchasingOrg);
             }
-
-            //Search Purchasing Group
-            if (request.PurchasingGroupFrom.HasValue)
+            //Lọc theo vendor
+            if (!string.IsNullOrEmpty(request.VendorFrom))
             {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
-                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) >= request.PurchasingGroupFrom &&
-                                         long.Parse(x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup) <= request.PurchasingGroupTo).ToList();
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(request.VendorTo)) request.VendorTo = request.VendorFrom;
+                query = query.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.VendorCode.CompareTo(request.VendorFrom) >= 0 &&
+                                                                                    x.PurchaseOrderDetail.PurchaseOrder.VendorCode.CompareTo(request.VendorTo) <= 0 : false);
             }
-
-            //Search Vendor
-            if (request.VendorFrom.HasValue)
-            {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
-                                         x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt >= request.VendorFrom &&
-                                         x.PurchaseOrderDetail.PurchaseOrder.VendorCodeInt <= request.VendorTo).ToList();
-            }
-
-            //Search PO TYPE
+            //Lọc PO Type
             if (!string.IsNullOrEmpty(request.POType))
             {
-                query = query.Where(x => x.PurchaseOrderDetail == null ? true :
-                                         x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType)).ToList();
+                query = query.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.POType.Contains(request.POType) : false);
             }
-
-
-            //Search PO
-            if (request.PurchaseOrderFrom.HasValue)
+            //Lọc theo material
+            if (!string.IsNullOrEmpty(request.MaterialFrom))
             {
-                query = query.Where(x => x.PurchaseOrderDetail is null ? false :
-                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt >= request.PurchaseOrderFrom &&
-                                         x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCodeInt <= request.PurchaseOrderTo).ToList();
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(request.MaterialTo)) request.MaterialTo = request.MaterialFrom;
+                query = query.Where(x => x.MaterialCodeInt >= long.Parse(request.MaterialFrom) &&
+                                                 x.MaterialCodeInt <= long.Parse(request.MaterialTo));
             }
-
-            //Search Material
-            if (request.MaterialFrom.HasValue)
+            //Lọc theo Purchasing Group
+            if (!string.IsNullOrEmpty(request.PurchasingGroupFrom))
             {
-                if (!request.MaterialTo.HasValue) request.MaterialTo = request.MaterialFrom;
-
-                query = query.Where(x => x.MaterialCodeInt >= request.MaterialFrom &&
-                                         x.MaterialCodeInt <= request.MaterialTo).ToList();
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(request.PurchasingGroupTo)) request.PurchasingGroupTo = request.PurchasingGroupFrom;
+                query = query.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup.CompareTo(request.PurchasingGroupFrom) >= 0 &&
+                                                                                    x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup.CompareTo(request.PurchasingGroupTo) <= 0 : false);
             }
-
-
-            //Search WeightHead
-            if (!string.IsNullOrEmpty(request.WeightHead))
+            //Lọc theo PurchaseOrder
+            if (!string.IsNullOrEmpty(request.PurchaseOrderFrom))
             {
-                query = query.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHead.Trim().ToLower() : false).ToList();
+                //Nếu không có To thì search 1
+                if (string.IsNullOrEmpty(request.PurchaseOrderTo)) request.PurchaseOrderTo = request.PurchaseOrderFrom;
+                query = query.Where(x => x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderFrom) >= 0 &&
+                                                                                    x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode.CompareTo(request.PurchaseOrderTo) <= 0 : false);
             }
 
-            //Search WeightDate
+            //Lọc document date
             if (request.WeightDateFrom.HasValue)
             {
-                if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom;
-
-                query = query.Where(x => x.WeighDate >= request.WeightDateFrom &&
-                                         x.WeighDate <= request.WeightDateTo).ToList();
+                if (!request.WeightDateTo.HasValue)
+                {
+                    request.WeightDateTo = request.WeightDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
+                }
+                query = query.Where(x => x.DocumentDate >= request.WeightDateFrom &&
+                                                 x.DocumentDate <= request.WeightDateTo);
             }
 
-            //Search WeightVotes
+            //Search dữ liệu đã cân
+            if (!string.IsNullOrEmpty(request.WeightHead))
+            {
+                query = query.Where(x => !string.IsNullOrEmpty(x.WeightHeadCode) ? x.WeightHeadCode.Trim().ToLower() == request.WeightHead.Trim().ToLower() : false);
+            }
+
+            //Search ngày cân
+            if (request.WeightDateFrom.HasValue)
+            {
+                //Nếu không có WeightDateTo thì lọc theo ngày WeightDateFrom
+                if (!request.WeightDateTo.HasValue) request.WeightDateTo = request.WeightDateFrom.Value.Date.AddDays(1).AddSeconds(-1);
+
+                query = query.Where(x => x.WeighDate >= request.WeightDateFrom &&
+                x.WeighDate <= request.WeightDateTo);
+            }
+            //Loc theo số phiếu cân
             if (request.WeightVotes != null && request.WeightVotes.Any())
             {
-                query = query.Where(x => request.WeightVotes.Contains(x.WeitghtVote)).ToList();
+                query = query.Where(x => request.WeightVotes.Contains(x.WeitghtVote));
             }
 
             //if (request.IsReverse == true)
@@ -171,11 +178,11 @@ namespace IntegrationNS.Application.Commands.NKMHs
             //Search Status
             if (!string.IsNullOrEmpty(request.Status))
             {
-                query = query.Where(x => x.Status == request.Status && x.ReverseDocument == null).ToList();
+                query = query.Where(x => x.Status == request.Status && x.ReverseDocument == null);
             }
 
             //Lấy ra dòng không có reverseDoc
-            query = query.Where(x => x.ReverseDocument is null).ToList();
+            query = query.Where(x => x.ReverseDocument == null);
 
             var data = query.AsEnumerable()
                             .Select(x => new NKMHResponse
@@ -252,7 +259,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 VehicleCode = x.VehicleCode,
                                 //Đơn vị vận tải
                                 TransportUnit = x.TransportUnit ?? "",
-                                //Số lượng đặt hàng
+                                //Số lượng đặt hàng 
                                 OrderQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail?.OrderQuantity,
                                 OpenQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.OpenQuantity : x.PurchaseOrderDetail?.OpenQuantity,
                                 //Mat Doc

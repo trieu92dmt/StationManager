@@ -40,6 +40,8 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string Activity { get; set; }
         [StringLength(50)]
+        public string Reservation { get; set; }
+        [StringLength(50)]
         public string ReservationItem { get; set; }
         [Column(TypeName = "decimal(18, 3)")]
         public decimal? OpenQuantity { get; set; }

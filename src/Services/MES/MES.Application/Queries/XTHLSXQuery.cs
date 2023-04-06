@@ -232,7 +232,7 @@ namespace MES.Application.Queries
                 //Batch
                 Batch = x.Batch ?? "",
                 //UoM
-                Unit = x.WorkOrder.Unit ?? "",
+                Unit = x.BaseUnit1 ?? "",
                 //Schedule Start Time
                 ScheduleStartTime = x.WorkOrder.ScheduledStartDate ?? null,
                 //Schedule Finish Time
@@ -447,7 +447,7 @@ namespace MES.Application.Queries
                 //23 Số lượng đã nhập thu hồi
                 WithdrawnQty = !string.IsNullOrEmpty(x.MaterialDocument) ? x.QuantityWithdrawn : x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn) : 0,
                 //24 UOM
-                Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : !string.IsNullOrEmpty(x.ComponentCode) ? materials.FirstOrDefault(m => m.ProductCode == x.ComponentCode).Unit : null,
+                Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.BaseUnit1 : !string.IsNullOrEmpty(x.ComponentCode) ? materials.FirstOrDefault(m => m.ProductCode == x.ComponentCode).Unit : null,
                 //Schedule Start Time
                 ScheduleStartTime = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.ScheduledStartDate : null,
                 //Schedule Finish Time

@@ -915,6 +915,7 @@ namespace IntegrationNS.API.Controllers
         ///                       "baseUnit2": "string",
         ///                       "batch": "string",
         ///                       "activity": "string",
+        ///                       "reservation": "string",
         ///                       "reservationItem": "string",
         ///                       "openQuantity": 0,
         ///                       "shortage": 0,
@@ -2141,7 +2142,9 @@ namespace IntegrationNS.API.Controllers
         ///               "scheduleStartTime": null,
         ///               "scheduleFinishTime": null,
         ///               "salesOrder": null,
-        ///               "isDelete": false
+        ///               "isDelete": false,
+        ///               "reservation": "",
+        ///               "reservationItem": ""
         ///             }
         ///           ],
         ///           "message": "\"Get data XTHLSX\" thành công.",

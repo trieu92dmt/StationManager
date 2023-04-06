@@ -219,7 +219,7 @@ namespace IntegrationNS.Application.Queries
                 WithdrawnQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.QuantityWithdrawn) : 0,
                 TotalQty = x.DetailWorkOrderId.HasValue ? Math.Abs(x.DetailWorkOrder.WorkOrder.TargetQuantity) : 0,
                 //24 UOM
-                Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.WorkOrder.Unit : "",
+                Unit = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.BaseUnit1 : "",
                 //25 Ghi chú
                 Description = x.Description ?? "",
                 //26 Hình ảnh
@@ -250,7 +250,11 @@ namespace IntegrationNS.Application.Queries
                 MaterialDocItem = x.MaterialDocumentItem ?? "",
                 //35 Reverse Doc
                 ReverseDoc = x.ReverseDocument ?? "",
-                isDelete = x.Status == "DEL" ? true : false
+                isDelete = x.Status == "DEL" ? true : false,
+                //Reservation number
+                Reservation = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.Reservation : "",
+                //Reservation item
+                ReservationItem = x.DetailWorkOrderId.HasValue ? x.DetailWorkOrder.ReservationItem : "",
             }).ToListAsync();
 
             return data;

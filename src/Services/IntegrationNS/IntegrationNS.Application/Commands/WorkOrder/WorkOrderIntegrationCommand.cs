@@ -73,6 +73,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
         public string BaseUnit2 { get; set; }      //MEINS
         public string Batch { get; set; }      //Số lô
         public string Activity { get; set; }      //
+        public string Reservation { get; set; } //Reservation number
         public string ReservationItem { get; set; }      //
         public decimal? OpenQuantity { get; set; }      //
         public decimal? Shortage { get; set; }      //
@@ -188,6 +189,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 BaseUnit2 = item.BaseUnit2,
                                 Batch = item.Batch,
                                 Activity = item.Activity,
+                                Reservation = item.Reservation,
                                 ReservationItem = item.ReservationItem,
                                 OpenQuantity = item.OpenQuantity,
                                 Shortage = item.Shortage,
@@ -265,6 +267,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                     BaseUnit2 = item.BaseUnit2,
                                     Batch = item.Batch,
                                     Activity = item.Activity,
+                                    Reservation = item.Reservation,
                                     ReservationItem = item.ReservationItem,
                                     OpenQuantity = item.OpenQuantity,
                                     Shortage = item.Shortage,
@@ -294,6 +297,7 @@ namespace IntegrationNS.Application.Commands.WorkOrder
                                 detailWO.BaseUnit2 = item.BaseUnit2;
                                 detailWO.Batch = item.Batch;
                                 detailWO.Activity = item.Activity;
+                                detailWO.Reservation = item.Reservation;
                                 detailWO.ReservationItem = item.ReservationItem;
                                 detailWO.OpenQuantity = item.OpenQuantity;
                                 detailWO.Shortage = item.Shortage;

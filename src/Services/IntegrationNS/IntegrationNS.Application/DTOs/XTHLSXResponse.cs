@@ -83,5 +83,9 @@ namespace IntegrationNS.Application.DTOs
         public string SalesOrder { get; set; }
         //Đánh dấu xóa
         public bool? isDelete { get; set; }
+        //Reservation number
+        public string Reservation { get; set; }
+        //Reservation item
+        public string ReservationItem { get; set; }
     }
 }

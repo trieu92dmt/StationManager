@@ -689,7 +689,7 @@ namespace MES.Application.Queries
                 var NKDCNBResponse = await _dtOdRepo.GetQuery()
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
-                                                    .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                    .Where(x => (!string.IsNullOrEmpty(plant) ? x.OutboundDelivery.ReceivingPlant == plant : true) &&
                                                                 (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&
@@ -1248,7 +1248,7 @@ namespace MES.Application.Queries
                 var NKDCNBResponse = await _dtOdRepo.GetQuery()
                                         .Include(x => x.OutboundDelivery)
                                         //Lọc delivery type
-                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.OutboundDelivery.ReceivingPlant == plant : true) &&
                                                     (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                     //Lấy delivery đã hoàn tất giao dịch
                                                     x.OutboundDelivery.GoodsMovementSts == "C" &&
@@ -1806,7 +1806,7 @@ namespace MES.Application.Queries
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
                                                     .Where(x =>
-                                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                                (!string.IsNullOrEmpty(plant) ? x.OutboundDelivery.ReceivingPlant == plant : true) &&
                                                                 (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&
@@ -1990,7 +1990,7 @@ namespace MES.Application.Queries
                                                     //Lọc delivery type
                                                     .Where(x =>
                                                                 //Theo plant 
-                                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                                (!string.IsNullOrEmpty(plant) ? x.OutboundDelivery.ReceivingPlant == plant : true) &&
                                                                 //Theo keyword
                                                                 (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.ShiptoParty.Contains(keyword) ||
                                                                                                 x.OutboundDelivery.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
@@ -2174,7 +2174,7 @@ namespace MES.Application.Queries
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
                                                     .Where(x =>
-                                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                                (!string.IsNullOrEmpty(plant) ? x.OutboundDelivery.ReceivingPlant == plant : true) &&
                                                                 (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&

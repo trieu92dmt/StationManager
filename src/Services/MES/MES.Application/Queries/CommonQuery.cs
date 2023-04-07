@@ -1241,23 +1241,23 @@ namespace MES.Application.Queries
             //Màn hình nhập kho điều chuyển nội bộ
             if (type == "NKDCNB")
             {
-                var NKDCNBResponse = await _poMasterRepo.GetQuery(x => 
-                                                             //Lọc theo từ khóa
-                                                             (!string.IsNullOrEmpty(keyword) ? x.PurchaseOrderCode.Contains(keyword) : true) &&
-                                                             //Lọc theo nhà máy
-                                                             (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
-                                                             //Lấy line có PO Type là "Z007"
-                                                             (x.POType == "Z007") &&
-                                                             //Lấy các line đã duyệt
-                                                             (x.ReleaseIndicator == "R") &&
-                                                             //Loại các line đã đánh dấu xóa
-                                                             (x.DeletionInd != "X")).Include(x => x.PurchaseOrderDetailModel)
-                                        .Where(x => x.PurchaseOrderDetailModel.FirstOrDefault(p => p.DeliveryCompleted != "X" && p.DeletionInd != "X") != null)
-                                        .OrderBy(x => x.PurchaseOrderCode)
+                //Lấy danh sách po code
+                var poCodes = await _poMasterRepo.GetQuery().Select(x => x.PurchaseOrderCode).ToListAsync();
+
+                var NKDCNBResponse = await _dtOdRepo.GetQuery()
+                                        .Include(x => x.OutboundDelivery)
+                                        //Lọc delivery type
+                                        .Where(x => (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                    //Lấy delivery đã hoàn tất giao dịch
+                                                    x.OutboundDelivery.GoodsMovementSts == "C" &&
+                                                    x.GoodsMovementSts == "C" &&
+                                                    x.ReferenceDocument1 != null &&
+                                                    poCodes.Contains(x.ReferenceDocument1))
+                                        .OrderBy(x => x.ReferenceDocument1)
                                         .Select(x => new CommonResponse
                                         {
-                                            Key = x.PurchaseOrderCode,
-                                            Value = x.PurchaseOrderCodeInt.ToString()
+                                            Key = x.ReferenceDocument1,
+                                            Value = long.Parse(x.ReferenceDocument1).ToString()
                                         }).AsNoTracking().ToListAsync();
 
                 return NKDCNBResponse.DistinctBy(x => x.Key).Take(10).ToList();
@@ -2339,6 +2339,7 @@ namespace MES.Application.Queries
                                   }).ToListAsync();
                 return XTHLSXResponse.Where(x => !string.IsNullOrEmpty(keyword) ? x.Value.Contains(keyword) : true).DistinctBy(x => x.Key).Take(20).ToList();
             }
+            
             var result = await _workOrderRep.GetQuery(x =>
                                                            //Lọc theo plant
                                                            x.Plant == plant &&

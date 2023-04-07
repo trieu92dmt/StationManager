@@ -184,8 +184,7 @@ namespace IntegrationNS.Application.Commands.NKMHs
             //Lấy ra dòng không có reverseDoc
             query = query.Where(x => x.ReverseDocument == null);
 
-            var data = query.AsEnumerable()
-                            .Select(x => new NKMHResponse
+            var data = query.Select(x => new NKMHResponse
                             {
                                 //Ngày thực hiện cân
                                 WeightDate = x.WeighDate,
@@ -210,9 +209,9 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Số lần cân
                                 QuantityWeitght = x.QuantityWeitght,
                                 //Total Quantity
-                                TotalQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail?.OrderQuantity,
+                                TotalQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail.OrderQuantity,
                                 //Delivered Quantity
-                                DeliveredQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveryQuantity : x.PurchaseOrderDetail?.QuantityReceived,
+                                DeliveredQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.DeliveryQuantity : x.PurchaseOrderDetail.QuantityReceived,
                                 //Số xe tải
                                 TruckQuantity = x.TruckQuantity,
                                 //Số cân đầu vào
@@ -229,25 +228,25 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 StartTime = x.StartTime,
                                 EndTime = x.EndTime,
                                 //Common
-                                CreateBy = users.FirstOrDefault(a => a.AccountId == x.CreateBy)?.UserName,
+                                CreateBy = users.FirstOrDefault(a => a.AccountId == x.CreateBy).UserName,
                                 CreateTime = x.CreateTime,
-                                LastEditBy = users.FirstOrDefault(a => a.AccountId == x.LastEditBy)?.UserName,
+                                LastEditBy = users.FirstOrDefault(a => a.AccountId == x.LastEditBy).UserName,
                                 LastEditTime = x.LastEditTime,
                                 //Palne 
-                                Plant = x.PurchaseOrderDetail?.PurchaseOrder?.Plant,
+                                Plant = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.Plant : "",
                                 //PO
-                                PurchaseOrderCode = x.PurchaseOrderDetail?.PurchaseOrder?.PurchaseOrderCode,
-                                POItem = x.PurchaseOrderDetail?.POLine,
-                                POType = x.PurchaseOrderDetail?.PurchaseOrder?.POType,
+                                PurchaseOrderCode = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchaseOrderCode : "",
+                                POItem = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.POLine : "",
+                                POType = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.POType : "",
                                 //PurchasingOrg
-                                PurchasingOrg = x.PurchaseOrderDetail?.PurchaseOrder?.PurchasingOrg,
-                                PurchasingGroup = x.PurchaseOrderDetail?.PurchaseOrder?.PurchasingGroup,
+                                PurchasingOrg = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchasingOrg : "",
+                                PurchasingGroup = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.PurchasingGroup : "",
                                 //NCC
-                                VendorCode = x.PurchaseOrderDetail?.PurchaseOrder?.VendorCode,
+                                VendorCode = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.VendorCode : "",
                                 //Material
                                 Material = x.MaterialCode,
                                 //DocumentDate
-                                DocumentDate = x.PurchaseOrderDetail?.PurchaseOrder?.DocumentDate,
+                                DocumentDate = x.PurchaseOrderDetailId.HasValue ? x.PurchaseOrderDetail.PurchaseOrder.DocumentDate : null,
                                 //Storage Location
                                 StorageLocation = x.SlocCode,
                                 //Số lô
@@ -260,8 +259,8 @@ namespace IntegrationNS.Application.Commands.NKMHs
                                 //Đơn vị vận tải
                                 TransportUnit = x.TransportUnit ?? "",
                                 //Số lượng đặt hàng 
-                                OrderQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail?.OrderQuantity,
-                                OpenQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.OpenQuantity : x.PurchaseOrderDetail?.OpenQuantity,
+                                OrderQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.TotalQuantity : x.PurchaseOrderDetail.OrderQuantity,
+                                OpenQuantity = !string.IsNullOrEmpty(x.MaterialDocument) ? x.OpenQuantity : x.PurchaseOrderDetail.OpenQuantity,
                                 //Mat Doc
                                 MaterialDocument = x.MaterialDocument,
                                 //Mat doc item

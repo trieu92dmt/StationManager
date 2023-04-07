@@ -2008,7 +2008,7 @@ namespace MES.Application.Queries
                                                         Key = x.OutboundDelivery.ShiptoParty,
                                                         Value = $"{x.OutboundDelivery.ShiptoParty} | {x.OutboundDelivery.ShiptoPartyName}"
                                                     }).AsNoTracking().ToListAsync();
-                return response.DistinctBy(x => x.Key).Take(10).ToList();
+                return NKDCNBResponse.DistinctBy(x => x.Key).Take(10).ToList();
             }    
 
 

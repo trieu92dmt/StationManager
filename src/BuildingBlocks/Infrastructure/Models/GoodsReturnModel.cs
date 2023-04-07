@@ -94,7 +94,7 @@ namespace Infrastructure.Models
         public string MaterialDocumentItem { get; set; }
         [StringLength(50)]
         public string ReverseDocument { get; set; }
-        [StringLength(50)]
+        [StringLength(2000)]
         public string Description { get; set; }
         [StringLength(2000)]
         public string Image { get; set; }

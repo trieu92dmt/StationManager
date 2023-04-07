@@ -892,7 +892,7 @@ namespace MES.Application.Queries
             #region NHLT
             //Màn nhập hàng loại T
             //Khi lại màn hình là "NHLT" có tham số đầu vào liên quan đến chứng từ thì lấy material trong chứng từ
-            else if (type == "XCK" && (!string.IsNullOrEmpty(shipToPartyFrom) || !string.IsNullOrEmpty(odFrom)))
+            else if (type == "NHLT" && (!string.IsNullOrEmpty(shipToPartyFrom) || !string.IsNullOrEmpty(odFrom)))
             {
                 //Gán giá trị cho biến deliveryType khi searh màn hình NHLT
                 var NHLTdeliveryType = new List<string>() { "ZLF1", "ZLF2", "ZLF3", "ZLF4", "ZLF5", "ZLF6", "ZLF7", "ZLF8", "ZLF9" };

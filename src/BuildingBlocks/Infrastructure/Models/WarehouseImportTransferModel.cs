@@ -92,7 +92,7 @@ namespace Infrastructure.Models
         public decimal? QuantityWithPackaging { get; set; }
         [StringLength(50)]
         public string VehicleCode { get; set; }
-        [StringLength(200)]
+        [StringLength(2000)]
         public string Description { get; set; }
         [StringLength(200)]
         public string Image { get; set; }

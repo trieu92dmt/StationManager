@@ -689,7 +689,8 @@ namespace MES.Application.Queries
                 var NKDCNBResponse = await _dtOdRepo.GetQuery()
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
-                                                    .Where(x => (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                    .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                                (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&
                                                                 x.GoodsMovementSts == "C" &&
@@ -1247,7 +1248,8 @@ namespace MES.Application.Queries
                 var NKDCNBResponse = await _dtOdRepo.GetQuery()
                                         .Include(x => x.OutboundDelivery)
                                         //Lọc delivery type
-                                        .Where(x => (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                        .Where(x => (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                    (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                     //Lấy delivery đã hoàn tất giao dịch
                                                     x.OutboundDelivery.GoodsMovementSts == "C" &&
                                                     x.GoodsMovementSts == "C" &&
@@ -1803,7 +1805,9 @@ namespace MES.Application.Queries
                 var NKDCNBResponse = await _dtOdRepo.GetQuery()
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
-                                                    .Where(x => (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
+                                                    .Where(x =>
+                                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
+                                                                (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&
                                                                 x.GoodsMovementSts == "C" &&
@@ -1985,6 +1989,8 @@ namespace MES.Application.Queries
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
                                                     .Where(x =>
+                                                                //Theo plant 
+                                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
                                                                 //Theo keyword
                                                                 (string.IsNullOrEmpty(keyword) ? true : x.OutboundDelivery.ShiptoParty.Contains(keyword) ||
                                                                                                 x.OutboundDelivery.ShiptoPartyName.Trim().ToLower().Contains(keyword.Trim().ToLower())) &&
@@ -2167,7 +2173,8 @@ namespace MES.Application.Queries
                 var NKDCNBResponse = await _dtOdRepo.GetQuery()
                                                     .Include(x => x.OutboundDelivery)
                                                     //Lọc delivery type
-                                                    .Where(x => 
+                                                    .Where(x =>
+                                                                (!string.IsNullOrEmpty(plant) ? x.Plant == plant : true) &&
                                                                 (x.OutboundDelivery.DeliveryType == "ZNLC" || x.OutboundDelivery.DeliveryType == "ZNLN") &&
                                                                 //Lấy delivery đã hoàn tất giao dịch
                                                                 x.OutboundDelivery.GoodsMovementSts == "C" &&

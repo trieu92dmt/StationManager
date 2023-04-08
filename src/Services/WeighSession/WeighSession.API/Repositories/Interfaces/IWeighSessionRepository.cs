@@ -43,6 +43,13 @@ namespace WeighSession.API.Repositories.Interfaces
         Task<SearchScaleMonitorResponse2> SearchScaleMonitor(SearchScaleMinitorRequest request);
 
         /// <summary>
+        /// Chi tiết đợt cân
+        /// </summary>
+        /// <param name="WeighSessionCode"></param>
+        /// <returns></returns>
+        Task<List<DetailWeighSsResponse>> GeWeighSessionDetail(string WeighSessionCode);
+
+        /// <summary>
         /// Search danh sách cân
         /// </summary>
         /// <param name="request"></param>

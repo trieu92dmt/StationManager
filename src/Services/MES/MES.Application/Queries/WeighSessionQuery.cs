@@ -2,13 +2,9 @@
 using Core.Properties;
 using Core.SeedWork.Repositories;
 using Infrastructure.Models;
-using MES.Application.DTOs.MES.WeighSession;
+using MES.Application.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared.WeighSession;
 
 namespace MES.Application.Queries
 {
@@ -25,38 +21,17 @@ namespace MES.Application.Queries
     public class WeighSessionQuery : IWeighSessionQuery
     {
         private readonly IRepository<WeighSessionDetailModel> _detailWeighSs;
+        private readonly IWeighSessionService _weighSsService;
 
-        public WeighSessionQuery(IRepository<WeighSessionDetailModel> detailWeighSs)
+        public WeighSessionQuery(IRepository<WeighSessionDetailModel> detailWeighSs, IWeighSessionService weighSsService)
         {
             _detailWeighSs = detailWeighSs;
+            _weighSsService = weighSsService;
         }
 
         public async Task<List<DetailWeighSsResponse>> GetDetailWeighSs(string WeighSessionCode)
         {
-            //Cho tiết đợt cân lấy theo id đợt cân
-            var detailWeighSs = await _detailWeighSs.GetQuery(x => x.WeighSessionCode == WeighSessionCode)
-                                                    .OrderByDescending(x => x.NumberOfWeigh)
-                                                    .Select(x => new DetailWeighSsResponse
-                                                    {
-                                                        //Id chi tiết đầu cân
-                                                        WeighSessionDetailId = x.WeighSessionDetailID,
-                                                        //Id đợt cân
-                                                        WeighSessionCode = x.WeighSessionCode,
-                                                        //Số lần cân
-                                                        NumberOfWeigh = x.NumberOfWeigh ?? 0,
-                                                        //Trọng lượng chi tiết
-                                                        DetailWeigh = x.DetailWeight ?? 0
-                                                    })
-                                                    .AsNoTracking().ToListAsync();
-
-            //Không tồn tại => báo lỗi
-            if (detailWeighSs == null)
-            {
-                throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Đợt cân"));
-            }
-
-            //Trả data
-            return detailWeighSs;
+            return await _weighSsService.GetListDetailWeighSession(WeighSessionCode);
         }
     }
 }

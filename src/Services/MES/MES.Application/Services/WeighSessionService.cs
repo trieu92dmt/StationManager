@@ -24,6 +24,13 @@ namespace MES.Application.Services
         Task<WeighSessionDetailResponse> GetDetailWeighSession(string ScaleCode);
 
         /// <summary>
+        /// Service call api lấy chi tiết đợt cân
+        /// </summary>
+        /// <param name="ScaleCode">Đầu cân</param>
+        /// <returns></returns>
+        Task<List<DetailWeighSsResponse>> GetListDetailWeighSession(string WeighSessionCode);
+
+        /// <summary>
         /// Service call api search cân
         /// </summary>
         /// <param name="request"></param>
@@ -172,6 +179,29 @@ namespace MES.Application.Services
             var response = JsonConvert.DeserializeObject<ApiSuccessResponse<bool>>(scaleResponse, jsonSettings);
 
             return response.IsSuccess;
+        }
+
+        public async Task<List<DetailWeighSsResponse>> GetListDetailWeighSession(string WeighSessionCode)
+        {
+            //GET data weigh session
+            var domainWS = new ConfigManager().WeighSessionUrl;
+            var url = $"{domainWS}get-detail-weiss?WeighSessionCode={WeighSessionCode}";
+
+            var weighSessionData = await _httpClient.GetAsync(url);
+            var weighSessionResponse = await weighSessionData.Content.ReadAsStringAsync();
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            var result = JsonConvert.DeserializeObject<ApiSuccessResponse<List<DetailWeighSsResponse>>>(weighSessionResponse, jsonSettings);
+
+            if (!result.IsSuccess)
+                return null;
+
+            return result?.Data;
         }
     }
 }

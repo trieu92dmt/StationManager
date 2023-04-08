@@ -68,6 +68,17 @@ namespace WeighSession.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("get-detail-weiss")]
+        public async Task<IActionResult> GeWeighSessionDetail(string WeighSessionCode)
+        {
+            var result = await _repository.GeWeighSessionDetail(WeighSessionCode);
+            return Ok(new ApiSuccessResponse<List<DetailWeighSsResponse>>
+            {
+                Data = result,
+                IsSuccess = true
+            });
+        }
+
         [HttpPost("search-scale")]
         public async Task<IActionResult> SearchScale([FromBody] SearchScaleRequest request)
         {

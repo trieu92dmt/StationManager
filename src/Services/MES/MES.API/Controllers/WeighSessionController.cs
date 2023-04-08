@@ -5,6 +5,7 @@ using MES.Application.DTOs.MES.WeighSession;
 using MES.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
+using Shared.WeighSession;
 
 namespace MES.API.Controllers
 {
@@ -52,7 +53,7 @@ namespace MES.API.Controllers
         {
             var response = await _query.GetDetailWeighSs(WeighSessionCode);
 
-            return Ok(new ApiSuccessResponse<List<DetailWeighSsResponse>>
+            return Ok(new ApiSuccessResponse<List<Shared.WeighSession.DetailWeighSsResponse>>
             {
                 Data = response,
                 Message = string.Format(CommonResource.Msg_Success, "Lấy chi tiết đợt cân")

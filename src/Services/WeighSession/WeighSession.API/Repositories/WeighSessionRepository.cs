@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Databases;
+﻿using Core.Exceptions;
+using Core.Interfaces.Databases;
 using Core.Properties;
 using Core.SeedWork;
 using Core.SeedWork.Repositories;
@@ -16,17 +17,20 @@ namespace WeighSession.API.Repositories
         private readonly IRepository<ScaleModel, DataCollectionContext> _scaleRepo;
         private readonly IRepository<WeighSessionModel, DataCollectionContext> _weiSsRepo;
         private readonly IRepository<WeightMonitorModel, DataCollectionContext> _weiMonitorRepo;
+        private readonly IRepository<WeighSessionDetailModel, DataCollectionContext> _detailWeighSsRepo;
         private readonly DataCollectionContext _context;
         private readonly IUnitOfWork<DataCollectionContext> _unitOfWork;
 
         public WeighSessionRepository(IRepository<ScaleModel, DataCollectionContext> scaleRepo, 
                                       IRepository<WeighSessionModel, DataCollectionContext> weiSsRepo,
                                       IRepository<WeightMonitorModel, DataCollectionContext> weiMonitorRepo,
+                                      IRepository<WeighSessionDetailModel, DataCollectionContext> detailWeighSsRepo,
                                       DataCollectionContext context, IUnitOfWork<DataCollectionContext> unitOfWork)
         {
             _scaleRepo = scaleRepo;
             _weiSsRepo = weiSsRepo;
             _weiMonitorRepo = weiMonitorRepo;
+            _detailWeighSsRepo = detailWeighSsRepo;
             _context = context;
             _unitOfWork = unitOfWork;
         }
@@ -136,6 +140,34 @@ namespace WeighSession.API.Repositories
                 EndTime = weighSession.EndTime,
                 TotalNumberOfWeigh = weighSession.TotalNumberOfWeigh,
             };
+        }
+
+        public async Task<List<DetailWeighSsResponse>> GeWeighSessionDetail(string WeighSessionCode)
+        {
+            //Cho tiết đợt cân lấy theo id đợt cân
+            var detailWeighSs = await _detailWeighSsRepo.GetQuery(x => x.WeighSessionCode == WeighSessionCode)
+                                                    .OrderByDescending(x => x.NumberOfWeigh)
+                                                    .Select(x => new DetailWeighSsResponse
+                                                    {
+                                                        //Id chi tiết đầu cân
+                                                        WeighSessionDetailId = x.WeighSessionCode,
+                                                        //Id đợt cân
+                                                        WeighSessionCode = x.WeighSessionCode,
+                                                        //Số lần cân
+                                                        NumberOfWeigh = x.NumberOfWeigh ?? 0,
+                                                        //Trọng lượng chi tiết
+                                                        DetailWeigh = x.DetailWeight ?? 0
+                                                    })
+                                                    .AsNoTracking().ToListAsync();
+
+            //Không tồn tại => báo lỗi
+            if (detailWeighSs == null)
+            {
+                throw new ISDException(string.Format(CommonResource.Msg_NotFound, "Đợt cân"));
+            }
+
+            //Trả data
+            return detailWeighSs;
         }
 
         public async Task<ApiResponse> SaveScale(SaveScaleRequest request)

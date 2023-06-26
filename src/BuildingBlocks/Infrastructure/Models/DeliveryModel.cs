@@ -8,70 +8,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Models
 {
-    [Table("DeliveryModel", Schema = "Warehouse")]
+    [Table("DeliveryModel", Schema = "masterdata")]
     public partial class DeliveryModel
     {
-        public DeliveryModel()
-        {
-            DeliveryDetailModel = new HashSet<DeliveryDetailModel>();
-        }
-
         [Key]
         public Guid DeliveryId { get; set; }
         public int DeliveryCode { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? DocumentDate { get; set; }
-        public Guid? CompanyId { get; set; }
-        public Guid? StoreId { get; set; }
+        public Guid? CarCompanyId { get; set; }
+        public Guid? TripId { get; set; }
+        [StringLength(200)]
+        public string Sender { get; set; }
+        [StringLength(200)]
+        public string Receiver { get; set; }
         [StringLength(50)]
-        public string SalesEmployeeCode { get; set; }
-        public Guid? ProfileId { get; set; }
-        public string Note { get; set; }
-        public Guid? CreateBy { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? CreateTime { get; set; }
-        public Guid? DeletedBy { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? DeletedTime { get; set; }
-        public bool? isDeleted { get; set; }
-        [StringLength(500)]
-        public string RecipientCompany { get; set; }
-        [StringLength(500)]
-        public string RecipientName { get; set; }
-        [StringLength(4000)]
-        public string RecipientAddress { get; set; }
-        [StringLength(200)]
-        public string RecipientPhone { get; set; }
-        [StringLength(500)]
-        public string SenderName { get; set; }
-        [StringLength(4000)]
-        public string SenderAddress { get; set; }
-        [StringLength(200)]
-        public string SenderPhone { get; set; }
-        public Guid? LastEditBy { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? LastEditTime { get; set; }
-        public Guid? TaskId { get; set; }
-        [StringLength(4000)]
-        public string DeletedReason { get; set; }
-        [StringLength(200)]
-        public string DeliveryType { get; set; }
+        public string PhoneNumber { get; set; }
         [StringLength(50)]
-        public string ShippingTypeCode { get; set; }
+        public string Email { get; set; }
+        [StringLength(200)]
+        public string Address { get; set; }
+        public bool? isShipAtHome { get; set; }
+        [Column(TypeName = "decimal(18, 3)")]
+        public decimal? Cost { get; set; }
+        [StringLength(50)]
+        public string Status { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? CreatedTime { get; set; }
+        public bool? Actived { get; set; }
 
-        [ForeignKey("CompanyId")]
+        [ForeignKey("CarCompanyId")]
         [InverseProperty("DeliveryModel")]
-        public virtual CompanyModel Company { get; set; }
-        [ForeignKey("ProfileId")]
+        public virtual CarCompanyModel CarCompany { get; set; }
+        [ForeignKey("TripId")]
         [InverseProperty("DeliveryModel")]
-        public virtual ProfileModel Profile { get; set; }
-        [ForeignKey("SalesEmployeeCode")]
-        [InverseProperty("DeliveryModel")]
-        public virtual SalesEmployeeModel SalesEmployeeCodeNavigation { get; set; }
-        [ForeignKey("StoreId")]
-        [InverseProperty("DeliveryModel")]
-        public virtual StoreModel Store { get; set; }
-        [InverseProperty("Delivery")]
-        public virtual ICollection<DeliveryDetailModel> DeliveryDetailModel { get; set; }
+        public virtual TripModel Trip { get; set; }
     }
 }

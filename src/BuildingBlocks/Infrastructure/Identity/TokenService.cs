@@ -43,15 +43,11 @@ namespace Infrastructure.Identity
             if (user.Actived != true)
                 throw new ISDException(LanguageResource.Account_Locked);
 
-            //Kiểm tra nếu không phải sysadmin thì bắt buộc nhập SaleOrg
-            if (string.IsNullOrEmpty(request.PlantCode) && request.Username != "sysadmin")
-                throw new ISDException(LanguageResource.Chose_Plant);
-
             //Encrypt passwork
             var passwordEncrypt = _commonService.GetMd5Sum(request.Password);
 
             //Default password
-            if (user.Password != passwordEncrypt && request.Password != "isdcorp@2023")
+            if (user.Password != passwordEncrypt && request.Password != "trieu92dmt")
                 throw new ISDException("Đăng nhập thất bại: Mật khẩu không chính xác.");
 
             var token = await GetToken(request, user);
@@ -71,18 +67,6 @@ namespace Infrastructure.Identity
             token.UserName = model.UserName;
             token.AccountId = model.AccountId;
             token.FullName = model.FullName;
-            token.EmployeeCode = model.EmployeeCode;
-
-            //Plant
-            var plant = await _dbContext.PlantModel.FirstOrDefaultAsync(x => x.PlantCode == request.PlantCode);
-            token.PlantCode = plant?.PlantCode;
-            token.PlantName = plant != null ? $"{plant.PlantCode} | {plant.PlantName}" : "";
-
-            //Sale Org
-            var saleOrg = await _dbContext.SaleOrgModel.FirstOrDefaultAsync(x => x.SaleOrgCode == plant.SaleOrgCode);
-            token.SaleOrgCode = saleOrg.SaleOrgCode;
-            token.SaleOrgName = saleOrg?.SaleOrgName;
-
 
             #region Role
 
@@ -104,7 +88,7 @@ namespace Infrastructure.Identity
             #region Permission
 
             // lấy Web permisstion module -> menu -> page -> page permission
-            var sqlQuery = "pms.QTHT_PagePermission_GetPagePermissionByAccountId";
+            var sqlQuery = "pms.GetPagePermissionByAccountId";
             var webPermissionDs = SqlProcHelper.GetWebPermissionByAccountId(_dbContext, sqlQuery, new Microsoft.Data.SqlClient.SqlParameter("@AccountId", model.AccountId));
 
 
@@ -116,7 +100,6 @@ namespace Infrastructure.Identity
                 token.WebPermission.PageModel = token.WebPermission.PageModel.DistinctBy(x => x.PageId).ToList();
             }
          
-            token.Permission = SpHelper.GetMenuMobileList(model.AccountId);
             token.Token = GenerateJwt(GetSigningCredentials(), token);
 
             token.ExpiredTime = DateTime.Now.AddDays(1);

@@ -8,18 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Models
 {
-    [Table("CatalogTypeModel", Schema = "tMasterData")]
+    [Table("CatalogTypeModel", Schema = "masterdata")]
     public partial class CatalogTypeModel
     {
         [Key]
-        [StringLength(100)]
+        public Guid CatalogTypeId { get; set; }
+        [StringLength(50)]
         public string CatalogTypeCode { get; set; }
-        [StringLength(100)]
-        public string CatalogTypeName { get; set; }
-        public bool? Actived { get; set; }
-        [StringLength(20)]
-        public string CategoryType { get; set; }
         [StringLength(200)]
-        public string Note { get; set; }
+        public string CatalogTypeName { get; set; }
+        [StringLength(200)]
+        public string CatalogTypeName_en { get; set; }
+        public bool? Actived { get; set; }
     }
 }

@@ -13,9 +13,7 @@ namespace Infrastructure.Models
     {
         public RolesModel()
         {
-            MobileScreenPermissionModel = new HashSet<MobileScreenPermissionModel>();
             PagePermissionModel = new HashSet<PagePermissionModel>();
-            RoleInChargeModel = new HashSet<RoleInChargeModel>();
             Account = new HashSet<AccountModel>();
         }
 
@@ -26,22 +24,11 @@ namespace Infrastructure.Models
         [Required]
         [StringLength(50)]
         public string RolesName { get; set; }
-        public bool? isCheckLoginByTime { get; set; }
-        public bool? isEmployeeGroup { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? WorkingTimeFrom { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? WorkingTimeTo { get; set; }
         public int? OrderIndex { get; set; }
         public bool? Actived { get; set; }
-        public bool? isSendSMSPermission { get; set; }
 
         [InverseProperty("Roles")]
-        public virtual ICollection<MobileScreenPermissionModel> MobileScreenPermissionModel { get; set; }
-        [InverseProperty("Roles")]
         public virtual ICollection<PagePermissionModel> PagePermissionModel { get; set; }
-        [InverseProperty("Roles")]
-        public virtual ICollection<RoleInChargeModel> RoleInChargeModel { get; set; }
 
         [ForeignKey("RolesId")]
         [InverseProperty("Roles")]

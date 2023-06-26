@@ -79,6 +79,14 @@ namespace Core.Extensions
                 return this._configuration["DomainFE"];
             }
         }
+
+        public string MailService
+        {
+            get
+            {
+                return this._configuration["MailService"];
+            }
+        }
     }
 
 }

@@ -143,9 +143,7 @@ namespace Infrastructure.Extensions
                     sda.Fill(ds);
 
                     ds.Tables[0].TableName = "PageModel";
-                    ds.Tables[1].TableName = "MenuModel";
-                    ds.Tables[2].TableName = "PagePermissionModel";
-                    ds.Tables[3].TableName = "ModuleModel";
+                    ds.Tables[1].TableName = "PagePermissionModel";
                 }
 
                 context.Database.CloseConnection();

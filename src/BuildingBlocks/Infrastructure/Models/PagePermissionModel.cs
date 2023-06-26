@@ -19,9 +19,6 @@ namespace Infrastructure.Models
         [StringLength(50)]
         public string FunctionId { get; set; }
 
-        [ForeignKey("FunctionId")]
-        [InverseProperty("PagePermissionModel")]
-        public virtual FunctionModel Function { get; set; }
         [ForeignKey("PageId")]
         [InverseProperty("PagePermissionModel")]
         public virtual PageModel Page { get; set; }

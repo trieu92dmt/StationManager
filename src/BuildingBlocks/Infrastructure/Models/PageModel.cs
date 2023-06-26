@@ -13,9 +13,8 @@ namespace Infrastructure.Models
     {
         public PageModel()
         {
-            FavoriteReportModel = new HashSet<FavoriteReportModel>();
+            PageFunctionModel = new HashSet<PageFunctionModel>();
             PagePermissionModel = new HashSet<PagePermissionModel>();
-            Function = new HashSet<FunctionModel>();
         }
 
         [Key]
@@ -35,16 +34,9 @@ namespace Infrastructure.Models
         public string Parameter { get; set; }
         public int? DomainConfig { get; set; }
 
-        [ForeignKey("MenuId")]
-        [InverseProperty("PageModel")]
-        public virtual MenuModel Menu { get; set; }
         [InverseProperty("Page")]
-        public virtual ICollection<FavoriteReportModel> FavoriteReportModel { get; set; }
+        public virtual ICollection<PageFunctionModel> PageFunctionModel { get; set; }
         [InverseProperty("Page")]
         public virtual ICollection<PagePermissionModel> PagePermissionModel { get; set; }
-
-        [ForeignKey("PageId")]
-        [InverseProperty("Page")]
-        public virtual ICollection<FunctionModel> Function { get; set; }
     }
 }

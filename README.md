@@ -1,4 +1,4 @@
-﻿## TLG - MES - API:
+﻿## StationManager - API:
 
 ## References URLs
 - Docs: https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture
@@ -34,38 +34,3 @@
 		+ Query: Get data to database
 		+ Services: Chứa các logic có thể dùng chung giữa các command.
 
-
-## Environment Configuration
-
----
-
-## Applications URLs - DEVELOPMENT Environment:
-- Authentication Api: https://tlg-auth-api.isdcorp.vn/swagger/index.html
-	+ Folder: D:\WebData\tlg-auth-api.isdcorp.vn
-- MES Api: https://tlg-mes-api.isdcorp.vn/swagger/index.html
-	+ Folder: D:\WebData\tlg-mes-api.isdcorp.vn
-- Masterdata Api: https://tlg-masterdata-api.isdcorp.vn/swagger/index.html
-	+ Folder: Chưa tạo
-- Integration Netsuite Api: https://tlg-api.isdcorp.vn/swagger/index.html
-	+ Folder: D:\WebData\tlg-auth-api.isdcorp.vn
-
-## Environment Configuration
-- Database:
-	+ ip = 192.168.100.233
-	+ db = TLG_MES
-	+ id = isd
-	+ pass = pm123@abcd
-- Test Environment 
-   - Web: https://tlg-mes-fe.isdcorp.vn/
-	+ username = admin
-	+ password = isd@2023
-
-
-## Command using window service
-```Powershell
-cd C:\Windows\Microsoft.NET\Framework64\v4.0.30319
-```
-
-```Powershell
-command: installutil.exe C:\Working\TLG.API\src\Services\WeighSessionFactory\WSFactory.Service\bin\Debug\WSFactory.Service.exe
-```

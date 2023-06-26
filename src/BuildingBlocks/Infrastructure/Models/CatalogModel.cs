@@ -8,34 +8,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Models
 {
-    [Table("CatalogModel", Schema = "tMasterData")]
+    [Table("CatalogModel", Schema = "masterdata")]
     public partial class CatalogModel
     {
-        public CatalogModel()
-        {
-            CampaignModel = new HashSet<CampaignModel>();
-            QuestionBankModelDepartment = new HashSet<QuestionBankModel>();
-            QuestionBankModelQuestionCategory = new HashSet<QuestionBankModel>();
-        }
-
         [Key]
         public Guid CatalogId { get; set; }
-        [StringLength(100)]
+        [StringLength(50)]
         public string CatalogTypeCode { get; set; }
-        [StringLength(100)]
+        [StringLength(50)]
         public string CatalogCode { get; set; }
-        [StringLength(1000)]
-        public string CatalogText_en { get; set; }
-        [StringLength(1000)]
-        public string CatalogText_vi { get; set; }
-        public int? OrderIndex { get; set; }
+        [StringLength(200)]
+        public string CatalogName { get; set; }
+        [StringLength(200)]
+        public string CatalogName_en { get; set; }
         public bool? Actived { get; set; }
-
-        [InverseProperty("StatusNavigation")]
-        public virtual ICollection<CampaignModel> CampaignModel { get; set; }
-        [InverseProperty("Department")]
-        public virtual ICollection<QuestionBankModel> QuestionBankModelDepartment { get; set; }
-        [InverseProperty("QuestionCategory")]
-        public virtual ICollection<QuestionBankModel> QuestionBankModelQuestionCategory { get; set; }
     }
 }

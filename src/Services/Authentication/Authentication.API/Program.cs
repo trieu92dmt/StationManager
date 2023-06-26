@@ -22,7 +22,7 @@ try
     {
         option.SwaggerDoc("v1", new OpenApiInfo
         {
-            Title = "TLG - MES API",
+            Title = "Station Manager API",
             Version = "v1"
         });
 
@@ -45,7 +45,7 @@ try
         });
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "TLG - AUTH - API");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Station Manager - AUTH - API");
         });
     }
 
